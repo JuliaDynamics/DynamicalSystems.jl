@@ -22,11 +22,12 @@ odeproblem, update!, evolve!
   state-vector calculates the corresponding Jacobian of the vector-field (e.o.m.)
   and writes it in-place for `J`.
 # Constructors:
-If you have an already defined function for the `jacobian!`, please use the fisrst
-constructor. The oher constructors do automatic calculation of the Jacobian function
+If you have an already defined function for the `jacobian!`, please use the first
+constructor. The other constructors do automatic calculation of the Jacobian function
 (and matrix):
 1. `ContinuousDynamicalSystem(u0, eom!::Function, jacobian!::Function)`
-  creates a system with user-provided functions (most efficient).
+  creates a system with user-provided functions for the equations of motion and the
+  Jacobian of them (most efficient).
 2. `ContinuousDynamicalSystem(u0, eom!::Function)`
   uses the package `ForwardDiff` for automatic (numeric) forward
   differentiation to calculate the `jacobian!` function.
