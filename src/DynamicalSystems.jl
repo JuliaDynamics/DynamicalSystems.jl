@@ -1,5 +1,7 @@
 module DynamicalSystems
 
+export DynamicalSystem
+
 abstract type DynamicalSystem end
 
 include("continuous.jl")

@@ -1,6 +1,6 @@
-using DiffEqBase, ParameterizedFunctions, ForwardDiff, OrdinaryDiffEq
+using DiffEqBase, ParameterizedFunctions, ForwardDiff
 
-export DynamicalSystem, ContinuousDynamicalSystem, DiscreteDynamicalSystem,
+export ContinuousDynamicalSystem, DiscreteDynamicalSystem,
 odeproblem, update!, evolve!
 
 
@@ -117,10 +117,11 @@ do so by using `:solver` as one of your keywords.
 **Do not** use this function if you want to get e.g. the time-series of the system's
 variables! This function is used to evolve the system step-by-step and as a result
 does not save any data of intermediate steps!
-Instead use the `solve` interfact of `DifferentialEquations` by taking
+Instead use the `solve` interface of `DifferentialEquations` by taking
 advantage of the function `odeproblem(system, tspan)`. E.g.:
 ```julia
-using OrdinaryDiffEq, DiffEqBase
+using DiffEqBase #defines the `solve` interface
+using OrdinaryDiffEq #contains solver algorithms, like TsitPap8()
 sol = solve(odeproblem(system, tspan), TsitPap8(), dense=false, saveat=0.01)
 ```
 """

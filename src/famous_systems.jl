@@ -1,5 +1,3 @@
-using ParameterizedFunctions
-
 #σ = 10.0; ρ = 28.0; β = 8/3;
 function lorentz(u0; σ = 10.0, ρ = 28.0, β = 8/3)
   function eom!(du, u)
