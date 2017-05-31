@@ -74,14 +74,13 @@ end
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################
-
 """
 ```julia
 odeproblem(system::ContinuousDynamicalSystem, t0, tfinal)
 odeproblem(system::ContinuousDynamicalSystem, tspan)
 ```
 Return a type `ODEProblem` with the given system information. This can be passed
-directly into `solve` from `DiffEqBase`.
+directly into `solve` from `DifferentialEquations`.
 """
 function odeproblem(system::ContinuousDynamicalSystem, t0::Real, tfinal::Real)
   t1, t2 = promote(t0, tfinal)
