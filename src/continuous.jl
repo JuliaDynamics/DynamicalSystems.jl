@@ -1,4 +1,4 @@
-using DiffEqBase, ParameterizedFunctions, ForwardDiff
+using DiffEqBase, OrdinaryDiffEq, ParameterizedFunctions, ForwardDiff
 
 export ContinuousDynamicalSystem, DiscreteDynamicalSystem,
 odeproblem, update!, evolve!
@@ -121,7 +121,7 @@ Instead use the `solve` interface of `DifferentialEquations` by taking
 advantage of the function `odeproblem(system, tspan)`. E.g.:
 ```julia
 using DiffEqBase #defines the `solve` interface
-using OrdinaryDiffEq #contains solver algorithms, like TsitPap8()
+using OrdinaryDiffEq #contains solver algorithms and keywords for `solve`
 sol = solve(odeproblem(system, tspan), TsitPap8(), dense=false, saveat=0.01)
 ```
 """
