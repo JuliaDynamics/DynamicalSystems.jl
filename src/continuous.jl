@@ -65,30 +65,23 @@ function ContinuousDynamicalSystem(u0, f::AbstractParameterizedFunction)
   ContinuousDynamicalSystem(u0, J, eom!, jacobian!)
 end
 
-function diff_eq_f(system::ContinuousDynamicalSystem)
-  f(t, u, du) = system.eom!(du, u)
-end
-
-
 
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################
 """
 ```julia
-odeproblem(system::ContinuousDynamicalSystem, t0, tfinal)
-odeproblem(system::ContinuousDynamicalSystem, tspan)
+odeproblem(system::ContinuousDynamicalSystem, t)
 ```
-Return a type `ODEProblem` with the given system information. This can be passed
-directly into `solve` from `DifferentialEquations`.
+Return a type `ODEProblem` with the given system information (t0 is zero).
+This can be passed directly into `solve` from `DifferentialEquations`.
 """
-function odeproblem(system::ContinuousDynamicalSystem, t0::Real, tfinal::Real)
-  t1, t2 = promote(t0, tfinal)
-  DiffEqBase.ODEProblem(diff_eq_f(system), system.u, (t1, t2))
+function odeproblem(system::ContinuousDynamicalSystem, t)
+  t0 = zero(t)
+  DiffEqBase.ODEProblem(diff_eq_f(system), system.u, (t0, t))
 end
-function odeproblem(system::ContinuousDynamicalSystem, t::Tuple{<:Real, <:Real})
-  @assert typeof(t[1]) == typeof(t[2]) "the timespan must have same types"
-  DiffEqBase.ODEProblem(diff_eq_f(system), system.u, t)
+function diff_eq_f(system::ContinuousDynamicalSystem)
+  f(t, u, du) = system.eom!(du, u)
 end
 
 
@@ -103,6 +96,7 @@ function update!(system::ContinuousDynamicalSystem, u0::AbstractArray)
   system.jacobian!(system.J, u0);
   return system
 end
+
 
 """
 ```julia
@@ -120,22 +114,22 @@ does not save any data of intermediate steps!
 Instead use the `solve` interface of `DifferentialEquations` by taking
 advantage of the function `odeproblem(system, tspan)`. E.g.:
 ```julia
-using DiffEqBase #defines the `solve` interface
+using DiffEqBase #defines the `solve` and `ODEProblem` interfaces
 using OrdinaryDiffEq #contains solver algorithms and keywords for `solve`
-sol = solve(odeproblem(system, tspan), TsitPap8(), dense=false, saveat=0.01)
+sol = solve(odeproblem(system, t), TsitPap8(), dense=false, saveat=0.01)
 ```
 """
 function evolve!(system::ContinuousDynamicalSystem, t::Real)
-  prob = odeproblem(system, zero(t), t)
+  prob = odeproblem(system, t)
   sol = solve(prob, Tsit5(); save_everystep=false)
   update!(system, sol[end])
 end
 function evolve!(system::ContinuousDynamicalSystem, t::Real, diff_eq_kwargs::Dict)
 
-  prob = odeproblem(system, zero(t), t)
+  prob = odeproblem(system, t)
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
-    pop!(diff_eq_kwargs, :abstol)
+    pop!(diff_eq_kwargs, :solver)
     if length(diff_eq_kwargs) == 0
       sol = solve(prob, solver; save_everystep=false)
     else
@@ -145,24 +139,4 @@ function evolve!(system::ContinuousDynamicalSystem, t::Real, diff_eq_kwargs::Dic
     sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
   end
   update!(system, sol[end])
-end
-
-
-
-
-
-
-
-""" bundle of the e.o.m. of the dynamics of system as well as tangent space
-(a.k.a Jacobian of the flow Φ).
-dU is a D×(k+1) array, with D the system dimension and k the tangent order required
-(e.g. how man lyapunovs you want). Of course 1≤k≤D. U is the state matrix, having
-exactly the same dimension as dU.
-Notice that dU[:,1] is the derivatives of the system (system.eom!)
-while dU[:, 2:k+1] is the derivatives of the jacobian of the flow,
-dU[:, 2:k+1] = system.jacobian! * U ."""
-function dynamics_eom!(dU::AbstractArray, system, U::AbstractArray)
-  kp1 = size(U)[2] #k + 1, where k the order of tangent dervs to be calculated
-  system.eom!(view(dU, :, 1), view(U, :, 1)) #system's dU/dt
-  A_mul_B!(view(dU, :, 2:kp1), system.J, view(U, :, 2:kp1))
 end
