@@ -140,3 +140,6 @@ end
 println("Conclusion: Versions 3,4 and 5 are by far the best for `evolve!`.")
 println("Why isn't evolve performing well for version 1? Because the system field `u`")
 println("has to be updated. In all other versions you can do s.u .= u, but not for v1!")
+println("and you cannot have version 1 with field anything else besides SVector")
+println("since it has to be converted to SVector for the e.o.m method/jacobian method")
+println("(which means that in the end of the day you will create an SVector anyways)")

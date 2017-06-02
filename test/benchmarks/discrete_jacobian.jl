@@ -108,3 +108,16 @@ println("--Return-value jacobian")
 @inline jac5(y, x, cfg) = (j = ForwardDiff.jacobian(eom_5!, y, x, cfg); sys.J .= j)
 bjr5 = @benchmark jac5($mun, $mu, $cfg)
 display(bjr5)
+
+
+println("comparison of evolve call:")
+for (i, b) in enumerate([bj2,bj3,bj4,bj5])
+  println("v$(i+1) versus v1")
+  sleep(0.1)
+  display(judge(median(b), median(bj1)))
+  sleep(0.1)
+end
+
+println("All methods for Jacobian are slower than the first (which uses SVector)")
+println("However method 4 comes extremely close to it!")
+println("It is actually even faster than the one with MVector")
