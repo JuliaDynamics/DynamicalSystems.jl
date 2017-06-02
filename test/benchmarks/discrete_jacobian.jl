@@ -110,7 +110,7 @@ bjr5 = @benchmark jac5($mun, $mu, $cfg)
 display(bjr5)
 
 
-println("comparison of evolve call:")
+println("comparison of in-place jacobian call:")
 for (i, b) in enumerate([bj2,bj3,bj4,bj5])
   println("v$(i+1) versus v1")
   sleep(0.1)
