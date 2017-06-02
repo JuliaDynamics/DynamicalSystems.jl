@@ -2,6 +2,9 @@ using DynamicalSystems, SymPy
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
+
+#all of this will be reworked based on the new benchmarks
+
 """
     DiscreteDynamicalSystem <: DynamicalSystem
 # Fields:
@@ -44,5 +47,6 @@ function DiscreteDynamicalSystem(u0, eom!::Function)
   DiscreteDynamicalSystem(u0, J, eom!, jacob!)
 end
 
-# Use SymPy for the method:
-function DiscreteDynamicalSystem(u0, f::Array{SymPy.Sym,1}, variables::Array{SymPy.Sym,1})
+#######################################################################################
+#                                 System Evolution                                    #
+#######################################################################################
