@@ -1,4 +1,6 @@
 using StaticArrays, BenchmarkTools, ForwardDiff
+BenchmarkTools.DEFAULT_PARAMETERS.seconds = 10
+show_ind_bench = false
 println("Benchmarking Jacobian calculation of 3D Discrete systems for different types of e.o.m.")
 
 u = rand(3); un = rand(3); su = SVector{3}(u); mu = MVector{3}(u)
@@ -23,11 +25,11 @@ end
 println("--In-place jacobian")
 @inline jac1!(J, x) = ForwardDiff.jacobian!(J, eom_1, x)
 bj1 = @benchmark jac1!($sys.J, $su)
-display(bj1)
+show_ind_bench && display(bj1)
 println("--Return-value jacobian")
 @inline jac1(x) = (j = ForwardDiff.jacobian(eom_1, x); sys.J .= j)
 bjr1 = @benchmark jac1($su)
-display(bjr1)
+show_ind_bench && display(bjr1)
 
 
 
@@ -45,11 +47,11 @@ cfg = ForwardDiff.JacobianConfig(eom_2, u)
 println("--In-place jacobian")
 @inline jac2!(J, x, cfg) = ForwardDiff.jacobian!(J, eom_2, x, cfg)
 bj2 = @benchmark jac2!($sys.J, $su, $cfg)
-display(bj2)
+show_ind_bench && display(bj2)
 println("--Return-value jacobian")
 @inline jac2(x, cfg) = (j = ForwardDiff.jacobian(eom_2, x, cfg); sys.J .= j)
 bjr2 = @benchmark jac2($su, $cfg)
-display(bjr2)
+show_ind_bench && display(bjr2)
 
 
 
@@ -67,11 +69,11 @@ cfg = ForwardDiff.JacobianConfig(eom_3, mu)
 println("--In-place jacobian")
 @inline jac3!(J, x, cfg) = ForwardDiff.jacobian!(J, eom_3, x, cfg)
 bj3 = @benchmark jac3!($MJ, $mu, $cfg)
-display(bj3)
+show_ind_bench && display(bj3)
 println("--Return-value jacobian")
 @inline jac3(x, cfg) = (j = ForwardDiff.jacobian(eom_3, x, cfg); sys.J .= j)
 bjr3 = @benchmark jac3($mu, $cfg)
-display(bjr3)
+show_ind_bench && display(bjr3)
 
 
 
@@ -85,29 +87,29 @@ cfg = ForwardDiff.JacobianConfig(eom_4!, un, u)
 println("--In-place jacobian")
 @inline jac4!(J, y, x, cfg) = ForwardDiff.jacobian!(J, eom_4!, y, x, cfg)
 bj4 = @benchmark jac4!($J, $un, $u, $cfg)
-display(bj4)
+show_ind_bench && display(bj4)
 println("--Return-value jacobian")
 @inline jac4(y, x, cfg) = (j = ForwardDiff.jacobian(eom_4!, y, x, cfg); sys.J .= j)
 bjr4 = @benchmark jac4($un, $u, $cfg)
-display(bjr4)
+show_ind_bench && display(bjr4)
 
 
 
 println("\nVersion 5: In place with 2 arguments & using MVector")
-@inline @inbounds function eom_5!(xn, x)
+@inline @inbounds function eom_5!(xn::MVector, x::MVector)
   xn[1] = 3.8*x[1]*(1-x[1])-0.05*(x[2]+0.35)*(1-2*x[3])
   xn[2] = 0.1*( (x[2]+0.35)*(1-2*x[3])-1 )*(1-1.9*x[1])
   xn[3] = 3.78*x[3]*(1-x[3])+0.2*x[2]
 end
-cfg = ForwardDiff.JacobianConfig(eom_5!, mun, mu)
+cfg5 = ForwardDiff.JacobianConfig(eom_5!, mun, mu)
 println("--In-place jacobian")
 @inline jac5!(J, y, x, cfg) = ForwardDiff.jacobian!(J, eom_5!, y, x, cfg)
-bj5 = @benchmark jac5!($MJ, $mun, $mu, $cfg)
-display(bj5)
+bj5 = @benchmark jac5!($MJ, $mun, $mu, $cfg5)
+show_ind_bench && display(bj5)
 println("--Return-value jacobian")
 @inline jac5(y, x, cfg) = (j = ForwardDiff.jacobian(eom_5!, y, x, cfg); sys.J .= j)
-bjr5 = @benchmark jac5($mun, $mu, $cfg)
-display(bjr5)
+bjr5 = @benchmark jac5($mun, $mu, $cfg5)
+show_ind_bench && display(bjr5)
 
 
 println("comparison of in-place jacobian call:")
@@ -118,6 +120,7 @@ for (i, b) in enumerate([bj2,bj3,bj4,bj5])
   sleep(0.1)
 end
 
+println("Conclusion about ForwardDiff jacobians:")
 println("All methods for Jacobian are slower than the first (which uses SVector)")
 println("However method 4 comes extremely close to it!")
 println("It is actually even faster than the one with MVector")

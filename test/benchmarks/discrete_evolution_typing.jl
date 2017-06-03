@@ -1,4 +1,6 @@
 using StaticArrays, BenchmarkTools
+BenchmarkTools.DEFAULT_PARAMETERS.seconds = 10
+show_ind_bench = false
 println("Benchmarking evolution of Discrete systems for different types of e.o.m.")
 u = rand(3); un = rand(3)
 
@@ -13,18 +15,18 @@ println("\nVersion 1: StaticArray returned: eom_1(u) -> un::SVector")
   3.78*x3*(1-x3)+0.2*x2
   )
 end
-println("eom call:")
+show_ind_bench && println("eom call:")
 e1 = @benchmark eom_1($u)
-display(e1)
+show_ind_bench && display(e1)
 
 mutable struct system_1{T<:Real}
   u::SVector{3, T}
 end
 evolve1(s::system_1) = (un = eom_1(s.u); s.u = un)
 s1 = system_1(SVector{3}(u))
-println("system evolution:")
+show_ind_bench && println("system evolution:")
 b1 = @benchmark evolve1($s1)
-display(b1)
+show_ind_bench && display(b1)
 sleep(0.1)
 println("-------------------------------------------")
 
@@ -39,7 +41,7 @@ println("\nVersion 2: Base Array returned eom_2(x) -> xn::Vector ")
 end
 println("eom call:")
 e2 = @benchmark eom_2($u)
-display(e2)
+show_ind_bench && display(e2)
 
 mutable struct system_2{T<:Real}
   u::Vector{T}
@@ -48,7 +50,7 @@ evolve2(s::system_2) = (un = eom_2(s.u); s.u .= un)
 s2 = system_2(u)
 println("system evolution:")
 b2 = @benchmark evolve2($s2)
-display(b2)
+show_ind_bench && display(b2)
 sleep(0.1)
 println("-------------------------------------------")
 
@@ -64,7 +66,7 @@ println("\nVersion 3: MVector returned eom_3(x) -> xn::MVector ")
 end
 println("call:")
 e3 = @benchmark eom_3($u)
-display(e3)
+show_ind_bench && display(e3)
 
 mutable struct system_3{T<:Real}
   u::MVector{3, T}
@@ -73,7 +75,7 @@ evolve3(s::system_3) = (un = eom_3(s.u); s.u .= un)
 s3 = system_3(MVector{3}(u))
 println("system evolution:")
 b3 = @benchmark evolve3($s3)
-display(b3)
+show_ind_bench && display(b3)
 sleep(0.1)
 println("-------------------------------------------")
 
@@ -85,7 +87,7 @@ println("\nVersion 4: In place with 2 arguments: eom_towel!(xn, x) (changes xn)"
 end
 println("eom call:")
 e4 = @benchmark eom_4!($un, $u)
-display(e4)
+show_ind_bench && display(e4)
 
 mutable struct system_4{T<:Real}
   u::Vector{T}
@@ -94,7 +96,7 @@ evolve4(s::system_4) = (u0 = copy(s.u); eom_4!(s.u, u0))
 s4 = system_4((u))
 println("system evolution:")
 b4 = @benchmark evolve4($s4)
-display(b4)
+show_ind_bench && display(b4)
 sleep(0.1)
 println("-------------------------------------------")
 
@@ -108,7 +110,7 @@ end
 println("eom call:")
 mun = MVector{3}(un)
 e5 = @benchmark eom_5!($mun, $u)
-display(e5)
+show_ind_bench && display(e5)
 
 mutable struct system_5{T<:Real}
   u::MVector{3, T}
@@ -117,7 +119,7 @@ evolve5(s::system_5) = (u0 = copy(s.u); eom_5!(s.u, u0))
 s5 = system_5(MVector{3}(u))
 println("system evolution:")
 b5 = @benchmark evolve5($s5)
-display(b5)
+show_ind_bench && display(b5)
 sleep(0.1)
 println("-------------------------------------------")
 
@@ -137,9 +139,9 @@ for (i, b) in enumerate([b2,b3,b4,b5])
   display(judge(median(b), median(b1)))
   sleep(0.1)
 end
-println("Conclusion: Versions 3,4 and 5 are by far the best for `evolve!`.")
-println("Why isn't evolve performing well for version 1? Because the system field `u`")
-println("has to be updated. In all other versions you can do s.u .= u, but not for v1!")
-println("and you cannot have version 1 with field anything else besides SVector")
-println("since it has to be converted to SVector for the e.o.m method/jacobian method")
-println("(which means that in the end of the day you will create an SVector anyways)")
+println("Conclusions about evolve calls: Versions with Base arrays are by far the slowest")
+println("Methods with Mutable StaticArrays are by far the fastests")
+println("with increase in speed of up to 60%")
+println("Note however, that both the methods with SVector and MVector are")
+println("very very fast, with speeds 60ns and 25ns respectively (on evolve call)")
+println("For the methods with MVector and SVector, calling eom and calling evolve")
