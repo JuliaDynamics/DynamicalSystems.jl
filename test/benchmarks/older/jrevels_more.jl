@@ -9,7 +9,7 @@ using ForwardDiff, BenchmarkTools, StaticArrays
 
 @inline function manual_jacobian(x)
     return @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
-    0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
+    -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
     0.0  0.2  3.78(1-2x[3]) ]
 end
 

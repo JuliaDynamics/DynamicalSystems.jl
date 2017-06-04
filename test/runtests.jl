@@ -1,2 +1,1 @@
-include("continuous_construction.jl")
-include("continuous_evolve.jl")
+include("discrete_tests.jl")

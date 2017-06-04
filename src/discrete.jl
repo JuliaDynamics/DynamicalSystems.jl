@@ -1,16 +1,17 @@
 using StaticArrays, ForwardDiff
-is1D(u) = length(size(u)) == 1
-#######################################################
-#                     Constructors                    #
-#######################################################
-struct DiscreteDS{N, S<:Real, F, J} #<: DynamicalSystem
+
+export DiscreteDS, evolve, jacobian, timeseries
+#######################################################################################
+#                                     Constructors                                    #
+#######################################################################################
+struct DiscreteDS{N, S<:Number, F, J} #<: DynamicalSystem
   state::SVector{N,S}
   eom::F
   jacob::J
 end
 # constsructor without jacobian (uses ForwardDiff)
 function DiscreteDS(u0, eom)
-  @assert is1D(u) "Initial condition must an one-dimensional vector"
+  @assert length(size(u0)) == 1 "Initial condition must an one-dimensional vector"
   D = length(u0)
   su0 = SVector{D}(u0); sun = eom(u0);
   ssu0 = eom(sun) #test that eom works with SVector as well
@@ -28,7 +29,7 @@ function DiscreteDS(u0, eom)
 end
 
 function DiscreteDS(u0, eom, jac)
-  @assert is1D(u) "Initial condition must an one-dimensional vector"
+  @assert length(size(u0)) == 1 "Initial condition must an one-dimensional vector"
   D = length(u0)
   su0 = SVector{D}(u0); sun = eom(u0);
   ssu0 = eom(sun) #test that eom works with SVector as well
@@ -44,9 +45,9 @@ function DiscreteDS(u0, eom, jac)
   return DiscreteDS(su0, eom, jac)
 end
 
-#######################################################
-#                      Evolutions                     #
-#######################################################
+#######################################################################################
+#                                 System Evolution                                    #
+#######################################################################################
 @inline function evolve(s::DiscreteDS, N::Int)
   d = s
   for i in 1:N
@@ -70,3 +71,9 @@ function timeseries(s::DiscreteDS, N::Int)
   end
   return ts
 end
+
+jacobian(s::DiscreteDS) = s.jacob(s.state)
+
+#######################################################################################
+#                                 Pretty-Printing                                     #
+#######################################################################################
