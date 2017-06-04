@@ -1,6 +1,6 @@
 using StaticArrays, BenchmarkTools, ForwardDiff
 BenchmarkTools.DEFAULT_PARAMETERS.seconds = 10
-show_ind_bench = false
+show_ind_bench = true
 println("Benchmarking Jacobian calculation of 3D Discrete systems for different types of e.o.m.")
 
 u = rand(3); un = rand(3); su = SVector{3}(u); mu = MVector{3}(u)
@@ -14,7 +14,7 @@ sys = system1(MI)
 
 
 println("\nVersion 1: StaticArray returned: eom_1(u) -> un::SVector")
-@inline @inbounds function eom_1(x)::SVector{3, <:Real}
+@inline @inbounds function eom_1(x)
   x1 = x[1]; x2=x[2]; x3 = x[3]
   SVector{3}(
   3.8*x1*(1-x1)-0.05*(x2+0.35)*(1-2*x3),
@@ -57,7 +57,7 @@ show_ind_bench && display(bjr2)
 
 
 println("\nVersion 3: MVector returned eom_3(x) -> xn::MVector ")
-@inline @inbounds function eom_3(x)::MVector{3, <:Real}
+@inline @inbounds function eom_3(x)
   x1 = x[1]; x2=x[2]; x3 = x[3];
   xn = MVector{3}(x)
   xn[1] = 3.8*x1*(1-x1)-0.05*(x2+0.35)*(1-2*x3)

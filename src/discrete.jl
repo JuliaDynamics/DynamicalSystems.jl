@@ -1,52 +1,72 @@
-using DynamicalSystems, SymPy
-#######################################################################################
-#                                     Constructors                                    #
-#######################################################################################
+using StaticArrays, ForwardDiff
+is1D(u) = length(size(u)) == 1
+#######################################################
+#                     Constructors                    #
+#######################################################
+struct DiscreteDS{N, S<:Real, F, J} #<: DynamicalSystem
+  state::SVector{N,S}
+  eom::F
+  jacob::J
+end
+# constsructor without jacobian (uses ForwardDiff)
+function DiscreteDS(u0, eom)
+  @assert is1D(u) "Initial condition must an one-dimensional vector"
+  D = length(u0)
+  su0 = SVector{D}(u0); sun = eom(u0);
+  ssu0 = eom(sun) #test that eom works with SVector as well
 
-#all of this will be reworked based on the new benchmarks
+  if !issubtype((typeof(sun)), SVector)
+    error("E.o.m. should create an SVector (from StaticArrays)")
+  end
 
-"""
-    DiscreteDynamicalSystem <: DynamicalSystem
-# Fields:
-* `u::AbstractVector` : Current state-vector of the system (initialized as the
-  initial conditions).
-* `J::AbstractMatrix` : Jacobian matrix of the e.o.m. at the current `u`.
-* `eom!::Function` : The function representing the equations of motion in an
-  **in-place form with only one argument**: `eom!(x)` with `x` the current state.
-  The function updates `x` in-place with the next state.
-* `jacobian!::Function` : An in-place function `jacobian!(J, u)` that given a
-  state-vector calculates the corresponding Jacobian of the e.o.m.
-  and writes it in-place for `J`.
-# Constructors:
-1. `DiscreteDynamicalSystem(u0, eom!::Function, jacobian!::Function)`
-  creates a system with user-provided functions for the equations of motion and the
-  Jacobian of them (most efficient). *Always* use this if you know the Jacobian of
-  your system.
-2. `DiscreteDynamicalSystem(u0, eom!::Function)`
-  uses the package `ForwardDiff` for automatic (numeric) forward
-  differentiation to calculate the `jacobian!` function.
-"""
-struct DiscreteDynamicalSystem <: DynamicalSystem
-  u::AbstractVector
-  J::AbstractArray
-  eom!::Function
-  jacobian!::Function
+  @inline jac(x) = ForwardDiff.jacobian(eom, x)
+  J = jac(su0)
+  if !issubtype((typeof(J)), SMatrix)
+    error("Fatal error in DiscreteDS: Jacobian is not SMatrix")
+  end
+  return DiscreteDS(su0, eom, jac)
 end
 
-function DiscreteDynamicalSystem(u0, eom!::Function, jacob!::Function)
-  J = similar(u0, (length(u0), length(u0)))
-  jacob!(J, u0)
-  DiscreteDynamicalSystem(u0, J, eom!, jacob!)
+function DiscreteDS(u0, eom, jac)
+  @assert is1D(u) "Initial condition must an one-dimensional vector"
+  D = length(u0)
+  su0 = SVector{D}(u0); sun = eom(u0);
+  ssu0 = eom(sun) #test that eom works with SVector as well
+
+  if !issubtype((typeof(sun)), SVector)
+    error("E.o.m. should create an SVector (from StaticArrays)!")
+  end
+
+  J1 = jac(u0); J2 = jac(su0)
+  if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
+    error("jacobian function should create an SMatrix (from StaticArrays)!")
+  end
+  return DiscreteDS(su0, eom, jac)
 end
 
-function DiscreteDynamicalSystem(u0, eom!::Function)
-  J = similar(u0, (length(u0), length(u0)))
-  L = length(u0)
-  fakef = (u) -> (un = copy(u); eom!(un); return un)
-  jacob! = (J, x) -> ForwardDiff.jacobian!(J, fakef, x)
-  DiscreteDynamicalSystem(u0, J, eom!, jacob!)
+#######################################################
+#                      Evolutions                     #
+#######################################################
+@inline function evolve(s::DiscreteDS, N::Int)
+  d = s
+  for i in 1:N
+    d = DiscreteDS(d.eom(d.state), d.eom, d.jacob)
+  end
+  return d
+end
+@inline function evolve(s::DiscreteDS)
+  DiscreteDS(s.eom(s.state), s.eom, s.jacob)
 end
 
-#######################################################################################
-#                                 System Evolution                                    #
-#######################################################################################
+function timeseries(s::DiscreteDS, N::Int)
+  d = s
+  T = eltype(d.state)
+  D = length(d.state)
+  ts = Array{T}(N, D)
+  ts[1,:] .= d.state
+  for i in 2:N
+    d = evolve(d)
+    ts[i, :] .= d.state
+  end
+  return ts
+end
