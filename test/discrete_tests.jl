@@ -1,5 +1,5 @@
 #towel map:
-using StaticArrays, Base.Test
+using StaticArrays, Base.Test, DynamicalSystems
 @inline function eom_towel(x)
   x1, x2, x3 = x[1], x[2], x[3]
   SVector(3.8*x1*(1-x1)-0.05*(x2+0.35)*(1-2*x3),
