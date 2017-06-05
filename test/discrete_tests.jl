@@ -19,6 +19,7 @@ end
     @test typeof(DiscreteDS(rand(3), eom_towel)) <: DiscreteDS
     @test typeof(DiscreteDS(rand(3), eom_towel, jacob_towel)) <: DiscreteDS
     @test typeof(DiscreteDS(big.(rand(3)), eom_towel, jacob_towel)) <: DiscreteDS
+    @test typeof(DiscreteDS(big.(0.1ones(3)), eom_towel, jacob_towel)) <: DiscreteDS
   end
   s1 = DiscreteDS(0.1ones(3), eom_towel)
   s2 = DiscreteDS(0.1ones(3), eom_towel, jacob_towel)
