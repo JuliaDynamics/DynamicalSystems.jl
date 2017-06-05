@@ -98,10 +98,85 @@ end
 
 
 ####
-@inline fj(u) = ForwardDiff.jacobian(eom_towel, u)
-@inline fj!(J, u) = ForwardDiff.jacobian!(J, eom_towel, u)
+using BenchmarkTools
+println("One dimensional benchmarks")
+struct ds1d1{S<:Real, F}
+  state::S
+  eom::F
+end
+function evolve1d1(s::ds1d1, N::Int)
+  x = deepcopy(s.state)
+  f = s.eom
+  for i in 1:N
+    x = f(x)
+  end
+  return ds1d1(x, s.eom)
+end
 
-j1 = @benchmark fj($su)
-display(j1)
-j2 = @benchmark fj!($J, $su)
-display(j2)
+mutable struct ds2d2{S<:Real, F}
+  state::S
+  eom::F
+end
+function evolve2d2(s::ds2d2, N::Int)
+  x = deepcopy(s.state)
+  f = s.eom
+  for i in 1:N
+    x = f(x)
+  end
+  s.state = x
+end
+
+function bench(N)
+  x0 = rand()
+
+  @inline eom_logistic(x) = 4*x*(1-x)
+  d1 = ds1d1(x0, eom_logistic)
+  println("V1: Immutable struct")
+  b1 = @benchmark evolve1d1($d1, $N)
+  display(b1)
+
+  println("V2: mutable struct")
+  d2 = ds2d2(x0, eom_logistic)
+  b2 = @benchmark evolve2d2($d2, $N)
+  display(b2)
+end
+
+println("For N = 1000")
+bench(1000)
+println("For N = 1000000")
+bench(1000000)
+
+## Profiling:
+Profile.clear()
+N = 1000000000
+x0 = rand()
+@inline eom_logistic(x) = 4*x*(1-x)
+d1 = ds1d1(x0, eom_logistic)
+evolve1d1(d1, N)
+@profile evolve1d1(d1, N)
+Profile.print()
+
+Profile.clear()
+N = 1000000000
+x0 = rand()
+@inline eom_logistic(x) = 4*x*(1-x)
+d2 = ds2d2(x0, eom_logistic)
+evolve2d2(d2, N)
+@profile evolve2d2(d2, N)
+Profile.print()
+
+## Profiling Juno
+# Profile.clear()
+# N = 10000000
+# x0 = rand()
+# eom_logistic(x) = 4*x*(1-x)
+# d1 = ds1d1(x0, eom_logistic)
+# @profile evolve1d1(d1, N)
+# Atom.Profiler.tree()
+#
+# N = 10000000
+# x0 = rand()
+# eom_logistic(x) = 4*x*(1-x)
+# d1 = ds1d1(x0, eom_logistic)
+# @profile evolve1d1(d1, N)
+# Juno.profiletree()

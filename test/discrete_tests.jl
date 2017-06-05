@@ -13,6 +13,39 @@ end
   0.0  0.2  3.78(1-2x[3]) ]
 end
 
+@inline eom_logistic(x) = 4*x*(1-x)
+@inline deriv_logistic(x) = 4(1-2x)
+
+@testset "Logistic Map" begin
+  @testset "Construction" begin
+    @test typeof(DiscreteDS1D(rand(), eom_logistic)) <: DiscreteDS1D
+    @test typeof(DiscreteDS1D(rand(), eom_logistic, deriv_logistic)) <: DiscreteDS1D
+  end
+  d1 = DiscreteDS1D(0.1, eom_logistic)
+  d2 = DiscreteDS1D(0.1, eom_logistic, deriv_logistic)
+  d3 = DiscreteDS1D(big(0.1), eom_logistic, deriv_logistic)
+  @testset "Evolution & Timeseries" begin
+    dd1 = evolve(d1)
+    dd2 = evolve(d2)
+    dd3 = evolve(d3)
+    @test dd1.state == dd2.state
+    @test dd1.state ≈ dd3.state
+    @test typeof(dd3.state) == BigFloat
+    ts1 = timeseries(dd1, 1000)
+    ts2 = timeseries(dd2, 1000)
+    ts3 = timeseries(dd2, 1000)
+    @test ts1[end] == ts2[end]
+    @test ts1[end] ≈ ts3[end]
+  end
+  @testset "Derivatives" begin
+    f1 = d1.deriv(d1.state)
+    f2 = d2.deriv(d2.state)
+    f3 = d3.deriv(d3.state)
+    @test isapprox(f1, f2;rtol = 1e-12)
+    @test isapprox(f1, f3;rtol = 1e-12)
+    @test typeof(f3) == BigFloat
+  end
+end
 
 @testset "Folded-Towel Map" begin
   @testset "Construction" begin
@@ -32,14 +65,14 @@ end
     s3 = evolve(s3)
     s4 = evolve(s4)
     @test s1.state == s2.state
-    @test isapprox.(s1.state, s3.state; rtol = 1e-12) == ones(s1.state)
-    @test isapprox.(s1.state, s4.state; rtol = 1e-12) == ones(s1.state)
+    @test isapprox.(s1.state, s3.state; rtol = 1e-12) == trues(s1.state)
+    @test isapprox.(s1.state, s4.state; rtol = 1e-12) == trues(s1.state)
 
     s1 = evolve(s1, 1000)
     s2 = evolve(s2, 1000)
     s3 = evolve(s3, 1000)
     s4 = evolve(s4, 1000)
-    @test isapprox.(s1.state, s2.state; rtol = 1e-12) == ones(s1.state)
+    @test isapprox.(s1.state, s2.state; rtol = 1e-12) == trues(s1.state)
 
     ts = timeseries(s1, 100)
     @test size(ts) == (100, 3)

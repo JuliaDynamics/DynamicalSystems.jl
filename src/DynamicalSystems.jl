@@ -2,9 +2,10 @@ module DynamicalSystems
 
 export DynamicalSystem
 
-abstract type DynamicalSystem end
-
-#include("continuous.jl")
 include("discrete.jl")
+#include("continuous.jl")
 include("famous_systems.jl")
 end # module
+
+
+using DynamicalSystems
