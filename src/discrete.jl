@@ -1,11 +1,25 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, evolve, jacobian, timeseries
+export DiscreteDS, DiscreteDS1D, evolve, jacobian, timeseries, setu
 
-abstract type DynamicalSystem end
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
+function test_functions(u0, eom, jac)
+  is1D(u0) || throw(ArgumentError("Initial condition must a Vector"))
+  D = length(u0)
+  su0 = SVector{D}(u0); sun = eom(u0);
+  length(sun) == length(s) ||
+  throw(DimensionMismatch("E.o.m. does not give same sized vector as initial condition"))
+  if !issubtype((typeof(sun)), SVector)
+    throw(ArgumentError("E.o.m. should create an SVector (from StaticArrays)"))
+  end
+  J1 = jac(u0); J2 = jac(SVector{length(u0)}(u0))
+  if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
+    throw(ArgumentError("Jacobian function should create an SMatrix (from StaticArrays)!"))
+  end
+end
+
 """
     DiscreteDS <: DynamicalSystem
 Immutable (for efficiency reasons) structure representing a `D`-dimensional
@@ -17,9 +31,12 @@ Discrete dynamical system.
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that   given a state-vector `u` it returns an `SVector` containing the
   next state.
-* `jacob::J` (function) : A function that calculates the system's jacobian matrix, based on the
-  format: `jacob(u) -> SMatrx` which means that given a state-vector `u` it returns
-  an SMatrix containing the Jacobian at that state.
+* `jacob::J` (function) : A function that calculates the system's jacobian matrix,
+  based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
+  `u` it returns an `SMatrix` containing the Jacobian at that state.
+
+The function `DynamicalBilliards.test_ds(u0, eom, jac)` is provided to help
+you ensure that your setup is correct.
 # Constructors:
 * `DiscreteDS(u0, eom, jac)` : The default constructor. **Ensures that the functions
   given are at the form described here**, or results in error otherwise.
@@ -27,45 +44,20 @@ Discrete dynamical system.
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed with a user-defined one.
 """
-struct DiscreteDS{D, S<:Real, F, J} <: DynamicalSystem
-  state::SVector{D,S}
+struct DiscreteDS{D, T<:Real, F, J} <: DynamicalSystem
+  state::SVector{D,T}
   eom::F
   jacob::J
 end
 # constsructor without jacobian (uses ForwardDiff)
-function DiscreteDS(u0, eom)
-  @assert length(size(u0)) == 1 "Initial condition must an one-dimensional vector"
-  D = length(u0)
-  su0 = SVector{D}(u0); sun = eom(u0);
-  ssu0 = eom(sun) #test that eom works with SVector as well
-
-  if !issubtype((typeof(sun)), SVector)
-    error("E.o.m. should create an SVector (from StaticArrays)")
-  end
-
+function DiscreteDS(u0::AbstractVector, eom)
+  su0 = SVector{length(u0)}(u0)
   @inline fd_jac(x) = ForwardDiff.jacobian(eom, x)
-  J = fd_jac(su0)
-  if !issubtype((typeof(J)), SMatrix)
-    error("Fatal error in DiscreteDS: Jacobian is not SMatrix")
-  end
   return DiscreteDS(su0, eom, fd_jac)
 end
-
-function DiscreteDS(u0, eom, jac)
-  @assert length(size(u0)) == 1 "Initial condition must an one-dimensional vector"
-  D = length(u0)
-  su0 = SVector{D}(u0); sun = eom(u0);
-  ssu0 = eom(sun) #test that eom works with SVector as well
-
-  if !issubtype((typeof(sun)), SVector)
-    error("E.o.m. should create an SVector (from StaticArrays)!")
-  end
-
-  J1 = jac(u0); J2 = jac(su0)
-  if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
-    error("jacobian function should create an SMatrix (from StaticArrays)!")
-  end
-  return DiscreteDS(su0, eom, jac)
+function DiscreteDS(u0::AbstractVector, eom, jac)
+  su0 = SVector{length(u0)}(u0)
+  return DiscreteDS(su0, eom, ac)
 end
 
 """
@@ -92,6 +84,18 @@ function DiscreteDS1D(x0, eom)
   fd_deriv(x) = ForwardDiff.derivative(eom, x)
   DiscreteDS1D(x0, eom, fd_deriv)
 end
+
+"""
+    setu(u, ds::DynamicalSystem) -> ds_new
+Create a new system, identical to `ds` but with state `u`.
+"""
+setu(u0, ds::DiscreteDS) = ds(u0, ds.eom, ds.jacob)
+
+"""
+    jacobian(ds::DynamicalSystem)
+Return the Jacobian matrix of the system at the current state.
+"""
+jacobian(s::DynamicalSystem) = s.jacob(s.state)
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################
@@ -158,30 +162,28 @@ function timeseries(s::DiscreteDS1D, N::Int)
   return ts
 end
 
-jacobian(s::DiscreteDS) = s.jacob(s.state)
-
 #######################################################################################
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
 function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
-  print(io, "$N-dimensional Discrete dynamical system:\n",
+  print(io, "$N-dimensional discrete dynamical system:\n",
   "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
   function Juno.render(i::Juno.Inline, s::DiscreteDS{N, S, F, J}) where {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
     t = Juno.render(i, Juno.defaultrepr(s))
-    t[:head] = Juno.render(i, Text("$N-dimensional Discrete dynamical system"))
+    t[:head] = Juno.render(i, Text("$N-dimensional discrete dynamical system"))
     t
   end
 end
 
+# 1-D
 function Base.show(io::IO, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:ANY}
   print(io, "1-dimensional Discrete dynamical system:\n",
   "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
-
 @require Juno begin
   function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:ANY}
     t = Juno.render(i, Juno.defaultrepr(s))

@@ -97,7 +97,7 @@ end
 
 
 
-####
+#### This is broken in Base (julia;s fault.) The immutable should be faster normally.
 using BenchmarkTools
 println("One dimensional benchmarks")
 struct ds1d1{S<:Real, F}

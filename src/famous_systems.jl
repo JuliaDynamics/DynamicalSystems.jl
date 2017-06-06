@@ -1,4 +1,5 @@
 module Systems
+using DynamicalSystems
 using StaticArrays
 #######################################################################################
 #                                    Continuous                                       #
@@ -22,12 +23,21 @@ end
 #######################################################################################
 #                                     Discrete                                        #
 #######################################################################################
-function towel(u0=rand(3))
+"""
+    towel(u0=[0.085, -0.121, 0.075])
+The folded-towel map is a hyperchaotic map due to O. E. Rössler [1]. It is a famous
+for being a mapping that has the smallest possible dimensions necessary for hyperchaos.
+The name comes from the fact that when plotted looks like a folded towel.
+Initial conditions are the ones used in the original paper.
+
+[1] : O. E. Rössler, Phys. Lett. A, **71A**, pp 155 (1979).
+"""
+function towel(u0=[0.085, -0.121, 0.075])
   @inline function eom_towel(x)
     x1, x2, x3 = x[1], x[2], x[3]
-    SVector(3.8*x1*(1-x1)-0.05*(x2+0.35)*(1-2*x3),
-    0.1*((x2+0.35)*(1-2*x3)-1 )*(1-1.9*x1),
-    3.78*x3*(1-x3)+0.2*x2)
+    SVector( 3.8*x1*(1-x1) - 0.05*(x2+0.35)*(1-2*x3),
+    0.1*( (x2+0.35)*(1-2*x3) - 1 )*(1 - 1.9*x1),
+    3.78*x3*(1-x3)+0.2*x2 )
   end
 
   @inline function jacob_towel(x)
@@ -36,7 +46,7 @@ function towel(u0=rand(3))
     0.0  0.2  3.78(1-2x[3]) ]
   end
   return DiscreteDS(u0, eom_towel, jacob_towel)
-end
+end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 function logistic(x0=rand(); r=4.0)
   @inline eom_logistic(x) = r*x*(1-x)
