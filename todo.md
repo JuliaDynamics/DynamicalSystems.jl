@@ -4,3 +4,6 @@
   for lyapunov for stiff problems.
 
 1. Add much more systems in the `famous_systems.jl`
+
+1. add progress meter: make it possible for user to choose between Juno progress
+  and REPL progress.

@@ -16,17 +16,14 @@
       @test 0.36 < λ1[2] < 0.38
       @test -2.9 < λ1[3] < -3.1
     end
-  end
 
-
-
-  # test lmax
-  @testset "λspectrum benchmarks" begin
-    b = @benchmark λspectrum(eom_towel!, j_towel!, u0, Ntr, 10000)
-    t = time(mean(b))
-    println("λspectrum_map time for 10000: $t")
-    if t > 2.5e8
-      println("!!! regression noticed !!!")
+    # test lmax
+    @testset "λmax" begin
+      #aasd
     end
-    @test t < 2.5e8
+
+    @testset "λspectrum benchmarks" begin
+      #asdf
+    end
+  end
 end

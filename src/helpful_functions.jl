@@ -26,4 +26,3 @@ end
 
 is1D(::Any) = false
 is1D(::AbstractArray) = length(size(u0)) == 1
-is1D(::DiscreteDS1D) = true

@@ -5,7 +5,7 @@ export DiscreteDS, DiscreteDS1D, evolve, jacobian, timeseries, setu
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
-function test_functions(u0, eom, jac)
+function test_discrete(u0, eom, jac)
   is1D(u0) || throw(ArgumentError("Initial condition must a Vector"))
   D = length(u0)
   su0 = SVector{D}(u0); sun = eom(u0);
@@ -35,14 +35,13 @@ Discrete dynamical system.
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
 
-The function `DynamicalBilliards.test_ds(u0, eom, jac)` is provided to help
+The function `DynamicalBilliards.test_discrete(u0, eom, jac)` is provided to help
 you ensure that your setup is correct.
 # Constructors:
-* `DiscreteDS(u0, eom, jac)` : The default constructor. **Ensures that the functions
-  given are at the form described here**, or results in error otherwise.
-* `DiscreteDS(u0, eom)` : The Jacobian function is created with tremendous efficiency
+* `DiscreteDS(u0, eom, jac)` : The default constructor.
+* `DiscreteDS(u0, eom)` : The Jacobian function is created with *tremendous* efficiency
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
-  Jacobian is within a few % of speed with a user-defined one.
+  Jacobian is within a few % of speed of a user-defined one.
 """
 struct DiscreteDS{D, T<:Real, F, J} <: DynamicalSystem
   state::SVector{D,T}
@@ -89,13 +88,16 @@ end
     setu(u, ds::DynamicalSystem) -> ds_new
 Create a new system, identical to `ds` but with state `u`.
 """
-setu(u0, ds::DiscreteDS) = ds(u0, ds.eom, ds.jacob)
+setu(u0, ds::DiscreteDS) = DiscreteDS(u0, ds.eom, ds.jacob)
+setu(x0, ds::DiscreteDS1D) = DiscreteDS1D(x0, ds.eom, ds.deriv)
 
 """
     jacobian(ds::DynamicalSystem)
 Return the Jacobian matrix of the system at the current state.
 """
 jacobian(s::DynamicalSystem) = s.jacob(s.state)
+
+is1D(::DiscreteDS1D) = true
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################
