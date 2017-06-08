@@ -15,4 +15,4 @@ end # module
 
 
 using DynamicalSystems
-ds = DynamicalSystems.Systems.towel()
+#ds = DynamicalSystems.Systems.towel()

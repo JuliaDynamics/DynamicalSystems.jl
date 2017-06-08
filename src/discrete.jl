@@ -56,7 +56,7 @@ function DiscreteDS(u0::AbstractVector, eom)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
   su0 = SVector{length(u0)}(u0)
-  return DiscreteDS(su0, eom, ac)
+  return DiscreteDS(su0, eom, jac)
 end
 
 """
