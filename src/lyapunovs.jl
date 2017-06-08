@@ -2,7 +2,9 @@ export λspectrum, λmax
 #######################################################################################
 #                                      Discrete                                       #
 #######################################################################################
-function λspectrum(ds::DiscreteDS, N::Int; Ntr::Int= 100)
+""" spectrum of lyapunovs """
+function λspectrum(ds::DiscreteDS, N::Real; Ntr::Int= 100)
+  N = convert(Int, N)
   u = deepcopy(ds.state)
   dim = length(u)
   eom = ds.eom
