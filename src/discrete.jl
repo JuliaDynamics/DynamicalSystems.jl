@@ -2,6 +2,7 @@ using StaticArrays, ForwardDiff, Requires
 
 export DiscreteDS, DiscreteDS1D, evolve, jacobian, timeseries, setu
 
+abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
@@ -43,7 +44,7 @@ you ensure that your setup is correct.
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed of a user-defined one.
 """
-struct DiscreteDS{D, T<:Real, F, J} <: DynamicalSystem
+struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
   eom::F
   jacob::J
@@ -74,7 +75,7 @@ Immutable utable structure representing an one-dimensional Discrete dynamical sy
 * `DiscreteDS1d(x0, eom)` : The derivative function is created
   automatically using the module `ForwardDiff`.
 """
-struct DiscreteDS1D{S<:Real, F, D} <: DynamicalSystem
+struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
   state::S
   eom::F
   deriv::D
@@ -103,41 +104,39 @@ is1D(::DiscreteDS1D) = true
 #######################################################################################
 """
 ```julia
-evolve(s::DiscreteDS, N::Int = 1)
+evolve(st, ds::DiscreteDynamicalSystem, N = 1)
+evolve(ds::DiscreteDynamicalSystem, N = 1)
 ```
-Evolve a discrete system for `N` steps. Because `DiscreteDS` is immutable, `evolve`
-has to be called as `s = evolve(s, N)`. Same function is used for `DiscreteDS1D`.
+Evolve a state `st` (or system `ds`) under the dynamics
+of `ds` for `N` steps.
+Because both `st` and `ds` are immutable, call as: `st = evolve(st, ds, N)` or
+`ds = evolve(ds, N)`.
 
-This function does not store any information about intermediate steps. Use `timeseries`
-if you want to keep intermediate information.
+This function does not store any information about intermediate steps.
+Use `timeseries` if you want to produce timeseries of the system.
 """
-@inline function evolve(s::DiscreteDS, N::Int)
-  d = deepcopy(s)
-  for i in 1:N
-    d = DiscreteDS(d.eom(d.state), d.eom, d.jacob)
-  end
-  return d
+function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
+  st = deepcopy(ds.state)
+  st = evolve(st, ds, N)
+  return setu(st, ds)
 end
-@inline function evolve(s::DiscreteDS)
-  DiscreteDS(s.eom(s.state), s.eom, s.jacob)
-end
-
-@inline function evolve(s::DiscreteDS1D, N::Int = 1)
-  x = deepcopy(s.state)
-  f = s.eom
+function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
+  f = ds.eom
   for i in 1:N
-    x = f(x)
+    state = f(state)
   end
-  return DiscreteDS1D(x, s.eom, s.deriv)
+  return state
 end
 
 
 """
 ```julia
-timeseries(s::DiscreteDS, N::Int)
+timeseries(ds::DiscreteDynamicalSystem, N::Int)
 ```
 Create an `N×D` matrix that will contain the timeseries of the sytem, after evolving it
 for `N` steps. (`D` is the system dimensionality)
+
+Returns a vector for 1-dimensional systems.
 """
 function timeseries(s::DiscreteDS, N::Int)
   d = s

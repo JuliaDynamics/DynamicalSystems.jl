@@ -44,7 +44,42 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 
 [1] : Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
-function λmax(ds::DynamicalSystem)
-  d0 = 1e-9
-  ds2 = setu
+function λmax(ds::DiscreteDS, N = 100000;
+  d0=1e-7*one(eltype(ds.state)), threshold=10^3*d0)
+
+  eom = ds.eom
+  st1 = deepcopy(ds.state)
+  st2 = st1 + d0
+  dist = d0
+  λ = zero(eltype(st1))
+  i = 0
+  while i < N
+    #evolve until rescaling:
+    while dist < threshold
+      st1 = eom(st1)
+      st2 = eom(st2)
+      # if hasnan
+      dist = norm(st1 - st2)
+      i+=1
+    end
+    a = dist/d0
+    λ += log(a)
+    #rescale:
+    st2 = st1 + (st2 - st1)/a
+    dist = d0
+  end
+  λ /= i
+end
+
+function λmax(ds::DiscreteDS1D, N=100000)
+
+  eom = ds.eom
+  der = ds.deriv
+  x = deepcopy(ds.state)
+  λ = log(abs(der(x)))
+  for i in 1:N
+    x = eom(x)
+    λ += log(abs(der(x)))
+  end
+  λ/N
 end
