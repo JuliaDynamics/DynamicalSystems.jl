@@ -6,7 +6,7 @@ abstract type DynamicalSystem end
 include("helpful_functions.jl")
 include("discrete.jl")
 #include("continuous.jl")
-#include("lyapunovs.jl")
+include("lyapunovs.jl")
 include("famous_systems.jl")
 
 

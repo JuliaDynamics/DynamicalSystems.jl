@@ -17,3 +17,5 @@
   1. Heiles
   1. Lotka Voltera
   1. Kaplan Yorke system
+
+1. create external documentation repo
