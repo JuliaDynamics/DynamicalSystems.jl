@@ -25,10 +25,13 @@ end
 #######################################################################################
 """
     towel(u0=[0.085, -0.121, 0.075])
+
 The folded-towel map is a hyperchaotic map due to O. E. Rössler [1]. It is a famous
-for being a mapping that has the smallest possible dimensions necessary for hyperchaos.
+for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
+meaning two positives (0.430, 0.377) and one negative (-3.299).
+
 The name comes from the fact that when plotted looks like a folded towel.
-Initial conditions are the ones used in the original paper.
+Default values are the ones used in the original paper.
 
 [1] : O. E. Rössler, Phys. Lett. A, **71A**, pp 155 (1979).
 """
@@ -54,4 +57,48 @@ function logistic(x0=rand(); r=4.0)
   return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
 end
 
+"""
+    henon(u0=zeros(2); a = 1.4, b = 0.3)
+The Hénon map is a two-dimensional mapping due to Hénon [1] that can display a strange
+attractor (at the default parameters). In addition, it also displays many other aspects
+of chaos, like period doubling or intermittency, for other parameters.
+
+According to the author, it is a system displaying all the properties of the
+Lorentz system (1963) while being
+as simple as possible. Default values are the ones used in the original paper.
+
+[1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
+"""
+function henon(u0=zeros(2); a = 1.4, b = 0.3)
+  @inline eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
+  @inline jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
+  # should give exponents 0.4189 -1.6229
+  return DiscreteDS(u0, eom_henon, jacob_henon)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+end# Systems module

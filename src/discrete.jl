@@ -19,6 +19,11 @@ function test_discrete(u0, eom, jac)
   if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
     throw(ArgumentError("Jacobian function should create an SMatrix (from StaticArrays)!"))
   end
+  return true
+end
+function test_discrete(u0, eom)
+  jac = (x) -> ForwardDiff.jacobian(eom, x)
+  test_discrete(u0, eom, fd_jac)
 end
 
 """
@@ -27,7 +32,7 @@ Immutable (for efficiency reasons) structure representing a `D`-dimensional
 Discrete dynamical system.
 # Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
-  of StaticArray's `SVector`.
+  of `StaticArray`'s `SVector`.
 * `eom::F` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that   given a state-vector `u` it returns an `SVector` containing the
@@ -36,7 +41,7 @@ Discrete dynamical system.
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
 
-The function `DynamicalBilliards.test_discrete(u0, eom, jac)` is provided to help
+The function `DynamicalBilliards.test_discrete(u0, eom[, jac])` is provided to help
 you ensure that your setup is correct.
 # Constructors:
 * `DiscreteDS(u0, eom, jac)` : The default constructor.
@@ -52,7 +57,7 @@ end
 # constsructor without jacobian (uses ForwardDiff)
 function DiscreteDS(u0::AbstractVector, eom)
   su0 = SVector{length(u0)}(u0)
-  @inline fd_jac(x) = ForwardDiff.jacobian(eom, x)
+  @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x)
   return DiscreteDS(su0, eom, fd_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
@@ -62,7 +67,7 @@ end
 
 """
     DiscreteDS1D <: DynamicalSystem
-Immutable utable structure representing an one-dimensional Discrete dynamical system.
+Immutable structure representing an one-dimensional Discrete dynamical system.
 # Fields:
 * `state::Real` : Current state of the system.
 * `eom::F` (function) : The function that represents the system's equations of motion:
