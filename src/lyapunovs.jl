@@ -68,6 +68,7 @@ one positive lyapunov exponent. Use `λspectrum` otherwise.
 function λmax(ds::DiscreteDS, N = 100000; Ntr::Int = 100,
   d0=1e-7*one(eltype(ds.state)), threshold=10^3*d0)
 
+  N = convert(Int, N)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
   st1 = deepcopy(ds.state)
@@ -101,6 +102,7 @@ end
 
 function λspectrum(ds::DiscreteDS1D, N=10000; Ntr = 100)
 
+  N = convert(Int, N)
   eom = ds.eom
   der = ds.deriv
   x = deepcopy(ds.state)

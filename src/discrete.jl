@@ -58,7 +58,7 @@ end
 function DiscreteDS(u0::AbstractVector, eom)
   su0 = SVector{length(u0)}(u0)
   @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x)
-  return DiscreteDS(su0, eom, fd_jac)
+  return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
   su0 = SVector{length(u0)}(u0)
