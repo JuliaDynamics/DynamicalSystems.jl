@@ -10,14 +10,16 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general. The package
 treats discrete and continuous systems of the forms:
+
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}) \quad \text{or}\quad \vec{x}_{n+1} = \vec{f}(\vec{x}_n)
 ```
+
 and it **does not** accept non-autonomous systems, since these can be made into autonomous ones with 1 more dynamical variable.
 
 This is the (non-final) list of what this package aims to offer:
 
-1. Intuitive, consistent UI for the definition of dynamical systems.
+1. Intuitive, consistent APIs for the definition of dynamical systems.
 2. Automatic "completion" of the dynamics of the system with numerically computed
   Jacobians, in case they are not provided by the user.
 3. Lyapunov exponent estimation.
@@ -29,7 +31,7 @@ This is the (non-final) list of what this package aims to offer:
 8. Suggest or Contribute more stuff!
 
 ## Lyapunov exponents of discrete systems
-The discrete systems assume the following UI:
+The discrete systems assume the following API:
 ```julia
 DiscreteDS(state, eom, jacob)
 ```
