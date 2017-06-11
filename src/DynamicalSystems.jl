@@ -8,6 +8,7 @@ Abstract type representing a dynamical system. Has the following concrete sub-ty
 * `ContinuousDS`
 """
 abstract type DynamicalSystem end
+
 export DynamicalSystem, Systems
 
 include("helpful_functions.jl")
@@ -17,8 +18,3 @@ include("lyapunovs.jl")
 include("famous_systems.jl")
 
 end # module
-
-
-using DynamicalSystems, BenchmarkTools, StaticArrays, OrdinaryDiffEq
-# lor = Systems.lorenz()
-# sol = timeseries(lor, 1.0)
