@@ -1,23 +1,33 @@
 module Systems
-using DynamicalSystems
-using StaticArrays
+using DynamicalSystems, StaticArrays
 #######################################################################################
 #                                    Continuous                                       #
 #######################################################################################
-function lorentz(u0=10rand(3); σ = 10.0, ρ = 28.0, β = 8/3)
-  function eom!(du, u)
-    du[1] = σ*(u[2]-u[1])
-    du[2] = u[1]*(ρ-u[3]) - u[2]
-    du[3] = u[1]*u[2] - β*u[3]
-    return du
-  end
-  function jacob!(J, u)
+"""
+    lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+The famous three dimensional system due to Lorenz [1], shown to exhibit
+so-called "deterministic nonperiodic flow". It was originally invented to study a
+simplified form of atmospheric convection.
+
+Currently, it is most famous for its strange attractor (occuring at the default
+parameters), which resembles a butterfly. For the same reason it is
+also associated with the term "butterfly effect" (a term which Lorenz himself disliked)
+even though the effect applies generally to dynamical systems.
+
+Default values are the ones used in the original paper.
+
+[1] E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
+"""
+function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+  @inline eom_lorenz(u) =
+  SVector{3}(σ*(u[2]-u[1]), u[1]*(ρ-u[3]) - u[2], u[1]*u[2] - β*u[3])
+  @inline function jacob_lorenz(u)
     i = one(eltype(u))
-    J[1,1] = -σ*i; J[1,2] = σ*i; J[1,3] = zero(i)
-    J[2,1] = ρ*i - u[3]; J[2,2] = -i; J[2,3] = -u[1]
-    J[3,1] = u[2]; J[3,2] = u[1]; J[3,3] = -β*i
+    @SMatrix [-σ*i           σ*i    zero(i);
+              (ρ*i - u[3])   (-i)   (-u[1]);
+              u[2]           u[1]   (-β*i) ]
   end# should give exponents [0.9056, 0, -14.5723]
-  return ContinuousDynamicalSystem(u0, eom!, jacob!)
+  return ContinuousDS(u0, eom_lorenz, jacob_lorenz)
 end
 
 #######################################################################################
@@ -26,11 +36,13 @@ end
 """
     towel(u0=[0.085, -0.121, 0.075])
 
-The folded-towel map is a hyperchaotic map due to O. E. Rössler [1]. It is a famous
+The folded-towel map is a hyperchaotic map due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
-meaning two positives (0.430, 0.377) and one negative (-3.299).
+having two positive and one negative lyapunov exponent.
 
-The name comes from the fact that when plotted looks like a folded towel.
+The name comes from the fact that when plotted looks like a folded towel, in every
+projection.
+
 Default values are the ones used in the original paper.
 
 [1] : O. E. Rössler, Phys. Lett. A, **71A**, pp 155 (1979).
@@ -65,7 +77,9 @@ of chaos, like period doubling or intermittency, for other parameters.
 
 According to the author, it is a system displaying all the properties of the
 Lorentz system (1963) while being
-as simple as possible. Default values are the ones used in the original paper.
+as simple as possible.
+
+Default values are the ones used in the original paper.
 
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
