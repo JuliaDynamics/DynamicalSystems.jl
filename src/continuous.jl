@@ -1,5 +1,5 @@
-using DiffEqBase, OrdinaryDiffEq, ForwardDiff
-import DiffEqBase.ODEProblem
+using OrdinaryDiffEq, ForwardDiff
+import OrdinaryDiffEq.ODEProblem
 
 export ContinuousDS, ODEProblem, setu, evolve, dimension
 
@@ -60,7 +60,7 @@ This can be passed directly into `solve` from `DifferentialEquations`.
 """
 function ODEProblem(ds::ContinuousDS, t)
   odef = (t, u) -> ds.eom(u)
-  DiffEqBase.ODEProblem(odef, ds.state, (zero(t), t))
+  OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
 end
 
 setu(u, ds::ContinuousDS) = ContinuousDS(u, ds.eom, ds.jacob)

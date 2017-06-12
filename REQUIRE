@@ -1,5 +1,4 @@
 julia 0.6
-DiffEqBase
-OrdinaryDiffEq 2.7.0
+OrdinaryDiffEq 2.7.1
 ForwardDiff 0.5
-Requires
+Requires 0.4.3
