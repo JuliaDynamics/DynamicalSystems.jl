@@ -34,9 +34,9 @@ end
 #                                     Discrete                                        #
 #######################################################################################
 """
-    towel(u0=[0.085, -0.121, 0.075])
+    towel(u0 = [0.085, -0.121, 0.075])
 
-The folded-towel map is a hyperchaotic map due to Rössler [1]. It is famous
+The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
 having two positive and one negative lyapunov exponent.
 
@@ -63,10 +63,35 @@ function towel(u0=[0.085, -0.121, 0.075])
   return DiscreteDS(u0, eom_towel, jacob_towel)
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
-function logistic(x0=rand(); r=4.0)
-  @inline eom_logistic(x) = r*x*(1-x)
-  @inline deriv_logistic(x) = r*(1-2x)
-  return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
+"""
+    standardmap(u0=0.001rand(2); k = 0.971635)
+
+The standard map (also known as Chirikov standard map) is a two dimensional,
+area-preserving chaotic mapping due to Chirikov [1]. It is one of the most studied
+chaotic systems and by far the most studied Hamiltonian (area-preserving) mapping.
+
+The map corresponds to the  Poincaré's surface of section of the kicked rotor system.
+Changing the non-linearity parameter `k` transitions the system from completely periodic
+motion, to quasi-periodic, to local chaos (mixed phase-space) and finally to global
+chaos.
+
+The default parameter `k` is the critical parameter where the golden-ratio torous is
+destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle variable
+`θ` to be the first, and the angular momentum `p` to be the second variable, while
+both variables
+are always taken modulo 2π (the mapping is on the [0,2π)² torus).
+
+[1] : B. V. Chirikov, Preprint N. **267**, Institute of Nuclear Physics Novosibirsk (1969)
+
+[2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
+"""
+function standardmap(u0=0.001rand(2); k = 0.971635)
+  @inline eom_standard(x) =
+  SVector{2}(mod2pi(x[1] + x[2] + k*sin(x[1])), mod2pi(x[2] + k*sin(x[1]))
+  @inline jacob_standard(x) =
+  @SMatrix [1 + k*cos(x[1])    1;
+            k*cos(x[1])        1]
+  return DiscreteDS(u0, eom_standard, jacob_standard)
 end
 
 """
@@ -76,8 +101,7 @@ attractor (at the default parameters). In addition, it also displays many other 
 of chaos, like period doubling or intermittency, for other parameters.
 
 According to the author, it is a system displaying all the properties of the
-Lorentz system (1963) while being
-as simple as possible.
+Lorentz system (1963) while being as simple as possible.
 
 Default values are the ones used in the original paper.
 
@@ -90,7 +114,25 @@ function henon(u0=zeros(2); a = 1.4, b = 0.3)
   return DiscreteDS(u0, eom_henon, jacob_henon)
 end
 
+"""
+    logistic(x0 = rand(); r = 4.0)
 
+The logistic map is an one dimensional unimodal mapping due to May [1] and is used by
+many as the archetypal example of how chaos can arise from very simple equations.
+
+Originally intentend to be a discretized model of polulation dynamics, it is now famous
+for its bifurcation diagram, an immensly complex graph that that was shown
+be universal by Feigenbaum [2].
+
+[1] : R. M. May, Nature **261**, pp 459 (1976)
+
+[2] : M. J. Feigenbaum, J. Stat. Phys. **19**, pp 25 (1978)
+"""
+function logistic(x0=rand(); r=4.0)
+  @inline eom_logistic(x) = r*x*(1-x)
+  @inline deriv_logistic(x) = r*(1-2x)
+  return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
+end
 
 
 

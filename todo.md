@@ -1,5 +1,7 @@
 1. add tests for solving with many different kwargs using ODE
 
+1. add test for standard map
+
 1. If I am solving ODEs with stiff problems, and using e.g. the Rosenbrock23
   then you can use the integrator interface of the ODE package to get the QR
   decompoisition

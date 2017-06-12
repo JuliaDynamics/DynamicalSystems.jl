@@ -31,13 +31,17 @@ using DynamicalSystems, Base.Test
   end
 
   @testset "Logistic Map" begin
-    lg1 = Systems.logistic()
+    lg1 = Systems.logistic(0.4)
     lg2 = DiscreteDS1D(lg1.state, lg1.eom)
+    lg3 = Systems.logistic(big(0.4))
+    @test typeof(lg3.state) == BigFloat
     λ1 = λmax(lg1, 100000000; Ntr = 100)
     λ2 = λspectrum(lg2, 100000000; Ntr = 100)
+    λ3 = λspectrum(lg3, 100000000; Ntr = 100)
+    @test typeof(λ3) == BigFloat
     @test isapprox(λ1, log(2); rtol = 1e-3)
     @test isapprox(λ2, log(2); rtol = 1e-3)
-    @test isapprox(λ1, λ2; rtol = 1e-3)
+    @test isapprox(λ3, log(2); rtol = 1e-3)
   end
 
   @testset "Henon Map" begin
