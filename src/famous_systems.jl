@@ -87,7 +87,7 @@ are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 """
 function standardmap(u0=0.001rand(2); k = 0.971635)
   @inline eom_standard(x) =
-  SVector{2}(mod2pi(x[1] + x[2] + k*sin(x[1])), mod2pi(x[2] + k*sin(x[1]))
+  SVector{2}(mod2pi(x[1] + x[2] + k*sin(x[1])), mod2pi(x[2] + k*sin(x[1])))
   @inline jacob_standard(x) =
   @SMatrix [1 + k*cos(x[1])    1;
             k*cos(x[1])        1]
