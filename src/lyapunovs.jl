@@ -21,7 +21,7 @@ values of the lyapunov exponents.
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
   N = convert(Int, N)
   u = deepcopy(ds.state)
-  dim = length(u)
+  D = length(u)
   eom = ds.eom
   jac = ds.jacob
   # Transient iterations
@@ -30,9 +30,9 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
   end
 
   # Initialization
-  λ = zeros(eltype(u), dim)
+  λ = zeros(eltype(u), D)
   J = jac(u)
-  Q = @MMatrix eye(eltype(J), dim);
+  Q = @MMatrix eye(eltype(J), D);
   # Main algorithm
   for i in 1:N
     u = eom(u)
@@ -42,7 +42,7 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
     F = qrfact(D)
     Q .= F[:Q]
     A_mul_signB!(Q, F[:R]) #ensure QR gives positive diagonal to R
-    for i in 1:dim
+    for i in 1:D
       λ[i] += log(abs(F[:R][i,i]))
     end
   end
@@ -68,6 +68,8 @@ one positive lyapunov exponent. Use `lyapunovs` otherwise.
 * `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
 * `et = 1.0` : (only for continuous) Time of individual evolutions
   between sucessive checks for rescaling.
+* `diff_eq_kwargs = Dict()` : Keyword arguments passed into the solvers of the
+  `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 
 [1] : Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
@@ -164,3 +166,41 @@ function lyapunov(ds::ContinuousDS, T = 10.0; Ttr::Int = 100,
   end
   λ /= i
 end
+
+
+function lyapunovs(ds::ContinuousDS, N::Real;
+  Ttr = 1.0, diff_eq_kwargs = Dict(), et = 1.0)
+
+
+
+Ttr = 1.0
+N = 1000
+et = 1.0
+diff_eq_kwargs = Dict()
+ds = Systems.lorenz()
+N = convert(Int, N)
+D = dimension(ds)
+# Transient iterations
+ds = evolve(ds, Ttr, diff_eq_kwargs)
+
+# Initialization
+λ = zeros(eltype(ds.state), D)
+tbprob = tangentbundle_setup(ds)
+Q = @MMatrix eye(eltype(ds.state), D)
+# Main algorithm
+for i in 1:N
+  S = tangentbundle_evolve!(tbprob, et, diff_eq_kwargs)
+  G = view(S, :, 2:D+1)*Q
+  F = qrfact(G)
+  Q .= F[:Q]
+  A_mul_signB!(Q, F[:R]) #ensure QR gives positive diagonal to R
+  for i in 1:D
+    λ[i] += log(abs(F[:R][i,i]))
+  end
+  # MUST MAKE Q THE MATRIX OF THE JACOBIAN!!!
+end
+λ./N
+
+
+
+end# this works. add tests and good to go.

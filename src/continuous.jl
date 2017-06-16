@@ -127,6 +127,44 @@ timeseries(ds::ContinuousDS, T::Real, diff_eq_kwargs::Dict) =
 timeseries(ds, T, 0.01, diff_eq_kwargs)
 
 #######################################################################################
+#                                 Tangent Space                                       #
+#######################################################################################
+function tangentbundle_setup(ds::ContinuousDS)
+  D = dimension(ds)
+  S = SMatrix{D, D+1}(ds.state..., eye(eltype(ds.state), D)...)
+  function tbeom(t, s)
+    SMatrix{D, D+1}(
+    ds.eom(@view s[:, 1])...,
+    ds.jacob(@view s[:, 1])*(@view s[:, 2:D+1])...)
+  end
+  tbprob = ODEProblem(tbeom, S, (zero(eltype(ds.state)), one(eltype(ds.state))))
+  return tbprob
+end
+
+function tangentbundle_evolve!(tbprob, T, diff_eq_kwargs = Dict())
+  tbprob.tspan = (0.0, T)
+  # Set solver for DifferentialEquations
+  if haskey(diff_eq_kwargs, :solver)
+    solver = diff_eq_kwargs[:solver]
+    pop!(diff_eq_kwargs, :solver)
+  else
+    solver = Tsit5()
+  end
+  # Evolve:
+  sol = solve(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
+  S = sol[end]
+  tbprob.u0 = S
+  return S
+end
+
+
+
+
+
+
+
+
+#######################################################################################
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
