@@ -1,19 +1,12 @@
 using DynamicalSystems
 using Base.Test
 
-@inline eom_lorenz(u) =
-SVector{3}(10.0*(u[2]-u[1]), u[1]*(28.0-u[3]) - u[2], u[1]*u[2] - 8/3*u[3])
-function jacob_lorenz(u)
-  i = one(eltype(u))
-  @SMatrix [-10.0*i           10.0*i    zero(i);
-            (28.0*i - u[3])   (-i)   (-u[1]);
-            u[2]           u[1]   (-i*8/3) ]
-end# should give exponents [0.9056, 0, -14.5723]
+println("\nTesting continuous system evolution...")
 
 @testset "Lorenz System" begin
 
   lo11 = Systems.lorenz()
-  lo22 = ContinuousDS([0.0, 10.0, 0.0], eom_lorenz, jacob_lorenz)
+  lo22 = ContinuousDS([0.0, 10.0, 0.0], lo11.eom)
   lo33 = Systems.lorenz(big.([0.0, 10.0, 0.0]))
   @testset "Construction" begin
     @test typeof(lo11) <: ContinuousDS

@@ -128,7 +128,7 @@ be universal by Feigenbaum [2].
 
 [2] : M. J. Feigenbaum, J. Stat. Phys. **19**, pp 25 (1978)
 """
-function logistic(x0=rand(); r=4.0)
+function logistic(x0=rand(); r = 4.0)
   @inline eom_logistic(x) = r*x*(1-x)
   @inline deriv_logistic(x) = r*(1-2x)
   return DiscreteDS1D(x0, eom_logistic, deriv_logistic)

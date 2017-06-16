@@ -1,4 +1,5 @@
 #towel map:
+println("Testing discrete system evolution...")
 using StaticArrays, Base.Test, DynamicalSystems
 @inline function eom_towel(x)
   x1, x2, x3 = x[1], x[2], x[3]

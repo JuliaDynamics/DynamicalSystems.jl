@@ -53,11 +53,11 @@ a Jacobian function to the constructor as the third argument, one was created nu
 The spectrum of the lyapunov exponents is given by the
 function:
 ```julia
-λspectrum(ds::DiscreteDS, N::Int; Ntr::Int = 100)
+lyapunovs(ds::DiscreteDS, N::Int; Ntr::Int = 100)
 ```
 and are computed using the QR-decomposition method for `N` steps.
 ```julia
-henon_λ = λspectrum(henon, 1000000)
+henon_λ = lyapunovs(henon, 1000000)
 # should give you: [0.42..., -1.62...]
 ```
 One is positive and the other is negative, which is necessary for a strange attractor, but you can also test:
@@ -65,8 +65,10 @@ One is positive and the other is negative, which is necessary for a strange attr
 sum(henon_ls) ≈ log(0.3)
 ```
 which is also true (and should be for mappings where the determinant of the Jacobian is constant). If you only needed the maximum lyapunov exponent of the system,
-the method function `λmax` is **much** more efficient:
+the method function `lyapunov` is **much** more efficient:
 ```julia
-λ = λmax(henon, 1000000)
+λ = lyapunov(henon, 1000000)
 # gives 0.42018717281774165 or so
 ```
+Requesting the spectrum of lyapunov exponents uses plural: `lyapunovs`, whereas
+requesting the maximum exponent uses singular: `lyapunov`.

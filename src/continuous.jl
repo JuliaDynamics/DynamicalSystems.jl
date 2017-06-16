@@ -114,7 +114,7 @@ function timeseries(ds::ContinuousDS, T::Real,
   kw = Dict{Symbol, Any}(diff_eq_kwargs...)
   kw[:saveat] = t
   sol = get_sol(prob, kw)
-  TS = zeros(eltype(ds.state), length(0:dt:T), D)
+  TS = zeros(eltype(ds.state), length(t), D)
   for j in 1:D
     TS[:, j] .= sol[j,:]
   end
