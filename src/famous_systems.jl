@@ -23,12 +23,38 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
   SVector{3}(σ*(u[2]-u[1]), u[1]*(ρ-u[3]) - u[2], u[1]*u[2] - β*u[3])
   @inline function jacob_lorenz(u)
     i = one(eltype(u))
+    o = zero(eltype(u))
     @SMatrix [-σ*i           σ*i    zero(i);
               (ρ*i - u[3])   (-i)   (-u[1]);
               u[2]           u[1]   (-β*i) ]
   end# should give exponents [0.9056, 0, -14.5723]
   return ContinuousDS(u0, eom_lorenz, jacob_lorenz)
 end
+
+
+"""
+```julia
+roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
+```
+This three-dimensional continuous system is due to Rössler [1].
+
+Default values are the same as the original paper.
+
+O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
+"""
+function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
+  @inline eom_roessler(u) =
+  SVector{3}(-u[2]-u[3], u[1] + a*u[2], b + u[3]*(u[1] - c))
+  @inline function jacob_roessler(u)
+    i = one(eltype(u))
+    o = zero(eltype(u))
+    @SMatrix [o     -i      -i;
+              i      a       o;
+              u[3]   o       u[1] - c]
+  end
+  return ContinuousDS(u0, eom_roessler, jacob_roessler)
+end
+
 
 #######################################################################################
 #                                     Discrete                                        #
@@ -45,7 +71,7 @@ projection.
 
 Default values are the ones used in the original paper.
 
-[1] : O. E. Rössler, Phys. Lett. A, **71A**, pp 155 (1979).
+[1] : O. E. Rössler, Phys. Lett. **71A**, pp 155 (1979)
 """
 function towel(u0=[0.085, -0.121, 0.075])
   @inline function eom_towel(x)

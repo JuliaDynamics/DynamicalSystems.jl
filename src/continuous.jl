@@ -89,13 +89,55 @@ end
 
 """
 ```julia
-timeseries(ds::ContinuousDS, T, dt=0.01 [, diff_eq_kwargs])
+evolve!(prob::ODEProblem [, t::Real, diff_eq_kwargs::Dict])
+```
+Evolve the problem using the solvers of `DifferentialEquations`, update
+the problem's state as the final state of the solution and return that state.
+
+If `t` is given, the problem is evolved for that much time (else the existing
+`tspan` is used). The optional
+argument `diff_eq_kwargs` is the same as for `evolve`.
+"""
+function evolve!(prob::ODEProblem, t::Real, diff_eq_kwargs::Dict=Dict())
+  prob.tspan = (zero(t), t)
+  if haskey(diff_eq_kwargs, :solver)
+    solver = diff_eq_kwargs[:solver]
+    pop!(diff_eq_kwargs, :solver)
+    state = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)[end]
+  else
+    state = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)[end]
+  end
+  prob.u0 = state
+  return state
+end
+
+function evolve!(prob::ODEProblem, diff_eq_kwargs::Dict)
+  if haskey(diff_eq_kwargs, :solver)
+    solver = diff_eq_kwargs[:solver]
+    pop!(diff_eq_kwargs, :solver)
+    state = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)[end]
+  else
+    state = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)[end]
+  end
+  prob.u0 = state
+  return state
+end
+
+function evolve!(prob::ODEProblem)
+  state = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)[end]
+  prob.u0 = state
+  return state
+end
+
+"""
+```julia
+timeseries(ds::ContinuousDS, T [, dt=0.05, diff_eq_kwargs])
 ```
 Similarly, create a `K×D` matrix with `K = length(0:dt:T)` that will contain the
 timeseries of the sytem, after evolving it for total time `T` while saving
-output every `dt`.
+output every `dt` (optional argument).
 
-The last **optional** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
+The last optional argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
 applicable for continuous systems. It contains keyword arguments passed into the
 `solve` of the `DifferentialEquations` package, like for
 example `:abstol => 1e-9`. If you want to specify the solving algorithm,
@@ -105,7 +147,7 @@ do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
 `1:N` for the discrete case and `0:dt:T` for the continuous.
 """
 function timeseries(ds::ContinuousDS, T::Real,
-  dt::Real=0.01, diff_eq_kwargs::Dict=Dict())
+  dt::Real=0.05, diff_eq_kwargs::Dict=Dict())
 
   T<=0 && throw(ArgumentError("Total time `T` must be positive."))
   D = dimension(ds)
@@ -124,25 +166,23 @@ function timeseries(ds::ContinuousDS, T::Real,
 end
 
 timeseries(ds::ContinuousDS, T::Real, diff_eq_kwargs::Dict) =
-timeseries(ds, T, 0.01, diff_eq_kwargs)
+timeseries(ds, T, 0.05, diff_eq_kwargs)
 
 #######################################################################################
 #                                 Tangent Space                                       #
 #######################################################################################
-function tangentbundle_setup(ds::ContinuousDS)
+function tangentbundle_setup(ds::ContinuousDS, dt)
   D = dimension(ds)
-  S = SMatrix{D, D+1}(ds.state..., eye(eltype(ds.state), D)...)
-  function tbeom(t, s)
-    SMatrix{D, D+1}(
-    ds.eom(@view s[:, 1])...,
-    ds.jacob(@view s[:, 1])*(@view s[:, 2:D+1])...)
+  S = [ds.state eye(eltype(ds.state), D)]
+  function tbeom(t, u, du)
+    du[:, 1] .= ds.eom(u)
+    A_mul_B!(view(du, :, 2:D+1), ds.jacob(view(u, :, 1)),view(u, :, 2:D+1))
   end
-  tbprob = ODEProblem(tbeom, S, (zero(eltype(ds.state)), one(eltype(ds.state))))
+  tbprob = ODEProblem(tbeom, S, (zero(dt), dt))
   return tbprob
 end
 
-function tangentbundle_evolve!(tbprob, T, diff_eq_kwargs = Dict())
-  tbprob.tspan = (0.0, T)
+function tangentbundle_evolve(tbprob, diff_eq_kwargs = Dict())
   # Set solver for DifferentialEquations
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
@@ -152,9 +192,7 @@ function tangentbundle_evolve!(tbprob, T, diff_eq_kwargs = Dict())
   end
   # Evolve:
   sol = solve(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
-  S = sol[end]
-  tbprob.u0 = S
-  return S
+  return sol[end]
 end
 
 
