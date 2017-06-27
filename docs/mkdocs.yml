@@ -1,0 +1,34 @@
+site_name:           DynamicalSystems
+repo_url:            https://github.com/Datseris/DynamicalSystems.jl
+site_description:    A Julia package for the exploration of continuous and discrete dynamical systems.
+site_author:         George Datseris
+theme:               'material'
+
+extra:
+  palette:
+    primary: 'teal'
+    accent: 'cyan'
+  social:
+    - type: 'github'
+      link: 'https://github.com/Datseris/DynamicalBilliards.jl'
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - extra
+  - tables
+  - fenced_code
+  - mdx_math
+
+extra_css:
+  - assets/Documenter.css
+
+extra_javascript:
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
+  - assets/mathjaxhelper.js
+
+docs_dir: 'build'
+
+pages:
+- Introduction: index.md
+- System Definition: system_definition.md

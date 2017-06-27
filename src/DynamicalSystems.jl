@@ -1,3 +1,7 @@
+"""
+A Julia package for the exploration of continuous
+and discrete dynamical systems.
+"""
 module DynamicalSystems
 
 """
