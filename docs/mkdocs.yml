@@ -1,7 +1,8 @@
-site_name:           DynamicalSystems
+site_name:           DynamicalSystems.jl
 repo_url:            https://github.com/Datseris/DynamicalSystems.jl
 site_description:    A Julia package for the exploration of continuous and discrete dynamical systems.
 site_author:         George Datseris
+
 theme:               'material'
 
 extra:
