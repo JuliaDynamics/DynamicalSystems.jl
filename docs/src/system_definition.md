@@ -4,6 +4,12 @@ By taking advantage of the package [`ForwardDiff.jl`](https://github.com/JuliaDi
 function can always be supplemented by the package. More details are enclosed in the indivivdual sections, however the documentation strings of all the constructors are
 also self-contained.
 
+!!! warning "Non-autonomous systems"
+    This package does **not** accept non-autonomous systems. To use such systems with this package increase
+    the dimensionality of your system by 1, by introducing an additional variable
+    ``\tau`` such that ``d\tau/dt = 1`` (or ``\tau_{n+1} = \tau_n + 1``). This additional variable will serve as
+    the "time" in your equations of motion.
+
 # Discrete Systems
 Discrete systems are of the form: ``\vec{x}_{n+1} = \vec{f}(\vec{x}_n)``.
 The Type representing such a system is called `DiscreteDS` and it is immutable. The reason for the choice of immutable type is simply speed: it is faster than the mutable
@@ -25,11 +31,12 @@ Jacobian matrix of the system. This however is optional and if not provided by t
     a system, and this way was proved to be the best.
 
 ## 1-dimensional Discrete Systems
-
+asdf
 # Continuous Systems
-
+asf
 # Pre-Defined Systems
-
+asf
 # Numerical Data
-
+asf
 # Convenience Functions
+asf
