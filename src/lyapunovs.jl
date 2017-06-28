@@ -20,7 +20,7 @@ values of the lyapunov exponents.
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 
 [1] : Add reference here.
-"""
+"""	
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
   N = convert(Int, N)
   u = deepcopy(ds.state)
@@ -42,11 +42,9 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
     J = jac(u)
     K = J*Q
 
-    F = qrfact(K)
-    Q .= F[:Q]
-    A_mul_signB!(Q, F[:R]) #ensure QR gives positive diagonal to R
+    Q, R = qr(K)
     for i in 1:D
-      λ[i] += log(abs(F[:R][i,i]))
+      λ[i] += log(abs(R[i,i]))
     end
   end
   λ./N
