@@ -33,9 +33,9 @@ println("\nTesting discrete system lyapunov exponents...")
 end
 
 @testset "Logistic Map" begin
-  lg1 = Systems.logistic(r=4)
+  lg1 = Systems.logistic(0.1, r=4)
   lg2 = DiscreteDS1D(lg1.state, lg1.eom)
-  lg3 = Systems.logistic(big(rand()), r=4)
+  lg3 = Systems.logistic(big(0.1), r=4)
   @test typeof(lg3.state) == BigFloat
   λ1 = lyapunov(lg1, 100000000; Ttr = 100)
   λ2 = lyapunovs(lg2, 100000000; Ttr = 100)
