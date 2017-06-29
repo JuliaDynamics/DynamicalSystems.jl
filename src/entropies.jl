@@ -61,7 +61,7 @@ function renyi(α, ε, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
   renyi(α, p)
 end
 function renyi{T<:Real}(α::Real, p::AbstractArray{T})
-  α < 0 && throw(ArgumentError("Order of Rényi entropy must be ≥0."))
+  α < 0 && throw(ArgumentError("Order of Rényi entropy must be ≥ 0."))
 
   if α ≈ 0
     return log(length(p)) #Hartley entropy, max-entropy
@@ -70,7 +70,7 @@ function renyi{T<:Real}(α::Real, p::AbstractArray{T})
   elseif (isinf(α))
     return -log(maximum(p)) #Min entropy
   else
-    return (1/(1-q))*log( sum(x^α for x in p) )
+    return (1/(1-α))*log( sum(x^α for x in p) )
   end
 end
 
