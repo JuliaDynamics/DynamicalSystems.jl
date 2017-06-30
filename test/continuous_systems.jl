@@ -21,21 +21,16 @@ println("\nTesting continuous system evolution...")
     @test st1 ≈ st2
     @test st1 ≈ st3
     # Test evolve(state,keywords):
-    st1 = evolve(lo11.state, lo11, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    st2 = evolve(lo22.state, lo22, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    st3 = evolve(lo33.state, lo33, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st1 = evolve(lo11.state, lo11, 1.0; diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st2 = evolve(lo22.state, lo22, 1.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st3 = evolve(lo33.state, lo33, 1.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
     @test st1 ≈ st2
     @test st1 ≈ st3
     # Test evolve(system):
-    s1 = evolve(lo11, 1.0)
-    s2 = evolve(lo22, 1.0)
-    s3 = evolve(lo33, 1.0)
-    @test s1.state ≈ s2.state
-    @test s1.state ≈ s3.state
-    # Test evolve(system, keywords):
-    s1 = evolve(lo11, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    s2 = evolve(lo22, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    s3 = evolve(lo33, 1.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
+    s1 = deepcopy(lo11); s2 = deepcopy(lo22); s3 = deepcopy(lo33)
+    evolve!(s1, 1.0)
+    evolve!(s2, 1.0)
+    evolve!(s3, 1.0)
     @test s1.state ≈ s2.state
     @test s1.state ≈ s3.state
   end
@@ -50,23 +45,23 @@ println("\nTesting continuous system evolution...")
     @test ts1[end, :] ≈ ts2[end,:]
     @test ts1[end, :] ≈ ts3[end,:]
     # timeseries with dt:
-    ts1 = timeseries(lo11, 5.0, 0.1)
-    ts2 = timeseries(lo22, 5.0, 0.1)
-    ts3 = timeseries(lo33, 5.0, 0.1)
+    ts1 = timeseries(lo11, 5.0, 0.1; mutate = false)
+    ts2 = timeseries(lo22, 5.0, 0.1; mutate = false)
+    ts3 = timeseries(lo33, 5.0, 0.1; mutate = false)
     @test size(ts1) == size(ts2) == size(ts3)
     @test ts1[end, :] ≈ ts2[end,:]
     @test ts1[end, :] ≈ ts3[end,:]
     # timeseries with diff_eq_kwargs:
-    ts1 = timeseries(lo11, 5.0, 0.1, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    ts2 = timeseries(lo22, 5.0, 0.1, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    ts3 = timeseries(lo33, 5.0, 0.1, Dict(:abstol=>1e-9, :reltol=>1e-9))
+    ts1 = timeseries(lo11, 5.0, 0.1, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
+    ts2 = timeseries(lo22, 5.0, 0.1, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
+    ts3 = timeseries(lo33, 5.0, 0.1, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
     @test size(ts1) == size(ts2) == size(ts3)
     @test ts1[end, :] ≈ ts2[end,:]
     @test ts1[end, :] ≈ ts3[end,:]
     # timeseries with kwargs but without dt:
-    ts1 = timeseries(lo11, 5.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    ts2 = timeseries(lo22, 5.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
-    ts3 = timeseries(lo33, 5.0, Dict(:abstol=>1e-9, :reltol=>1e-9))
+    ts1 = timeseries(lo11, 5.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
+    ts2 = timeseries(lo22, 5.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
+    ts3 = timeseries(lo33, 5.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9), mutate = false)
     @test size(ts1) == size(ts2) == size(ts3)
     @test ts1[end, :] ≈ ts2[end,:]
     @test ts1[end, :] ≈ ts3[end,:]
@@ -80,7 +75,7 @@ println("\nTesting continuous system evolution...")
     s1 = evolve(lo11, 1.0)
     s2 = evolve(lo22, 1.0)
     s3 = evolve(lo33, 1.0)
-    j1 = jacobian(s1); j2 = jacobian(s2); j3 = jacobian(s3)
+    j1 = lo11.jacob(s1); j2 = lo22.jacob(s2); j3 = lo33.jacob(s3)
     @test eltype(j3) == BigFloat
     @test j1 ≈ j2
     @test j1 ≈ j3

@@ -1,16 +1,16 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, DiscreteDS1D, evolve, jacobian, timeseries, setu, dimension
+export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension, jacobian
 
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
 function test_functions(u0, eom, jac)
-  is1D(u0) || throw(ArgumentError("Initial condition must a Vector"))
+  length(size(u0)) == 1 || throw(ArgumentError("Initial condition must an AbstractVector"))
   D = length(u0)
   su0 = SVector{D}(u0); sun = eom(u0);
-  length(sun) == length(s) ||
+  length(sun) == length(u0) ||
   throw(DimensionMismatch("E.o.m. does not give same sized vector as initial condition"))
   if !issubtype((typeof(sun)), SVector)
     throw(ArgumentError("E.o.m. should create an SVector (from StaticArrays)"))
@@ -28,8 +28,7 @@ end
 
 """
     DiscreteDS <: DynamicalSystem
-Immutable (for efficiency reasons) structure representing a `D`-dimensional
-discrete dynamical system.
+`D`-dimensional discrete dynamical system (used for `D ≤ 10`).
 # Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
@@ -41,15 +40,13 @@ discrete dynamical system.
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
 
-The function `DynamicalBilliards.test_functions(u0, eom[, jac])` is provided to help
-you ensure that your setup is correct.
 # Constructors:
 * `DiscreteDS(u0, eom, jac)` : The default constructor.
 * `DiscreteDS(u0, eom)` : The Jacobian function is created with *tremendous* efficiency
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed of a user-defined one.
 """
-struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
   eom::F
   jacob::J
@@ -58,16 +55,18 @@ end
 function DiscreteDS(u0::AbstractVector, eom)
   su0 = SVector{length(u0)}(u0)
   @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x)
+  # test_functions(su0, eom, ForwardDiff_jac)
   return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
   su0 = SVector{length(u0)}(u0)
+  # test_functions(su0, eom, jac)
   return DiscreteDS(su0, eom, jac)
 end
 
 """
     DiscreteDS1D <: DynamicalSystem
-Immutable structure representing an one-dimensional Discrete dynamical system.
+One-dimensional discrete dynamical system.
 # Fields:
 * `state::Real` : Current state of the system.
 * `eom::F` (function) : The function that represents the system's equations of motion:
@@ -80,7 +79,7 @@ Immutable structure representing an one-dimensional Discrete dynamical system.
 * `DiscreteDS1d(x0, eom)` : The derivative function is created
   automatically using the module `ForwardDiff`.
 """
-struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
   state::S
   eom::F
   deriv::D
@@ -90,37 +89,23 @@ function DiscreteDS1D(x0, eom)
   DiscreteDS1D(x0, eom, fd_deriv)
 end
 
-"""
-    setu(u, ds::DynamicalSystem) -> new_ds
-Create a new system, identical to `ds` but with state `u`.
-"""
-setu(u0, ds::DiscreteDS) = DiscreteDS(u0, ds.eom, ds.jacob)
-setu(x0, ds::DiscreteDS1D) = DiscreteDS1D(x0, ds.eom, ds.deriv)
-
-"""
-    jacobian(ds::DynamicalSystem)
-Return the Jacobian matrix of the system at the current state.
-"""
-jacobian(s::DynamicalSystem) = s.jacob(s.state)
-
 is1D(::DiscreteDS1D) = true
 
 dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
 dimension(::DiscreteDS1D) = 1
+jacobian(ds::DynamicalSystem) = ds.jacob(ds.state)
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################
 """
 ```julia
-evolve(state, ds::DynamicalSystem, T [, diff_eq_kwargs])
-evolve(ds::DynamicalSystem, T [, diff_eq_kwargs])
+evolve([state, ] ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> new_state
 ```
-Evolve a `state` (or a system `ds`) under the dynamics
+Evolve a `state` (or the system's state) under the dynamics
 of `ds` for total "time" `T`. For discrete systems `T` corresponds to steps and
-thus it must be integer. Because both `state` and `ds` are immutable,
-call as: `st = evolve(st, ds, T)` or `ds = evolve(ds, T)`.
+thus it must be integer. Returns the final state after evolution.
 
-The last **optional** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
+The **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
 applicable for continuous systems. It contains keyword arguments passed into the
 `solve` of the `DifferentialEquations` package, like for
 example `:abstol => 1e-9`. If you want to specify the solving algorithm,
@@ -130,9 +115,8 @@ This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system.
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
-  st = deepcopy(ds.state)
+  st = ds.state
   st = evolve(st, ds, N)
-  return setu(st, ds)
 end
 function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
   f = ds.eom
@@ -142,37 +126,70 @@ function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
   return state
 end
 
+"""
+```julia
+evolve!(ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> ds
+```
+Evolve (in-place) a dynamical system for total "time" `T`.
+For discrete systems `T` corresponds to steps and
+thus it must be integer.
+
+The last **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
+applicable for continuous systems. It contains keyword arguments passed into the
+`solve` of the `DifferentialEquations` package, like for
+example `:abstol => 1e-9`. If you want to specify the solving algorithm,
+do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
+
+This function *does not store* any information about intermediate steps.
+Use `timeseries` if you want to produce timeseries of the system.
+"""
+function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
+  st = ds.state
+  ds.state = evolve(st, ds, N)
+  return ds
+end
+
 
 """
 ```julia
-timeseries(ds::DiscreteDS, N::Int)
+timeseries(ds::DiscreteDS, N::Int; mutate = true)
 ```
 Create a `N×D` matrix that will contain the timeseries of the sytem, after evolving it
-for `N` steps (`D` is the system dimensionality). Returns a `Vector` for `DiscreteDS1D`.
+for `N` steps (`D` is the system dimensionality).
 
 *Each column corresponds to one dynamic variable.*
+
+The keyword argument `mutate` controls whether the system's state is updated to
+the final state of the timeseries.
 """
-function timeseries(s::DiscreteDS, N::Int)
-  d = s
-  T = eltype(d.state)
-  D = length(d.state)
+function timeseries(ds::DiscreteDS, N::Int; mutate = true)
+  st = ds.state
+  T = eltype(st)
+  D = length(st)
   ts = Array{T}(N, D)
-  ts[1,:] .= d.state
+  f = ds.eom
+  ts[1,:] .= ds.state
   for i in 2:N
-    d = evolve(d)
-    ts[i, :] .= d.state
+    st = f(st)
+    ts[i, :] .= st
+  end
+  if mutate
+    ds.state = ts[end, :]
   end
   return ts
 end
 
-function timeseries(s::DiscreteDS1D, N::Int)
-  x = deepcopy(s.state)
-  f = s.eom
+function timeseries(ds::DiscreteDS1D, N::Int; mutate = true)
+  x = deepcopy(ds.state)
+  f = ds.eom
   ts = Vector{eltype(x)}(N)
   ts[1] = x
   for i in 2:N
     x = f(x)
     ts[i] = x
+  end
+  if mutate
+    ds.state = x
   end
   return ts
 end

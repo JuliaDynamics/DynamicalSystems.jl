@@ -7,8 +7,8 @@ module DynamicalSystems
 """
     DynamicalSystem
 Abstract type representing a dynamical system. Has the following concrete sub-types:
-* `DiscreteDS`
 * `DiscreteDS1D`
+* `DiscreteDS`
 * `ContinuousDS`
 """
 abstract type DynamicalSystem end

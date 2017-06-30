@@ -1,3 +1,8 @@
+
+"""
+Sub-module of the module `DynamicalSystems`, which contains pre-defined
+famous systems.
+"""
 module Systems
 using DynamicalSystems, StaticArrays
 #######################################################################################

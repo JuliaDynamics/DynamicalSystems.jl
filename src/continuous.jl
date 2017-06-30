@@ -1,7 +1,7 @@
 using OrdinaryDiffEq, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 
-export ContinuousDS, ODEProblem, setu, evolve, dimension
+export ContinuousDS, ODEProblem, evolve, dimension
 
 #######################################################################################
 #                                     Constructors                                    #
@@ -29,7 +29,7 @@ you ensure that your setup is correct.
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed of a user-defined one.
 """
-struct ContinuousDS{D, T<:Real, F, J} <: DynamicalSystem
+mutable struct ContinuousDS{D, T<:Real, F, J} <: DynamicalSystem
   state::SVector{D,T}
   eom::F
   jacob::J
@@ -63,8 +63,6 @@ function ODEProblem(ds::ContinuousDS, t)
   OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
 end
 
-setu(u, ds::ContinuousDS) = ContinuousDS(u, ds.eom, ds.jacob)
-
 function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
@@ -76,29 +74,35 @@ function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   return sol
 end
 
-function evolve(state, ds::ContinuousDS, t::Real, diff_eq_kwargs::Dict=Dict())
+function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict=Dict())
+  prob = ODEProblem(ds, t)
+  return get_sol(prob, diff_eq_kwargs)[end]
+end
+function evolve(
+  state::AbstractVector, ds::ContinuousDS, t::Real=1.0;
+  diff_eq_kwargs::Dict=Dict())
+
   prob = ODEProblem(ds, t)
   prob.u0 = state
   return get_sol(prob, diff_eq_kwargs)[end]
 end
 
-function evolve(ds::ContinuousDS, t::Real, diff_eq_kwargs::Dict=Dict())
-  newst = evolve(ds.state, ds, t, diff_eq_kwargs)
-  setu(newst, ds)
+function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict = Dict())
+  ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
 end
 
 """
 ```julia
-evolve!(prob::ODEProblem [, t::Real, diff_eq_kwargs::Dict])
+evolve!(prob::ODEProblem [, t::Real, diff_eq_kwargs::Dict]) -> final_state
 ```
 Evolve the problem using the solvers of `DifferentialEquations`, update
 the problem's state as the final state of the solution and return that state.
 
 If `t` is given, the problem is evolved for that much time (else the existing
-`tspan` is used). The optional
-argument `diff_eq_kwargs` is the same as for `evolve`.
+`tspan` is used). Notice that in this function, `diff_eq_kwargs` is *not* a keyword
+argument (to allow usage of multiple dispatch).
 """
-function evolve!(prob::ODEProblem, t::Real, diff_eq_kwargs::Dict=Dict())
+function evolve!(prob::ODEProblem, t::Real, diff_eq_kwargs::Dict)
   prob.tspan = (zero(t), t)
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
@@ -110,7 +114,6 @@ function evolve!(prob::ODEProblem, t::Real, diff_eq_kwargs::Dict=Dict())
   prob.u0 = state
   return state
 end
-
 function evolve!(prob::ODEProblem, diff_eq_kwargs::Dict)
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
@@ -122,22 +125,21 @@ function evolve!(prob::ODEProblem, diff_eq_kwargs::Dict)
   prob.u0 = state
   return state
 end
-
 function evolve!(prob::ODEProblem)
-  state = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)[end]
+  state = solve(prob, Tsit5(); save_everystep=false)[end]
   prob.u0 = state
   return state
 end
 
 """
 ```julia
-timeseries(ds::ContinuousDS, T [, dt=0.05, diff_eq_kwargs])
+timeseries(ds::ContinuousDS, T, dt=0.05; diff_eq_kwargs = Dict(), mutate = true)
 ```
 Similarly, create a `K×D` matrix with `K = length(0:dt:T)` that will contain the
 timeseries of the sytem, after evolving it for total time `T` while saving
 output every `dt` (optional argument).
 
-The last optional argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
+The **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
 applicable for continuous systems. It contains keyword arguments passed into the
 `solve` of the `DifferentialEquations` package, like for
 example `:abstol => 1e-9`. If you want to specify the solving algorithm,
@@ -147,13 +149,13 @@ do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
 `1:N` for the discrete case and `0:dt:T` for the continuous.
 """
 function timeseries(ds::ContinuousDS, T::Real,
-  dt::Real=0.05, diff_eq_kwargs::Dict=Dict())
+  dt::Real=0.05; diff_eq_kwargs::Dict=Dict(), mutate = true)
 
   T<=0 && throw(ArgumentError("Total time `T` must be positive."))
   D = dimension(ds)
   t = zero(T):dt:T
   prob = ODEProblem(ds, T)
-  kw = Dict{Symbol, Any}(diff_eq_kwargs...)
+  kw = Dict{Symbol, Any}(diff_eq_kwargs)
   kw[:saveat] = t
   sol = get_sol(prob, kw)
   TS = zeros(eltype(ds.state), length(t), D)
@@ -162,11 +164,11 @@ function timeseries(ds::ContinuousDS, T::Real,
   end
   # using: transpose(hcat(get_sol(prob, diff_eq_kwargs).u...))
   # is so absurdly tragically slower.
+  if mutate
+    ds.state = TS[end, :]
+  end
   return TS
 end
-
-timeseries(ds::ContinuousDS, T::Real, diff_eq_kwargs::Dict) =
-timeseries(ds, T, 0.05, diff_eq_kwargs)
 
 #######################################################################################
 #                                 Tangent Space                                       #
