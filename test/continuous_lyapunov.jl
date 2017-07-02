@@ -8,20 +8,20 @@ println("\nTesting continuous system lyapunov exponents...")
   @testset "lyapunovs" begin
     λ = lyapunovs(ds, 2e4)
     @test 0.89 < λ[1] < 0.91
-    @test 0.0 < λ[2] < 0.01
+    @test -0.001 < λ[2] < 0.01
     @test -14.6 < λ[3] < -14.5
 
     λ = lyapunovs(ds, 2e4; dt = 0.1, Ttr = 10.0,
     diff_eq_kwargs = Dict(:abstol=>1e-9, :solver => DP5()))
     @test 0.89 < λ[1] < 0.91
-    @test 0.0 < λ[2] < 0.01
+    @test -0.001 < λ[2] < 0.01
     @test -14.6 < λ[3] < -14.5
   end
 
   @testset "lyapunovs ForwardDiff" begin
     λ = lyapunovs(ds2, 2e4)
     @test 0.89 < λ[1] < 0.91
-    @test 0.0 < λ[2] < 0.01
+    @test -0.001 < λ[2] < 0.01
     @test -14.6 < λ[3] < -14.5
   end
 
