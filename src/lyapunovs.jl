@@ -21,7 +21,7 @@ values of the lyapunov exponents.
 
 [1] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
 """
-function lyapunovs(ds::DiscreteDS, N::Int; Ttr::Int= 100)
+function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
 
   u = deepcopy(ds.state)
   D = length(u)
