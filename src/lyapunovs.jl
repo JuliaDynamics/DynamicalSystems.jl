@@ -7,7 +7,7 @@ export lyapunovs, lyapunov
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
 Calculate the spectrum of lyapunov exponents of the system `ds` by applying the
-QR-decomposition method [1] `N` times. Returns a vector with the *final*
+QR-decomposition method [1], `N` times. Returns a vector with the *final*
 values of the lyapunov exponents.
 # Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
@@ -21,8 +21,8 @@ values of the lyapunov exponents.
 
 [1] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
 """
-function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
-  N = convert(Int, N)
+function lyapunovs(ds::DiscreteDS, N::Int; Ttr::Int= 100)
+
   u = deepcopy(ds.state)
   D = length(u)
   eom = ds.eom
@@ -54,9 +54,8 @@ end# this works. add tests and good to go.
 lyapunov(ds::DynamicalSystem, Τ; kwargs...) -> λ
 ```
 Calculate the maximum lyapunov exponent using a method due to Benettin [1], which simply
-evolves two neighboring trajectories while constantly rescaling one of the two. `T` is
-an optional argument which denotes
-the total time of evolution (should be `Int` for discrete systems).
+evolves two neighboring trajectories while constantly rescaling one of the two.
+`T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
 # Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
@@ -67,8 +66,8 @@ the total time of evolution (should be `Int` for discrete systems).
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
-* `dt = 10.0` : (only for continuous) Time between each check of distance exceeding
-  the `threshold`.
+* `dt = 10.0` : (only for continuous) Time of evolution between each check of
+  distance exceeding the `threshold`.
 
 *Warning*: Default values have been choosen to give accurate & fast results for
 maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
@@ -76,10 +75,9 @@ them properly for your system.
 
 [1] : Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
-function lyapunov(ds::DiscreteDS, N = 100000; Ttr::Int = 100,
+function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   d0=1e-7*one(eltype(ds.state)), threshold=10^3*d0)
 
-  N = convert(Int, N)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
   st1 = deepcopy(ds.state)
@@ -112,9 +110,8 @@ function lyapunov(ds::DiscreteDS, N = 100000; Ttr::Int = 100,
   λ /= i
 end
 
-function lyapunovs(ds::DiscreteDS1D, N=10000; Ttr = 100)
+function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr = 100)
 
-  N = convert(Int, N)
   eom = ds.eom
   der = ds.deriv
   x = deepcopy(ds.state)
@@ -137,79 +134,93 @@ lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=
 #                                    Continuous                                       #
 #######################################################################################
 function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 10.0,
-  d0=1e-7*one(eltype(ds.state)), threshold=10^3*d0, dt = 10.0,
+  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0, dt = 0.1,
   diff_eq_kwargs = Dict())
+
+  const dict = Dict()
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
-  # transient:
-  ds = evolve(ds, Ttr, diff_eq_kwargs)
+  # Transient
+  evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
   # initialize:
   st1 = ds.state
   st2 = st1 + d0
   prob1 = ODEProblem(ds, dt)
-  prob2 = ODEProblem(setu(st2, ds), dt)
+  prob2 = ODEProblem(ds, dt)
+  prob2.u0 = st2
   dist = d0
   λ = zero(eltype(st1))
   t = zero(T)
+  i = 0
   # start evolution and rescaling:
   while t < T
     #evolve until rescaling:
     while dist < threshold
       # evolve
-      st1 = evolve!(prob1, diff_eq_kwargs)
-      st2 = evolve!(prob2, diff_eq_kwargs)
+      if diff_eq_kwargs == dict
+        st1 = evolve!(prob1)
+        st2 = evolve!(prob2)
+      else
+        st1 = evolve!(prob1, diff_eq_kwargs)
+        st2 = evolve!(prob2, diff_eq_kwargs)
+      end
       dist = norm(st1 - st2)
       t += dt
-      t >= T && break
+      i += 1
+      t ≥ T && break
     end
+    # add computed scale to accumulator:
     a = dist/d0
-    λ += log(a)
+    if a > 1e^4 && i <= 1
+      warnstr = "Distance between test and original trajectory exceeded threshold "
+      warnstr*= "after just 1 evolution step. "
+      warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
+      warn(warnstr)
+      errorstr = "Parameters choosen for `lyapunov` with "
+      errorstr*= "`ContinuousDS` are not accurate."
+      throw(ArgumentError(errorstr))
+    end
+    λ += log(a); i+= 1
     #rescale:
     st2 = st1 + (st2 - st1)/a
     prob2.u0 = st2
-    dist = d0
+    dist = d0; i = 0
   end
   λ /= t
 end
 
 
-function lyapunovs(ds::ContinuousDS, N::Int;
+function lyapunovs(ds::ContinuousDS, N::Real;
   Ttr::Real = 1.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 1.0)
 
-# Ttr = 1.0
-# N = 1000
-# et = 1.0
-# diff_eq_kwargs = Dict()
-# ds = Systems.lorenz()
+  D = dimension(ds)
+  T = eltype(ds.state)
+  jac = ds.jacob
+  const dict = Dict()
+  # Transient
+  evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
 
+  # Initialization
+  tbprob = tangentbundle_setup(ds, dt)
+  λ = zeros(T, D)
+  Q = eye(eltype(ds.state), D)
 
-D = dimension(ds)
-T = eltype(ds.state)
-# Transient iterations
-ds = evolve(ds, Ttr, diff_eq_kwargs)
+  # Main algorithm
+  for i in 1:N
+    tbprob.u0[:, 2:end] .= Q #update tangent dynamics state
+    # evolve system and tangent dynamics:
+    if diff_eq_kwargs == dict
+      evolve!(tbprob)
+    else
+      evolve!(tbprob, diff_eq_kwargs)
+    end
 
-# Initialization
-λ::Vector{T} = zeros(T, D)
-tbprob = tangentbundle_setup(ds, dt)
-Q = @MMatrix eye(eltype(ds.state), D)
-S = tbprob.u0
-# Main algorithm
-for i in 1:N
-  tbprob.u0[:, 1] .= view(S, :, 1)
-  tbprob.u0[:, 2:D+1] .= Q
-
-  S = tangentbundle_evolve(tbprob, diff_eq_kwargs)
-  G = view(S, :, 2:D+1)*Q
-  F = qrfact(G)
-  Q .= F[:Q]
-  A_mul_signB!(Q, F[:R]) #ensure QR gives positive diagonal to R
-  for j in 1:D
-    λ[j] += log(abs(F[:R][j,j]))
+    # Perform QR:
+    Q, R = qr(view(tbprob.u0, :, 2:D+1))
+    for j in 1:D
+      λ[j] += log(abs(R[j,j]))
+    end
   end
-  # Set initial conditions for next iteration:
-
+  λ./(N*dt) #return spectrum
 end
-λ./(N*dt)
-
-end# this works. add tests and good to go.

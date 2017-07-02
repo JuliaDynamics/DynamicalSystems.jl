@@ -42,10 +42,14 @@ end
 roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 ```
 This three-dimensional continuous system is due to Rössler [1].
+It is a system that by-design behaves similarly
+to the `lorenz` system and displays a (fractal)
+strange attractor. However, it is easier to analyze qualitatively, as for example
+the attractor is composed of a single manifold.
 
 Default values are the same as the original paper.
 
-O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
+[1] O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
   @inline eom_roessler(u) =

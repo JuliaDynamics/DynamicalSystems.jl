@@ -1,7 +1,7 @@
 using OrdinaryDiffEq, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 
-export ContinuousDS, ODEProblem, evolve, dimension
+export ContinuousDS, ODEProblem
 
 #######################################################################################
 #                                     Constructors                                    #
@@ -88,6 +88,7 @@ end
 
 function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict = Dict())
   ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
+  return ds
 end
 
 """
@@ -99,7 +100,7 @@ the problem's state as the final state of the solution and return that state.
 
 If `t` is given, the problem is evolved for that much time (else the existing
 `tspan` is used). Notice that in this function, `diff_eq_kwargs` is *not* a keyword
-argument (to allow usage of multiple dispatch).
+argument.
 """
 function evolve!(prob::ODEProblem, t::Real, diff_eq_kwargs::Dict)
   prob.tspan = (zero(t), t)
@@ -175,32 +176,15 @@ end
 function tangentbundle_setup(ds::ContinuousDS, dt)
   D = dimension(ds)
   S = [ds.state eye(eltype(ds.state), D)]
+  f = ds.eom
+  jac = ds.jacob
   function tbeom(t, u, du)
-    du[:, 1] .= ds.eom(u)
-    A_mul_B!(view(du, :, 2:D+1), ds.jacob(view(u, :, 1)), view(u, :, 2:D+1))
+    du[:, 1] .= f(u)
+    A_mul_B!(view(du, :, 2:D+1), jac(view(u, :, 1)), view(u, :, 2:D+1))
   end
   tbprob = ODEProblem(tbeom, S, (zero(dt), dt))
   return tbprob
 end
-
-function tangentbundle_evolve(tbprob, diff_eq_kwargs = Dict())
-  # Set solver for DifferentialEquations
-  if haskey(diff_eq_kwargs, :solver)
-    solver = diff_eq_kwargs[:solver]
-    pop!(diff_eq_kwargs, :solver)
-  else
-    solver = Tsit5()
-  end
-  # Evolve:
-  sol = solve(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
-  return sol[end]
-end
-
-
-
-
-
-
 
 
 #######################################################################################
