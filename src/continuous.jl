@@ -7,9 +7,8 @@ export ContinuousDS, ODEProblem, evolve, dimension
 #                                     Constructors                                    #
 #######################################################################################
 """
-    ContinuousDynamicalSystem <: DynamicalSystem
-Immutable (for efficiency reasons) structure representing a `D`-dimensional
-continuous dynamical system.
+    ContinuousDS <: DynamicalSystem
+`D`-dimensional continuous dynamical system (used for `D ≤ 10`).
 # Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
@@ -178,7 +177,7 @@ function tangentbundle_setup(ds::ContinuousDS, dt)
   S = [ds.state eye(eltype(ds.state), D)]
   function tbeom(t, u, du)
     du[:, 1] .= ds.eom(u)
-    A_mul_B!(view(du, :, 2:D+1), ds.jacob(view(u, :, 1)),view(u, :, 2:D+1))
+    A_mul_B!(view(du, :, 2:D+1), ds.jacob(view(u, :, 1)), view(u, :, 2:D+1))
   end
   tbprob = ODEProblem(tbeom, S, (zero(dt), dt))
   return tbprob

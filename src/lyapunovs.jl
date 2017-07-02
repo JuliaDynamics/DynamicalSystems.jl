@@ -4,7 +4,7 @@ export lyapunovs, lyapunov
 #######################################################################################
 """
 ```julia
-lyapunovs(ds::DynamicalSystem, N::Int; kwargs...) -> [λ1, λ2, ..., λD]
+lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
 Calculate the spectrum of lyapunov exponents of the system `ds` by applying the
 QR-decomposition method [1] `N` times. Returns a vector with the *final*
@@ -19,8 +19,8 @@ values of the lyapunov exponents.
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 
-[1] : Add reference here.
-"""	
+[1] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
+"""
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
   N = convert(Int, N)
   u = deepcopy(ds.state)
@@ -34,13 +34,12 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
 
   # Initialization
   λ = zeros(eltype(u), D)
-  J = jac(u)
-  Q = @MMatrix eye(eltype(J), D);
+  Q = eye(eltype(u), D)
+  K = copy(Q)
   # Main algorithm
   for i in 1:N
     u = eom(u)
-    J = jac(u)
-    K = J*Q
+    A_mul_B!(K, jac(u), Q)
 
     Q, R = qr(K)
     for i in 1:D

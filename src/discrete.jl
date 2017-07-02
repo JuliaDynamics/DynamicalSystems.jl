@@ -89,10 +89,11 @@ function DiscreteDS1D(x0, eom)
   DiscreteDS1D(x0, eom, fd_deriv)
 end
 
-is1D(::DiscreteDS1D) = true
+
 
 dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
 dimension(::DiscreteDS1D) = 1
+is1D(::DiscreteDS1D) = true
 jacobian(ds::DynamicalSystem) = ds.jacob(ds.state)
 #######################################################################################
 #                                 System Evolution                                    #
