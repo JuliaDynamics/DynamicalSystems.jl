@@ -115,7 +115,7 @@ function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
   st = evolve(st, ds, N)
 end
-function evolve(state::AbstractVector, ds::DiscreteDynamicalSystem, N::Int = 1)
+function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
   f = ds.eom
   for i in 1:N
     state = f(state)

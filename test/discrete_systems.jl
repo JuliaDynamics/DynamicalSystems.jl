@@ -18,7 +18,7 @@ using StaticArrays, Base.Test, DynamicalSystems
     ts1 = timeseries(dd1, 100, mutate = false)
     ts3 = timeseries(dd3, 100, mutate = false)
     @test ts1[10] ≈ ts3[10]
-    @test typeof(eltype(ts3)) == BigFloat
+    @test eltype(ts3) == BigFloat
   end
   @testset "Derivatives" begin
     f1 = d1.deriv(d1.state)

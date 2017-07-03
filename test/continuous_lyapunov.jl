@@ -33,7 +33,7 @@ println("\nTesting continuous system lyapunov exponents...")
     @test 0.89 < λ2[1] < 0.91
   end
 end
-
+#=
 @testset "Roessler system" begin
   ds = Systems.roessler()
   ds2 = ContinuousDS(ds.state, ds.eom)
@@ -65,3 +65,4 @@ end
     @test 0.065 < λ2[1] < 0.075
   end
 end
+=#

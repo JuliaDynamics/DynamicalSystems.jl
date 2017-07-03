@@ -65,7 +65,7 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
   algorithm. Should be `Int` for discrete systems. Defaults are
   system type dependent.
 * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-* `threshold = 1043*d0` : Threshold to rescale the test trajectory.
+* `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
