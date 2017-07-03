@@ -61,7 +61,7 @@ end
     λ1 = lyapunov(ds, 5000, dt =  0.1)
     λ2 = lyapunov(ds2, 5000, dt = 0.1,
     diff_eq_kwargs = Dict(:solver => DP5(), :abstol => 1e-9))
-    @test 0.069 < λ1[1] < 0.075
-    @test 0.069 < λ2[1] < 0.075
+    @test 0.065 < λ1[1] < 0.075
+    @test 0.065 < λ2[1] < 0.075
   end
 end
