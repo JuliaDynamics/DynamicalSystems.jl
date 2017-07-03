@@ -7,7 +7,7 @@ export ContinuousDS, ODEProblem
 #                                     Constructors                                    #
 #######################################################################################
 """
-    ContinuousDS <: DynamicalSystem
+    ContinuousDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system (used for `D ≤ 10`).
 # Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
@@ -15,16 +15,11 @@ export ContinuousDS, ODEProblem
 * `eom::F` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that given a state-vector `u` it returns an `SVector` containing the
-  derivatives vector `du` at the current state.
+  derivatives `du` at the current state.
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-
-The function `DynamicalBilliards.test_functions(u0, eom[, jac])` is provided to help
-you ensure that your setup is correct.
-# Constructors:
-* `DiscreteDS(u0, eom, jac)` : The default constructor.
-* `DiscreteDS(u0, eom)` : The Jacobian function is created with *tremendous* efficiency
+  If the `jacob` is not provided by the user, it is created with *tremendous* efficiency
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed of a user-defined one.
 """

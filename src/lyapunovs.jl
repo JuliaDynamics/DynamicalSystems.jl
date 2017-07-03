@@ -6,9 +6,9 @@ export lyapunovs, lyapunov
 ```julia
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
-Calculate the spectrum of lyapunov exponents of the system `ds` by applying the
-QR-decomposition method [1], `N` times. Returns a vector with the *final*
-values of the lyapunov exponents.
+Calculate the spectrum of lyapunov exponents [1] of the system `ds` by applying the
+QR-decomposition method [2] `N` times. Returns a vector with the *final*
+values of the lyapunov exponents, ordered from bigger to smaller.
 # Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems. Defaults are
@@ -19,7 +19,10 @@ values of the lyapunov exponents.
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 
-[1] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
+[1] : A.M. Lyapunov, *The General Problem of the Stability of Motion*,
+Taylor & Francis (1992)
+
+[2] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
 """
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
 
@@ -61,13 +64,13 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 * `Ttr` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems. Defaults are
   system type dependent.
-* `d0 = 1e-7` : Initial & rescaling distance between two neighboring trajectories.
-* `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
+* `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
+* `threshold = 1043*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
-* `dt = 10.0` : (only for continuous) Time of evolution between each check of
-  distance exceeding the `threshold`.
+* `dt = 0.1` : (only for continuous) Time of evolution between each check of
+  distance e0xceeding the `threshold`.
 
 *Warning*: Default values have been choosen to give accurate & fast results for
 maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
@@ -76,7 +79,7 @@ them properly for your system.
 [1] : Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
-  d0=1e-7*one(eltype(ds.state)), threshold=10^3*d0)
+  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0)
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom

@@ -33,3 +33,4 @@ docs_dir: 'build'
 pages:
 - Introduction: index.md
 - System Definition: system_definition.md
+- Lyapunov Exponents: lyapunovs.md

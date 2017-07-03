@@ -27,7 +27,7 @@ function test_functions(u0, eom)
 end
 
 """
-    DiscreteDS <: DynamicalSystem
+    DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
 # Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
@@ -39,10 +39,7 @@ end
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-
-# Constructors:
-* `DiscreteDS(u0, eom, jac)` : The default constructor.
-* `DiscreteDS(u0, eom)` : The Jacobian function is created with *tremendous* efficiency
+  If the `jacob` is not provided by the user, it is created with *tremendous* efficiency
   using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
   Jacobian is within a few % of speed of a user-defined one.
 """
@@ -65,19 +62,15 @@ function DiscreteDS(u0::AbstractVector, eom, jac)
 end
 
 """
-    DiscreteDS1D <: DynamicalSystem
+    DiscreteDS1D(state, eom [, deriv]) <: DynamicalSystem
 One-dimensional discrete dynamical system.
 # Fields:
 * `state::Real` : Current state of the system.
-* `eom::F` (function) : The function that represents the system's equations of motion:
+* `eom::F` (function) : The function that represents the system's equation of motion:
   `eom(x) -> Real`.
 * `deriv::D` (function) : A function that calculates the system's derivative given
-  a state: `deriv(x) -> Real`.
-# Constructors:
-* `DiscreteDS1D(x0, eom, deriv)` : The default constructor with user-provided
-  derivative function (most efficient)
-* `DiscreteDS1d(x0, eom)` : The derivative function is created
-  automatically using the module `ForwardDiff`.
+  a state: `deriv(x) -> Real`. If it is not provided by the user
+  it is created automatically using the module `ForwardDiff`.
 """
 mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
   state::S
