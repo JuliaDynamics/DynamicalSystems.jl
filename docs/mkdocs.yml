@@ -8,7 +8,7 @@ theme:               'material'
 extra:
   palette:
     primary: 'teal'
-    accent: 'cyan'
+    accent: 'deep orange'
   social:
     - type: 'github'
       link: 'https://github.com/Datseris/DynamicalBilliards.jl'

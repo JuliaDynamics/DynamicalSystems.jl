@@ -99,11 +99,14 @@ Evolve a `state` (or the system's state) under the dynamics
 of `ds` for total "time" `T`. For discrete systems `T` corresponds to steps and
 thus it must be integer. Returns the final state after evolution.
 
-The **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
-applicable for continuous systems. It contains keyword arguments passed into the
-`solve` of the `DifferentialEquations` package, like for
-example `:abstol => 1e-9`. If you want to specify the solving algorithm,
-do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
+The **keyword** argument `diff_eq_kwargs` is dictionary `Dict{Symbol, ANY}`
+of keyword arguments
+passed into the `solve` of the `DifferentialEquations.jl` package,
+for example `Dict(:abstol => 1e-9)`. It is applicable only in `ContinuousDS`.
+If you want to specify a solver,
+do so by using the symbol `:solver`, e.g.:
+`Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
+`using OrdinaryDiffEq` or `using DifferentialEquations` to access the solvers.
 
 This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system.
@@ -112,7 +115,7 @@ function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
   st = evolve(st, ds, N)
 end
-function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
+function evolve(state::AbstractVector, ds::DiscreteDynamicalSystem, N::Int = 1)
   f = ds.eom
   for i in 1:N
     state = f(state)
@@ -122,20 +125,10 @@ end
 
 """
 ```julia
-evolve!(ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> ds
+evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict()) -> ds
 ```
-Evolve (in-place) a dynamical system for total "time" `T`.
-For discrete systems `T` corresponds to steps and
-thus it must be integer.
-
-The last **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
-applicable for continuous systems. It contains keyword arguments passed into the
-`solve` of the `DifferentialEquations` package, like for
-example `:abstol => 1e-9`. If you want to specify the solving algorithm,
-do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
-
-This function *does not store* any information about intermediate steps.
-Use `timeseries` if you want to produce timeseries of the system.
+Evolve (in-place) a dynamical system for total "time" `T`, setting the final
+state as the system's state.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
@@ -146,15 +139,27 @@ end
 
 """
 ```julia
-timeseries(ds::DiscreteDS, N::Int; mutate = true)
+timeseries(ds::DynamicalSystem, T; kwargs...)
 ```
-Create a `N×D` matrix that will contain the timeseries of the sytem, after evolving it
-for `N` steps (`D` is the system dimensionality).
+Create a matrix that will contain the timeseries of the sytem, after evolving it
+for `N` steps (`D` is the system dimensionality). *Each column corresponds to
+one dynamic variable.*
 
-*Each column corresponds to one dynamic variable.*
-
-The keyword argument `mutate` controls whether the system's state is updated to
-the final state of the timeseries.
+For the discrete case, `T` is an integer and a `T×D` matrix is returned. For the
+continuous case, a `K×D` matrix is returned, with `K = length(0:dt:T)` with
+`0:dt:T` representing the time vector.
+# Keywords:
+* `mutate = true` : whether to update the dynamical system's state with the
+  final state of the timeseries.
+* `dt = 0.05` : (only for continuous) Time step of value output during the solving
+  of the continuous system.
+* `diff_eq_kwargs = Dict()` : (only for continuous) A dictionary `Dict{Symbol, ANY}`
+  of keyword arguments
+  passed into the `solve` of the `DifferentialEquations.jl` package,
+  for example `Dict(:abstol => 1e-9)`. If you want to specify a solver,
+  do so by using the symbol `:solver`, e.g.:
+  `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
+  `using OrdinaryDiffEq` or `using DifferentialEquations` to access the solvers.
 """
 function timeseries(ds::DiscreteDS, N::Int; mutate = true)
   st = ds.state

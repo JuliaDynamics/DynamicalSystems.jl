@@ -6,7 +6,7 @@ println("\nTesting discrete system lyapunov exponents...")
 @testset "Towel Map" begin
   @testset "lyapunovs" begin
     ds = Systems.towel()
-    λ1 = lyapunovs(ds, 1e6)
+    λ1 = lyapunovs(ds, 1e5)
     @test 0.42 < λ1[1] < 0.44
     @test 0.36 < λ1[2] < 0.38
     @test -3.4 < λ1[3] < -3.2
@@ -15,7 +15,7 @@ println("\nTesting discrete system lyapunov exponents...")
   @testset "lyapunovs ForwardDiff" begin
     ds = Systems.towel()
     ds = DiscreteDS(ds.state, ds.eom)
-    λ1 = lyapunovs(ds, 1e6)
+    λ1 = lyapunovs(ds, 1e5)
     @test 0.42 < λ1[1] < 0.44
     @test 0.36 < λ1[2] < 0.38
     @test -3.4 < λ1[3] < -3.1
@@ -24,8 +24,8 @@ println("\nTesting discrete system lyapunov exponents...")
   @testset "lyapunov" begin
     ds1 = Systems.towel()
     ds2 = DiscreteDS(ds1.state, ds1.eom)
-    λ1 = lyapunov(ds1, 1000000)
-    λ2 = lyapunov(ds2, 1000000)
+    λ1 = lyapunov(ds1, 100000)
+    λ2 = lyapunov(ds2, 100000)
     @test 0.42 < λ1[1] < 0.44
     @test 0.42 < λ2[1] < 0.44
     @test isapprox(λ1, λ2; rtol = 1e-3)
@@ -37,9 +37,9 @@ end
   lg2 = DiscreteDS1D(lg1.state, lg1.eom)
   lg3 = Systems.logistic(big(0.1), r=4)
   @test typeof(lg3.state) == BigFloat
-  λ1 = lyapunov(lg1, 100000000; Ttr = 100)
-  λ2 = lyapunovs(lg2, 100000000; Ttr = 100)
-  λ3 = lyapunovs(lg3, 1000000; Ttr = 100)
+  λ1 = lyapunov(lg1, 10000000; Ttr = 100)
+  λ2 = lyapunovs(lg2, 10000000; Ttr = 100)
+  λ3 = lyapunovs(lg3, 100000; Ttr = 100)
   @test typeof(λ3) == BigFloat
   @test isapprox(λ1, log(2); rtol = 1e-3)
   @test isapprox(λ2, log(2); rtol = 1e-3)

@@ -31,8 +31,8 @@ Jacobian matrix of the system (at this state). This however is optional and if n
 
 !!! tip "Return form of the `eom` function for small `D`"
     It is **heavily** advised that the equations of motion `eom` function returns an `SVector` from
-    the julia package [`StaticArrays.jl`](https://www.google.de/search?q=julia+staticarrays&ie=utf-8&oe=utf-8&client=firefox-b-ab&gfe_rd=cr&ei=J0dSWdXTObLPXqvhj9AE) and similarly the `jacob` function returns an `SMatrix`. [Numerous benchmarks](https://github.com/Datseris/DynamicalSystems.jl/tree/master/test/benchmarks) have been made in order to deduce the most efficient possible way to define
-    a system, and this way was proved to be the best.
+    the julia package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and similarly the `jacob` function returns an `SMatrix`. [Numerous benchmarks](https://github.com/Datseris/DynamicalSystems.jl/tree/master/test/benchmarks) have been made in order to deduce the most efficient possible way to define
+    a system, and this way was proved to be the best when the system's dimension is small.
 
 For example, let's create one of the [Predefined Systems](#Predefined-systems) offered by this package, the Hénon map:
 ```julia

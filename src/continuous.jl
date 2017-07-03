@@ -126,25 +126,8 @@ function evolve!(prob::ODEProblem)
   return state
 end
 
-"""
-```julia
-timeseries(ds::ContinuousDS, T, dt=0.05; diff_eq_kwargs = Dict(), mutate = true)
-```
-Similarly, create a `K×D` matrix with `K = length(0:dt:T)` that will contain the
-timeseries of the sytem, after evolving it for total time `T` while saving
-output every `dt` (optional argument).
-
-The **keyword** argument `diff_eq_kwargs` is a `Dict{Symbol, Any}` and is only
-applicable for continuous systems. It contains keyword arguments passed into the
-`solve` of the `DifferentialEquations` package, like for
-example `:abstol => 1e-9`. If you want to specify the solving algorithm,
-do so by using `:solver` as one of your keywords, like `:solver => DP5()`.
-
-*Notice* : This function does not return the time vector since it is already known:
-`1:N` for the discrete case and `0:dt:T` for the continuous.
-"""
-function timeseries(ds::ContinuousDS, T::Real,
-  dt::Real=0.05; diff_eq_kwargs::Dict=Dict(), mutate = true)
+function timeseries(ds::ContinuousDS, T::Real;
+  dt::Real=0.05, diff_eq_kwargs::Dict=Dict(), mutate = true)
 
   T<=0 && throw(ArgumentError("Total time `T` must be positive."))
   D = dimension(ds)
