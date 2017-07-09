@@ -6,9 +6,10 @@ export lyapunovs, lyapunov
 ```julia
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
-Calculate the spectrum of lyapunov exponents [1] of the system `ds` by applying the
-QR-decomposition method [2] `N` times. Returns a vector with the *final*
-values of the lyapunov exponents, ordered from bigger to smaller.
+Calculate the spectrum of lyapunov exponents [1] of `ds` by applying the
+QR-decomposition method `N` times (see method "H2" of [2]).
+Returns a vector with the *final*
+values of the lyapunov exponents in descending order.
 # Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems. Defaults are
@@ -19,12 +20,12 @@ values of the lyapunov exponents, ordered from bigger to smaller.
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 
-[1] : A.M. Lyapunov, *The General Problem of the Stability of Motion*,
+[1] : A. M. Lyapunov, *The General Problem of the Stability of Motion*,
 Taylor & Francis (1992)
 
 [2] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
 """
-function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Int= 100)
+function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
   u = deepcopy(ds.state)
   D = length(u)
@@ -74,9 +75,10 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 
 *Warning*: Default values have been choosen to give accurate & fast results for
 maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
-them properly for your system.
+them properly for your system. Specifically for the continuous systems,
+be sure that `exp(λ*dt) < d0 - threshold`.
 
-[1] : Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
+[1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0)
@@ -145,7 +147,9 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 10.0,
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
   # Transient
-  evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+  if Ttr != 0
+    evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+  end
   # initialize:
   st1 = ds.state
   st2 = st1 + d0
@@ -202,8 +206,9 @@ function lyapunovs(ds::ContinuousDS, N::Real;
   jac = ds.jacob
   const dict = Dict()
   # Transient
-  evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-
+  if Ttr != 0
+    evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+  end
   # Initialization
   tbprob = tangentbundle_setup(ds, dt)
   λ = zeros(T, D)

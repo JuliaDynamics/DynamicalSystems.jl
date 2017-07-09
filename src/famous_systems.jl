@@ -24,9 +24,9 @@ Default values are the ones used in the original paper.
 [1] E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
 function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
-  @inline eom_lorenz(u) =
+  @inline @inbounds eom_lorenz(u) =
   SVector{3}(σ*(u[2]-u[1]), u[1]*(ρ-u[3]) - u[2], u[1]*u[2] - β*u[3])
-  @inline function jacob_lorenz(u)
+  @inline @inbounds function jacob_lorenz(u)
     i = one(eltype(u))
     o = zero(eltype(u))
     @SMatrix [-σ*i           σ*i    zero(i);
@@ -52,9 +52,9 @@ Default values are the same as the original paper.
 [1] O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-  @inline eom_roessler(u) =
+  @inline @inbounds eom_roessler(u) =
   SVector{3}(-u[2]-u[3], u[1] + a*u[2], b + u[3]*(u[1] - c))
-  @inline function jacob_roessler(u)
+  @inline @inbounds function jacob_roessler(u)
     i = one(eltype(u))
     o = zero(eltype(u))
     @SMatrix [o     -i      -i;
@@ -83,14 +83,14 @@ Default values are the ones used in the original paper.
 [1] : O. E. Rössler, Phys. Lett. **71A**, pp 155 (1979)
 """
 function towel(u0=[0.085, -0.121, 0.075])
-  @inline function eom_towel(x)
+  @inline @inbounds function eom_towel(x)
     x1, x2, x3 = x[1], x[2], x[3]
     SVector( 3.8*x1*(1-x1) - 0.05*(x2+0.35)*(1-2*x3),
     0.1*( (x2+0.35)*(1-2*x3) - 1 )*(1 - 1.9*x1),
     3.78*x3*(1-x3)+0.2*x2 )
   end
 
-  @inline function jacob_towel(x)
+  @inline @inbounds function jacob_towel(x)
     @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
     -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
     0.0  0.2  3.78(1-2x[3]) ]
@@ -121,9 +121,9 @@ are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """
 function standardmap(u0=0.001rand(2); k = 0.971635)
-  @inline eom_standard(x) =
+  @inline @inbounds eom_standard(x) =
   SVector{2}(mod2pi(x[1] + x[2] + k*sin(x[1])), mod2pi(x[2] + k*sin(x[1])))
-  @inline jacob_standard(x) =
+  @inline @inbounds jacob_standard(x) =
   @SMatrix [1 + k*cos(x[1])    1;
             k*cos(x[1])        1]
   return DiscreteDS(u0, eom_standard, jacob_standard)
@@ -143,8 +143,8 @@ Default values are the ones used in the original paper.
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
-  @inline eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
-  @inline jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
+  @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
+  @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
   # should give exponents 0.4189 -1.6229
   return DiscreteDS(u0, eom_henon, jacob_henon)
 end

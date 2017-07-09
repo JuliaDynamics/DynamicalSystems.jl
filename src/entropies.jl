@@ -3,10 +3,10 @@ using StatsBase
 
 """
 ```julia
-non0hist(ε, vectors...)
 non0hist(ε, dataset)
+non0hist(ε, vectors...)
 ```
-Partition a data-set contained in the `vectors` into tabulated intervals (boxes) of
+Partition a data-set into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in a 1D form, discarding all
 non-zero elements. Use the `fit(Histogram, ...)` from package `StatsBase` if you
 wish to keep information about the edges of the binning as well as the zero elements.
@@ -29,10 +29,12 @@ function non0hist end
     ranges = StepRangeLen{T, Base.TwicePrecision{T},Base.TwicePrecision{T}}[]
   end
   # Create ranges:
-  @simd for v in vectors
+  for v in vectors
     push!(ranges, minimum(v):ε:maximum(v)+ε)  #be sure to have that +ε at the end!
   end
   # Perform Histogram:
+  # Write my OWN Version, which would be many times over faster,
+  # since I don't need the 0 elements.
   pks = fit(Histogram, vectors, (ranges...), closed=:left).weights/L
   return T[x for x in pks if x != 0]
 end
@@ -41,20 +43,27 @@ end
 
 """
 ```julia
-renyi(α, ε, vectors...)
 renyi(α, ε, dataset)
+renyi(α, ε, vectors...)
 ```
-Compute the `α` order generalized Rényi entropy of a dataset,
+Compute the `α` order generalized Rényi entropy [1] of a dataset,
 by first partitioning them into boxes of of size `ε` (log base-e is used).
-
-It is assumed that `dataset ≡ hcat(vectors...)`, meaning that each vector represents
-a variable of the system.
 
 ```julia
 renyi(α, p::AbstractArray)
 ```
 Compute the `α` order generalized Rényi entropy of an Array `p` directly,
 assuming that `p` is sum-normalized.
+
+The Rényi entropy `R_α(p) = 1/(1-α) * sum_i(p_i^α)` generalizes other known entropies,
+like e.g. the Shannon entropy
+(α = 1, see *the* Shannon paper [2]), the Hartley entropy (α = 0, also known as
+maximum entropy), or the Collision (or correlation) entropy (α = 2).
+
+[1] : A. Rényi, Proceedings of the fourth Berkeley Symposium on Mathematics,
+Statistics and Probability, pp 547 (1960)
+
+[2] : C. E. Shannon, Bell System Technical Journal **27**, pp 379 (1948)
 """
 function renyi(α, ε, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
   p = non0hist(ε, vectors...)

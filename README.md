@@ -6,7 +6,7 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 |:--------:|:-------------------:|:-----------------------:|:-----:|
 | [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://datseris.github.io/DynamicalSystems.jl/latest) | Not yet! | [![Build Status](https://travis-ci.org/Datseris/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/Datseris/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/oabd7hgibx63bo1l?svg=true)](https://ci.appveyor.com/project/Datseris/dynamicalsystems-jl)
 
-*WARNING: Only trust what is written in the documentation! Anything else might be incomplete, broken, or given wrong results!*
+*WARNING: Only trust what is written in the documentation! Anything else might be incomplete, broken, or give wrong results!*
 
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
@@ -22,46 +22,3 @@ This is the (non-final) list of what this package aims to offer:
 7. Chaos control.
 8. Other stuff I have not yet decided upon, since this is like a pre-alpha version.
 8. Suggest or Contribute more stuff!
-
-## Lyapunov exponents of discrete systems
-The discrete systems assume the following API:
-```julia
-DiscreteDS(state, eom, jacob)
-```
-The equations of motion (`eom`) function takes the current `state` and returns an `SVector` (from the module `StaticArrays`) with the next state. Similarly, the Jacobian function (`jacob`) returns an `SMatrix` given the current state. The `state` is always stored internally as an `SVector` as well.
-
-*Why `SVector` instead of the standard Julia ones? Because they are absurdly
-fast and offer just as absurdly fast computation of automatic Jacobians!*
-
-For example, let's calculate the lyapunov exponents of the Hénon system:
-```julia
-using DynamicalSystems, StaticArrays
-henon_eom(x) = @SVector [1.0 - 1.4x[1]^2 + x[2], 0.3*x[1]]
-### let's say I am too bored to write down a jacobian
-henon = DiscreteDS([0.0, 0.0], henon_eom)
-```
-These lines created a `DiscreteDS` that represents the Hénon map. Since we did not pass
-a Jacobian function to the constructor as the third argument, one was created numerically using the package `ForwardDiff`. Alternatively, you could use the already existing definition in this package: `henon = DynamicalSystems.Systems.henon()`.
-
-The spectrum of the lyapunov exponents is given by the
-function:
-```julia
-lyapunovs(ds::DiscreteDS, N::Int; Ntr::Int = 100)
-```
-and are computed using the QR-decomposition method for `N` steps.
-```julia
-henon_λ = lyapunovs(henon, 1000000)
-# should give you: [0.42..., -1.62...]
-```
-One is positive and the other is negative, which is necessary for a strange attractor, but you can also test:
-```julia
-sum(henon_ls) ≈ log(0.3)
-```
-which is also true (and should be for mappings where the determinant of the Jacobian is constant). If you only needed the maximum lyapunov exponent of the system,
-the method function `lyapunov` is **much** more efficient:
-```julia
-λ = lyapunov(henon, 1000000)
-# gives 0.42018717281774165 or so
-```
-Requesting the spectrum of lyapunov exponents uses plural: `lyapunovs`, whereas
-requesting the maximum exponent uses singular: `lyapunov`.

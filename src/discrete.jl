@@ -142,7 +142,7 @@ end
 timeseries(ds::DynamicalSystem, T; kwargs...)
 ```
 Create a matrix that will contain the timeseries of the sytem, after evolving it
-for `N` steps (`D` is the system dimensionality). *Each column corresponds to
+for time `T` (`D` is the system dimensionality). *Each column corresponds to
 one dynamic variable.*
 
 For the discrete case, `T` is an integer and a `T×D` matrix is returned. For the
@@ -159,9 +159,9 @@ continuous case, a `K×D` matrix is returned, with `K = length(0:dt:T)` with
   for example `Dict(:abstol => 1e-9)`. If you want to specify a solver,
   do so by using the symbol `:solver`, e.g.:
   `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
-  `using OrdinaryDiffEq` or `using DifferentialEquations` to access the solvers.
+  `using OrdinaryDiffEq` to access the solvers.
 """
-function timeseries(ds::DiscreteDS, N::Int; mutate = true)
+function timeseries(ds::DiscreteDS, N::Real; mutate = true)
   st = ds.state
   T = eltype(st)
   D = length(st)
