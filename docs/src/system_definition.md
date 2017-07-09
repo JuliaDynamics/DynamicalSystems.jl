@@ -110,14 +110,19 @@ ros = ContinuousDS(rand(3), eom_roessler, jacob_roessler)
 ```
 
 ## System evolution
-`DynamicalSystems.jl` provides convenient interfaces for the evolution of systems. In general, these are the functions you want to use:
+`DynamicalSystems.jl` provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module `DifferentialEquations.jl`, with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
+
+Notice that if you want to do repeated evolutions of a system, use the
+`evolve!(::ODEProblem)` interface, which does not create a new `ODEProblem` every time.
+
+These are the functions related to system-evolution:
 ```@docs
 evolve
 timeseries
 ODEProblem
 evolve!
 ```
-Especially in the continuous case, an interface is provided to the module `DifferentialEquations.jl`, with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion). Also, the function `timeseries` is the only one that stores the actual time-series of the system. All the other functions only keep the final state.
+
 
 
 ## Numerical Data
@@ -133,7 +138,13 @@ system. The `vectors... = v1, v2, ..., vD` are simply the individual columns of 
 
 
 ## Predefined Systems
-Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems.jl`, in the form of functions that return a `DynamicalSystem`.
+Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems.jl`, in the form of functions that return a `DynamicalSystem`. They are accessed
+like:
+```julia
+using DynamicalSystems
+ds = Systems.lorenz(ρ = 32.0)
+ts = timeseries(ds, 10.0)
+```
 
 All of these functions have very similar documentation strings:
 
@@ -142,10 +153,6 @@ All of these functions have very similar documentation strings:
 2. Couple of sentences that contain cool science info about the system.
 3. Reference to the original papers.
 
-For example, the documentation of the [Lorenz system](https://en.wikipedia.org/wiki/Lorenz_system) reads:
-```@docs
-Systems.lorenz
-```
 So far, the predefined systems that exist in the `Systems` sub-module are:
 ```@autodocs
 Modules = [Systems]

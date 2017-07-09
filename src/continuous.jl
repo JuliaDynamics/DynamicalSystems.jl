@@ -40,7 +40,6 @@ function ContinuousDS(u0::AbstractVector, eom, jac)
 end
 
 dimension(::ContinuousDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
-is1D(ds::ContinuousDS) = dimension(ds) == 1
 #######################################################################################
 #                                 System Evolution                                    #
 #######################################################################################

@@ -10,9 +10,6 @@ Partition a data-set into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in a 1D form, discarding all
 non-zero elements. Use the `fit(Histogram, ...)` from package `StatsBase` if you
 wish to keep information about the edges of the binning as well as the zero elements.
-
-It is assumed that `dataset ≡ hcat(vectors...)`, meaning that each vector represents
-a variable of the system.
 """
 function non0hist end
 @inbounds function non0hist(ε, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
@@ -20,7 +17,7 @@ function non0hist end
   D = length(vectors); L = length(vectors[1])
   for i in 1:D
   length(vectors[i]) == L ||
-  throw(ArgumentError("All vectors given to `non0hist` be of equal length!"))
+  throw(ArgumentError("All vectors given to `non0hist` must be of equal length!"))
   end
 
   if T == BigFloat || T == BigInt

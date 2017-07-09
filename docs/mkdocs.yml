@@ -34,3 +34,5 @@ pages:
 - Introduction: index.md
 - System Definition: system_definition.md
 - Lyapunov Exponents: lyapunovs.md
+- Entropies and Dimensions: entropies.md
+- Contributor Guide: contributors_guide.md

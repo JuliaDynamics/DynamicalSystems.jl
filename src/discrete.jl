@@ -86,7 +86,6 @@ end
 
 dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
 dimension(::DiscreteDS1D) = 1
-is1D(::DiscreteDS1D) = true
 jacobian(ds::DynamicalSystem) = ds.jacob(ds.state)
 #######################################################################################
 #                                 System Evolution                                    #
@@ -99,10 +98,11 @@ Evolve a `state` (or the system's state) under the dynamics
 of `ds` for total "time" `T`. For discrete systems `T` corresponds to steps and
 thus it must be integer. Returns the final state after evolution.
 
-The **keyword** argument `diff_eq_kwargs` is dictionary `Dict{Symbol, ANY}`
+The **keyword** argument `diff_eq_kwargs` (applicable only in `ContinuousDS`)
+is a dictionary `Dict{Symbol, ANY}`
 of keyword arguments
 passed into the `solve` of the `DifferentialEquations.jl` package,
-for example `Dict(:abstol => 1e-9)`. It is applicable only in `ContinuousDS`.
+for example `Dict(:abstol => 1e-9)`.
 If you want to specify a solver,
 do so by using the symbol `:solver`, e.g.:
 `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first

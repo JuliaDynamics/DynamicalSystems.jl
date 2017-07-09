@@ -116,7 +116,7 @@ destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle varia
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
-[1] : B. V. Chirikov, Preprint N. **267**, Institute of Nuclear Physics Novosibirsk (1969)
+[1] : B. V. Chirikov, Preprint N. **267**, Institute of Nuclear Physics, Novosibirsk (1969)
 
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """

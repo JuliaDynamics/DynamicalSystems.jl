@@ -32,4 +32,4 @@ This is the (non-final) list of what this package aims to offer:
 6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*, see [Lyapunov Exponents](lyapunovs) and [Entropies and Dimensions](entropies).
 7. Chaos control, TBA.
 8. Other stuff I have not yet decided upon, since this is like a pre-alpha version.
-8. Suggest or Contribute more stuff! (see [contributors guide](contributors_guide)).
+8. Suggest or Contribute more stuff! (see [Contributor Guide](contributors_guide)).
