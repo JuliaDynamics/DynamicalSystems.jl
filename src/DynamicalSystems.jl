@@ -15,7 +15,6 @@ abstract type DynamicalSystem end
 
 export DynamicalSystem, Systems
 
-include("helpful_functions.jl")
 include("discrete.jl")
 include("continuous.jl")
 include("lyapunovs.jl")
