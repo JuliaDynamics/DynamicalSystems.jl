@@ -48,7 +48,7 @@ mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
   eom::F
   jacob::J
 end
-# constsructor without jacobian (uses ForwardDiff)
+# constructor without jacobian (uses ForwardDiff)
 function DiscreteDS(u0::AbstractVector, eom)
   su0 = SVector{length(u0)}(u0)
   @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x)
