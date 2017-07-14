@@ -76,7 +76,7 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 *Warning*: Default values have been choosen to give accurate & fast results for
 maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
 them properly for your system. Specifically for the continuous systems,
-be sure that `exp(λ*dt) < d0 - threshold`.
+be sure that `exp(λ*dt) < threshold/d0`.
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
@@ -138,7 +138,7 @@ lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=
 #######################################################################################
 #                                    Continuous                                       #
 #######################################################################################
-function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 10.0,
+function lyapunov(ds::ContinuousDS, T::Real = 10000.0; Ttr = 10.0,
   d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0, dt = 0.1,
   diff_eq_kwargs = Dict())
 

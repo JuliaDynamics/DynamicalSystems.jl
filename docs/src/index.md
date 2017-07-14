@@ -10,7 +10,7 @@ One of a major goals of this package is to be completely transparent as to what 
 going on "under the hood". In scientific research, you never want to use *black boxes*,
 e.g. functions that give a result without telling you how it was calculated. To this end,
 **almost every documentation string** gives
-direct references to the original papers where the algorithm is taken from. For example,
+direct references to the original papers where the algorithm is taken from, in case you don't understand (or simply don't want to read) the source code. For example,
 the documentation string of [`?lyapunovs`](https://datseris.github.io/DynamicalSystems.jl/latest/lyapunovs/#DynamicalSystems.lyapunovs) will cite:
 ```
 [1] : A.M. Lyapunov, The General Problem of the Stability of Motion, Taylor & Francis (1992)
@@ -19,7 +19,7 @@ the documentation string of [`?lyapunovs`](https://datseris.github.io/DynamicalS
 ```
 where the first reference introduces the concept of Lyapunov exponents and the second
 contains a plethora of methods for their computation (including the method used in
-the aforementioned function.
+the aforementioned function).
 
 ## Contents
 This is the (non-final) list of what this package aims to offer:
@@ -30,6 +30,9 @@ This is the (non-final) list of what this package aims to offer:
 4. Entropy estimation, see [Entropies and Dimensions](entropies).
 5. Attractor dimension estimation, see [Entropies and Dimensions](entropies).
 6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*, see [Lyapunov Exponents](lyapunovs) and [Entropies and Dimensions](entropies).
+6. Attractor reconstruction, embedding and all that jazz.
+7. Numeric Computation of Kolmogorov-Sinai entropy.
+8. Definition of chaos, by Ott.
 7. Chaos control, TBA.
 8. Other stuff I have not yet decided upon, since this is like a pre-alpha version.
 8. Suggest or Contribute more stuff! (see [Contributor Guide](contributors_guide)).
