@@ -18,8 +18,10 @@ println("\nTesting continuous system evolution...")
     st3 = evolve(lo33.state, lo33, 1.0)
     @test st1 ≈ st3
     # Test evolve(state,keywords):
-    st1 = evolve(lo11.state, lo11, 1.0; diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-    st3 = evolve(lo33.state, lo33, 1.0, diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st1 = evolve(lo11.state, lo11, 1.0;
+    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st3 = evolve(lo33.state, lo33, 1.0;
+    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
     @test st1 ≈ st3
   end
 

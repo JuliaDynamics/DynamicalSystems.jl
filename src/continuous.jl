@@ -126,8 +126,11 @@ function evolve!(prob::ODEProblem)
 end
 
 function timeseries(ds::ContinuousDS, T::Real;
-  dt::Real=0.05, diff_eq_kwargs::Dict=Dict(), mutate = true)
+  dt::Real=0.05, diff_eq_kwargs::Dict=Dict(), mutate::Bool = true)
 
+  if !issubtype(typeof(T), AbstractFloat)
+    T = convert(Float64, T)
+  end
   T<=0 && throw(ArgumentError("Total time `T` must be positive."))
   D = dimension(ds)
   t = zero(T):dt:T

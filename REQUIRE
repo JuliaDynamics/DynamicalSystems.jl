@@ -2,3 +2,4 @@ julia 0.6
 OrdinaryDiffEq 2.7.1
 ForwardDiff 0.5
 Requires 0.4.3
+LsqFit 0.3.0

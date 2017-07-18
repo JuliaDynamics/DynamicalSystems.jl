@@ -14,10 +14,14 @@ Abstract type representing a dynamical system. Has the following concrete sub-ty
 abstract type DynamicalSystem end
 
 export DynamicalSystem, Systems
-
+# System definition and evolution:
 include("discrete.jl")
 include("continuous.jl")
-include("lyapunovs.jl")
 include("famous_systems.jl")
+# Lyapunovs:
+include("lyapunovs.jl")
+# Entropies and Dimension Estimation:
+include("linear_scaling.jl")
+include("entropies.jl")
 
 end # module

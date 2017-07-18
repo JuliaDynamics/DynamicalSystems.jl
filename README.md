@@ -10,7 +10,6 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
-This is the (non-final) list of what this package aims to offer:
 
 This is the (non-final) list of what this package aims to offer:
 
