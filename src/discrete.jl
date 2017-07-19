@@ -3,9 +3,9 @@ using StaticArrays, ForwardDiff, Requires
 export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension, jacobian
 
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
-#######################################################################################
-#                                     Constructors                                    #
-#######################################################################################
+#####################################################################################
+#                                   Constructors                                    #
+#####################################################################################
 function test_functions(u0, eom, jac)
   length(size(u0)) == 1 || throw(ArgumentError("Initial condition must an AbstractVector"))
   D = length(u0)
@@ -52,12 +52,10 @@ end
 function DiscreteDS(u0::AbstractVector, eom)
   su0 = SVector{length(u0)}(u0)
   @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x)
-  # test_functions(su0, eom, ForwardDiff_jac)
   return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
   su0 = SVector{length(u0)}(u0)
-  # test_functions(su0, eom, jac)
   return DiscreteDS(su0, eom, jac)
 end
 
@@ -83,13 +81,12 @@ function DiscreteDS1D(x0, eom)
 end
 
 
-
 dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
 dimension(::DiscreteDS1D) = 1
 jacobian(ds::DynamicalSystem) = ds.jacob(ds.state)
-#######################################################################################
-#                                 System Evolution                                    #
-#######################################################################################
+#####################################################################################
+#                               System Evolution                                    #
+#####################################################################################
 """
 ```julia
 evolve([state, ] ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> new_state
@@ -99,7 +96,7 @@ of `ds` for total "time" `T`. For discrete systems `T` corresponds to steps and
 thus it must be integer. Returns the final state after evolution.
 
 The **keyword** argument `diff_eq_kwargs` (applicable only in `ContinuousDS`)
-is a dictionary `Dict{Symbol, ANY}`
+is a dictionary `Dict{Symbol, Any}`
 of keyword arguments
 passed into the `solve` of the `DifferentialEquations.jl` package,
 for example `Dict(:abstol => 1e-9)`.
@@ -139,17 +136,17 @@ end
 
 """
 ```julia
-timeseries(ds::DynamicalSystem, T; kwargs...)
+timeseries(ds::DynamicalSystem, T; kwargs...) -> ts
 ```
-Create a matrix that will contain the timeseries of the sytem, after evolving it
-for time `T` (`D` is the system dimensionality). *Each column corresponds to
-one dynamic variable.*
+Create a matrix `ts` that will contain the timeseries of the sytem, after evolving it
+for time `T`. *Each column corresponds to one dynamic variable.*
 
-For the discrete case, `T` is an integer and a `T×D` matrix is returned. For the
-continuous case, a `K×D` matrix is returned, with `K = length(0:dt:T)` with
-`0:dt:T` representing the time vector.
+For the discrete case, `T` is an integer and a `T×D` matrix is returned
+(`D` is the system dimensionality). For the
+continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
+`0:dt:T` representing the time vector (*not* returned).
 # Keywords:
-* `mutate = true` : whether to update the dynamical system's state with the
+* `mutate = false` : whether to update the dynamical system's state with the
   final state of the timeseries.
 * `dt = 0.05` : (only for continuous) Time step of value output during the solving
   of the continuous system.
@@ -161,7 +158,7 @@ continuous case, a `K×D` matrix is returned, with `K = length(0:dt:T)` with
   `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
   `using OrdinaryDiffEq` to access the solvers.
 """
-function timeseries(ds::DiscreteDS, N::Real; mutate = true)
+function timeseries(ds::DiscreteDS, N::Real; mutate = false)
   st = ds.state
   T = eltype(st)
   D = length(st)
@@ -172,9 +169,7 @@ function timeseries(ds::DiscreteDS, N::Real; mutate = true)
     st = f(st)
     ts[i, :] .= st
   end
-  if mutate
-    ds.state = ts[end, :]
-  end
+  mutate && (ds.state = ts[end, :])
   return ts
 end
 
@@ -187,15 +182,13 @@ function timeseries(ds::DiscreteDS1D, N::Int; mutate = true)
     x = f(x)
     ts[i] = x
   end
-  if mutate
-    ds.state = x
-  end
+  mutate && (ds.state = x)
   return ts
 end
 
-#######################################################################################
-#                                 Pretty-Printing                                     #
-#######################################################################################
+#####################################################################################
+#                                Pretty-Printing                                    #
+#####################################################################################
 import Base.show
 function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
   print(io, "$N-dimensional discrete dynamical system:\n",

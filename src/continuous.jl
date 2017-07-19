@@ -56,7 +56,12 @@ function ODEProblem(ds::ContinuousDS, t)
   OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
 end
 
+"""
+    get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
+Solve the `prob` using `solve` and return the solution.
+"""
 function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
+  # Check if there is a solver in the keywords:
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
     pop!(diff_eq_kwargs, :solver)
@@ -66,7 +71,11 @@ function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   end
   return sol
 end
+function get_sol(prob::ODEProblem)
+  sol = solve(prob, Tsit5(); save_everystep=false)
+end
 
+# See discrete.jl for the documentation string
 function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict=Dict())
   prob = ODEProblem(ds, t)
   return get_sol(prob, diff_eq_kwargs)[end]
@@ -124,18 +133,21 @@ function evolve!(prob::ODEProblem)
   prob.u0 = state
   return state
 end
+evolve!(prob::ODEProblem, t::Real) = (prob.tspan = (zero(t), t); evolve!(prob))
 
 function timeseries(ds::ContinuousDS, T::Real;
-  dt::Real=0.05, diff_eq_kwargs::Dict=Dict(), mutate::Bool = true)
+  dt::Real=0.05, diff_eq_kwargs::Dict=Dict(), mutate::Bool = false)
 
+  # Necessary due to DifferentialEquations:
   if !issubtype(typeof(T), AbstractFloat)
     T = convert(Float64, T)
   end
   T<=0 && throw(ArgumentError("Total time `T` must be positive."))
+
   D = dimension(ds)
-  t = zero(T):dt:T
+  t = zero(T):dt:T #time vector
   prob = ODEProblem(ds, T)
-  kw = Dict{Symbol, Any}(diff_eq_kwargs)
+  kw = Dict{Symbol, Any}(diff_eq_kwargs) #nessesary conversion to add :saveat
   kw[:saveat] = t
   sol = get_sol(prob, kw)
   TS = zeros(eltype(ds.state), length(t), D)
@@ -155,9 +167,17 @@ end
 #######################################################################################
 function tangentbundle_setup(ds::ContinuousDS, dt)
   D = dimension(ds)
+
+  # S is the matrix that keeps the system state in the first column
+  # and tangent dynamics (Jacobian of the Flow) in the rest of the columns
   S = [ds.state eye(eltype(ds.state), D)]
   f = ds.eom
   jac = ds.jacob
+
+  # the equations of motion `tbeom` evolve the system and the tangent dynamics
+  # The e.o.m. for the tangent dynamics is simply:
+  # dY/dt = J ⋅ Y
+  # with J the Jacobian of the system (NOT the flow) at the current state
   function tbeom(t, u, du)
     du[:, 1] .= f(u)
     A_mul_B!(view(du, :, 2:D+1), jac(view(u, :, 1)), view(u, :, 2:D+1))
@@ -165,7 +185,6 @@ function tangentbundle_setup(ds::ContinuousDS, dt)
   tbprob = ODEProblem(tbeom, S, (zero(dt), dt))
   return tbprob
 end
-
 
 #######################################################################################
 #                                 Pretty-Printing                                     #

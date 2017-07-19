@@ -62,18 +62,18 @@ end
 linear_regions(x, y; dxi::Int = 1, tol = 0.1) -> (lrs, tangents)
 ```
 Identify regions where the curve `y(x)` is linear, by scanning the
-`x`-axis every `Dx` indeces (e.g. at `x[1]:x[5], x[5]:x[10], x[10]:x[15], ...`
-if `Dx=5`).
+`x`-axis every `dxi` indeces (e.g. at `x[1]:x[5], x[5]:x[10], x[10]:x[15], ...`
+if `dxi=5`).
 
-If the slope (calculated using LsqFit) of a region of width `Dx` is
-approximate to the previous region,
+If the slope (calculated using `LsqFit`) of a region of width `dxi` is
+approximatelly equal to the previous region,
 within tolerance `tol`,
 then these two regions belong to the same linear region.
 
 Return the indeces of `x` that correspond to linear regions, `lrs`,
 and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
 
-Example:
+###### Example:
 ```julia
 lrs, tangents = linear_regions(xdata, ydata)
 x[lrs[1]:lrs[2]] #this is the first linear region
@@ -91,9 +91,8 @@ function linear_regions(x::AbstractVector, y::AbstractVector;
   lrs = Int[1] #start of first linear region is always 1
   lastk = 1
 
-
+  # Start loop over all partitions of `x` into `dxi` intervals:
   for k in 1:maxit-1
-    #tang = (y[(k+1)*dxi] - y[(k)*dxi]) / (x[(k+1)*dxi] - x[(k)*dxi])
     tang = slope(view(x, k*dxi:(k+1)*dxi), view(y, k*dxi:(k+1)*dxi))
     if isapprox(tang, prevtang, rtol=tol)
       # Tanget is similar with initial previous one (based on tolerance)
@@ -102,6 +101,7 @@ function linear_regions(x::AbstractVector, y::AbstractVector;
       # Tangent is not similar.
       # Push new tangent for a new linear region
       push!(tangents, tang)
+
       # Set the START of a new linear region
       # which is also the END of the previous linear region
       push!(lrs, k*dxi)
@@ -115,6 +115,11 @@ function linear_regions(x::AbstractVector, y::AbstractVector;
   return lrs, tangents
 end
 
+"""
+    slope(xdata, ydata)
+Perform linear fit to `y(x)` using the module `LsqFit` and return the calculated
+slope.
+"""
 function slope(xfit, yfit)
   p0 = [1.0, 1.0]
   model(x, p) = p[1].*x .+ p[2]

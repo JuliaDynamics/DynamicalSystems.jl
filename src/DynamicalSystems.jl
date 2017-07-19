@@ -1,3 +1,5 @@
+__precompile__()
+
 """
 A Julia package for the exploration of continuous
 and discrete dynamical systems.
@@ -21,7 +23,8 @@ include("famous_systems.jl")
 # Lyapunovs:
 include("lyapunovs.jl")
 # Entropies and Dimension Estimation:
-include("linear_scaling.jl")
-include("entropies.jl")
+include("dimensions/linear_scaling.jl")
+include("dimensions/entropies.jl")
+include("dimensions/dims.jl")
 
 end # module

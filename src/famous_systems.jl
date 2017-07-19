@@ -9,7 +9,14 @@ using DynamicalSystems, StaticArrays
 #                                    Continuous                                       #
 #######################################################################################
 """
-    lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+```julia
+lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+```
+```math
+  \\frac{\\dd}{\\dd t}X &=& \\sigma(Y-X) \\\
+  \\frac{\\dd}{\\dd t}Y &=& - XZ + \\rho X -Y \\\
+  \\frac{\\dd}{\\dd t}Z &=& XY - \\beta Z 
+```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
 simplified form of atmospheric convection.

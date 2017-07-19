@@ -1,13 +1,13 @@
 export lyapunovs, lyapunov
-#######################################################################################
-#                                      Discrete                                       #
-#######################################################################################
+#####################################################################################
+#                                    Discrete                                       #
+#####################################################################################
 """
 ```julia
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
-Calculate the spectrum of lyapunov exponents [1] of `ds` by applying the
-QR-decomposition method `N` times (see method "H2" of [2]).
+Calculate the spectrum of lyapunov [1] exponents of `ds` by applying the
+QR-decomposition method `N` times (see method "H2" of [2] or the source code).
 Returns a vector with the *final*
 values of the lyapunov exponents in descending order.
 # Keyword Arguments:
@@ -57,7 +57,8 @@ end# this works. add tests and good to go.
 ```julia
 lyapunov(ds::DynamicalSystem, Τ; kwargs...) -> λ
 ```
-Calculate the maximum lyapunov exponent using a method due to Benettin [1], which simply
+Calculate the maximum lyapunov exponent `λ` using a method due to Benettin [1],
+which simply
 evolves two neighboring trajectories while constantly rescaling one of the two.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
@@ -87,7 +88,7 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   eom = ds.eom
   st1 = deepcopy(ds.state)
 
-  # transient
+  # transient system evolution
   for i in 1:Ttr
     st1 = eom(st1)
   end
@@ -101,11 +102,11 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
     while dist < threshold
       st1 = eom(st1)
       st2 = eom(st2)
-      # if hasnan
       dist = norm(st1 - st2)
       i+=1
-      i>=N && break
+      i>=N && break # this line is nessesary for safety! (if systems never go apart)
     end
+    # local lyapunov exponent is simply the relative distance of the trajectories
     a = dist/d0
     λ += log(a)
     #rescale:
@@ -121,11 +122,12 @@ function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr = 100)
   der = ds.deriv
   x = deepcopy(ds.state)
 
-  #transient
+  #transient system evolution
   for i in 1:Ttr
     x = eom(x)
   end
 
+  # The case for 1D systems is trivial: you add log(abs(der(x))) at each step
   λ = log(abs(der(x)))
   for i in 1:N
     x = eom(x)
@@ -135,9 +137,9 @@ function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr = 100)
 end
 lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=Ttr)
 
-#######################################################################################
-#                                    Continuous                                       #
-#######################################################################################
+#####################################################################################
+#                                  Continuous                                       #
+#####################################################################################
 function lyapunov(ds::ContinuousDS, T::Real = 10000.0; Ttr = 10.0,
   d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0, dt = 0.1,
   diff_eq_kwargs = Dict())
@@ -146,7 +148,7 @@ function lyapunov(ds::ContinuousDS, T::Real = 10000.0; Ttr = 10.0,
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
-  # Transient
+  # Transient system evolution
   if Ttr != 0
     evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
   end
@@ -175,23 +177,23 @@ function lyapunov(ds::ContinuousDS, T::Real = 10000.0; Ttr = 10.0,
       dist = norm(st1 - st2)
       t += dt
       i += 1
-      t ≥ T && break
+      t ≥ T && break #once again, necessary for systems that don't go apart
     end
-    # add computed scale to accumulator:
+    # add computed scale to accumulator (scale = local lyaponov exponent):
     a = dist/d0
+    # Warning message for bad decision of `thershold` or `d0`:
     if a > 1e^4 && i <= 1
       warnstr = "Distance between test and original trajectory exceeded threshold "
       warnstr*= "after just 1 evolution step. "
       warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
       warn(warnstr)
       errorstr = "Parameters choosen for `lyapunov` with "
-      errorstr*= "`ContinuousDS` are not accurate."
+      errorstr*= "`ContinuousDS` are not fitting the algorithm."
       throw(ArgumentError(errorstr))
     end
-    λ += log(a); i+= 1
-    #rescale:
-    st2 = st1 + (st2 - st1)/a
-    prob2.u0 = st2
+    λ += log(a)
+    # Rescale and reset everything:
+    prob2.u0 = st1 + (st2 - st1)/a
     dist = d0; i = 0
   end
   λ /= t
@@ -209,14 +211,14 @@ function lyapunovs(ds::ContinuousDS, N::Real;
   if Ttr != 0
     evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
   end
-  # Initialization
+  # Initialization (uses tangent dynamics)
   tbprob = tangentbundle_setup(ds, dt)
   λ = zeros(T, D)
   Q = eye(eltype(ds.state), D)
 
   # Main algorithm
   for i in 1:N
-    tbprob.u0[:, 2:end] .= Q #update tangent dynamics state
+    tbprob.u0[:, 2:end] .= Q # update tangent dynamics state
     # evolve system and tangent dynamics:
     if diff_eq_kwargs == dict
       evolve!(tbprob)
@@ -224,8 +226,9 @@ function lyapunovs(ds::ContinuousDS, N::Real;
       evolve!(tbprob, diff_eq_kwargs)
     end
 
-    # Perform QR:
+    # Perform QR (on the tangent flow):
     Q, R = qr(view(tbprob.u0, :, 2:D+1))
+    # Add correct (positive) numbers to Lyapunov spectrum
     for j in 1:D
       λ[j] += log(abs(R[j,j]))
     end

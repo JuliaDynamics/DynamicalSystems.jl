@@ -1,4 +1,4 @@
-export non0hist, renyi
+export non0hist, genentropy, renyi, d2v
 using StaticArrays
 
 """
@@ -17,31 +17,35 @@ function d2v(dataset)
 end
 
 @inbounds function perform_non0hist(vectors, ranges, ε)
-  D = length(vectors)
-  L = length(vectors[1])
+  D = length(vectors); L = length(vectors[1])
+  # `d` is a dictionary that contains all the histogram information
+  # the keys are the bin edges indeces and the values are the amount of
+  # datapoints in each bin
   d = Dict{NTuple{D, Int}, Int}()
   minima = [minimum(v) for v in vectors]
-  for j in 1:length(vectors[1])
-    ind = NTuple{D, Int}(Int(floor((vectors[k][j] - minima[k])/ε)) + 1 for k in 1:D)
-    haskey(d, ind) || (d[ind] = 0)
-    d[ind] += 1
+  for j in 1:L
+    ind = NTuple{D, Int}( #index of datapoint in the ranges space
+    Int(floor((vectors[k][j] - minima[k])/ε)) + 1 for k in 1:D)
+
+    haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
+    d[ind] += 1 #add 1 to an existing bin
   end
   return [val/L for val in values(d)]
 end
 
 function perform_non0hist_statsbase(vectors, ranges, ε)
+  # StatsBase version
   pks = fit(Histogram, (vectors...), (ranges...), closed=:left).weights/L
   return T[x for x in pks if x != 0]
 end
 
 """
 ```julia
-non0hist(ε, dataset)
-non0hist(ε, vectors...)
+non0hist(ε, dataset), non0hist(ε, vectors...)
 ```
 Partition a data-set into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
-discarding all non-zero elements.
+**discarding all zero** elements.
 
 Use the `fit(Histogram, ...)` from package `StatsBase` if you
 wish to keep information about the edges of the binning as well
@@ -61,49 +65,53 @@ function non0hist end
   else
     ranges = StepRangeLen{T, Base.TwicePrecision{T},Base.TwicePrecision{T}}[]
   end
-  # Create ranges:
+  # Create ranges (bin edges):
   for v in vectors
     push!(ranges, minimum(v):ε:maximum(v)+ε)  #be sure to have that +ε at the end!
   end
   # Perform Histogram:
   perform_non0hist(vectors, ranges, ε)
 end
-@inbounds non0hist(ε::Real, dataset::AbstractMatrix{<:Real}) =
-non0hist(ε, d2v(dataset)...)
+non0hist(ε::Real, dataset::AbstractMatrix{<:Real}) = non0hist(ε, d2v(dataset)...)
 
 
 """
 ```julia
-renyi(α, ε, dataset)
-renyi(α, ε, vectors...)
+genentropy(α, ε, dataset), genentropy(α, ε, vectors...)
 ```
-Compute the `α` order generalized Rényi entropy [1] of a dataset,
+Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
 by first partitioning it into boxes of length `ε` (log base-e is used).
 
+Other aliases: `renyi`.
+
 ```julia
-renyi(α, p::AbstractArray)
+genentropy(α, p::AbstractArray)
 ```
 Compute the entropy of an Array `p` directly, assuming that `p` is
 sum-normalized (log base-e is used).
 
-The Rényi entropy `R_α(p) = 1/(1-α) * sum_i(p_i^α)` generalizes other known entropies,
-like e.g. the Shannon entropy
-(α = 1, see *the* Shannon paper [2]), the Hartley entropy (α = 0, also known as
-maximum entropy), or the Collision entropy (α = 2, also known as correlation entropy).
+The Rényi entropy:
+```math
+R_\\alpha(P) = \\frac{1}{1-\\alpha}\sum_{p \\in P}(p^\\alpha)
+```
+generalizes other known entropies,
+like e.g. the information entropy
+(α = 1, see *the* Shannon paper [2]), the maximum entropy (α = 0, also known as
+Hartley entropy), or the correlation entropy (α = 2, also known as collision entropy).
 
-[1] : A. Rényi, Proceedings of the fourth Berkeley Symposium on Mathematics,
-Statistics and Probability, pp 547 (1960)
+[1] : A. Rényi, *Proceedings of the fourth Berkeley Symposium on Mathematics,
+Statistics and Probability*, pp 547 (1960)
 
 [2] : C. E. Shannon, Bell System Technical Journal **27**, pp 379 (1948)
 """
-function renyi(α::Real, ε::Real, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
+function genentropy(α::Real, ε::Real, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
   p = non0hist(ε, vectors...)
-  renyi(α, p)
+  genentropy(α, p)
 end
-renyi(α::Real, ε::Real, dataset::AbstractMatrix{<:Real}) =
-renyi(α, ε, d2v(dataset)...)
+genentropy(α::Real, ε::Real, dataset::AbstractMatrix{<:Real}) =
+genentropy(α, ε, d2v(dataset)...)
 
-function renyi{T<:Real}(α::Real, p::AbstractArray{T})
+function genentropy{T<:Real}(α::Real, p::AbstractArray{T})
   α < 0 && throw(ArgumentError("Order of Rényi entropy must be ≥ 0."))
 
   if α ≈ 0
@@ -113,6 +121,8 @@ function renyi{T<:Real}(α::Real, p::AbstractArray{T})
   elseif (isinf(α))
     return -log(maximum(p)) #Min entropy
   else
-    return (1/(1-α))*log( sum(x^α for x in p) )
+    return (1/(1-α))*log( sum(x^α for x in p) ) #genentropy entropy
   end
 end
+
+renyi = genentropy
