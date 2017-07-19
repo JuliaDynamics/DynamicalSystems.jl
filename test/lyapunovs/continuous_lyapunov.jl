@@ -1,5 +1,4 @@
 using DynamicalSystems, Base.Test, OrdinaryDiffEq
-
 println("\nTesting continuous system lyapunov exponents...")
 
 @testset "Lorenz system" begin

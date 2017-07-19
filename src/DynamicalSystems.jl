@@ -23,8 +23,8 @@ include("famous_systems.jl")
 # Lyapunovs:
 include("lyapunovs.jl")
 # Entropies and Dimension Estimation:
-include("dimensions/linear_scaling.jl")
-include("dimensions/entropies.jl")
-include("dimensions/dims.jl")
+include(joinpath("dimensions", "linear_scaling.jl"))
+include(joinpath("dimensions", "entropies.jl"))
+include(joinpath("dimensions", "dims.jl"))
 
 end # module

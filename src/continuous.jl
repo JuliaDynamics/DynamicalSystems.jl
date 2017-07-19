@@ -60,7 +60,7 @@ end
     get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
 Solve the `prob` using `solve` and return the solution.
 """
-function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
+function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict)
   # Check if there is a solver in the keywords:
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]

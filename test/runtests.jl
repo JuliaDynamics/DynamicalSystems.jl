@@ -1,13 +1,14 @@
 ti = time()
 
 
-
-include("discrete_systems.jl")
-include("discrete_lyapunov.jl")
-include("continuous_systems.jl")
-include("continuous_lyapunov.jl")
-
-
+# System Evolution:
+include(joinpath("systems", "discrete_systems.jl"))
+include(joinpath("systems", "continuous_systems.jl"))
+# lyapunov Exponents:
+include(joinpath("lyapunovs", "discrete_lyapunov.jl"))
+include(joinpath("lyapunovs", "continuous_lyapunov.jl"))
+# Entropies (and attractor dimensions)
+include("entropy_dimension.jl")
 
 
 ti = time() - ti

@@ -4,14 +4,14 @@ estimate_ε(dataset) = estimate_ε(d2v(dataset)...)
 magnitude(x::Real) = round(Int, log10(x))
 
 """
-    estimate_ε(vectors..., m=10)
+    estimate_ε(vectors...; m = 10)
 Return `logspace(magnitude(x), magnitude(x) - 4, 9)` where `x` is
 the `minimum( maximum(abs.(v)) - minimum(abs.(v)) for v in vectors )/m`.
 
 In essense, get a `logspace` with maximum being the 1/m of the relative order of
 magnitude of the vectors, and the minimum being 4 orders of magnitude less.
 """
-function estimate_ε(vectors..., m=10)
+function estimate_ε(vectors...; m = 10)
   # maximum ε is 1/100 of maximum - minimum
   maxε = Inf
   for v in vectors

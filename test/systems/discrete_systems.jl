@@ -1,4 +1,3 @@
-#towel map:
 println("Testing discrete system evolution...")
 using StaticArrays, Base.Test, DynamicalSystems
 

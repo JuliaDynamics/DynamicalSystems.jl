@@ -1,6 +1,4 @@
-using DynamicalSystems
-using Base.Test
-
+using DynamicalSystems, Base.Test
 println("\nTesting continuous system evolution...")
 
 @testset "Lorenz System" begin

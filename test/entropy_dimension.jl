@@ -2,9 +2,9 @@ using Base.Test, DynamicalSystems
 
 test_value(val, vmin, vmax) = @test vmin < val < vmax
 
-println("Testing generalized dimensions & linear scaling...")
+println("\nTesting generalized entropy (renyi) & linear scaling...")
 @testset "Generalized Dimensions" begin
-  @testset "Henon system" begin
+  @testset "Henon Map" begin
     ds = Systems.henon()
     ts = timeseries(ds, 200000)
     xx = view(ts, :, 1); yy = view(ts, :, 2)
@@ -31,7 +31,7 @@ println("Testing generalized dimensions & linear scaling...")
       end
     end
   end
-  @testset "Lorenz system" begin
+  @testset "Lorenz System" begin
     ds = Systems.lorenz()
     ts = timeseries(ds, 5000)
     vecs = DynamicalSystems.d2v(ts)
@@ -44,7 +44,7 @@ println("Testing generalized dimensions & linear scaling...")
         end
         linr, dim = linear_region(-log.(es), dd)
         if q == 0
-          test_value(dim, 1.7, 1.8)
+          test_value(dim, 1.7, 1.9)
         else
           test_value(dim, 1.85, 2.0)
         end
@@ -59,7 +59,7 @@ println("Testing generalized dimensions & linear scaling...")
         end
         linr, dim = linear_region(-log.(es), dd)
         if q == 0
-          test_value(dim, 1.7, 1.8)
+          test_value(dim, 1.7, 1.9)
         else
           test_value(dim, 1.85, 2.0)
         end
