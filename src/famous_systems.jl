@@ -12,11 +12,6 @@ using DynamicalSystems, StaticArrays
 ```julia
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
-```math
-\dot{x} &=& \sigma(y-x) \\
-\dot{y} &=& - xz + \rho x -y \\
-\dot{z} &=& xy - \beta z
-```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
 simplified form of atmospheric convection.
@@ -28,7 +23,7 @@ even though the effect applies generally to dynamical systems.
 
 Default values are the ones used in the original paper.
 
-[1] E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
+[1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
 function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
   @inline @inbounds eom_lorenz(u) =
@@ -49,14 +44,14 @@ end
 roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 ```
 This three-dimensional continuous system is due to Rössler [1].
-It is a system that by-design behaves similarly
+It is a system that by design behaves similarly
 to the `lorenz` system and displays a (fractal)
 strange attractor. However, it is easier to analyze qualitatively, as for example
 the attractor is composed of a single manifold.
 
 Default values are the same as the original paper.
 
-[1] O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
+[1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
   @inline @inbounds eom_roessler(u) =
@@ -117,7 +112,7 @@ Changing the non-linearity parameter `k` transitions the system from completely 
 motion, to quasi-periodic, to local chaos (mixed phase-space) and finally to global
 chaos.
 
-The default parameter `k` is the critical parameter where the golden-ratio torous is
+The default parameter `k` is the critical parameter where the golden-ratio torus is
 destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle variable
 `θ` to be the first, and the angular momentum `p` to be the second variable, while
 both variables

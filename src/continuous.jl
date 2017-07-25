@@ -9,7 +9,7 @@ export ContinuousDS, ODEProblem
 """
     ContinuousDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system (used for `D ≤ 10`).
-# Fields:
+## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
 * `eom::F` (function) : The function that represents the system's equations of motion

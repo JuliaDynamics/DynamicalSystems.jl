@@ -10,7 +10,7 @@ Calculate the spectrum of lyapunov [1] exponents of `ds` by applying the
 QR-decomposition method `N` times (see method "H2" of [2] or the source code).
 Returns a vector with the *final*
 values of the lyapunov exponents in descending order.
-# Keyword Arguments:
+## Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems. Defaults are
   system type dependent.
@@ -62,7 +62,7 @@ which simply
 evolves two neighboring trajectories while constantly rescaling one of the two.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-# Keyword Arguments:
+## Keyword Arguments:
 * `Ttr` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems. Defaults are
   system type dependent.

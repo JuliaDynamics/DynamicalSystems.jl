@@ -45,7 +45,8 @@ non0hist(ε, dataset), non0hist(ε, vectors...)
 ```
 Partition a data-set into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
-**discarding all zero** elements.
+**discarding all zero** elements. This method is extremely effecient in both memory
+and speed.
 
 Use the `fit(Histogram, ...)` from package `StatsBase` if you
 wish to keep information about the edges of the binning as well
@@ -90,10 +91,7 @@ genentropy(α, p::AbstractArray)
 Compute the entropy of an Array `p` directly, assuming that `p` is
 sum-normalized (log base-e is used).
 
-The Rényi entropy:
-```math
-R_\\alpha(P) = \\frac{1}{1-\\alpha}\sum_{p \\in P}(p^\\alpha)
-```
+The Rényi entropy `R_α(p) = (1/1-α)*sum(pi^α for pi ∈ p)`
 generalizes other known entropies,
 like e.g. the information entropy
 (α = 1, see *the* Shannon paper [2]), the maximum entropy (α = 0, also known as
@@ -102,7 +100,7 @@ Hartley entropy), or the correlation entropy (α = 2, also known as collision en
 [1] : A. Rényi, *Proceedings of the fourth Berkeley Symposium on Mathematics,
 Statistics and Probability*, pp 547 (1960)
 
-[2] : C. E. Shannon, Bell System Technical Journal **27**, pp 379 (1948)
+[2] : C. E. Shannon, Bell Systems Technical Journal **27**, pp 379 (1948)
 """
 function genentropy(α::Real, ε::Real, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
   p = non0hist(ε, vectors...)

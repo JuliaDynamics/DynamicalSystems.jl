@@ -29,7 +29,7 @@ end
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
-# Fields:
+## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
 * `eom::F` (function) : The function that represents the system's equations of motion
@@ -62,7 +62,7 @@ end
 """
     DiscreteDS1D(state, eom [, deriv]) <: DynamicalSystem
 One-dimensional discrete dynamical system.
-# Fields:
+## Fields:
 * `state::Real` : Current state of the system.
 * `eom::F` (function) : The function that represents the system's equation of motion:
   `eom(x) -> Real`.
@@ -145,7 +145,7 @@ For the discrete case, `T` is an integer and a `T×D` matrix is returned
 (`D` is the system dimensionality). For the
 continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).
-# Keywords:
+## Keywords:
 * `mutate = false` : whether to update the dynamical system's state with the
   final state of the timeseries.
 * `dt = 0.05` : (only for continuous) Time step of value output during the solving
