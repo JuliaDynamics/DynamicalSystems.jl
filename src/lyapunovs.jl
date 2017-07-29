@@ -7,7 +7,8 @@ export lyapunovs, lyapunov
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
 Calculate the spectrum of lyapunov [1] exponents of `ds` by applying the
-QR-decomposition method `N` times (see method "H2" of [2] or the source code).
+QR-decomposition method `N` times (see method "H2" of [2], or directly the original
+paper(s) [3]).
 Returns a vector with the *final*
 values of the lyapunov exponents in descending order.
 ## Keyword Arguments:
@@ -23,7 +24,9 @@ values of the lyapunov exponents in descending order.
 [1] : A. M. Lyapunov, *The General Problem of the Stability of Motion*,
 Taylor & Francis (1992)
 
-[2] : K. Geist *et al*, Progr. Theor. Phys. **83**, pp 875 (1990)
+[2] : K. Geist *et al.*, Progr. Theor. Phys. **83**, pp 875 (1990)
+
+[3] : G. Benettin *et al.*, Meccanica **15**, pp 9-20 & 21-30 (1980)
 """
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
@@ -72,7 +75,7 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
 * `dt = 0.1` : (only for continuous) Time of evolution between each check of
-  distance e0xceeding the `threshold`.
+  distance exceeding the `threshold`.
 
 *Warning*: Default values have been choosen to give accurate & fast results for
 maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
