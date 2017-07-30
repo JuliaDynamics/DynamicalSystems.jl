@@ -2,9 +2,7 @@
 Lyapunov exponents measure rates of separation of nearby trajectories in the flow
 of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_exponent) and the [Scholarpedia](http://www.scholarpedia.org/article/Lyapunov_exponent) entries have a lot of valuable information about the history and usage of these quantities.
 
-The naming comes after Aleksandr M. Lyapunov [1], a Russian mathematician/physicist that had major impact on the analysis of the stability of systems.
-
-[1] : See e.g. A.M. Lyapunov, *The General Problem of the Stability of Motion*, Taylor & Francis (1992) and references therein.
+The naming comes after Aleksandr M. Lyapunov, a Russian mathematician/physicist that had major impact on the analysis of the stability of systems.
 
 ## Dynamical Systems
 For systems where the equations of motion are known, there two functions related with the computation of lyapunov exponents: `lyapunovs` and `lyapunov`.
