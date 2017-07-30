@@ -37,7 +37,7 @@ dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
 
 ### Maximum Lyapunov Exponent
 The function `lyapunov` calculates the maximum lyapunov exponent of a system, much
-more efficiently than `lyapunovs[1]`:
+more efficiently than getting the first result of `lyapunovs`:
 ```@docs
 lyapunov
 ```

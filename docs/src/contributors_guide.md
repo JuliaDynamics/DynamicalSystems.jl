@@ -8,11 +8,11 @@
   If you do want to make something like this, please make it a subtype
   of `DynamicalSystem`. I have created the discrete and continuous general types, but
   more specialized types would allow for specialized methods.
+* If you are adding a new system type accompanied by new methods and quantities, please
+  introduce a new file in the `/src` folder, or even better create your own subfolder, instead of adding code to the existing files.
 * Any kind of existing discrete or continuous system that have been used in published
   literature at least once and you find it useful.
   Put this in the `famous_systems.jl` file.
-* If you are adding a new system type accompanied by new methods and quantities, please
-  introduce a new file in the `/src` folder, or even better create your own subfolder, instead of adding code to the existing files.
 
 Also, you can contribute in the enhancement of the existing package by:
 * Solving the [github issues](https://github.com/Datseris/DynamicalSystems.jl/issues)

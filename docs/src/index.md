@@ -16,12 +16,11 @@ the documentation string of [`?lyapunovs`](https://datseris.github.io/DynamicalS
 ## Contents
 This is the (non-final) list of what this package aims to offer:
 
-1. Intuitive, consistent APIs for the definition of dynamical systems, see [System Definition](system_definition).
-2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user, see [System Definition](system_definition).
-3. Lyapunov exponent estimation, see [Lyapunov Exponents](lyapunovs).
-4. Entropy estimation, see [Entropies and Dimensions](entropies).
-5. Attractor dimension estimation, see [Entropies and Dimensions](entropies).
-6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*, see [Lyapunov Exponents](lyapunovs) and [Entropies and Dimensions](entropies).
+1. [Intuitive, consistent APIs for the definition of general dynamical systems](system_definition).
+2. [Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user](system_definition).
+3. [Lyapunov exponent estimation](lyapunovs).
+4. [Entropy and Attractor Dimension estimation](entropies).
+6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
 6. Attractor reconstruction, embedding and all that jazz.
 7. Numeric Computation of Kolmogorov-Sinai entropy.
 8. Definition of chaos, by Ott.
