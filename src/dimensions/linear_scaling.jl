@@ -62,8 +62,8 @@ end
 linear_regions(x, y; dxi::Int = 1, tol = 0.1) -> (lrs, tangents)
 ```
 Identify regions where the curve `y(x)` is linear, by scanning the
-`x`-axis every `dxi` indeces (e.g. at `x[1]:x[5], x[5]:x[10], x[10]:x[15], ...`
-if `dxi=5`).
+`x`-axis every `dxi` indeces (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
+and so on if `dxi=5`).
 
 If the slope (calculated using `LsqFit`) of a region of width `dxi` is
 approximatelly equal to the previous region,
@@ -76,8 +76,9 @@ and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
 ###### Example:
 ```julia
 lrs, tangents = linear_regions(xdata, ydata)
-x[lrs[1]:lrs[2]] #this is the first linear region
+x[lrs[1]:lrs[2]] #this is the FIRST linear region
 tangents[1] #this is the tangent approximating the first linear region
+x[lrs[end]:end] #this is the FINAL linear region
 ```
 """
 function linear_regions(x::AbstractVector, y::AbstractVector;
@@ -85,7 +86,7 @@ function linear_regions(x::AbstractVector, y::AbstractVector;
 
   maxit = length(x) ÷ dxi
 
-  tangents = Float64[slope(view(x, 1:max(dxi,2)), view(y, 1:max(dxi, 2)))]
+  tangents = Float64[slope(view(x, 1:max(dxi, 2)), view(y, 1:max(dxi, 2)))]
 
   prevtang = tangents[1]
   lrs = Int[1] #start of first linear region is always 1

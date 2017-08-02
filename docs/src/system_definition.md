@@ -127,14 +127,10 @@ evolve!
 
 ## Numerical Data
 In the most general case, the numerical data representing the evolution of a system
-are in the form of time-series. `DynamicalSystems.jl` accepts two forms of numerical data
-in the most common function calls:
-```julia
-foo(dataset)
-bar(vectors...)
-```
-where the `dataset` is an `N×D` matrix that contains `N` data points of a `D` dimensional
-system. The `vectors... = v1, v2, ..., vD` are simply the individual columns of the `dataset` (each column corresponds to a dynamic variable), so that `dataset ≡ hcat(vectors...)`.
+are in the form of time-series. `DynamicalSystems.jl` offers many methods that accept numerical data. A general convention stated in the documentation string of all functions is the following: `foo(dataset)`.
+
+The data can be provided in two ways: firstly as a `N×D` matrix (`dataset`) that contains `N` data points of a `D` dimensional
+system (each column represents a dynamical variable's timeseries). Secondly all functions can be also called as `foo(v1, v2, v3, ...)`, passing vectors like a `Vararg`. The `vectors = v1, v2, ..., vD` are simply the individual timeseries, so that `dataset ≡ hcat(vectors...)`.
 
 
 ## Predefined Systems

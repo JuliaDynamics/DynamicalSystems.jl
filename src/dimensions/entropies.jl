@@ -5,7 +5,7 @@ using StaticArrays
 ```julia
 d2v(dataset) -> vectors
 ```
-Convert a dataset to a bundle of vectors, using views.
+Convert a dataset to a tuple of vectors, using views.
 """
 function d2v(dataset)
   D = size(dataset)[2] #dimension of the system (dynamic variables)
@@ -41,12 +41,13 @@ end
 
 """
 ```julia
-non0hist(ε, dataset), non0hist(ε, vectors...)
+non0hist(ε, dataset)
 ```
 Partition a data-set into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
 **discarding all zero** elements. This method is extremely effecient in both memory
-and speed.
+and speed, because it uses a dictionary to collect the information of bins with
+elements, while it completely disregards empty bins.
 
 Use the `fit(Histogram, ...)` from package `StatsBase` if you
 wish to keep information about the edges of the binning as well
@@ -78,7 +79,7 @@ non0hist(ε::Real, dataset::AbstractMatrix{<:Real}) = non0hist(ε, d2v(dataset).
 
 """
 ```julia
-genentropy(α, ε, dataset), genentropy(α, ε, vectors...)
+genentropy(α::Real, ε::Positive, dataset)
 ```
 Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
 by first partitioning it into boxes of length `ε` (log base-e is used).
@@ -122,5 +123,8 @@ function genentropy{T<:Real}(α::Real, p::AbstractArray{T})
     return (1/(1-α))*log( sum(x^α for x in p) ) #genentropy entropy
   end
 end
-
+# Aliases:
 renyi = genentropy
+
+"shannon(args...) = genentropy(1, args...)"
+shannon(args...) = genentropy(1, args...)
