@@ -1,4 +1,4 @@
-export non0hist, genentropy, renyi, d2v
+export non0hist, genentropy, renyi, d2v, shannon, hartley
 using StaticArrays
 
 """
@@ -49,7 +49,7 @@ size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
 and speed, because it uses a dictionary to collect the information of bins with
 elements, while it completely disregards empty bins.
 
-Use the `fit(Histogram, ...)` from package `StatsBase` if you
+Use the `fit(Histogram, ...)` from `StatsBase` if you
 wish to keep information about the edges of the binning as well
 as the zero elements.
 """
@@ -61,12 +61,7 @@ function non0hist end
     length(vectors[i]) == L ||
     throw(ArgumentError("All vectors given to `non0hist` must be of equal length!"))
   end
-
-  if T == BigFloat || T == BigInt
-    ranges = StepRangeLen{T, T, T}[]
-  else
-    ranges = StepRangeLen{T, Base.TwicePrecision{T},Base.TwicePrecision{T}}[]
-  end
+  ranges = typeof(minimum(vectors[1]):ε:maximum(vectors[1])+ε)[]
   # Create ranges (bin edges):
   for v in vectors
     push!(ranges, minimum(v):ε:maximum(v)+ε)  #be sure to have that +ε at the end!
@@ -82,15 +77,13 @@ non0hist(ε::Real, dataset::AbstractMatrix{<:Real}) = non0hist(ε, d2v(dataset).
 genentropy(α::Real, ε::Positive, dataset)
 ```
 Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
-by first partitioning it into boxes of length `ε` (log base-e is used).
-
-Other aliases: `renyi`.
-
+by first partitioning it into boxes of length `ε`.
+log base-e is used, i.e. units of "nat".
 ```julia
 genentropy(α, p::AbstractArray)
 ```
 Compute the entropy of an Array `p` directly, assuming that `p` is
-sum-normalized (log base-e is used).
+sum-normalized. log base-e is used, i.e. units of "nat".
 
 The Rényi entropy `R_α(p) = (1/1-α)*sum(pi^α for pi ∈ p)`
 generalizes other known entropies,
@@ -104,6 +97,7 @@ Statistics and Probability*, pp 547 (1960)
 [2] : C. E. Shannon, Bell Systems Technical Journal **27**, pp 379 (1948)
 """
 function genentropy(α::Real, ε::Real, vectors::Vararg{AbstractVector{T}}) where {T<:Real}
+  ε < 0 && throw(ArgumentError("Box-size for entropy calculation must be ≥ 0."))
   p = non0hist(ε, vectors...)
   genentropy(α, p)
 end
@@ -128,3 +122,6 @@ renyi = genentropy
 
 "shannon(args...) = genentropy(1, args...)"
 shannon(args...) = genentropy(1, args...)
+
+"hartley(args...) = genentropy(0, args...)"
+hartley(args...) = genentropy(0, args...)

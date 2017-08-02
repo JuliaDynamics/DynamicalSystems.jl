@@ -21,8 +21,9 @@ end
 ```julia
 linear_region(x, y; dxi::Int = 1, tol = 0.1) -> ([ind1, ind2], slope)
 ```
-Call `linear_regions`, identify the largest linear region and approximate
-the slope of this region using least squares fit. Return the indeces where
+Call `linear_regions`, identify the largest linear region (`max_linear_region`)
+and approximate the slope of this region using least squares fit.
+Return the indeces where
 the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
 """
 function linear_region(x::AbstractVector, y::AbstractVector,
