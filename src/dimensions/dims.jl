@@ -1,5 +1,6 @@
 export boxcounting_dim, capacity_dim, generalized_dim,
-information_dim, correlation_dim, collision_dim, estimate_ε
+information_dim, correlation_dim, collision_dim, estimate_ε,
+kaplanyorke_dim
 
 magnitude(x::Real) = round(Int, log10(x))
 
@@ -77,3 +78,37 @@ boxcounting_dim = capacity_dim
 
 "information_dim(args...) = generalized_dim(1, args...)"
 information_dim(args...) = generalized_dim(1, args...)
+
+"""
+```julia
+kaplanyorke_dim(lyapunovs::AbstractVector)
+```
+Calculate the Kaplan-Yorke dimension [1]. This simply is the point where
+`cumsum(lyapunovs)` becomes zero (interpolated). Returns the dimension of the system
+if the sum of the exponents never becomes negative.
+
+[1] :  J. Kaplan & J. Yorke,
+*Chaotic behavior of multidimensional difference equations*,
+Lecture Notes in Mathematics vol. **730**, Springer (1979)
+"""
+function kaplanyorke_dim(v::AbstractVector)
+  issorted(v, rev = true) || throw(ArgumentError(
+  "The lyapunov vector must be sorted from most positive to most negative"))
+
+  s = cumsum(v); k = length(v)
+  # Find k such that sum(λ_i for i in 1:k) is still possitive
+  for i in eachindex(s)
+    if s[i] < 0
+      k = i-1
+      break
+    end
+  end
+
+  if k == 0
+    return zero(v[1])
+  elseif k < length(v)
+    return k + s[k]/abs(v[k+1])
+  else
+    return typeof(v[1])(length(v))
+  end
+end

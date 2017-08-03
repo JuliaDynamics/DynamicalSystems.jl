@@ -51,7 +51,7 @@ dataset, like for example the [Fractal dimension](https://en.wikipedia.org/wiki/
 a lot of information about the object that the dataset represents.
 
 ### Generalized Dimensions & Co.
-Based on the definition of the [generalized entropy](entropies/#genentropy), one can calculate an appropriate
+Based on the definition of the [generalized entropy](entropies/#DynamicalSystems.genentropy), one can calculate an appropriate
 dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
@@ -66,11 +66,11 @@ For example, we will calculate the dimensions of the strange attractors of the
 using DynamicalSystems
 hen = Systems.henon(-rand(2))
 ts = timeseries(hen, 200000)
-D_hen = capacity_dim(ts)
+D_hen = information_dim(ts)
 
 lor = Systems.lorenz(rand(3))
 ts = timeseries(lor, 5000, dt = 0.05)
-D_lor = information_dim(ts)
+D_lor = capacity_dim(ts)
 ```
 You will find that `D_hen` is around `1.2` and `D_lor` is around `1.95`, both of which
 [are correct values](http://www.dt.fee.unicamp.br/~tiago/courses/dinamica_caotica/Lyapunov.pdf). As
@@ -79,4 +79,12 @@ get will never be correct, as is demonstrated by
 J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
 ### Kaplan-Yorke Dimension (aka Lyapunov Dimension)
-TBA
+```@docs
+kaplanyorke_dim
+```
+Notice that calling this function requires you to pass the lyapunov exponents in an
+ordered vector form (largest to smallest). Example:
+```julia
+hen = Systems.henon()
+D_kp = kaplanyorke_dim(lyapunovs(hen, 200000))
+```
