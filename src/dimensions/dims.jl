@@ -1,5 +1,5 @@
 export boxcounting_dim, capacity_dim, generalized_dim,
-information_dim, correlation_dim, collision_dim
+information_dim, correlation_dim, collision_dim, estimate_ε
 
 magnitude(x::Real) = round(Int, log10(x))
 
@@ -33,13 +33,13 @@ estimate_ε(dataset::AbstractMatrix{<:Real}) = estimate_ε(d2v(dataset)...)
 
 """
     generalized_dim(α, dataset)
-Return the generalized dimension that corresponds to the given dataset.
-This quantities corresponds to the
+Return the `α` order generalized dimension that corresponds to the given dataset.
+This quantity corresponds to the
 power law exponent of the scaling of the `genentropy` versus the box size `ε`.
 
 **WARNING** - This call performs a lot of automated steps:
 
-  1. A vector of box sizes is decided by calling `es = estimate_e(dataset)`.
+  1. A vector of box sizes is decided by calling `es = estimate_ε(dataset)`.
   2. For each `ε ∈ es` the appropriate entropy is
      calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
   3. The curve d(x) is decomposed into linear regions, using `linear_regions(x, d)`.
@@ -52,9 +52,9 @@ given to each of these function calls, refining the accuracy of the result.
 
 The following aliases are provided:
 
-  * α = 0 : boxcounting_dim, capacity_dim
-  * α = 1 : information_dim
-  * α = 2 : correlation_dim, collision_dim
+  * α = 0 : `boxcounting_dim`, `capacity_dim`
+  * α = 1 : `information_dim`
+  * α = 2 : `correlation_dim`, `collision_dim`
 """
 function generalized_dim(α, vectors::Vararg{AbstractVector{<:Real}})
   es = estimate_ε(vectors...)

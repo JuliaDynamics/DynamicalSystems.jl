@@ -74,7 +74,7 @@ non0hist(ε::Real, dataset::AbstractMatrix{<:Real}) = non0hist(ε, d2v(dataset).
 
 """
 ```julia
-genentropy(α::Real, ε::Positive, dataset)
+genentropy(α, ε, dataset)
 ```
 Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
 by first partitioning it into boxes of length `ε`.
@@ -90,6 +90,12 @@ generalizes other known entropies,
 like e.g. the information entropy
 (α = 1, see *the* Shannon paper [2]), the maximum entropy (α = 0, also known as
 Hartley entropy), or the correlation entropy (α = 2, also known as collision entropy).
+
+The following aliases are provided:
+
+* `renyi = genentropy`
+* `shannon(args...) = genentropy(1, args...)`
+* `hartley(args...) = genentropy(0, args...)`
 
 [1] : A. Rényi, *Proceedings of the fourth Berkeley Symposium on Mathematics,
 Statistics and Probability*, pp 547 (1960)

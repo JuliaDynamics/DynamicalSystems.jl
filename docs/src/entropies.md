@@ -3,7 +3,7 @@
 ## Entropies
 In the study of dynamical systems there are many quantities that identify as "entropy".
 Notice that these quantities are not the more commonly known
-[thermodynamic ones](https://en.wikipedia.org/wiki/Entropy), used in Statistical Physics. Rather, they are more like the to the entropies of [information theory](https://en.wikipedia.org/wiki/Entropy_(information_theory), which represent
+[thermodynamic ones](https://en.wikipedia.org/wiki/Entropy), used in Statistical Physics. Rather, they are more like the to the entropies of [information theory](https://en.wikipedia.org/wiki/Entropy_(information_theory)), which represents
 information contained within a dataset, or information about the dimensional
 scaling of a dataset.
 
@@ -32,16 +32,11 @@ by **several orders of magnitude** in both memory and speed. You can compare
 `DynamicalSystems.perform_non0hist` with `DynamicalSystems.perform_non0hist_statsbase`
 for specific numbers on your machine.
 
-In the same family of entropies, other aliases are given for convenience:
-* `renyi = genentropy`
-* `shannon(args...) = genentropy(1, args...)`
-* `hartley(args...) = genentropy(0, args...)`
-
 For example, the Shannon entropy of a coin-flip process should be one bit, [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
 ```julia
 using DynamicalSystems
 y = Int.(rand(Bool, 10000)) # just some coin tosses
-sh = shannon(0.01, y)   # ≡ genentropy(1, 0.01, y)
+sh = shannon(0.01, y)       # ≡ genentropy(1, 0.01, y)
 isapprox(sh, log(2),  rtol = 1e-3) # true!
 ```
 Because all entropies are calculated on base-e, the unit of measurement is "nat", and
