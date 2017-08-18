@@ -1,12 +1,140 @@
+using LsqFit: curve_fit
+export linear_region, linear_regions
+#######################################################################################
+# Functions and methods to deduce linear scaling regions
+#######################################################################################
+"""
+    isevenly(a::AbstractVector)
+Check if `a` is evenly spaced.
+"""
+function isevenly(a::AbstractVector)
+  test = a[2] - a[1]
+  for i in 2:length(a)-1
+    if !(a[i+1] - a[i] ≈ test)
+      throw(ArgumentError("x-axis is not evenly spaced!"))
+    end
+  end
+  true
+end
+
+"""
+```julia
+linear_region(x, y; dxi::Int = 1, tol = 0.1) -> ([ind1, ind2], slope)
+```
+Call `linear_regions`, identify the largest linear region (`max_linear_region`)
+and approximate the slope of this region using least squares fit.
+Return the indeces where
+the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
+"""
+function linear_region(x::AbstractVector, y::AbstractVector,
+  dxi::Int = 1, tol::Real = 0.1)
+
+  # Find biggest linear region:
+  reg_ind = max_linear_region(linear_regions(x,y; dxi=dxi, tol=tol)...)
+  # Prepare least squares fit:
+  xfit = view(x, reg_ind[1]:reg_ind[2])
+  yfit = view(y, reg_ind[1]:reg_ind[2])
+  p0 = [1.0, 1.0]
+  model(x, p) = p[1].*x .+ p[2]
+  # Find fit of tangent:
+  fit = curve_fit(model, xfit, yfit, p0)
+  approx_tang = fit.param[1]
+  return reg_ind, approx_tang
+end
+
+"""
+    max_linear_region(lrs::Vector{Int}, tangents::Vector{Float64})
+Find the biggest linear region and return it.
+"""
+function max_linear_region(lrs::Vector{Int}, tangents::Vector{Float64})
+  dis = 0
+  tagind = 0
+  for i in 1:length(lrs)-1
+    if lrs[i+1] - lrs[i] > dis
+      dis = lrs[i+1] - lrs[i]
+      tagind = i
+    end
+  end
+  return [lrs[tagind], lrs[tagind+1]]
+end
+
+"""
+```julia
+linear_regions(x, y; dxi::Int = 1, tol = 0.1) -> (lrs, tangents)
+```
+Identify regions where the curve `y(x)` is linear, by scanning the
+`x`-axis every `dxi` indeces (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
+and so on if `dxi=5`).
+
+If the slope (calculated using `LsqFit`) of a region of width `dxi` is
+approximatelly equal to that of the previous region,
+within tolerance `tol`,
+then these two regions belong to the same linear region.
+
+Return the indeces of `x` that correspond to linear regions, `lrs`,
+and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
+"""
+function linear_regions(x::AbstractVector, y::AbstractVector;
+  dxi::Int = 1, tol::Real = 0.1)
+
+  maxit = length(x) ÷ dxi
+
+  tangents = Float64[slope(view(x, 1:max(dxi, 2)), view(y, 1:max(dxi, 2)))]
+
+  prevtang = tangents[1]
+  lrs = Int[1] #start of first linear region is always 1
+  lastk = 1
+
+  # Start loop over all partitions of `x` into `dxi` intervals:
+  for k in 1:maxit-1
+    tang = slope(view(x, k*dxi:(k+1)*dxi), view(y, k*dxi:(k+1)*dxi))
+    if isapprox(tang, prevtang, rtol=tol)
+      # Tanget is similar with initial previous one (based on tolerance)
+      continue
+    else
+      # Tangent is not similar.
+      # Push new tangent for a new linear region
+      push!(tangents, tang)
+
+      # Set the START of a new linear region
+      # which is also the END of the previous linear region
+      push!(lrs, k*dxi)
+      lastk = k
+    end
+
+    # Set new previous tangent (only if it was not the same as current)
+    prevtang = tang
+  end
+  push!(lrs, length(x))
+  return lrs, tangents
+end
+
+"""
+    slope(xdata, ydata)
+Perform linear fit to `y(x)` using the module `LsqFit` and return the calculated
+slope.
+"""
+function slope(xfit, yfit)
+  p0 = [(yfit[end] - yfit[1])/(xfit[end] - xfit[1]), yfit[1]]
+  model(x, p) = p[1].*x .+ p[2]
+  # Find fit of tangent:
+  curve_fit(model, xfit, yfit, p0).param[1]
+end
+
+
+#######################################################################################
+# Dimensions
+#######################################################################################
+
 export boxcounting_dim, capacity_dim, generalized_dim,
-information_dim, correlation_dim, collision_dim, estimate_ε,
+information_dim, correlation_dim, collision_dim, estimate_boxsizes,
 kaplanyorke_dim
 
 magnitude(x::Real) = round(Int, log10(x))
 
 """
 ```julia
-estimate_ε(dataset; m = 10, k::Int = 12, n::Int = 4)
+estimate_boxsizes(dataset; m = 10, k::Int = 12, n::Int = 4)
 ```
 Return `logspace(magnitude(x), magnitude(x) - n, k)` where `x` is
 the `minimum( maximum(abs.(v)) - minimum(abs.(v)) for v in vectors )/m`.
@@ -15,7 +143,7 @@ In essense, get a `k`-element `logspace` with maximum being the `1/m` of the
 relative order of magnitude of the vectors,
 and the minimum being `n` orders of magnitude less.
 """
-function estimate_ε(vectors::Vararg{AbstractVector{<:Real}};
+function estimate_boxsizes(vectors::Vararg{AbstractVector{<:Real}};
   m = 10, k::Int = 12, n::Int = 4)
   # maximum ε is 1/m of maximum - minimum
   maxε = Inf
@@ -30,18 +158,18 @@ function estimate_ε(vectors::Vararg{AbstractVector{<:Real}};
   end
   logspace(magnitude(maxε), magnitude(maxε)-n, k)
 end
-estimate_ε(dataset::AbstractMatrix{<:Real}) = estimate_ε(d2v(dataset)...)
+estimate_boxsizes(dataset::AbstractMatrix{<:Real}) = estimate_boxsizes(d2v(dataset)...)
 
 """
-    generalized_dim(α, dataset)
+    generalized_dim(α, dataset) -> D_α
 Return the `α` order generalized dimension that corresponds to the given dataset.
 This quantity corresponds to the
 power law exponent of the scaling of the `genentropy` versus the box size `ε`.
 
 **WARNING** - This call performs a lot of automated steps:
 
-  1. A vector of box sizes is decided by calling `es = estimate_ε(dataset)`.
-  2. For each `ε ∈ es` the appropriate entropy is
+  1. A vector of box sizes is decided by calling `es = estimate_boxsizes(dataset)`.
+  2. For each element of `es` the appropriate entropy is
      calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
   3. The curve d(x) is decomposed into linear regions, using `linear_regions(x, d)`.
   4. The biggest linear region is chosen, and a fit for the slope of that
@@ -58,7 +186,7 @@ The following aliases are provided:
   * α = 2 : `correlation_dim`, `collision_dim`
 """
 function generalized_dim(α, vectors::Vararg{AbstractVector{<:Real}})
-  es = estimate_ε(vectors...)
+  es = estimate_boxsizes(vectors...)
   dd = zeros(es)
   for i in 1:length(es)
     dd[i] = genentropy(α, es[i], vectors...)

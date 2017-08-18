@@ -1,5 +1,4 @@
 export non0hist, genentropy, renyi, d2v, shannon, hartley
-using StaticArrays
 
 """
 ```julia
@@ -36,7 +35,7 @@ end
 function perform_non0hist_statsbase(vectors, ranges, ε)
   # StatsBase version
   pks = fit(Histogram, (vectors...), (ranges...), closed=:left).weights/L
-  return T[x for x in pks if x != 0]
+  return [x for x in pks if x != 0]
 end
 
 """
@@ -49,7 +48,7 @@ size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
 and speed, because it uses a dictionary to collect the information of bins with
 elements, while it completely disregards empty bins.
 
-Use the `fit(Histogram, ...)` from `StatsBase` if you
+Use e.g. `fit(Histogram, ...)` from `StatsBase` if you
 wish to keep information about the edges of the binning as well
 as the zero elements.
 """
@@ -78,12 +77,13 @@ genentropy(α, ε, dataset)
 ```
 Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
 by first partitioning it into boxes of length `ε`.
-log base-e is used, i.e. units of "nat".
 ```julia
 genentropy(α, p::AbstractArray)
 ```
 Compute the entropy of an Array `p` directly, assuming that `p` is
-sum-normalized. log base-e is used, i.e. units of "nat".
+sum-normalized.
+
+log base-e is used in both cases, i.e. units of "nat".
 
 The Rényi entropy `R_α(p) = (1/1-α)*sum(pi^α for pi ∈ p)`
 generalizes other known entropies,

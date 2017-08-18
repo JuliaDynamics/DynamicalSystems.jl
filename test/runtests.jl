@@ -12,5 +12,5 @@ include("entropy_dimension.jl")
 
 
 ti = time() - ti
-println("Test took total time of:")
+println("\nTest took total time of:")
 println(round(ti, 3), " seconds or ", round(ti/60, 3), " minutes")
