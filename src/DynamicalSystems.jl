@@ -20,8 +20,10 @@ export DynamicalSystem, Systems
 include("discrete.jl")
 include("continuous.jl")
 include("famous_systems.jl")
+
 # Lyapunovs:
 include("lyapunovs.jl")
+
 # Entropies and Dimension Estimation:
 include(joinpath("dimensions", "entropies.jl"))
 include(joinpath("dimensions", "dims.jl"))
