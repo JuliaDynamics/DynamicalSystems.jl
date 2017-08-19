@@ -141,9 +141,6 @@ lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=
 #####################################################################################
 #                              Lyapunov Helpers                                     #
 #####################################################################################
-# function dual_evolution_rescaling(ds::ContinuousDS, T;
-#   diff_eq_kwargs = Dict(), dt = 0.1)
-
 function tangentbundle_setup_integrator(ds::ContinuousDS, t_final;
   diff_eq_kwargs=Dict())
 
@@ -240,6 +237,8 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
       println("u2 = ", integ2.u[1])
 
       integ2.u = integ1.u .+ (integ2.u .- integ1.u)./a
+      u_modified!(integ2,true)
+      println("dist after mod = ", norm(integ1.u .- integ2.u))
       dist = d0; i = 0
       println("---------")
     end

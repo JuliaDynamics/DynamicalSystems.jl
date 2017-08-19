@@ -6,26 +6,6 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 #####################################################################################
 #                                   Constructors                                    #
 #####################################################################################
-function test_functions(u0, eom, jac)
-  length(size(u0)) == 1 || throw(ArgumentError("Initial condition must an AbstractVector"))
-  D = length(u0)
-  su0 = SVector{D}(u0); sun = eom(u0);
-  length(sun) == length(u0) ||
-  throw(DimensionMismatch("E.o.m. does not give same sized vector as initial condition"))
-  if !issubtype((typeof(sun)), SVector)
-    throw(ArgumentError("E.o.m. should create an SVector (from StaticArrays)"))
-  end
-  J1 = jac(u0); J2 = jac(SVector{length(u0)}(u0))
-  if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
-    throw(ArgumentError("Jacobian function should create an SMatrix (from StaticArrays)!"))
-  end
-  return true
-end
-function test_functions(u0, eom)
-  jac = (x) -> ForwardDiff.jacobian(eom, x)
-  test_discrete(u0, eom, fd_jac)
-end
-
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
@@ -39,9 +19,9 @@ end
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-  If the `jacob` is not provided by the user, it is created with *tremendous* efficiency
-  using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
-  Jacobian is within a few % of speed of a user-defined one.
+  If the `jacob` is not provided by the user, it is created with *tremendous*
+  efficiency using the module `ForwardDiff`. Most of the time, for low dimensional
+  systems, this Jacobian is within a few % of speed of a user-defined one.
 """
 mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
@@ -123,8 +103,8 @@ the `step!(integrator)` function provided by `DifferentialEquations.jl`.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
-  ds.state = evolve(st, ds, N)
-  return ds
+  ds.state = evolve(ds, N)
+  return ds.state
 end
 
 

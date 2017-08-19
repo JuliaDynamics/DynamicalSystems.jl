@@ -8,14 +8,14 @@ using StaticArrays, Base.Test, DynamicalSystems
   d3 = DiscreteDS1D(big(0.1), d1.eom, d1.deriv)
 
   @testset "Evolution & Timeseries" begin
-    dd1 = evolve!(d1)
-    dd2 = evolve!(d2)
-    dd3 = evolve!(d3)
-    @test dd1.state == dd2.state
-    @test dd1.state ≈ dd3.state
-    @test typeof(dd3.state) == BigFloat
-    ts1 = timeseries(dd1, 100, mutate = false)
-    ts3 = timeseries(dd3, 100, mutate = false)
+    st1 = evolve!(d1)
+    st2 = evolve!(d2)
+    st3 = evolve!(d3)
+    @test st1 == st2
+    @test st1 ≈ st3
+    @test typeof(st3) == BigFloat
+    ts1 = timeseries(d1, 100)
+    ts3 = timeseries(d3, 100)
     @test ts1[10] ≈ ts3[10]
     @test eltype(ts3) == BigFloat
   end
@@ -47,19 +47,19 @@ end
     @test s1.state ≈ s2.state
     @test s2.state ≈ s4.state
 
-    ts = timeseries(s1, 100; mutate = false)
+    ts = timeseries(s1, 100)
     @test size(ts) == (100, 3)
-    ts4 = timeseries(s4, 100; mutate = false)
+    ts4 = timeseries(s4, 100)
     @test size(ts4) == (100, 3)
     @test eltype(ts4) == BigFloat
     @test isapprox.(ts[10, :],ts4[10, :]) == trues(3)
   end
   @testset "Jacobians" begin
 
-    J1 = jacobian(s1)
+    J1 = s1.jacob(s1.state)
     @test typeof(J1) <: SMatrix
-    J2 = jacobian(s2)
-    J4 = jacobian(s4)
+    J2 = s2.jacob(s2.state)
+    J4 = s4.jacob(s4.state)
     @test typeof(J4) <: SMatrix
 
     @test isapprox.(J1, J2; rtol = 1e-6) == trues(J1)

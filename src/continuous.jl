@@ -77,9 +77,11 @@ function ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs=Dict())
   if haskey(diff_eq_kwargs, :solver)
     solver = diff_eq_kwargs[:solver]
     pop!(diff_eq_kwargs, :solver)
-    integrator = init(prob, solver; diff_eq_kwargs..., save_everystep=false)
+    integrator = init(prob, solver; diff_eq_kwargs...,
+    save_first=false, save_everystep=false)
   else
-    integrator = init(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
+    integrator = init(prob, Tsit5(); diff_eq_kwargs...,
+    save_first=false, save_everystep=false)
   end
   return integrator
 end
@@ -110,7 +112,7 @@ function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict=Dict())
 end
 function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict = Dict())
   ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
-  return ds
+  return ds.state
 end
 
 # See discrete.jl for the documentation string
