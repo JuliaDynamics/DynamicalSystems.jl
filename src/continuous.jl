@@ -33,11 +33,6 @@ mutable struct ContinuousDS{T<:AbstractVector, F, J} <: DynamicalSystem
 end
 # Constructor without Jacobian (nothing in the field)
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
-# constructor with Jacobian
-function ContinuousDS(u0::AbstractVector, eom!, jac!)
-  length(size(u0)) != 1 && throw(ArgumentError("u0 has to be one dimensional!"))
-  return ContinuousDS(u0, eom!, jac!)
-end
 
 dimension(ds::ContinuousDS) = length(ds.state)
 #######################################################################################
