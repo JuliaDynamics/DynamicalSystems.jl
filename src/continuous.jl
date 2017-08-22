@@ -71,7 +71,7 @@ do so by using the symbol `:solver`, e.g.:
 `Dict(:solver => DP5(), :tstops => 0:0.01:t)`. This requires you to have been first
 `using OrdinaryDiffEq` to access the solvers.
 """
-function ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs=Dict())
+function ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs = Dict())
   prob = ODEProblem(ds, t)
   # Check if there is a solver in the keywords:
   if haskey(diff_eq_kwargs, :solver)
@@ -106,18 +106,18 @@ end
 #                                Evolution of System                                  #
 #######################################################################################
 # See discrete.jl for the documentation string
-function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict=Dict())
+function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
   prob = ODEProblem(ds, t)
   return get_sol(prob, diff_eq_kwargs)[end]
 end
-function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs::Dict = Dict())
+function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
   ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
   return ds.state
 end
 
 # See discrete.jl for the documentation string
 function timeseries(ds::ContinuousDS, T::Real;
-  dt::Real=0.05, diff_eq_kwargs::Dict=Dict())
+  dt::Real=0.05, diff_eq_kwargs = Dict())
 
   # Necessary due to DifferentialEquations:
   if !issubtype(typeof(T), AbstractFloat)

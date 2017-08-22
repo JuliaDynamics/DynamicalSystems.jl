@@ -4,7 +4,7 @@ export non0hist, genentropy, renyi, d2v, shannon, hartley
 ```julia
 d2v(dataset) -> vectors
 ```
-Convert a dataset to a tuple of vectors, using views.
+Convert a dataset (Matrix) to a tuple of vectors, using views.
 """
 function d2v(dataset)
   D = size(dataset)[2] #dimension of the system (dynamic variables)

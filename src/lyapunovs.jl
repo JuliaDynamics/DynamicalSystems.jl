@@ -68,7 +68,7 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems.
 * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-* `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
+* `threshold = 10^4*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
@@ -83,7 +83,7 @@ be sure that `exp(λ*dt) < threshold/d0`.
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
-  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0)
+  d0=1e-9, threshold=10^4*d0)
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
@@ -95,7 +95,7 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   end
 
   st2 = st1 + d0
-  dist = d0
+  dist = d0*one(eltype(ds.state))
   λ = zero(eltype(st1))
   i = 0
   while i < N
@@ -117,7 +117,7 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   λ /= i
 end
 
-function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr = 100)
+function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
 
   eom = ds.eom
   der = ds.deriv
@@ -177,12 +177,26 @@ function tangentbundle_setup_integrator(ds::ContinuousDS, t_final;
   return tb_integ
 end
 
+function check_tolerances(d0, dek)
+  defatol = 1e-6; defrtol = 1e-3
+  atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
+  rtol = haskey(dek, :reltol) ? dek[:reltol] : defrtol
+  if atol > 10d0
+    warn("Absolute tolerance (abstol) of integration is much bigger than `d0`.")
+  end
+  if rtol > 10d0
+    warn("Relative tolerance (reltol) of integration is much bigger than `d0`.")
+  end
+end
+
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
 function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
-  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0, dt = 0.1,
-  diff_eq_kwargs = Dict())
+  d0=1e-9, threshold=10^4*d0, dt = 0.1,
+  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
+
+  check_tolerances(d0, diff_eq_kwargs)
 
   T = convert(eltype(ds.state), T)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
@@ -194,12 +208,12 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 + d0
+  ds.state = st1 + d0/sqrt(dimension(ds))
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
 
-  dist = d0
+  dist = d0*one(eltype(st1))
   λ = zero(eltype(st1))
   i = 0
   tvector = dt:dt:T
@@ -210,17 +224,11 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
     push!(integ1.opts.tstops, τ); step!(integ1)
     push!(integ2.opts.tstops, τ); step!(integ2)
     dist = norm(integ1.u .- integ2.u)
-    println(dist)
     i += 1
     # Rescale:
     if dist ≥ threshold
-      println("Reached Threshold after $i iterations")
-      println("with dist = $dist")
-
       # add computed scale to accumulator (scale = local lyaponov exponent):
       a = dist/d0
-      println("a = $a")
-
       # Warning message for bad decision of `thershold` or `d0`:
       if a > threshold/d0 && i ≤ 1
         warnstr = "Distance between test and original trajectory exceeded threshold "
@@ -233,21 +241,17 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
       end
       λ += log(a)
       # Rescale and reset everything:
-      println("u1 = ", integ1.u[1])
-      println("u2 = ", integ2.u[1])
-
       integ2.u = integ1.u .+ (integ2.u .- integ1.u)./a
-      u_modified!(integ2,true)
-      println("dist after mod = ", norm(integ1.u .- integ2.u))
+      u_modified!(integ2, true)
+      set_proposed_dt!(integ2, integ1)
       dist = d0; i = 0
-      println("---------")
     end
   end
   λ /= T
 end
 
 
-function lyapunovs(ds::ContinuousDS, N::Real;
+function lyapunovs(ds::ContinuousDS, N::Real=1000;
   Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 1.0)
 
   tstops = dt:dt:N*dt
