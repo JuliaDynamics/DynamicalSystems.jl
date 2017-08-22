@@ -26,8 +26,11 @@ Default values are the ones used in the original paper.
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
 function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
-  @inline @inbounds eom_lorenz(u) =
-  SVector{3}(σ*(u[2]-u[1]), u[1]*(ρ-u[3]) - u[2], u[1]*u[2] - β*u[3])
+  @inline @inbounds function eom_lorenz!(du, u)
+    du[1] = σ*(u[2]-u[1])
+    du[2] = u[1]*(ρ-u[3]) - u[2]
+    du[3] = u[1]*u[2] - β*u[3]
+  end
   @inline @inbounds function jacob_lorenz(u)
     i = one(eltype(u))
     o = zero(eltype(u))
@@ -35,7 +38,7 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
               (ρ*i - u[3])   (-i)   (-u[1]);
               u[2]           u[1]   (-β*i) ]
   end# should give exponents [0.9056, 0, -14.5723]
-  return ContinuousDS(u0, eom_lorenz, jacob_lorenz)
+  return ContinuousDS(u0, eom_lorenz!, jacob_lorenz)
 end
 
 
@@ -54,8 +57,11 @@ Default values are the same as the original paper.
 [1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-  @inline @inbounds eom_roessler(u) =
-  SVector{3}(-u[2]-u[3], u[1] + a*u[2], b + u[3]*(u[1] - c))
+  @inline @inbounds function eom_roessler!(du, u)
+    du[1] = -u[2]-u[3]
+    du[2] = u[1] + a*u[2]
+    du[3] = b + u[3]*(u[1] - c)
+  end
   @inline @inbounds function jacob_roessler(u)
     i = one(eltype(u))
     o = zero(eltype(u))
@@ -63,7 +69,7 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
               i      a       o;
               u[3]   o       u[1] - c]
   end
-  return ContinuousDS(u0, eom_roessler, jacob_roessler)
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler)
 end
 
 
@@ -147,9 +153,8 @@ Default values are the ones used in the original paper.
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
   @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
   @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-  # should give exponents 0.4189 -1.6229
   return DiscreteDS(u0, eom_henon, jacob_henon)
-end
+end # should give lyapunov exponents [0.4189, -1.6229]
 
 """
     logistic(x0 = rand(); r = 4.0)

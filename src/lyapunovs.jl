@@ -12,14 +12,13 @@ paper(s) [3]).
 Returns a vector with the *final*
 values of the lyapunov exponents in descending order.
 ## Keyword Arguments:
-* `Ttr` : Extra "transient" time to evolve the system before application of the
-  algorithm. Should be `Int` for discrete systems. Defaults are
-  system type dependent.
+* `Ttr = 0` : Extra "transient" time to evolve the system before application of the
+  algorithm. Should be `Int` for discrete systems.
 * `dt = 1.0` : (only for continuous) Time of individual evolutions
   between sucessive orthonormalization steps.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
-  `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
+  `DifferentialEquations` package (see `timeseries` for more info).
 
 [1] : A. M. Lyapunov, *The General Problem of the Stability of Motion*,
 Taylor & Francis (1992)
@@ -66,11 +65,10 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
 ## Keyword Arguments:
-* `Ttr` : Extra "transient" time to evolve the system before application of the
-  algorithm. Should be `Int` for discrete systems. Defaults are
-  system type dependent.
+* `Ttr = 0` : Extra "transient" time to evolve the system before application of the
+  algorithm. Should be `Int` for discrete systems.
 * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-* `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
+* `threshold = 10^4*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
@@ -85,7 +83,7 @@ be sure that `exp(λ*dt) < threshold/d0`.
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
-  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0)
+  d0=1e-9, threshold=10^4*d0)
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
@@ -97,7 +95,7 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   end
 
   st2 = st1 + d0
-  dist = d0
+  dist = d0*one(eltype(ds.state))
   λ = zero(eltype(st1))
   i = 0
   while i < N
@@ -119,7 +117,7 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
   λ /= i
 end
 
-function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr = 100)
+function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
 
   eom = ds.eom
   der = ds.deriv
@@ -141,96 +139,142 @@ end
 lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=Ttr)
 
 #####################################################################################
-#                                  Continuous                                       #
+#                              Lyapunov Helpers                                     #
 #####################################################################################
-function lyapunov(ds::ContinuousDS, T::Real = 10000.0; Ttr = 10.0,
-  d0=1e-9*one(eltype(ds.state)), threshold=10^4*d0, dt = 0.1,
-  diff_eq_kwargs = Dict())
+function tangentbundle_setup_integrator(ds::ContinuousDS, t_final;
+  diff_eq_kwargs=Dict())
 
-  const dict = Dict()
+  D = dimension(ds)
+  f! = ds.eom!
+  jac = ds.jacob
 
+  # the equations of motion `tbeom!` evolve the system and the tangent dynamics
+  # The e.o.m. for the system is f!(t, u , du).
+  # The e.o.m. for the tangent dynamics is simply:
+  # dY/dt = J(u) ⋅ Y
+  # with J the Jacobian of the system (NOT the flow), at the current state
+  tbeom! = (t, u, du) -> begin
+    f!(view(du, :, 1), u)
+    A_mul_B!(
+    view(du, :, 2:D+1),
+    jac(view(u, :, 1)),
+    view(u, :, 2:D+1)
+    )
+  end
+
+  # S is the matrix that keeps the system state in the first column
+  # and tangent dynamics (Jacobian of the Flow) in the rest of the columns
+  S = [ds.state eye(eltype(ds.state), D)]
+
+  tbprob = ODEProblem(tbeom!, S, (zero(t_final), t_final))
+  if haskey(diff_eq_kwargs, :solver)
+    solver = diff_eq_kwargs[:solver]
+    pop!(diff_eq_kwargs, :solver)
+    tb_integ = init(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
+  else
+    tb_integ = init(tbprob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
+  end
+  return tb_integ
+end
+
+function check_tolerances(d0, dek)
+  defatol = 1e-6; defrtol = 1e-3
+  atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
+  rtol = haskey(dek, :reltol) ? dek[:reltol] : defrtol
+  if atol > 10d0
+    warn("Absolute tolerance (abstol) of integration is much bigger than `d0`.")
+  end
+  if rtol > 10d0
+    warn("Relative tolerance (reltol) of integration is much bigger than `d0`.")
+  end
+end
+
+#####################################################################################
+#                            Continuous Lyapunovs                                   #
+#####################################################################################
+function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
+  d0=1e-9, threshold=10^4*d0, dt = 0.1,
+  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
+
+  check_tolerances(d0, diff_eq_kwargs)
+
+  T = convert(eltype(ds.state), T)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
   # Transient system evolution
-  if Ttr != 0
-    evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-  end
+  Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+
   # initialize:
   st1 = ds.state
-  st2 = st1 + d0
-  prob1 = ODEProblem(ds, dt)
-  prob2 = ODEProblem(ds, dt)
-  prob2.u0 = st2
-  dist = d0
+  integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ1.opts.advance_to_tstop=true
+  ds.state = st1 + d0/sqrt(dimension(ds))
+  integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ2.opts.advance_to_tstop=true
+  ds.state = st1
+
+  dist = d0*one(eltype(st1))
   λ = zero(eltype(st1))
-  t = zero(T)
   i = 0
+  tvector = dt:dt:T
+
   # start evolution and rescaling:
-  while t < T
-    #evolve until rescaling:
-    while dist < threshold
-      # evolve
-      if diff_eq_kwargs == dict
-        st1 = evolve!(prob1)
-        st2 = evolve!(prob2)
-      else
-        st1 = evolve!(prob1, diff_eq_kwargs)
-        st2 = evolve!(prob2, diff_eq_kwargs)
+  for τ in tvector
+    # evolve until rescaling:
+    push!(integ1.opts.tstops, τ); step!(integ1)
+    push!(integ2.opts.tstops, τ); step!(integ2)
+    dist = norm(integ1.u .- integ2.u)
+    i += 1
+    # Rescale:
+    if dist ≥ threshold
+      # add computed scale to accumulator (scale = local lyaponov exponent):
+      a = dist/d0
+      # Warning message for bad decision of `thershold` or `d0`:
+      if a > threshold/d0 && i ≤ 1
+        warnstr = "Distance between test and original trajectory exceeded threshold "
+        warnstr*= "after just 1 evolution step. "
+        warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
+        warn(warnstr)
+        errorstr = "Parameters choosen for `lyapunov` with "
+        errorstr*= "`ContinuousDS` are not fitted for the algorithm."
+        throw(ArgumentError(errorstr))
       end
-      dist = norm(st1 - st2)
-      t += dt
-      i += 1
-      t ≥ T && break #once again, necessary for systems that don't go apart
+      λ += log(a)
+      # Rescale and reset everything:
+      integ2.u = integ1.u .+ (integ2.u .- integ1.u)./a
+      u_modified!(integ2, true)
+      set_proposed_dt!(integ2, integ1)
+      dist = d0; i = 0
     end
-    # add computed scale to accumulator (scale = local lyaponov exponent):
-    a = dist/d0
-    # Warning message for bad decision of `thershold` or `d0`:
-    if a > 1e^4 && i <= 1
-      warnstr = "Distance between test and original trajectory exceeded threshold "
-      warnstr*= "after just 1 evolution step. "
-      warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
-      warn(warnstr)
-      errorstr = "Parameters choosen for `lyapunov` with "
-      errorstr*= "`ContinuousDS` are not fitting the algorithm."
-      throw(ArgumentError(errorstr))
-    end
-    λ += log(a)
-    # Rescale and reset everything:
-    prob2.u0 = st1 + (st2 - st1)/a
-    dist = d0; i = 0
   end
-  λ /= t
+  λ /= T
 end
 
 
-function lyapunovs(ds::ContinuousDS, N::Real;
-  Ttr::Real = 1.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 1.0)
+function lyapunovs(ds::ContinuousDS, N::Real=1000;
+  Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 1.0)
 
+  tstops = dt:dt:N*dt
   D = dimension(ds)
-  T = eltype(ds.state)
-  jac = ds.jacob
-  const dict = Dict()
-  # Transient
-  if Ttr != 0
-    evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-  end
-  # Initialization (uses tangent dynamics)
-  tbprob = tangentbundle_setup(ds, dt)
-  λ = zeros(T, D)
+  λ = zeros(eltype(ds.state), D)
   Q = eye(eltype(ds.state), D)
 
+  # Transient evolution:
+  Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+
+  # Create integrator for dynamics and tangent space:
+  integ = tangentbundle_setup_integrator(
+  ds, tstops[end]; diff_eq_kwargs = diff_eq_kwargs)
+  integ.opts.advance_to_tstop=true
+
   # Main algorithm
-  for i in 1:N
-    tbprob.u0[:, 2:end] .= Q # update tangent dynamics state
-    # evolve system and tangent dynamics:
-    if diff_eq_kwargs == dict
-      evolve!(tbprob)
-    else
-      evolve!(tbprob, diff_eq_kwargs)
-    end
+  for τ in tstops
+    integ.u[:, 2:end] .= Q # update tangent dynamics state (super important!)
+    push!(integ.opts.tstops, τ)
+    step!(integ)
 
     # Perform QR (on the tangent flow):
-    Q, R = qr(view(tbprob.u0, :, 2:D+1))
+    Q, R = qr(view(integ.u, :, 2:D+1))
     # Add correct (positive) numbers to Lyapunov spectrum
     for j in 1:D
       λ[j] += log(abs(R[j,j]))

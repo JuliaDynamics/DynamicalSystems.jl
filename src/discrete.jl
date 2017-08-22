@@ -1,31 +1,11 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension, jacobian
+export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension
 
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 #####################################################################################
 #                                   Constructors                                    #
 #####################################################################################
-function test_functions(u0, eom, jac)
-  length(size(u0)) == 1 || throw(ArgumentError("Initial condition must an AbstractVector"))
-  D = length(u0)
-  su0 = SVector{D}(u0); sun = eom(u0);
-  length(sun) == length(u0) ||
-  throw(DimensionMismatch("E.o.m. does not give same sized vector as initial condition"))
-  if !issubtype((typeof(sun)), SVector)
-    throw(ArgumentError("E.o.m. should create an SVector (from StaticArrays)"))
-  end
-  J1 = jac(u0); J2 = jac(SVector{length(u0)}(u0))
-  if !issubtype((typeof(J1)), SMatrix) || !issubtype((typeof(J2)), SMatrix)
-    throw(ArgumentError("Jacobian function should create an SMatrix (from StaticArrays)!"))
-  end
-  return true
-end
-function test_functions(u0, eom)
-  jac = (x) -> ForwardDiff.jacobian(eom, x)
-  test_discrete(u0, eom, fd_jac)
-end
-
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
@@ -39,9 +19,9 @@ end
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-  If the `jacob` is not provided by the user, it is created with *tremendous* efficiency
-  using the module `ForwardDiff`. Most of the time, for low dimensional systems, this
-  Jacobian is within a few % of speed of a user-defined one.
+  If the `jacob` is not provided by the user, it is created with *tremendous*
+  efficiency using the module `ForwardDiff`. Most of the time, for low dimensional
+  systems, this Jacobian is within a few % of speed of a user-defined one.
 """
 mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
@@ -83,41 +63,30 @@ end
 
 dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
 dimension(::DiscreteDS1D) = 1
-jacobian(ds::DynamicalSystem) = ds.jacob(ds.state)
 #####################################################################################
 #                               System Evolution                                    #
 #####################################################################################
 """
 ```julia
-evolve([state, ] ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> new_state
+evolve(ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> final_state
 ```
-Evolve a `state` (or the system's state) under the dynamics
-of `ds` for total "time" `T`. For discrete systems `T` corresponds to steps and
-thus it must be integer. Returns the final state after evolution.
-
-The **keyword** argument `diff_eq_kwargs` (applicable only in `ContinuousDS`)
-is a dictionary `Dict{Symbol, Any}`
-of keyword arguments
-passed into the `solve` of the `DifferentialEquations.jl` package,
-for example `Dict(:abstol => 1e-9)`.
-If you want to specify a solver,
-do so by using the symbol `:solver`, e.g.:
-`Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
-`using OrdinaryDiffEq` or `using DifferentialEquations` to access the solvers.
+Evolve a `ds` for total "time" `T` and return the `final_state` (does not change
+`ds.state`).
+For discrete systems `T` corresponds to steps and
+thus it must be integer. See `timeseries` for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
-Use `timeseries` if you want to produce timeseries of the system.
+Use `timeseries` if you want to produce timeseries of the system. If you want to
+perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations.jl`.
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
-  st = evolve(st, ds, N)
-end
-function evolve(state, ds::DiscreteDynamicalSystem, N::Int = 1)
   f = ds.eom
   for i in 1:N
-    state = f(state)
+    st = f(st)
   end
-  return state
+  return st
 end
 
 """
@@ -125,12 +94,17 @@ end
 evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict()) -> ds
 ```
 Evolve (in-place) a dynamical system for total "time" `T`, setting the final
-state as the system's state.
+state as the system's state. See `timeseries` for using `diff_eq_kwargs`.
+
+This function *does not store* any information about intermediate steps.
+Use `timeseries` if you want to produce timeseries of the system. If you want to
+perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations.jl`.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
-  ds.state = evolve(st, ds, N)
-  return ds
+  ds.state = evolve(ds, N)
+  return ds.state
 end
 
 
@@ -146,8 +120,6 @@ For the discrete case, `T` is an integer and a `T×D` matrix is returned
 continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).
 ## Keywords:
-* `mutate = false` : whether to update the dynamical system's state with the
-  final state of the timeseries.
 * `dt = 0.05` : (only for continuous) Time step of value output during the solving
   of the continuous system.
 * `diff_eq_kwargs = Dict()` : (only for continuous) A dictionary `Dict{Symbol, ANY}`
@@ -158,7 +130,7 @@ continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
   `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
   `using OrdinaryDiffEq` to access the solvers.
 """
-function timeseries(ds::DiscreteDS, N::Real; mutate = false)
+function timeseries(ds::DiscreteDS, N::Real)
   st = ds.state
   T = eltype(st)
   D = length(st)
@@ -169,11 +141,10 @@ function timeseries(ds::DiscreteDS, N::Real; mutate = false)
     st = f(st)
     ts[i, :] .= st
   end
-  mutate && (ds.state = ts[end, :])
   return ts
 end
 
-function timeseries(ds::DiscreteDS1D, N::Int; mutate = true)
+function timeseries(ds::DiscreteDS1D, N::Int)
   x = deepcopy(ds.state)
   f = ds.eom
   ts = Vector{eltype(x)}(N)
@@ -182,7 +153,6 @@ function timeseries(ds::DiscreteDS1D, N::Int; mutate = true)
     x = f(x)
     ts[i] = x
   end
-  mutate && (ds.state = x)
   return ts
 end
 
@@ -190,13 +160,15 @@ end
 #                                Pretty-Printing                                    #
 #####################################################################################
 import Base.show
-function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
+function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where
+  {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
   print(io, "$N-dimensional discrete dynamical system:\n",
   "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
-  function Juno.render(i::Juno.Inline, s::DiscreteDS{N, S, F, J}) where {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
+  function Juno.render(i::Juno.Inline, s::DiscreteDS{N, S, F, J}) where
+    {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
     t = Juno.render(i, Juno.defaultrepr(s))
     t[:head] = Juno.render(i, Text("$N-dimensional discrete dynamical system"))
     t
@@ -209,7 +181,8 @@ function Base.show(io::IO, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:A
   "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 @require Juno begin
-  function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:ANY}
+  function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where
+    {S<:ANY, F<:ANY, J<:ANY}
     t = Juno.render(i, Juno.defaultrepr(s))
     t[:head] = Juno.render(i, Text("1-dimensional discrete dynamical system"))
     t
