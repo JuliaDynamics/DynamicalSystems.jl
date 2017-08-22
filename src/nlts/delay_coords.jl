@@ -67,9 +67,9 @@ end
 function estimate_τ(s::AbstractVector)
   c = autocor(x, 0:length(x)÷10)
   # First approach: find zero
-  asdf
+
   # Second approach: if all positive, perform exponential fit
-  
+
 end
 
 function estimate_d(s::AbstractVector)

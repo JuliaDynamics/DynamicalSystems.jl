@@ -4,7 +4,7 @@ import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
 
 export ContinuousDS, ODEProblem, ODEIntegrator
-abstract type DynamicalSystem end
+
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
@@ -26,8 +26,8 @@ Because the `jacob` function is only necessary for a small subset of algorithms,
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
-mutable struct ContinuousDS{T<:Real, F, J} <: DynamicalSystem
-  state::AbstractVector{T}
+mutable struct ContinuousDS{T<:AbstractVector, F, J} <: DynamicalSystem
+  state::T
   eom!::F
   jacob::J
 end
