@@ -5,43 +5,33 @@ This of course stands for systems where one already **knows the equations of mot
 if instead, your "system" is in the form of [numerical data](#numerical-data), then see the appropriate section.
 
 
-By taking advantage of the package [`ForwardDiff.jl`](https://github.com/JuliaDiff/ForwardDiff.jl) an automated Jacobian
-function can always be supplemented by the package. More details are enclosed in the individual sections, however the documentation strings of all the constructors are
-also self-contained.
-
 !!! warning "Non-autonomous systems"
     This package does **not** accept non-autonomous systems. To use such systems with this package increase
     the dimensionality of your system by 1, by introducing an additional variable
-    ``\tau`` such that ``d\tau/dt = 1`` (or ``\tau_{n+1} = \tau_n + 1``). This additional variable will serve as
+    $\tau$ such that $d\tau/dt = 1$ (or $\tau_{n+1} = \tau_n + 1$). This additional variable will serve as
     the "time" in your equations of motion.
 
-!!! tip "User-defined Jacobian"
-    Providing a user-defined Jacobian to the system constructors is faster than using
-    the one generated from `ForwardDiff.jl`, albeit slightly. Currently, the only function
-    that uses the Jacobian is `lyapunovs`, therefore it is advised to provided a
-    user-defined one if you want to use it.
 
 ## Discrete Systems
 Discrete systems are of the form:
 ```math
 \vec{x}_{n+1} = \vec{f}(\vec{x}_n).
 ```
-The Type representing such systems for dimensionality `D ≤ 10` is called `DiscreteDS`.
-
-The constructor is:
-```julia
-DiscreteDS(state, eom [, jacob])
+The Type representing such systems is called `DiscreteDS`:
+```@docs
+DiscreteDS
 ```
+
 The documentation string of the constructor is perfectly self-contained, but for the sake of clarity we will go through all the steps in the following.
 
 `state` is simply the state the system starts (a.k.a. initial conditions) and
 `eom` is a *function* that takes a `state` as an input and returns the next state
 as an output.
-
 The `jacob` is also a *function* that takes a `state` as an input and returns the
-Jacobian matrix of the system (at this state). This however is optional and if not provided by the user, will be calculated automatically using the package `ForwardDiff.jl`.
+Jacobian matrix of the system (at this state).
+This however is optional and if not provided by the user, will be calculated automatically using the package `ForwardDiff.jl`.
 
-!!! note "Return form of the `eom` function for small `D`"
+!!! note "Return form of the `eom` function"
     It is **heavily** advised that the equations of motion `eom` function returns an `SVector` from
     the julia package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and similarly the `jacob` function returns an `SMatrix`. [Numerous benchmarks](https://github.com/Datseris/DynamicalSystems.jl/tree/master/test/benchmarks) have been made in order to deduce the most efficient possible way to define
     a system, and this way was proved to be the best when the system's dimension is small.
@@ -56,19 +46,17 @@ jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
 
 ds = DiscreteDS(rand(2), eom_henon, jacob_henon)
 ```
-If we did not want to write a Jacobian (due to e.g. unending laziness), we could
+If we did not want to write a Jacobian, we could do
 ```julia
 ds_nojac = DiscreteDS(rand(2), eom_henon)
 ```
 and the Jacobian function would be created automatically.
 
-
-### Large Discrete Systems
-TBA
-
 ### 1-dimensional Discrete Systems
 In the case of maps, there a special structure for one-dimensional systems, since
-they are commonly used in scientific research. The syntax is `DiscreteDS1D(state, eom [, deriv])`. In this one-dimensional case, you don't need to worry about `StaticArrays.jl`
+they are commonly used in scientific research.
+The syntax is `DiscreteDS1D(state, eom [, deriv])`.
+In this one-dimensional case, you don't need to worry about `StaticArrays.jl`
 because everything is in plain numbers. For example:
 ```julia
 using DynamicalSystems
@@ -86,27 +74,38 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined almost identically with the discrete systems. The documentation string
-of the constructor `ContinuousDS` has all the necessary information:
+are defined almost similarly with the discrete systems:
 ```@docs
 ContinuousDS
 ```
-Once again, using `StaticArrays` is preferred.
+There are two major differences compared to the discrete case:
+
+1. The second field `eom!` ends with an `!` to remind users that it is an in-place
+   function.
+2. Automated Jacobian function evaluation is not yet supported due to the dissonance
+   of the interfaces of [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl) and [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
+
+Notice that providing a Jacobian is not necessary, as it is used by few methods (e.g.
+[`lyapunovs`](lyapunovs/#DynamicalSystems.lyapunovs)). If you do provide a Jacobian,
+it is best if it returns an `SMatrix`.
 
 For example, the continuous Rössler system can be defined as:
 ```julia
-eom_roessler(u) =
-SVector{3}(-u[2]-u[3], u[1] + a*u[2], b + u[3]*(u[1] - c))
-
-function jacob_roessler(u)
-  i = one(eltype(u))
-  o = zero(eltype(u))
-  @SMatrix [o     -i      -i;
-            i      a       o;
-            u[3]   o       u[1] - c]
+@inline @inbounds function eom_roessler!(du, u)
+    a = 0.2; b = 0.2; c = 5.7
+    du[1] = -u[2]-u[3]
+    du[2] = u[1] + a*u[2]
+    du[3] = b + u[3]*(u[1] - c)
+end
+@inline @inbounds function jacob_roessler(u)
+    i = one(eltype(u))
+    o = zero(eltype(u))
+    @SMatrix [o     -i      -i;
+              i      a       o;
+              u[3]   o       u[1] - c]
 end
 
-ros = ContinuousDS(rand(3), eom_roessler, jacob_roessler)
+ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
 ```
 
 ## System evolution
@@ -118,23 +117,27 @@ Notice that if you want to do repeated evolutions of a system, use the
 These are the functions related to system-evolution:
 ```@docs
 evolve
-timeseries
-ODEProblem
 evolve!
+timeseries
 ```
 
+In addition, interfaces are provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
+```@docs
+ODEProblem
+ODEIntegrator
+```
 
 
 ## Numerical Data
 In the most general case, the numerical data representing the evolution of a system
 are in the form of time-series. `DynamicalSystems.jl` offers many methods that accept numerical data. A general convention stated in the documentation string of all functions is the following: `foo(dataset)`.
 
-The data can be provided in two ways: firstly as a `N×D` matrix (`dataset`) that contains `N` data points of a `D` dimensional
-system (each column represents a dynamical variable's timeseries). Secondly all functions can be also called as `foo(v1, v2, v3, ...)`, passing vectors like a `Vararg`. The `vectors = v1, v2, ..., vD` are simply the individual timeseries, so that `dataset ≡ hcat(vectors...)`.
+The dataset can be provided in two ways: firstly as a `N×D` matrix (`foo(matrix)`) that contains `N` data points of a `D` dimensional
+system (each column represents a dynamical variable's timeseries). Secondly all functions can be also called as `foo(v1, v2, v3, ...)`, passing vectors like a `Vararg`. The `vectors = v1, v2, ..., vD` are simply the individual timeseries, so that `matrix ≡ hcat(vectors...)`.
 
 
 ## Predefined Systems
-Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems.jl`, in the form of functions that return a `DynamicalSystem`. They are accessed
+Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems`, in the form of functions that return a `DynamicalSystem`. They are accessed
 like:
 ```julia
 using DynamicalSystems

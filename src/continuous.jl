@@ -1,4 +1,3 @@
-#### DO NOT EDIT: CHANGING EVERYTHING TO INPLACE
 using OrdinaryDiffEq, Requires
 import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
@@ -15,7 +14,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 * `state::Vector{T}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
 * `eom!` (function) : The function that represents the system's equations of motion
-  (also called vector field). The function is of the format: `eom(du, u)`
+  (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
   `du` is the first).
 * `jacob` (function) : The function that represents the Jacobian of the system,
