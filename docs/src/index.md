@@ -1,3 +1,4 @@
+# Introduction
 `DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general. The package
 treats the following types of dynamical systems:
@@ -21,7 +22,7 @@ This is the (non-final) list of what this package aims to offer:
 3. [Lyapunov exponent estimation](lyapunovs).
 4. [Entropy and Attractor Dimension estimation](entropies).
 6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
-6. Attractor reconstruction, embedding and all that jazz.
+6. [Attractor reconstruction, embedding and all that jazz](nlts).
 7. Numeric Computation of Kolmogorov-Sinai entropy.
 8. Definition of chaos, by Ott.
 7. Chaos control, TBA.

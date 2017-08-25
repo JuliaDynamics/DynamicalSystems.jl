@@ -8,7 +8,8 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
 !!! warning "Non-autonomous systems"
     This package does **not** accept non-autonomous systems. To use such systems with this package increase
     the dimensionality of your system by 1, by introducing an additional variable
-    $\tau$ such that $d\tau/dt = 1$ (or $\tau_{n+1} = \tau_n + 1$). This additional variable will serve as
+    `τ` such that `dτdt = 1` (or `τ_next = τ_prev + 1`).
+    This additional variable will serve as
     the "time" in your equations of motion.
 
 
@@ -74,7 +75,7 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined almost similarly with the discrete systems:
+are defined almost with the discrete systems:
 ```@docs
 ContinuousDS
 ```

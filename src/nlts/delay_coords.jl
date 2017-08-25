@@ -1,4 +1,4 @@
-using RecursiveArrayTools, Requires
+using RecursiveArrayTools, Requires, StatsBase
 #####################################################################################
 #                            Reconstruction Object                                  #
 #####################################################################################
@@ -40,7 +40,9 @@ end
     reconstruct(s::AbstractVector, τ::Int, d::Int) -> R
 Create and return an efficient `Reconstruction` data structure that serves as the
 delay-coordinates reconstruction of the signal `s`. The reconstuction has
-dimension `d` and delay `τ` (measured in indeces).
+dimension `d` and delay `τ` (measured in indeces). This object can have same
+invariant quantities (like e.g. lyapunov exponents) with the original system
+that the timeseries were recorded from [1, 2].
 
 The returned `R` is a `VectorOfArrays` from `RecursiveArrayTools.jl` and
 stores all the information about the embedding without allocating new arrays.
@@ -49,9 +51,13 @@ It can however be used as a normal matrix:
 R[:, 2] # get the first column the reconstructed matrix
 R[5, 1] # get the 5th element of the first column of the matrix
 ```
+
+[1] : F. Takens, *Detecting Strange Attractors in Turbulence— Dynamical
+Systems and Turbulence*, Lecture Notes in Mathematics **366** (1981)
+
+[2] : T. Sauer *et al.*, J. Stat. Phys. **65**, pp 579 (1991)
 """
 function reconstruct(s::AbstractVector, τ::Int, d::Int)
-  maxn = length(s) - (d-1)*τ
   N = length(s)
   u = typeof(view(s, 1:2))[]
 
@@ -67,7 +73,6 @@ end
 function estimate_τ(s::AbstractVector)
   c = autocor(x, 0:length(x)÷10)
   # First approach: find zero
-
   # Second approach: if all positive, perform exponential fit
 
 end

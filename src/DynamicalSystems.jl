@@ -28,4 +28,7 @@ include("lyapunovs.jl")
 include(joinpath("dimensions", "entropies.jl"))
 include(joinpath("dimensions", "dims.jl"))
 
+# Nonlinear Timeseries Analysis:
+include(joinpath("nlts", "delay_coords.jl"))
+
 end # module

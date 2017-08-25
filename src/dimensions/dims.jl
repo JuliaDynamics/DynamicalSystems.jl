@@ -211,7 +211,8 @@ information_dim(args...) = generalized_dim(1, args...)
 ```julia
 kaplanyorke_dim(lyapunovs::AbstractVector)
 ```
-Calculate the Kaplan-Yorke dimension [1]. This simply is the point where
+Calculate the Kaplan-Yorke dimension [1] (aka Lyapunov dimension).
+This simply is the point where
 `cumsum(lyapunovs)` becomes zero (interpolated). Returns the dimension of the system
 if the sum of the exponents never becomes negative.
 
