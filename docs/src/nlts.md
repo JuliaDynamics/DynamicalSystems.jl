@@ -1,7 +1,7 @@
 # Nonlinear Timeseries Analysis
 ## Attractor Reconstruction
 A timeseries can be used to gain information about the dynamics of the entire phase-space,
-by reconstructing a phase-spaced from the timeseries. One method that can do this is
+by reconstructing a phase-space from the timeseries. One method that can do this is
 what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem).
 
 In `DynamicalSystems.jl` this is done through the `reconstruct` interface:
