@@ -6,10 +6,13 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 |:--------:|:-------------------:|:-----------------------:|:-----:|
 | [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://datseris.github.io/DynamicalSystems.jl/latest) | Not yet! | [![Build Status](https://travis-ci.org/Datseris/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/Datseris/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/oabd7hgibx63bo1l?svg=true)](https://ci.appveyor.com/project/Datseris/dynamicalsystems-jl)
 
-*WARNING: Only trust what is written in the documentation! Anything else might be incomplete, broken, or give wrong results!*
+*WARNING: This package is currently in Beta. However, you can trust what is written
+in the documentation, because it has been tested. Anything else in the source code
+that is not documented might be incomplete, broken, or give wrong results!*
 
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
+See the [documentation](https://datseris.github.io/DynamicalSystems.jl/latest) for more.
 
 This is the (non-final) list of what this package aims to offer:
 
