@@ -49,7 +49,7 @@ The returned `R` is a `VectorOfArrays` from `RecursiveArrayTools.jl` and
 stores all the information about the embedding without allocating new arrays.
 It can however be used as a normal matrix:
 ```julia
-R[:, 2] # get the first column the reconstructed matrix
+R[:, 2] # get the second column the reconstructed matrix
 R[5, 1] # get the 5th element of the first column of the matrix
 ```
 
