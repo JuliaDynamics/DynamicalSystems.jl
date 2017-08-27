@@ -5,3 +5,4 @@ Requires 0.4.3
 LsqFit 0.3.0
 StaticArrays 0.6.2
 StatsBase 0.18.0
+RecursiveArrayTools 0.12.1
