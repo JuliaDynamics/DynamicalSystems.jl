@@ -25,8 +25,8 @@ println("\nTesting continuous system lyapunov exponents...")
   # end
 
   @testset "lyapunov" begin
-    λ1 = lyapunov(ds, 10000, dt =  0.1)
-    @test 0.89 < λ1[1] < 0.92
+    λ1 = lyapunov(ds, 10000.0)
+    @test 0.89 < λ1 < 0.92
   end
 end
 #=

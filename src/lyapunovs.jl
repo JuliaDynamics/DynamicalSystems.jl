@@ -208,17 +208,20 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  return lyapunov(integ1; d0=d0, threshold=threshold, dt=dt)
+  ds.state = st1 .+ d0
+  integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ2.opts.advance_to_tstop=true
+  ds.state = st1
+  return lyapunov(integ1, integ2, T; d0=d0, threshold=threshold, dt=dt)
 end
 
-function lyapunov(integ1::ODEIntegrator; d0=1e-9, threshold=10^4*d0, dt = 0.1)
-  integ2 = deepcopy(integ1)
-  integ2.u = integ1.u .+ d0
-  integ2.opts.advance_to_tstop=true
+function lyapunov(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
+  d0=1e-9, threshold=10^4*d0, dt = 0.1)
 
-  dist = d0*one(eltype(st1))
-  λ = zero(eltype(st1))
-  i = 0
+
+  dist = d0*one(eltype(integ1.u))
+  λ = zero(eltype(integ1.u))
+  i = 0;
   tvector = dt:dt:T
 
   # start evolution and rescaling:
