@@ -145,31 +145,29 @@ magnitude(x::Real) = round(Int, log10(x))
 
 """
 ```julia
-estimate_boxsizes(dataset; m = 5, k::Int = 10, n::Int = 3)
+estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 1)
 ```
-Return `logspace(magnitude(x), magnitude(x) - n, k)` where `x` is
-the `minimum( maximum(abs.(v)) - minimum(abs.(v)) for v in vectors )/m`.
-
-In essense, get a `k`-element `logspace` with maximum being the `1/m` of the
-relative order of magnitude of the vectors,
-and the minimum being `n` orders of magnitude less.
+Return a `k`-element logspace from the magnitude + `z` of the biggest absolute
+value of the dataset, to the magnitude + `w` of the
+minimum pair-wise distance between datapoints.
 """
-function estimate_boxsizes(vectors::Vararg{AbstractVector{<:Real}};
-  m = 5, k::Int = 10, n::Int = 3)
-  # maximum ε is 1/m of maximum - minimum
-  maxε = Inf
-  for v in vectors
-    vv = abs.(v)
-    ma = maximum(vv)
-    mi = minimum(vv)
-    d = (ma - mi)/10
-    if d < maxε
-      maxε = d
-    end
+function estimate_boxsizes(ts::AbstractMatrix;
+  k::Int = 12, z = 0, w = 1)
+  cts = transpose(ts)
+  mindist = min_pairwise_distance(cts)[2]
+  maxv = -Inf
+  for i in 1:size(cts, 1)
+    ma = maximum(abs.(view(cts, i, :)))
+    maxv = (ma > maxv) ? ma : maxv
   end
-  logspace(magnitude(maxε), magnitude(maxε)-n, k)
+  lower = magnitude(mindist)
+  if 10.0^lower < mindist
+    lower += 1
+  end
+  logspace(magnitude(maxv)+z, lower+w, k)
 end
-estimate_boxsizes(dataset::AbstractMatrix{<:Real}) = estimate_boxsizes(d2v(dataset)...)
+estimate_boxsizes(vectors::Vararg{AbstractVector{<:Real}}) =
+estimate_boxsizes(v2d(vectors...))
 
 """
     generalized_dim(α, dataset) -> D_α

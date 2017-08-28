@@ -1,19 +1,4 @@
-export non0hist, genentropy, renyi, d2v, shannon, hartley
-
-"""
-```julia
-d2v(dataset) -> vectors
-```
-Convert a dataset (Matrix) to a tuple of vectors, using views.
-"""
-function d2v(dataset)
-  D = size(dataset)[2] #dimension of the system (dynamic variables)
-  vectors = typeof(view(dataset, :, 1))[] #initialize array that will store vectors
-  for k in 1:D
-    push!(vectors, view(dataset, :, k))
-  end
-  return vectors
-end
+export non0hist, genentropy, renyi, shannon, hartley
 
 @inbounds function perform_non0hist(vectors, ranges, ε)
   D = length(vectors); L = length(vectors[1])
