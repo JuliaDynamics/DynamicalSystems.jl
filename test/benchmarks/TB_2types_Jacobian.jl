@@ -89,12 +89,18 @@ function tangentbundle_setup_integrator(ds::system2, t_final)
 
   # Different approach that makes an SMatrix first for multiplication:
   function tbeom3(t, u)
-    mm = SMatrix{3,3}(view(u, :, 2:4))
-    return SMatrix{3, 4}(f(u)..., jac(view(u, :, 1))*mm...)
+    mm = SMatrix{3,3}(u[:, 2:4])
+    return SMatrix{3, 4}(f(u)..., jac(u[:, 1])*mm...)
+  end
+
+  # Approach 3 without splatting
+  function tbeom4(t, u)
+    mm = SMatrix{3,3}(u[:, 2:4])
+    return hcat(f(u), jac(u[:, 1])*mm)
   end
 
   S = SMatrix{3, 4}(ds.state..., eye(eltype(ds.state), 3)...)
-  tbprob = ODEProblem(tbeom3, S, (zero(t_final), t_final))
+  tbprob = ODEProblem(tbeom4, S, (zero(t_final), t_final))
   tb_integ = init(tbprob, Tsit5(); save_everystep=false)
   return tb_integ
 end

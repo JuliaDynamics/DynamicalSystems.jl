@@ -208,10 +208,13 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 + d0/sqrt(dimension(ds))
-  integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  return lyapunov(integ1; d0=d0, threshold=threshold, dt=dt)
+end
+
+function lyapunov(integ1::ODEIntegrator; d0=1e-9, threshold=10^4*d0, dt = 0.1)
+  integ2 = deepcopy(integ1)
+  integ2.u = integ1.u .+ d0
   integ2.opts.advance_to_tstop=true
-  ds.state = st1
 
   dist = d0*one(eltype(st1))
   λ = zero(eltype(st1))
