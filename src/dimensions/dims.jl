@@ -133,6 +133,9 @@ function _plot_lrs(x, y, tol::Real)
   _plot_lrs(x, y, lrs, tang)
 end
 
+function _plot_lrs(x, y)
+  _plot_lrs(x, y, linear_regions(x, y)...)
+end
 #######################################################################################
 # Dimensions
 #######################################################################################
@@ -145,14 +148,14 @@ magnitude(x::Real) = round(Int, log10(x))
 
 """
 ```julia
-estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 1)
+estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 2)
 ```
 Return a `k`-element logspace from the magnitude + `z` of the biggest absolute
-value of the dataset, to the magnitude + `w` of the
+value of the dataset, to the magnitude + `1` of the
 minimum pair-wise distance between datapoints.
 """
 function estimate_boxsizes(ts::AbstractMatrix;
-  k::Int = 12, z = 0, w = 1)
+  k::Int = 12, z = 0, w = 2)
   cts = transpose(ts)
   mindist = min_pairwise_distance(cts)[2]
   maxv = -Inf

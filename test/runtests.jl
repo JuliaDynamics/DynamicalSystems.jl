@@ -9,7 +9,8 @@ include(joinpath("lyapunovs", "discrete_lyapunov.jl"))
 include(joinpath("lyapunovs", "continuous_lyapunov.jl"))
 # Entropies (and attractor dimensions)
 include("entropy_dimension.jl")
-
+# Nonlinear Timeseries Analysis:
+include("nlts_tests.jl")
 
 ti = time() - ti
 println("\nTest took total time of:")

@@ -18,7 +18,6 @@ export non0hist, genentropy, renyi, shannon, hartley
 end
 
 function perform_non0hist_statsbase(vectors, ranges, ε)
-  # StatsBase version
   pks = fit(Histogram, (vectors...), (ranges...), closed=:left).weights/L
   return [x for x in pks if x != 0]
 end
@@ -102,7 +101,7 @@ function genentropy{T<:Real}(α::Real, p::AbstractArray{T})
     return log(length(p)) #Hartley entropy, max-entropy
   elseif α ≈ 1
     return -sum( x*log(x) for x in p ) #Shannon entropy, information to locate with ε
-  elseif (isinf(α))
+  elseif isinf(α)
     return -log(maximum(p)) #Min entropy
   else
     return (1/(1-α))*log( sum(x^α for x in p) ) #genentropy entropy
