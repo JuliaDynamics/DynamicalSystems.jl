@@ -16,6 +16,10 @@ Abstract type representing a dynamical system. Has the following concrete sub-ty
 abstract type DynamicalSystem end
 
 export DynamicalSystem, Systems
+
+# Mathematics:
+include("mathfun.jl")
+
 # System definition and evolution:
 include("discrete.jl")
 include("continuous.jl")
