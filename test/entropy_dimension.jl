@@ -60,7 +60,8 @@ println("\nTesting generalized entropy (renyi) & linear scaling...")
         for (i, ee) in enumerate(es)
           dd[i] = renyi(q, ee, vecs...)
         end
-        linr, dim = linear_region(-log.(es), dd)
+        x = -log.(es)
+        linr, dim = linear_region(x, dd)
         if q == 0
           test_value(dim, 1.7, 1.9)
         else
@@ -82,6 +83,6 @@ println("\nTesting dimension calls (all names)...")
   xx = view(ts, :, 1); yy = view(ts, :, 2)
   test_value(generalized_dim(2.56, xx, yy), 1.1, 1.3)
   test_value(correlation_dim(xx, yy), 1.1, 1.3)
-  test_value(capacity_dim(xx,yy), 1.1, 1.3)
-  test_value(information_dim(xx,yy), 1.1, 1.3)
+  test_value(capacity_dim(xx, yy), 1.1, 1.3)
+  test_value(information_dim(xx, yy), 1.1, 1.3)
 end

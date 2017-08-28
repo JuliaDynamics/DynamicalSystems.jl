@@ -19,15 +19,15 @@ end
 
 """
 ```julia
-linear_region(x, y; dxi::Int = 1, tol = 0.1) -> ([ind1, ind2], slope)
+linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
 ```
 Call `linear_regions`, identify the largest linear region (`max_linear_region`)
 and approximate the slope of this region using least squares fit.
 Return the indeces where
 the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
 """
-function linear_region(x::AbstractVector, y::AbstractVector,
-  dxi::Int = 1, tol::Real = 0.1)
+function linear_region(x::AbstractVector, y::AbstractVector;
+  dxi::Int = 1, tol::Real = 0.2)
 
   # Find biggest linear region:
   reg_ind = max_linear_region(linear_regions(x,y; dxi=dxi, tol=tol)...)
@@ -60,7 +60,7 @@ end
 
 """
 ```julia
-linear_regions(x, y; dxi::Int = 1, tol = 0.1) -> (lrs, tangents)
+linear_regions(x, y; dxi::Int = 1, tol = 0.2) -> (lrs, tangents)
 ```
 Identify regions where the curve `y(x)` is linear, by scanning the
 `x`-axis every `dxi` indeces (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
@@ -75,7 +75,7 @@ Return the indeces of `x` that correspond to linear regions, `lrs`,
 and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
 """
 function linear_regions(x::AbstractVector, y::AbstractVector;
-  dxi::Int = 1, tol::Real = 0.1)
+  dxi::Int = 1, tol::Real = 0.2)
 
   maxit = length(x) ÷ dxi
 
@@ -121,6 +121,17 @@ function slope(xfit, yfit)
   curve_fit(model, xfit, yfit, p0).param[1]
 end
 
+# This function exists ONLY FOR TESTING! Do not use it elsewhere!
+function _plot_lrs(x, y, lrs, tangents)
+  for i ∈ 1:length(lrs)-1
+    PyPlot.plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
+  end
+end
+
+function _plot_lrs(x, y, tol::Real)
+  lrs, tang = linear_regions(x, y; tol = tol)
+  _plot_lrs(x, y, lrs, tang)
+end
 
 #######################################################################################
 # Dimensions
@@ -134,7 +145,7 @@ magnitude(x::Real) = round(Int, log10(x))
 
 """
 ```julia
-estimate_boxsizes(dataset; m = 10, k::Int = 12, n::Int = 4)
+estimate_boxsizes(dataset; m = 5, k::Int = 10, n::Int = 3)
 ```
 Return `logspace(magnitude(x), magnitude(x) - n, k)` where `x` is
 the `minimum( maximum(abs.(v)) - minimum(abs.(v)) for v in vectors )/m`.
@@ -144,7 +155,7 @@ relative order of magnitude of the vectors,
 and the minimum being `n` orders of magnitude less.
 """
 function estimate_boxsizes(vectors::Vararg{AbstractVector{<:Real}};
-  m = 10, k::Int = 12, n::Int = 4)
+  m = 5, k::Int = 10, n::Int = 3)
   # maximum ε is 1/m of maximum - minimum
   maxε = Inf
   for v in vectors
