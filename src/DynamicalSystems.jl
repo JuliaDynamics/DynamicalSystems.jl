@@ -21,9 +21,10 @@ export DynamicalSystem, Systems
 include("mathfun.jl")
 
 # System definition and evolution:
-include("discrete.jl")
-include("continuous.jl")
-include("famous_systems.jl")
+include((joinpath("systems", "dataset.jl"))
+include((joinpath("systems", "discrete.jl"))
+include((joinpath("systems", "continuous.jl"))
+include((joinpath("systems", "famous_systems.jl"))
 
 # Lyapunovs:
 include("lyapunovs.jl")
