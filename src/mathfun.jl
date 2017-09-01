@@ -1,26 +1,6 @@
 # Mathematical functions that do some stuff
 # very fast or very conveniently.
 # Also includes helper functions
-#####################################################################################
-#                                   Conversions                                     #
-#####################################################################################
-"""
-```julia
-d2v(matrix) -> vectors
-```
-Convert a dataset (Matrix) to a tuple of vectors, using views.
-"""
-function d2v(matrix)
-  D = size(matrix)[2] #dimension of the system (dynamic variables)
-  vectors = typeof(view(matrix, :, 1))[] #initialize array that will store vectors
-  for k in 1:D
-    push!(vectors, view(matrix, :, k))
-  end
-  return vectors
-end
-
-v2d(vectors...) = hcat(vectors...)
-v2d(vectors) = hcat(vectors...)
 
 #####################################################################################
 #                                Pairwse Distance                                   #
@@ -46,7 +26,7 @@ function min_pairwise_distance(cts::AbstractMatrix)
     return min_pair, min_d
 end
 
-function min_pairwise_distance(pts::Vector{SVector{N, T}}) where {N, T}
+function min_pairwise_distance{D, T<:Real}(pts::Dataset{D, T})
     tree = KDTree(pts)
     min_d = Inf
     min_pair = (0, 0)
@@ -59,4 +39,31 @@ function min_pairwise_distance(pts::Vector{SVector{N, T}}) where {N, T}
         end
     end
     return min_pair, min_d
+end
+
+#####################################################################################
+#                                 Minima and Maxima                                 #
+#####################################################################################
+function minima{D, T<:Real}(data::Dataset{D, T})
+    m = zeros(T, D).*T(Inf)
+    for point in data
+        for i in 1:D
+            if point[i] < m[i]
+                m[i] = point[i]
+            end
+        end
+    end
+    return SVector{D,T}(m)
+end
+
+function maxima{D, T<:Real}(data::Dataset{D, T})
+    m = zeros(T, D).*T(-Inf)
+    for point in data
+        for i in 1:D
+            if point[i] > m[i]
+                m[i] = point[i]
+            end
+        end
+    end
+    return SVector{D, T}(m)
 end

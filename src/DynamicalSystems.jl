@@ -18,10 +18,10 @@ abstract type DynamicalSystem end
 export DynamicalSystem, Systems
 
 # Mathematics:
+include(joinpath("systems", "dataset.jl"))
 include("mathfun.jl")
 
 # System definition and evolution:
-include(joinpath("systems", "dataset.jl"))
 include(joinpath("systems", "discrete.jl"))
 include(joinpath("systems", "continuous.jl"))
 include(joinpath("systems", "famous_systems.jl"))
