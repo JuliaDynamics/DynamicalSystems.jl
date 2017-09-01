@@ -28,7 +28,7 @@ println("\nTesting continuous system lyapunov exponents...")
     λ1 = lyapunov(ds, 10000.0)
     @test 0.89 < λ1 < 0.92
     λ_ts, tvec = lyapunov_full(ds, 10000.0)
-    @test λ1 == λ_ts[end]
+    @test λ1 ≈ λ_ts[end]
     @test tvec[end] <= T
     @test size(λ_ts, 1) == size(tvec, 1)
   end
