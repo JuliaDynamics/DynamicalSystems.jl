@@ -1,6 +1,10 @@
 using StaticArrays, Requires
-import Base: size, getindex, convert
-# Dataset:
+import Base: size, getindex, convert, show
+
+"""   Dataset{D, T} = Vector{SVector{D, T}}
+A `Dataset` is simply a Vector of `SVector` from the module of `StaticArrays`.
+This data representation is most of the time better than having a `Matrix`.
+"""
 const Dataset{D, T} = Vector{SVector{D, T}}
 v = [rand(SVector{3}) for i in 1:1000]
 
@@ -27,31 +31,38 @@ function convert(::Type{Dataset}, mat::AbstractMatrix)
 end
 
 ### Pretty printing
-@require Juno begin
-  function Juno.render(i::Juno.Inline, d::Dataset{D,T}) where {D,T}
-    N = length(d)
-    Juno.render(
-      Juno.Tree(Text("$D-dimensional Dataset{$T} with $N points"),
-        [Juno.Text(stringrep(d))])
-    )
-  end
-end
+# @require Juno begin
+#   function Juno.render(i::Juno.Inline, d::Dataset{D,T}) where {D,T}
+#     N = length(d)
+#     Juno.render(
+#       Juno.Tree(Text("$D-dimensional Dataset{$T} with $N points"),
+#         [Juno.Text(stringrep(d))])
+#     )
+#   end
+# end
+
+# function Base.show{D, T}(io::IO, d::Dataset{D, T})
+#   N = length(d)
+#   println(io, "$D-dimensional Dataset{$T} with $N points:")
+#   print(io, stringrep(d))
+# end
+
 function stringrep(d::Dataset, nshow::Int=21, ndigits::Int=5)
   iseven(nshow) && throw(ArgumentError("nshow must be odd"))
   n = min(nshow, length(d))
   s = ""
-  if n < nshow
+  if n <= nshow
     for i in 1:n
-      s *= string(v[i], "\n")
+      s *= string(" ", v[i], "\n")
     end
   else
     for i in 1:(n÷2)
-      s *= string(v[i], "\n")
+      s *= string(" ", v[i], "\n")
     end
     padlen = length(string(v[n÷2]))÷2
-    s *= lpad("⋮\n", padlen)
+    s *= lpad("⋮\n", padlen+1)
     for i in (length(v)-(n÷2)+1):length(v)
-      s *= string(v[i], "\n")
+      s *= string(" ", v[i], "\n")
     end
   end
   return s

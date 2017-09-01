@@ -12,18 +12,18 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
-* `eom::F` (function) : The function that represents the system's equations of motion
+* `eom` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that given a state-vector `u` it returns an `SVector` containing the
   next state.
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-  If the `jacob` is not provided by the user, it is created with *tremendous*
-  efficiency using the module `ForwardDiff`. Most of the time, for low dimensional
-  systems, this Jacobian is within a few % of speed of a user-defined one.
+
+If the `jacob` is not provided by the user, it is created efficiently
+using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
   eom::F
   jacob::J
@@ -163,7 +163,7 @@ import Base.show
 function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where
   {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
   print(io, "$N-dimensional discrete dynamical system:\n",
-  "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+  " state: $(s.state)\n", " e.o.m.: $F\n", " jacobian: $J")
 end
 
 @require Juno begin

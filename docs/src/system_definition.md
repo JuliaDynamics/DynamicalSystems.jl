@@ -75,29 +75,20 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined almost with the discrete systems:
+are defined exactly like the discrete systems:
 ```@docs
 ContinuousDS
 ```
-There are two major differences compared to the discrete case:
-
-1. The second field `eom!` ends with an `!` to remind users that it is an in-place
-   function.
-2. Automated Jacobian function evaluation is not yet supported due to the dissonance
-   of the interfaces of [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl) and [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
-
-Notice that providing a Jacobian is not necessary, as it is used by few methods (e.g.
-[`lyapunovs`](lyapunovs/#DynamicalSystems.lyapunovs)). If you do provide a Jacobian,
-it is best if it returns an `SMatrix`.
+For low dimensional systems, this approach using `StaticArrays.jl` is simply better in
+terms of both speed and memory. For large-dimensional systems, a new interface has to be provided.
 
 For example, the continuous Rössler system can be defined as:
 ```julia
-@inline @inbounds function eom_roessler!(du, u)
-    a = 0.2; b = 0.2; c = 5.7
-    du[1] = -u[2]-u[3]
-    du[2] = u[1] + a*u[2]
-    du[3] = b + u[3]*(u[1] - c)
-end
+@inline @inbounds eom_roessler(u) = SVector{3}(
+  -u[2]-u[3],
+  u[1] + a*u[2],
+  b + u[3]*(u[1] - c)
+  )
 @inline @inbounds function jacob_roessler(u)
     i = one(eltype(u))
     o = zero(eltype(u))
@@ -106,7 +97,7 @@ end
               u[3]   o       u[1] - c]
 end
 
-ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
+ros = ContinuousDS(rand(3), eom_roessler, jacob_roessler)
 ```
 
 ## System evolution
@@ -130,6 +121,8 @@ ODEIntegrator
 
 
 ## Numerical Data
+THIS IS TO BE RE-WRITTEN IN THE STYLE OF `Dataset`!!!
+
 In the most general case, the numerical data representing the evolution of a system
 are in the form of time-series. `DynamicalSystems.jl` offers many methods that accept numerical data. A general convention stated in the documentation string of all functions is the following: `foo(dataset)`.
 

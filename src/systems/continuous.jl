@@ -1,4 +1,4 @@
-using OrdinaryDiffEq, Requires
+using OrdinaryDiffEq, Requires, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
 
@@ -8,45 +8,52 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 #                                     Constructors                                    #
 #######################################################################################
 """
-    ContinuousDS(state, eom! [, jacob]) <: DynamicalSystem
+    ContinuousDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system, stored in the data format
+* `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
-* `eom!` (function) : The function that represents the system's equations of motion
-  (also called vector field). The function is of the format: `eom!(du, u)`
-  which means that it is **in-place**, with the Julian syntax (the mutated argument
-  `du` is the first).
+* `eom` (function) : The function that represents the system's equations of motion
+  (also called vector field). The function is of the format: `eom(u) -> SVector`
+  which means that given a state-vector `u` it returns an `SVector` containing the
+  next state.
 * `jacob` (function) : The function that represents the Jacobian of the system,
   given in the format: `jacob(u) => J` (i.e. returns a matrix). If the matrix is
-  an `SMatrix` from `StaticArrays.jl` there are major performance gains.
+  an `SMatrix` from the module `StaticArrays` there are major performance gains.
 
-Because the `jacob` function is only necessary for a small subset of algorithms, you
-do not have to provide it necessarily to the constructor (but then you can't use these
-functions).
+If the `jacob` is not provided by the user, it is created efficiently
+using the module `ForwardDiff`.
 """
-mutable struct ContinuousDS{T<:AbstractVector, F, J} <: DynamicalSystem
-  state::T
-  eom!::F
+mutable struct ContinuousDS{D, T<:Number, F, J} #<: DynamicalSystem
+  state::SVector{D, T}
+  eom::F
   jacob::J
 end
+function ContinuousDS(u0::AbstractVector, eom, jac)
+  su0 = SVector{length(u0)}(u0)
+  return ContinuousDS(su0, eom, jac)
+end
 # Constructor without Jacobian (nothing in the field)
-ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
+function ContinuousDS(state, eom)
+  jc = ForwardDiff.JacobianConfig(eom, state)
+  jac = (u) -> ForwardDiff.jacobian(eom, u, jc)
+  return ContinuousDS(state, eom, jac)
+end
 
-dimension(ds::ContinuousDS) = length(ds.state)
+dimension{D, T, F, J}(ds::ContinuousDS{D, T, F, J}) = D
 #######################################################################################
-#                         Interface to DifferentialEquations.jl                       #
+#                         Interface to DifferentialEquations                          #
 #######################################################################################
 """
 ```julia
-ODEProblem(ds::ContinuousDS, t)
+ODEProblem(ds::ContinuousDS, tfinal)
 ```
 Return an `ODEProblem` with the given
 system information (t0 is zero).
-This can be passed directly into `solve` from `DifferentialEquations`.
+This can be passed directly into `solve` from `DifferentialEquations.jl`.
 """
 function ODEProblem(ds::ContinuousDS, t)
-  odef = (t, u, du) -> ds.eom!(du, u)
+  odef = (t, u) -> ds.eom(u)
   OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
 end
 
@@ -59,7 +66,7 @@ This can be used directly with the interfaces of `DifferentialEquations`.
 
 `diff_eq_kwargs = Dict()` is a dictionary `Dict{Symbol, ANY}`
 of keyword arguments
-passed into the `init` of the `DifferentialEquations.jl` package,
+passed into the `init` of the `DifferentialEquations` package,
 for example `Dict(:abstol => 1e-9)`. If you want to specify a solver,
 do so by using the symbol `:solver`, e.g.:
 `Dict(:solver => DP5(), :tstops => 0:0.01:t)`. This requires you to have been first
@@ -93,7 +100,7 @@ function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   else
     sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
   end
-  return sol
+  return sol.u
 end
 
 #######################################################################################
@@ -124,33 +131,23 @@ function timeseries(ds::ContinuousDS, T::Real;
   prob = ODEProblem(ds, T)
   kw = Dict{Symbol, Any}(diff_eq_kwargs) #nessesary conversion to add :saveat
   kw[:saveat] = t
-  sol = get_sol(prob, kw)
-  TS = zeros(eltype(ds.state), length(t), D)
-  for j in 1:D
-    TS[:, j] .= sol[j,:]
-  end
-  # using: transpose(hcat(get_sol(prob, diff_eq_kwargs).u...))
-  # is so absurdly tragically slower.
-  return TS
+  return get_sol(prob, kw)
 end
 
 #######################################################################################
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
-function Base.show(io::IO, s::ContinuousDS{S, F, J}) where
-  {S<:ANY, F<:ANY, J<:ANY}
-  N = length(s.state)
-  print(io, "$N-dimensional continuous dynamical system:\n",
-  "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+function Base.show{D, T, F, J}(io::IO, s::ContinuousDS{D, T, F, J})
+  print(io, "$D-dimensional continuous dynamical system:\n",
+  " state: $(s.state)\n", " e.o.m.: $F\n", " jacobian: $J")
 end
 
 @require Juno begin
-  function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
-    {S<:ANY, F<:ANY, J<:ANY}
-    N = length(s.state)
+  function Juno.render{D, T, F, J}(i::Juno.Inline, s::ContinuousDS{D, T, F, J})
     t = Juno.render(i, Juno.defaultrepr(s))
-    t[:head] = Juno.render(i, Text("$N-dimensional continuous dynamical system"))
+    t[:head] = Juno.render(i, Text("$D-dimensional continuous dynamical system"))
+    # t[:children][1][:child] = Juno.Text("SVector($(s.state))")
     t
   end
 end

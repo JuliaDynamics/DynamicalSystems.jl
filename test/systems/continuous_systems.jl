@@ -4,8 +4,9 @@ println("\nTesting continuous system evolution...")
 @testset "Lorenz System" begin
 
   lo11 = Systems.lorenz()
-  lo22 = ContinuousDS(lo11.state, lo11.eom!)
+  lo22 = ContinuousDS(lo11.state, lo11.eom)
   lo33 = Systems.lorenz(big.([0.0, 10.0, 0.0]))
+
   @testset "Construction" begin
     @test typeof(lo11) <: ContinuousDS
     @test typeof(lo33) <: ContinuousDS
@@ -33,7 +34,7 @@ println("\nTesting continuous system evolution...")
     # timeseries pure:
     ts1 = timeseries(lo11, 2.0)
     ts3 = timeseries(lo33, 2.0)
-    @test eltype(ts3) == BigFloat
+    @test eltype(ts3[1]) == BigFloat
     @test size(ts1) == size(ts3)
     @test ts1[end, :] ≈ ts3[end,:]
     # timeseries with diff_eq_kwargs and dt:
@@ -45,18 +46,22 @@ println("\nTesting continuous system evolution...")
     @test ts1[end, :] ≈ ts3[end,:]
   end
 
-  # @testset "Jacobians" begin
-  #   j1 = jacobian(lo11); j2 = jacobian(lo22); j3 = jacobian(lo33)
-  #   @test eltype(j3) == BigFloat
-  #   @test j1 ≈ j2
-  #   @test j1 ≈ j3
-  #   s1 = evolve(lo11, 1.0)
-  #   s2 = evolve(lo22, 1.0)
-  #   s3 = evolve(lo33, 1.0)
-  #   j1 = lo11.jacob(s1); j2 = lo22.jacob(s2); j3 = lo33.jacob(s3)
-  #   @test eltype(j3) == BigFloat
-  #   @test j1 ≈ j2
-  #   @test j1 ≈ j3
-  # end
+  lo11 = Systems.lorenz()
+  lo22 = ContinuousDS(lo11.state, lo11.eom)
+  lo33 = Systems.lorenz(big.([0.0, 10.0, 0.0]))
+
+  @testset "Jacobians" begin
+    j1 = lo11.jacob(lo11.state); j2 = lo22.jacob(lo22.state); j3 = lo33.jacob(lo33.state)
+    @test eltype(j3) == BigFloat
+    @test j1 ≈ j2
+    @test j1 ≈ j3
+    s1 = evolve(lo11, 1.0)
+    s2 = evolve(lo22, 1.0)
+    s3 = evolve(lo33, 1.0)
+    j1 = lo11.jacob(s1); j2 = lo22.jacob(s2); j3 = lo33.jacob(s3)
+    @test eltype(j3) == BigFloat
+    @test j1 ≈ j2
+    @test j1 ≈ j3
+  end
 
 end
