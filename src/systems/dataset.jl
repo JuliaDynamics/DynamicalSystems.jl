@@ -1,4 +1,5 @@
 using StaticArrays, Requires
+export Dataset
 
 """
     Dataset{D, T, V}
