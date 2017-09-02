@@ -12,18 +12,18 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
-* `eom::F` (function) : The function that represents the system's equations of motion
+* `eom` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that given a state-vector `u` it returns an `SVector` containing the
   next state.
 * `jacob::J` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-  If the `jacob` is not provided by the user, it is created with *tremendous*
-  efficiency using the module `ForwardDiff`. Most of the time, for low dimensional
-  systems, this Jacobian is within a few % of speed of a user-defined one.
+
+If the `jacob` is not provided by the user, it is created efficiently
+using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS{D, T<:Real, F, J} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
   state::SVector{D,T}
   eom::F
   jacob::J
@@ -77,8 +77,9 @@ thus it must be integer. See `timeseries` for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system. If you want to
-perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
-the `step!(integrator)` function provided by `DifferentialEquations.jl`.
+perform step-by-step evolution of a continuous system, use
+`ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations`.
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
@@ -98,8 +99,9 @@ state as the system's state. See `timeseries` for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system. If you want to
-perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
-the `step!(integrator)` function provided by `DifferentialEquations.jl`.
+perform step-by-step evolution of a continuous system, use
+`ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations`.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
@@ -110,12 +112,13 @@ end
 
 """
 ```julia
-timeseries(ds::DynamicalSystem, T; kwargs...) -> ts
+timeseries(ds::DynamicalSystem, T; kwargs...) -> dataset
 ```
-Create a matrix `ts` that will contain the timeseries of the sytem, after evolving it
-for time `T`. *Each column corresponds to one dynamic variable.*
+Return a dataset what will contain the timeseries of the sytem,
+after evolving it for time `T`. See `Dataset` for info on how to
+manipulate this object.
 
-For the discrete case, `T` is an integer and a `T×D` matrix is returned
+For the discrete case, `T` is an integer and a `T×D` dataset is returned
 (`D` is the system dimensionality). For the
 continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).
@@ -132,22 +135,19 @@ continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 """
 function timeseries(ds::DiscreteDS, N::Real)
   st = ds.state
-  T = eltype(st)
-  D = length(st)
-  ts = Array{T}(N, D)
+  ts = [st]
   f = ds.eom
-  ts[1,:] .= ds.state
   for i in 2:N
     st = f(st)
-    ts[i, :] .= st
+    push!(ts, st)
   end
-  return ts
+  return Dataset(ts)
 end
 
 function timeseries(ds::DiscreteDS1D, N::Int)
   x = deepcopy(ds.state)
   f = ds.eom
-  ts = Vector{eltype(x)}(N)
+  ts = Vector{typeof(x)}(N)
   ts[1] = x
   for i in 2:N
     x = f(x)
@@ -163,7 +163,7 @@ import Base.show
 function Base.show(io::IO, s::DiscreteDS{N, S, F, J}) where
   {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
   print(io, "$N-dimensional discrete dynamical system:\n",
-  "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+  " state: $(s.state)\n", " e.o.m.: $F\n", " jacobian: $J")
 end
 
 @require Juno begin

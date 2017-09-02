@@ -40,16 +40,16 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
   # Initialization
   λ = zeros(eltype(u), D)
-  Q = eye(eltype(u), D)
+  Q = @SMatrix eye(eltype(u), D)
   K = copy(Q)
   # Main algorithm
   for i in 1:N
     u = eom(u)
-    A_mul_B!(K, jac(u), Q)
+    K = jac(u)*Q
 
-    Q, R = qr(K)
+    Q, R = qr_sq(K)
     for i in 1:D
-      λ[i] += log(abs(R[i,i]))
+      λ[i] += log(abs(R[i]))
     end
   end
   λ./N
@@ -71,7 +71,7 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 * `threshold = 10^4*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
-  `DifferentialEquations` package (see `evolve` or `timeseries` for more info).
+  `DifferentialEquations` package (`timeseries` for more info).
 * `dt = 0.1` : (only for continuous) Time of evolution between each check of
   distance exceeding the `threshold`.
 
@@ -197,7 +197,7 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
-
+  D = dimension(ds)
   T = convert(eltype(ds.state), T)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
@@ -330,7 +330,7 @@ end
 
 
 function lyapunovs(ds::ContinuousDS, N::Real=1000;
-  Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 1.0)
+  Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
 
   tstops = dt:dt:N*dt
   D = dimension(ds)
@@ -352,7 +352,7 @@ function lyapunovs(ds::ContinuousDS, N::Real=1000;
     step!(integ)
 
     # Perform QR (on the tangent flow):
-    Q, R = qr(view(integ.u, :, 2:D+1))
+    Q, R = qr_sq(view(integ.u, :, 2:D+1))
     # Add correct (positive) numbers to Lyapunov spectrum
     for j in 1:D
       λ[j] += log(abs(R[j,j]))

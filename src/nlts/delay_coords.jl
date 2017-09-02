@@ -20,15 +20,15 @@ d2v(R::Reconstruction) = R.u
 
 # Pretty-print
 import Base.show
-function Base.show(io::IO, R::Reconstruction)
-  print(io, "$(R.d)-dimensional reconstruction with delay τ=$(R.τ)")
+function Base.show{T, N, A}(io::IO, R::Reconstruction{T, N, A})
+  print(io, "$(R.d)-dimensional Reconstruction{$T} with delay τ=$(R.τ)")
 end
 
 @require Juno begin
-  function Juno.render(i::Juno.Inline, R::Reconstruction)
+  function Juno.render{T, N, A}(i::Juno.Inline, R::Reconstruction{T, N, A})
     t = Juno.render(i, Juno.defaultrepr(R))
     t[:head] = Juno.render(i,
-    Text("$(R.d)-dimensional reconstruction with delay τ=$(R.τ)"))
+    Text("$(R.d)-dimensional Reconstruction{$T} with delay τ=$(R.τ)"))
     pop!(t[:children]); pop!(t[:children])
 
     t[:children][1][:child][:head][:contents][1][:contents][1] = "SubArray"
@@ -46,8 +46,8 @@ invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from [1, 2].
 
 The returned `R` is a `VectorOfArrays` from `RecursiveArrayTools.jl` and
-stores all the information about the embedding without allocating new arrays.
-It can however be used as a normal matrix:
+stores all the information about the embedding without allocating new arrays,
+using `view`. It can however be used as a normal matrix:
 ```julia
 R[:, 2] # get the second column the reconstructed matrix
 R[5, 1] # get the 5th element of the first column of the matrix

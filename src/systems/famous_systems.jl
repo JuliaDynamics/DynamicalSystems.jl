@@ -12,17 +12,17 @@ using DynamicalSystems, StaticArrays
 ```julia
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
+\$\$
+\lambda = 3
+\$\$
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
 simplified form of atmospheric convection.
-
 Currently, it is most famous for its strange attractor (occuring at the default
 parameters), which resembles a butterfly. For the same reason it is
 also associated with the term "butterfly effect" (a term which Lorenz himself disliked)
 even though the effect applies generally to dynamical systems.
-
 Default values are the ones used in the original paper.
-
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
 function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
@@ -51,9 +51,7 @@ It is a system that by design behaves similarly
 to the `lorenz` system and displays a (fractal)
 strange attractor. However, it is easier to analyze qualitatively, as for example
 the attractor is composed of a single manifold.
-
 Default values are the same as the original paper.
-
 [1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)

@@ -11,7 +11,7 @@ function isevenly(a::AbstractVector)
   test = a[2] - a[1]
   for i in 2:length(a)-1
     if !(a[i+1] - a[i] ≈ test)
-      throw(ArgumentError("x-axis is not evenly spaced!"))
+      return false
     end
   end
   true
@@ -124,7 +124,7 @@ end
 # This function exists ONLY FOR TESTING! Do not use it elsewhere!
 function _plot_lrs(x, y, lrs, tangents)
   for i ∈ 1:length(lrs)-1
-    PyPlot.plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
+    plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
   end
 end
 
@@ -136,6 +136,7 @@ end
 function _plot_lrs(x, y)
   _plot_lrs(x, y, linear_regions(x, y)...)
 end
+
 #######################################################################################
 # Dimensions
 #######################################################################################
@@ -144,23 +145,23 @@ export boxcounting_dim, capacity_dim, generalized_dim,
 information_dim, correlation_dim, collision_dim, estimate_boxsizes,
 kaplanyorke_dim
 
-magnitude(x::Real) = round(Int, log10(x))
+magnitude(x::Real) = round(log10(x))
 
 """
 ```julia
 estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 2)
 ```
 Return a `k`-element logspace from the magnitude + `z` of the biggest absolute
-value of the dataset, to the magnitude + `1` of the
+value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
-function estimate_boxsizes(ts::AbstractMatrix;
-  k::Int = 12, z = 0, w = 2)
-  cts = transpose(ts)
-  mindist = min_pairwise_distance(cts)[2]
+function estimate_boxsizes(data::Dataset{D, T, V};
+  k::Int = 12, z = 0, w = 2) where {D, T<:Number, V}
+
+  mindist = min_pairwise_distance(data)[2]
   maxv = -Inf
-  for i in 1:size(cts, 1)
-    ma = maximum(abs.(view(cts, i, :)))
+  for point in data
+    ma = maximum(point)
     maxv = (ma > maxv) ? ma : maxv
   end
   lower = magnitude(mindist)
@@ -169,8 +170,9 @@ function estimate_boxsizes(ts::AbstractMatrix;
   end
   logspace(magnitude(maxv)+z, lower+w, k)
 end
-estimate_boxsizes(vectors::Vararg{AbstractVector{<:Real}}) =
-estimate_boxsizes(v2d(vectors...))
+
+estimate_boxsizes(ts::AbstractMatrix; kwargs...) =
+estimate_boxsizes(convert(Dataset, ts); kwargs...)
 
 """
     generalized_dim(α, dataset) -> D_α
@@ -197,16 +199,17 @@ The following aliases are provided:
   * α = 1 : `information_dim`
   * α = 2 : `correlation_dim`, `collision_dim`
 """
-function generalized_dim(α, vectors::Vararg{AbstractVector{<:Real}})
-  es = estimate_boxsizes(vectors...)
+function generalized_dim(α, data::Dataset)
+  es = estimate_boxsizes(data)
   dd = zeros(es)
   for i in 1:length(es)
-    dd[i] = genentropy(α, es[i], vectors...)
+    dd[i] = genentropy(α, es[i], data)
   end
   return linear_region(-log.(es), dd)[2]
 end
-generalized_dim(α, dataset::AbstractMatrix{<:Real}) =
-generalized_dim(α, d2v(dataset)...)
+generalized_dim(α, matrix::AbstractMatrix) =
+generalized_dim(α, convert(Dataset, matrix))
+
 # Aliases
 "correlation_dim(args...) = generalized_dim(2, args...)"
 correlation_dim(args...) = generalized_dim(2, args...)

@@ -1,4 +1,4 @@
-using OrdinaryDiffEq, Requires
+using OrdinaryDiffEq, Requires, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
 
@@ -11,8 +11,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator
     ContinuousDS(state, eom! [, jacob]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system, stored in the data format
-  of `StaticArray`'s `SVector`.
+* `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
@@ -35,7 +34,7 @@ ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
 dimension(ds::ContinuousDS) = length(ds.state)
 #######################################################################################
-#                         Interface to DifferentialEquations.jl                       #
+#                         Interface to DifferentialEquations                          #
 #######################################################################################
 """
 ```julia
@@ -56,7 +55,6 @@ ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs)
 ```
 Return an `ODEIntegrator`, by first creating an `ODEProblem(ds, t)`.
 This can be used directly with the interfaces of `DifferentialEquations`.
-
 `diff_eq_kwargs = Dict()` is a dictionary `Dict{Symbol, ANY}`
 of keyword arguments
 passed into the `init` of the `DifferentialEquations.jl` package,
@@ -93,7 +91,7 @@ function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   else
     sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
   end
-  return sol
+  return sol.u
 end
 
 #######################################################################################
@@ -124,14 +122,7 @@ function timeseries(ds::ContinuousDS, T::Real;
   prob = ODEProblem(ds, T)
   kw = Dict{Symbol, Any}(diff_eq_kwargs) #nessesary conversion to add :saveat
   kw[:saveat] = t
-  sol = get_sol(prob, kw)
-  TS = zeros(eltype(ds.state), length(t), D)
-  for j in 1:D
-    TS[:, j] .= sol[j,:]
-  end
-  # using: transpose(hcat(get_sol(prob, diff_eq_kwargs).u...))
-  # is so absurdly tragically slower.
-  return TS
+  return Dataset(get_sol(prob, kw))
 end
 
 #######################################################################################

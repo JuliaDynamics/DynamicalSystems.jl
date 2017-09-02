@@ -7,15 +7,14 @@ println("\nTesting generalized entropy (renyi) & linear scaling...")
   @testset "Henon Map" begin
     ds = Systems.henon()
     ts = timeseries(ds, 200000)
+    mat = convert(Matrix, ts)
     # Test call with dataset
     renyi(1, 0.001, ts)
-    # Full tests with vectors
-    xx = view(ts, :, 1); yy = view(ts, :, 2)
     es = logspace(-0, -3, 7)
     dd = zeros(es)
     for q in [0,2,1, 2.56]
       for (i, ee) in enumerate(es)
-        dd[i] = renyi(q, ee, xx, yy)
+        dd[i] = renyi(q, ee, mat)
       end
       linr, dim = linear_region(-log.(es), dd)
       test_value(dim, 1.1, 1.3)
@@ -24,12 +23,11 @@ println("\nTesting generalized entropy (renyi) & linear scaling...")
   @testset "Lorenz System" begin
     ds = Systems.lorenz()
     ts = timeseries(ds, 5000)
-    vecs = DynamicalSystems.d2v(ts)
     es = logspace(1, -3, 11)
     dd = zeros(es)
     for q in [0,1,2]
       for (i, ee) in enumerate(es)
-        dd[i] = renyi(q, ee, vecs...)
+        dd[i] = renyi(q, ee, ts)
       end
       linr, dim = linear_region(-log.(es), dd)
       if q == 0
