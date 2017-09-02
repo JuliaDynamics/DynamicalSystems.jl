@@ -9,7 +9,7 @@ export non0hist, genentropy, renyi, shannon, hartley
     mini = minima(data)
     for point in data
         # index of datapoint in the ranges space:
-        ind::SVector{D, Int} = Int.(floor.(point .- mini ))
+        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
@@ -35,7 +35,6 @@ as the zero elements.
 function non0hist end
 @inbounds function non0hist{D, T<:Real, V}(ε::Real, data::Dataset{D, T, V})
     # Initialize:
-    L = length(data)
     mini = minima(data); maxi = maxima(data)
     ranges = [mini[i]:ε:maxi[i]+ε for i in 1:D]
     # Perform Histogram:
