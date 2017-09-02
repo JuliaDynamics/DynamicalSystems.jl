@@ -139,8 +139,8 @@ Numerical data in `DynamicalSystems.jl` are represented by a structure called
 ```@docs
 Dataset
 ```
-In essence a `Dataset` is simply a container for a `Vector` of `Vector`s, inspired by
-[`RecursiveArrayTools.jl`](https://github.com/JuliaDiffEq/RecursiveArrayTools.jl).
+In essence a `Dataset` is simply a container for a `Vector` of `Vector`s, but only for
+cases where the all inner vectors are of equal size.
 However, it
 is visually represented as a matrix, similarly to how numerical data would be printed
 on a spreadsheet (with time being the *column* direction). It also offers a lot more

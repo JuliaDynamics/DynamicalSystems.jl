@@ -2,9 +2,9 @@ using StaticArrays, Requires
 
 """
     Dataset{D, T, V}
-A `Dataset` is an interface for `Vector`s of `Vector`s, inspired by
-RecursiveArrayTools.jl. It contains numbers of type `T` and represents datapoints in
-`D` dimensions, contained within vectors of type `V`.
+A `Dataset` is an interface for vectors of vectors, inspired by
+RecursiveArrayTools.jl. It contains **equally-sized datapoints** of length `D`,
+represented by vectors of type `V`, containing numbers of type `T`.
 
 This data representation is most of the time better than having a `Matrix`, but can be
 used exactly like a matrix that has each of the columns be the timeseries of each of
