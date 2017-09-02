@@ -77,8 +77,9 @@ thus it must be integer. See `timeseries` for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system. If you want to
-perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
-the `step!(integrator)` function provided by `DifferentialEquations.jl`.
+perform step-by-step evolution of a continuous system, use
+`ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations`.
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
@@ -98,8 +99,9 @@ state as the system's state. See `timeseries` for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
 Use `timeseries` if you want to produce timeseries of the system. If you want to
-perform step-by-step evolution use the struct `ODEIntegrator(ds, t_final)` and
-the `step!(integrator)` function provided by `DifferentialEquations.jl`.
+perform step-by-step evolution of a continuous system, use
+`ODEIntegrator(ds, t_final)` and
+the `step!(integrator)` function provided by `DifferentialEquations`.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
   st = ds.state
@@ -110,12 +112,13 @@ end
 
 """
 ```julia
-timeseries(ds::DynamicalSystem, T; kwargs...) -> ts
+timeseries(ds::DynamicalSystem, T; kwargs...) -> dataset
 ```
-Create a matrix `ts` that will contain the timeseries of the sytem, after evolving it
-for time `T`. *Each column corresponds to one dynamic variable.*
+Return a dataset what will contain the timeseries of the sytem,
+after evolving it for time `T`. See `Dataset` for info on how to
+manipulate this object.
 
-For the discrete case, `T` is an integer and a `T×D` matrix is returned
+For the discrete case, `T` is an integer and a `T×D` dataset is returned
 (`D` is the system dimensionality). For the
 continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).

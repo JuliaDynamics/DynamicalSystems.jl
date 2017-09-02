@@ -45,11 +45,11 @@ using StaticArrays #only necessary when defining a system
 eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
 jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
 
-ds = DiscreteDS(rand(2), eom_henon, jacob_henon)
+hen = DiscreteDS(rand(2), eom_henon, jacob_henon)
 ```
 If we did not want to write a Jacobian, we could do
 ```julia
-ds_nojac = DiscreteDS(rand(2), eom_henon)
+hen_nojac = DiscreteDS(rand(2), eom_henon)
 ```
 and the Jacobian function would be created automatically.
 
@@ -71,11 +71,10 @@ Once again, if you skip the derivative functions it will be calculated automatic
 using `ForwardDiff.jl`.
 
 ## Continuous Systems
-## Continuous Systems
 Continuous systems of the form
-```math
+$$
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
-```
+$$
 are defined in a similar manner with the discrete systems:
 ```@docs
 ContinuousDS
@@ -113,7 +112,6 @@ end
 ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
 ```
 
-```
 
 ## System evolution
 `DynamicalSystems.jl` provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module `DifferentialEquations.jl`, with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
@@ -136,14 +134,29 @@ ODEIntegrator
 
 
 ## Numerical Data
-THIS IS TO BE RE-WRITTEN IN THE STYLE OF `Dataset`!!!
+Numerical data in `DynamicalSystems.jl` are represented by a structure called
+`Dataset`:
+```@docs
+Dataset
+```
+In essence a `Dataset` is simply a container for a `Vector` of `Vector`s, inspired by
+[`RecursiveArrayTools.jl`](https://github.com/JuliaDiffEq/RecursiveArrayTools.jl).
+However, it
+is visually represented as a matrix, similarly to how numerical data would be printed
+on a spreadsheet (with time being the *column* direction). It also offers a lot more
+functionality and pretty-printing. Besides the examples in the documentation string,
+you can also do:
+```julia
+data = timeseries(hen, 10000)
+for point in data
+# do stuff with each datapoint (vector with as many elements as system dimension)
+end
+```
 
-In the most general case, the numerical data representing the evolution of a system
-are in the form of time-series. `DynamicalSystems.jl` offers many methods that accept numerical data. A general convention stated in the documentation string of all functions is the following: `foo(dataset)`.
-
-The dataset can be provided in two ways: firstly as a `N×D` matrix (`foo(matrix)`) that contains `N` data points of a `D` dimensional
-system (each column represents a dynamical variable's timeseries). Secondly all functions can be also called as `foo(v1, v2, v3, ...)`, passing vectors like a `Vararg`. The `vectors = v1, v2, ..., vD` are simply the individual timeseries, so that `matrix ≡ hcat(vectors...)`.
-
+All functions that manipulate and use data are expecting a `Dataset` instance. If given
+a matrix, they will first convert to `Dataset`. This means that you should first
+convert your data to a `Dataset` if you want to call functions more than once, to avoid
+constantly converting.
 
 ## Predefined Systems
 Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems`, in the form of functions that return a `DynamicalSystem`. They are accessed

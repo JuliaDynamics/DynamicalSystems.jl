@@ -4,13 +4,24 @@ using StaticArrays, Requires
     Dataset{D, T, V}
 A `Dataset` is an interface for `Vector`s of `Vector`s, inspired by
 RecursiveArrayTools.jl. It contains numbers of type `T` and represents datapoints in
-`D` dimensions, represented by vectors type `V`.
+`D` dimensions, contained within vectors of type `V`.
 
 This data representation is most of the time better than having a `Matrix`, but can be
 used exactly like a matrix that has each of the columns be the timeseries of each of
-the dynamic variables.
+the dynamic variables. For example,
+```julia
+data = timeseries(ds, 100.0) #this gives a dataset
+data[:, 2] # this is the timeseries vector of the second variable
+data[1] == data[1, :] # this is the first datapoint of the timeseries
+data[5, 3] # this is the value of the third variable, at the 5th timepoint
+```
+
+Use `convert(Matrix, dataset)` to create a `Matrix`, and `convert(Dataset, matrix)`
+to create a `Dataset` from a matrix. **Notice:**  `convert(Dataset, matrix)` assumes
+that each column of the matrix represents one dynamic variable. If instead each
+column of the matrix represents a datapoint, use `reinterpret(Dataset, matrix)`.
 """
-mutable struct Dataset{
+struct Dataset{
   D, T<:Number, V<:Union{Vector{T}, SVector{D,T}}}
   data::Vector{V}
 end
@@ -74,6 +85,12 @@ function Base.convert(::Type{Dataset}, mat::AbstractMatrix)
   return Dataset(d)
 end
 
+function Base.reinterpret(::Type{Dataset}, mat::Array{T,2}) where {T<:Real}
+  s = size(mat)
+  D = s[1]; N = s[2]
+  Dataset(reinterpret(SVector{D, T}, mat, (N,)))
+end
+
 ### Pretty printing
 function vectorname(d::Dataset{D, T, V}) where {D, T, V}
   if V <: Vector
@@ -90,10 +107,9 @@ end
     mat = convert(Matrix, d)
     s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
     s = join(split(s, '\n')[2:end], '\n')
+    tos = "$D-dimensional Dataset with $N points ($(vectorname(d))) :"*"\n"*s
     Juno.render(
-      Juno.Tree(Text("$D-dimensional Dataset with $N points ($(vectorname(d))) :"),
-        [Text(s)])
-    )
+      Juno.Tree(Text(tos), []))
   end
 end
 
@@ -105,21 +121,3 @@ function Base.show(io::IO, d::Dataset{D, T, V}) where {D, T, V}
   println(io, "$D-dimensional Dataset with $n points ($(vectorname(d))) :")
   print(io, Text(s))
 end
-
-### Karlesson comments
-# # A dataset will be a vector of vectors
-# # you can always move quickly from a
-# # vector of static arrays to a matrix using reinterpret though:
-# << v = [rand(SVector{3}) for i in 1:1000];
-#
-# << @time V = reinterpret(Float64, v, (3, 1000));
-#   0.000009 seconds (7 allocations: 288 bytes)
-#
-# << typeof(V)
-# >> Array{Float64,2}
-#
-# # and then back,
-# << reinterpret(SVector{3, Float64}, V, (1000,))
-# >> 1000-element Array{SVector{3,Float64},1}:
-#  [0.511705, 0.880423, 0.502126]
-# ...
