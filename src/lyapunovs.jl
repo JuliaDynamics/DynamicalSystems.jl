@@ -256,6 +256,78 @@ function lyapunov(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
   λ /= T
 end
 
+"""
+Compute the timeseries of the maximum Lyapunov exponent. This function
+should be used to check the convergence of the series.
+"""
+function lyapunov_full(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
+  d0=1e-9, threshold=10^4*d0, dt = 0.1,
+  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
+
+  check_tolerances(d0, diff_eq_kwargs)
+
+  T = convert(eltype(ds.state), T)
+  threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
+
+  # Transient system evolution
+  Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+
+  # initialize:
+  st1 = ds.state
+  integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ1.opts.advance_to_tstop=true
+  ds.state = st1 .+ d0
+  integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ2.opts.advance_to_tstop=true
+  ds.state = st1
+  return lyapunov_full(integ1, integ2, T; d0=d0, threshold=threshold, dt=dt)
+end
+
+function lyapunov_full(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
+  d0=1e-9, threshold=10^4*d0, dt = 0.1)
+
+
+  dist = d0*one(eltype(integ1.u))
+  λ = zero(eltype(integ1.u))
+  λ_ts = Array{eltype(integ1.u)}(0)   # the timeseries for the Lyapunov exponent
+  ts = Array{eltype(T)}(0)            # the time points of the timeseries
+  i = 0;
+  tvector = dt:dt:T
+
+  # start evolution and rescaling:
+  for τ in tvector
+    # evolve until rescaling:
+    push!(integ1.opts.tstops, τ); step!(integ1)
+    push!(integ2.opts.tstops, τ); step!(integ2)
+    dist = norm(integ1.u .- integ2.u)
+    i += 1
+    # Rescale:
+    if dist ≥ threshold
+      # add computed scale to accumulator (scale = local lyaponov exponent):
+      a = dist/d0
+      # Warning message for bad decision of `thershold` or `d0`:
+      if a > threshold/d0 && i ≤ 1
+        warnstr = "Distance between test and original trajectory exceeded threshold "
+        warnstr*= "after just 1 evolution step. "
+        warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
+        warn(warnstr)
+        errorstr = "Parameters choosen for `lyapunov` with "
+        errorstr*= "`ContinuousDS` are not fitted for the algorithm."
+        throw(ArgumentError(errorstr))
+      end
+      λ += log(a)
+      push!(λ_ts, λ/τ)
+      push!(ts, τ)
+      # Rescale and reset everything:
+      integ2.u = @. integ1.u + (integ2.u - integ1.u)/a
+      u_modified!(integ2, true)
+      set_proposed_dt!(integ2, integ1)
+      dist = d0; i = 0
+    end
+  end
+  λ_ts, ts
+end
+
 
 function lyapunovs(ds::ContinuousDS, N::Real=1000;
   Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
