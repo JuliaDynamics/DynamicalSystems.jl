@@ -1,71 +1,109 @@
 using StaticArrays, Requires
-import Base: size, getindex, convert, show
 
-"""   Dataset{D, T} = Vector{SVector{D, T}}
-A `Dataset` is simply a Vector of `SVector` from the module of `StaticArrays`.
-This data representation is most of the time better than having a `Matrix`.
 """
-const Dataset{D, T} = Vector{SVector{D, T}}
-v = [rand(SVector{3}) for i in 1:1000]
+    Dataset{D, T, V}
+A `Dataset` is an interface for `Vector`s of `Vector`s, inspired by
+RecursiveArrayTools.jl. It contains numbers of type `T` and represents datapoints in
+`D` dimensions, represented by vectors type `V`.
 
-@inline Base.getindex(d::Dataset, i::Int, j::Int) = d[i][j]
-@inline Base.getindex(d::Dataset, i::Colon, j::Int) = [d[k][j] for k in 1:length(d)]
-@inline Base.getindex(d::Dataset, i::Int, j::Colon) = d[i]
-@inline dimension{D,T}(::Dataset{D,T}) = D
+This data representation is most of the time better than having a `Matrix`, but can be
+used exactly like a matrix that has each of the columns be the timeseries of each of
+the dynamic variables.
+"""
+mutable struct Dataset{
+  D, T<:Number, V<:Union{Vector{T}, SVector{D,T}}}
+  data::Vector{V}
+end
+Dataset(v::Vector{SVector{D,T}}) where {D, T<:Number} = Dataset{D, T, SVector{D,T}}(v)
+function Dataset(v::Vector{Vector{T}}) where {T<:Number}
+  D = length(v[1])
+  for i in 1:length(v)
+    D != length(v[i]) && throw(ArgumentError(
+    "All data-points in a Dataset must have same size"
+    ))
+  end
+  return Dataset{D, T, Vector{T}}(v)
+end
 
-function convert{D, T}(::Type{Matrix}, d::Dataset{D,T})
+@inline dimension{D, T, V}(::Dataset{D, T, V}) = D
+@inline Base.eltype{D, T, V}(d::Dataset{D, T, V}) = T
+@inline vectype{D, T, V}(::Dataset{D, T, V}) = V
+
+# Size:
+@inline Base.length(d::Dataset) = length(d.data)
+@inline Base.size(d::Dataset{D, T, V}) where {D, T, V} = (length(d.data), D)
+@inline Base.size(d::Dataset, i::Int) = size(d)[i]
+@inline Base.iteratorsize(d::Dataset) = Base.HasLength()
+# 1D indexing  over the container elements:
+@inline Base.getindex(d::Dataset, i::Int) = d.data[i]
+@inline Base.endof(d::Dataset) = endof(d.data)
+# 2D indexing exactly like if the dataset was a matrix
+# with each column a dynamic variable
+@inline Base.getindex(d::Dataset, i::Int, j::Int) = d.data[i][j]
+@inline Base.getindex(d::Dataset, i::Colon, j::Int) = [d.data[k][j] for k in 1:length(d)]
+@inline Base.getindex(d::Dataset, i::Int, j::Colon) = d.data[i]
+# Itereting interface:
+@inline Base.eachindex(D::Dataset) = Base.OneTo(length(D.data))
+Base.start(d::Dataset) = 1
+Base.next(d::Dataset, state) = (d[state], state + 1)
+Base.done(d::Dataset, state) = state >= length(d.data) + 1
+
+# Other commonly used functions:
+function Base.push!(d::Dataset{D, T, V}, new_item::S) where {D, T, V, S}
+  if V != S
+    throw(ArgumentError("Can only push vectors of type $V into this Dataset"))
+  end
+  push!(d.data, new_item)
+end
+
+# Conversions:
+function Base.convert{D, T}(::Type{Matrix}, d::Dataset{D,T})
   mat = Matrix{T}(length(d), D)
   for i in 1:length(d)
-    mat[i,:] .= d[i]
+    mat[i,:] .= d.data[i]
   end
   mat
 end
 
-function convert(::Type{Dataset}, mat::AbstractMatrix)
+function Base.convert(::Type{Dataset}, mat::AbstractMatrix)
   D = size(mat, 2); T = eltype(mat)
   d = SVector{D, T}[]
   for i in 1:size(mat, 1)
     push!(d, SVector{D, T}(view(mat, i, :)))
   end
-  return d
+  return Dataset(d)
 end
 
 ### Pretty printing
-# @require Juno begin
-#   function Juno.render(i::Juno.Inline, d::Dataset{D,T}) where {D,T}
-#     N = length(d)
-#     Juno.render(
-#       Juno.Tree(Text("$D-dimensional Dataset{$T} with $N points"),
-#         [Juno.Text(stringrep(d))])
-#     )
-#   end
-# end
-
-# function Base.show{D, T}(io::IO, d::Dataset{D, T})
-#   N = length(d)
-#   println(io, "$D-dimensional Dataset{$T} with $N points:")
-#   print(io, stringrep(d))
-# end
-
-function stringrep(d::Dataset, nshow::Int=21, ndigits::Int=5)
-  iseven(nshow) && throw(ArgumentError("nshow must be odd"))
-  n = min(nshow, length(d))
-  s = ""
-  if n <= nshow
-    for i in 1:n
-      s *= string(" ", v[i], "\n")
-    end
-  else
-    for i in 1:(n÷2)
-      s *= string(" ", v[i], "\n")
-    end
-    padlen = length(string(v[n÷2]))÷2
-    s *= lpad("⋮\n", padlen+1)
-    for i in (length(v)-(n÷2)+1):length(v)
-      s *= string(" ", v[i], "\n")
-    end
+function vectorname(d::Dataset{D, T, V}) where {D, T, V}
+  if V <: Vector
+    s = "Vector{$T}"
+  elseif V <: SVector
+    s = "SVector{$D,$T}"
   end
   return s
+end
+
+@require Juno begin
+  function Juno.render(i::Juno.Inline, d::Dataset{D, T, V}) where {D, T, V}
+    N = length(d)
+    mat = convert(Matrix, d)
+    s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
+    s = join(split(s, '\n')[2:end], '\n')
+    Juno.render(
+      Juno.Tree(Text("$D-dimensional Dataset with $N points ($(vectorname(d))) :"),
+        [Text(s)])
+    )
+  end
+end
+
+function Base.show(io::IO, d::Dataset{D, T, V}) where {D, T, V}
+  mat = convert(Matrix, d)
+  n = length(d)
+  s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
+  s = join(split(s, '\n')[2:end], '\n')
+  println(io, "$D-dimensional Dataset with $n points ($(vectorname(d))) :")
+  print(io, Text(s))
 end
 
 ### Karlesson comments

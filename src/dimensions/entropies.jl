@@ -1,15 +1,15 @@
 export non0hist, genentropy, renyi, shannon, hartley
 
-@inbounds function perform_non0hist{D, T<:Real}(data::Dataset{D,T}, ranges, ε)
+@inbounds function perform_non0hist{D, T<:Real, V}(data::Dataset{D,T, V}, ranges, ε)
     L = length(data)
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indeces and the values are the amount of
     # datapoints in each bin
-    d = Dict{NTuple{D, Int}, Int}()
+    d = Dict{SVector{D, Int}, Int}()
     mini = minima(data)
-    for j in 1:L
+    for point in data
         # index of datapoint in the ranges space:
-        ind = NTuple{D, Int}(Int(floor(point .- minima )))
+        ind::SVector{D, Int} = Int.(floor.(point .- mini ))
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
@@ -33,7 +33,7 @@ wish to keep information about the edges of the binning as well
 as the zero elements.
 """
 function non0hist end
-@inbounds function non0hist{D, T<:Real}(ε::Real, data::Dataset{D, T})
+@inbounds function non0hist{D, T<:Real, V}(ε::Real, data::Dataset{D, T, V})
     # Initialize:
     L = length(data)
     mini = minima(data); maxi = maxima(data)

@@ -3,7 +3,6 @@ println("\nTesting continuous system lyapunov exponents...")
 
 @testset "Lorenz system" begin
   ds = Systems.lorenz()
-  ds2 = ContinuousDS(ds.state, ds.eom)
   # ds2 = ContinuousDS(ds.state, ds.eom!)
   @testset "lyapunovs" begin
     λ = lyapunovs(ds, 1e5)

@@ -145,24 +145,35 @@ function tangentbundle_setup_integrator(ds::ContinuousDS, t_final;
   diff_eq_kwargs=Dict())
 
   D = dimension(ds)
-  f = ds.eom
+  f! = ds.eom!
   jac = ds.jacob
 
-  # the equations of motion `tbeom` evolve the system and the tangent dynamics
+  # the equations of motion `tbeom!` evolve the system and the tangent dynamics
   # The e.o.m. for the system is f!(t, u , du).
   # The e.o.m. for the tangent dynamics is simply:
   # dY/dt = J(u) ⋅ Y
   # with J the Jacobian of the system (NOT the flow), at the current state
-  function tbeom(t, u)
-    mm = SMatrix{D,D}(u[:, 2:D+1])
-    return hcat(f(u), jac(u[:, D])*mm)
+  tbeom! = (t, u, du) -> begin
+    f!(view(du, :, 1), u)
+    A_mul_B!(
+    view(du, :, 2:D+1),
+    jac(view(u, :, 1)),
+    view(u, :, 2:D+1)
+    )
   end
 
   # S is the matrix that keeps the system state in the first column
   # and tangent dynamics (Jacobian of the Flow) in the rest of the columns
-  S = SMatrix{3, 4}(ds.state..., eye(eltype(ds.state), 3)...)
-  tbprob = ODEProblem(tbeom, S, (zero(t_final), t_final))
-  tb_integ = init(tbprob, Tsit5(); save_everystep=false)
+  S = [ds.state eye(eltype(ds.state), D)]
+
+  tbprob = ODEProblem(tbeom!, S, (zero(t_final), t_final))
+  if haskey(diff_eq_kwargs, :solver)
+    solver = diff_eq_kwargs[:solver]
+    pop!(diff_eq_kwargs, :solver)
+    tb_integ = init(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
+  else
+    tb_integ = init(tbprob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
+  end
   return tb_integ
 end
 
@@ -186,7 +197,7 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
-
+  D = dimension(ds)
   T = convert(eltype(ds.state), T)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
@@ -264,12 +275,12 @@ function lyapunovs(ds::ContinuousDS, N::Real=1000;
 
   # Main algorithm
   for τ in tstops
-    integ.u = hcat(integ.u[:, 1], Q) # update tangent dynamics state
+    integ.u[:, 2:end] .= Q # update tangent dynamics state (super important!)
     push!(integ.opts.tstops, τ)
     step!(integ)
 
     # Perform QR (on the tangent flow):
-    Q, R = qr(integ.u[:, 2:D+1])
+    Q, R = qr(view(integ.u, :, 2:D+1))
     # Add correct (positive) numbers to Lyapunov spectrum
     for j in 1:D
       λ[j] += log(abs(R[j,j]))

@@ -155,12 +155,11 @@ Return a `k`-element logspace from the magnitude + `z` of the biggest absolute
 value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
-function estimate_boxsizes(data::Dataset;
-  k::Int = 12, z = 0, w = 2)
+function estimate_boxsizes(data::Dataset{D, T, V};
+  k::Int = 12, z = 0, w = 2) where {D, T<:Number, V}
 
-  T = eltype(data[1])
   mindist = min_pairwise_distance(data)[2]
-  maxv = -
+  maxv = -Inf
   for point in data
     ma = maximum(point)
     maxv = (ma > maxv) ? ma : maxv
@@ -204,7 +203,7 @@ function generalized_dim(α, data::Dataset)
   es = estimate_boxsizes(data)
   dd = zeros(es)
   for i in 1:length(es)
-    dd[i] = genentropy(α, es[i], vectors...)
+    dd[i] = genentropy(α, es[i], data)
   end
   return linear_region(-log.(es), dd)[2]
 end

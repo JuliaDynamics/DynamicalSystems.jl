@@ -132,22 +132,19 @@ continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
 """
 function timeseries(ds::DiscreteDS, N::Real)
   st = ds.state
-  T = eltype(st)
-  D = length(st)
-  ts = Array{T}(N, D)
+  ts = [st]
   f = ds.eom
-  ts[1,:] .= ds.state
   for i in 2:N
     st = f(st)
-    ts[i, :] .= st
+    push!(ts, st)
   end
-  return ts
+  return Dataset(ts)
 end
 
 function timeseries(ds::DiscreteDS1D, N::Int)
   x = deepcopy(ds.state)
   f = ds.eom
-  ts = Vector{eltype(x)}(N)
+  ts = Vector{typeof(x)}(N)
   ts[1] = x
   for i in 2:N
     x = f(x)
