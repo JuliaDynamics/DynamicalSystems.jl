@@ -9,6 +9,7 @@
 + New and better docs.
 + Better integration of `SVectors` in the package all around.
 + Better default keywords for attractor dimension and lyapunov exponents.
++ Equations of motion on all famous systems.
 
 # v0.1.0: First release
 Normal changelog will be kept from this point onwards.

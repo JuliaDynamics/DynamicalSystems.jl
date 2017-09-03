@@ -13,9 +13,9 @@ using DynamicalSystems, StaticArrays
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
 ```math
-\dot{X} &=& \sigma(Y-X) \\
-\dot{Y} &=& -XZ + \rho X -Y \\
-\dot{Z} &=& XY - \beta Z
+\dot{X} = \sigma(Y-X) \\
+\dot{Y} = -XZ + \rho X -Y \\
+\dot{Z} = XY - \beta Z
 ```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
@@ -50,12 +50,20 @@ end
 ```julia
 roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 ```
+```math
+\dot{x} = -y-z \\
+\dot{y} = x+ay \\
+\dot{z} = -b + z(x-c)
+```
 This three-dimensional continuous system is due to Rössler [1].
 It is a system that by design behaves similarly
 to the `lorenz` system and displays a (fractal)
-strange attractor. However, it is easier to analyze qualitatively, as for example
+strange attractor.
+
+However, it is easier to analyze qualitatively, as for example
 the attractor is composed of a single manifold.
 Default values are the same as the original paper.
+
 [1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
@@ -79,8 +87,15 @@ end
 #                                     Discrete                                        #
 #######################################################################################
 """
-    towel(u0 = [0.085, -0.121, 0.075])
-
+```julia
+towel(u0 = [0.085, -0.121, 0.075])
+```
+```math
+x_{n+1} = a x_n (1-x_n) -0.05 (y_n +0.35) (1-2z_n) \\
+y_{n+1} = 0.1 \left( \left( y_n +0.35 \right)\left( 1+2z_n\right) -1 \right)
+\left( 1 -1.9 x_n \right) \\
+z_{n+1} = 3.78 z_n (1-z_n) + b y_n
+```
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
 having two positive and one negative lyapunov exponent.
@@ -109,8 +124,13 @@ function towel(u0=[0.085, -0.121, 0.075])
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 """
-    standardmap(u0=0.001rand(2); k = 0.971635)
-
+```julia
+standardmap(u0=0.001rand(2); k = 0.971635)
+```
+```math
+\theta_{n+1} = \theta_n + p_{n+1}\\
+p_{n+1} = p_n + k\sin(\theta_n)
+```
 The standard map (also known as Chirikov standard map) is a two dimensional,
 area-preserving chaotic mapping due to Chirikov [1]. It is one of the most studied
 chaotic systems and by far the most studied Hamiltonian (area-preserving) mapping.
@@ -122,7 +142,7 @@ chaos.
 
 The default parameter `k` is the critical parameter where the golden-ratio torus is
 destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle variable
-`θ` to be the first, and the angular momentum `p` to be the second variable, while
+`θ` to be the first, and the angular momentum `p` to be the second, while
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
@@ -140,7 +160,13 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
 end
 
 """
-    henon(u0=zeros(2); a = 1.4, b = 0.3)
+```julia
+henon(u0=zeros(2); a = 1.4, b = 0.3)
+```
+```math
+x_{n+1} = 1 - ax^2_n+y_n \\
+y_{n+1} = bx_n
+```
 The Hénon map is a two-dimensional mapping due to Hénon [1] that can display a strange
 attractor (at the default parameters). In addition, it also displays many other aspects
 of chaos, like period doubling or intermittency, for other parameters.
@@ -159,8 +185,12 @@ function henon(u0=zeros(2); a = 1.4, b = 0.3)
 end # should give lyapunov exponents [0.4189, -1.6229]
 
 """
-    logistic(x0 = rand(); r = 4.0)
-
+```julia
+logistic(x0 = rand(); r = 4.0)
+```
+```math
+x_{n+1} = rx_n(1-x_n)
+```
 The logistic map is an one dimensional unimodal mapping due to May [1] and is used by
 many as the archetypal example of how chaos can arise from very simple equations.
 
