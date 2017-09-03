@@ -54,6 +54,7 @@ end
 @inline Base.getindex(d::Dataset, i::Int, j::Int) = d.data[i][j]
 @inline Base.getindex(d::Dataset, i::Colon, j::Int) = [d.data[k][j] for k in 1:length(d)]
 @inline Base.getindex(d::Dataset, i::Int, j::Colon) = d.data[i]
+@inline Base.getindex(d::Dataset, r::Range) = d.data[r]
 # Itereting interface:
 @inline Base.eachindex(D::Dataset) = Base.OneTo(length(D.data))
 Base.start(d::Dataset) = 1
@@ -102,13 +103,28 @@ function vectorname(d::Dataset{D, T, V}) where {D, T, V}
   return s
 end
 
+function matstring(d::Dataset)
+  N = length(d); D = dimension(d)
+  if N > 50
+    mat = zeros(eltype(d), 50, D)
+    A = collect(1:25)
+    append!(A, collect(N-24:N))
+    for (i, a) in enumerate(A)
+      mat[i, :] .= d[a]
+    end
+  else
+    mat = convert(Matrix, d)
+  end
+  s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
+  s = join(split(s, '\n')[2:end], '\n')
+  tos = "$D-dimensional Dataset with $N points ($(vectorname(d))) :"*"\n"*s
+  return tos
+end
+
 @require Juno begin
   function Juno.render(i::Juno.Inline, d::Dataset{D, T, V}) where {D, T, V}
     N = length(d)
-    mat = convert(Matrix, d)
-    s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
-    s = join(split(s, '\n')[2:end], '\n')
-    tos = "$D-dimensional Dataset with $N points ($(vectorname(d))) :"*"\n"*s
+    tos = matstring(d)
     Juno.render(
       Juno.Tree(Text(tos), []))
   end

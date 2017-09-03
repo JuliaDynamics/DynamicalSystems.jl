@@ -55,6 +55,7 @@ ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs)
 ```
 Return an `ODEIntegrator`, by first creating an `ODEProblem(ds, t)`.
 This can be used directly with the interfaces of `DifferentialEquations`.
+
 `diff_eq_kwargs = Dict()` is a dictionary `Dict{Symbol, ANY}`
 of keyword arguments
 passed into the `init` of the `DifferentialEquations.jl` package,
