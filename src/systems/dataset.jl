@@ -1,4 +1,5 @@
 using StaticArrays, Requires
+using IterTools: chain
 export Dataset
 
 """
@@ -107,9 +108,7 @@ function matstring(d::Dataset)
   N = length(d); D = dimension(d)
   if N > 50
     mat = zeros(eltype(d), 50, D)
-    A = collect(1:25)
-    append!(A, collect(N-24:N))
-    for (i, a) in enumerate(A)
+    for (i, a) in enumerate(chain(1:25, N-24:N))
       mat[i, :] .= d[a]
     end
   else
