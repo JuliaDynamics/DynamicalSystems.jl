@@ -13,8 +13,12 @@ using DynamicalSystems, StaticArrays
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
 ```math
-\\dot{X} = \\sigma(Y-X) \\\
-\\dot{Y} = -XZ + \\rho X -Y \\\
+\\dot{X} = \\sigma(Y-X)
+```
+```math
+\\dot{Y} = -XZ + \\rho X -Y
+```
+```math
 \\dot{Z} = XY - \\beta Z
 ```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
