@@ -8,6 +8,13 @@
 using NearestNeighbors, StaticArrays
 export min_pairwise_distance
 
+# min_pairwise_distance contributed by Kristoffer Carlsson
+"""
+    min_pairwise_distance(data) -> (min_pair, min_dist)
+Calculate the minimum pairwise distance in the data (`Matrix`, `Vector{Vector}` or
+`Dataset`). Return the index pair
+of the datapoints that have the minimum distance, as well as its value.
+"""
 function min_pairwise_distance(cts::AbstractMatrix)
     if size(cts, 1) > size(cts, 2)
         error("Points must be close (transpose the Matrix)")
@@ -86,6 +93,12 @@ function qr_gs(A::SMatrix{D,D,T}) where {D, T<:Real}
     return Q, Rdiag
 end
 
+# qr_sq contributed by Max Roßner
+"""
+    qr_sq(m::AbstractMatrix) -> (Q, R)
+Perform QR decomposition on a square matrix `m`.
+This method is faster than `Base.qr` for small matrices.
+"""
 function qr_sq(m::AbstractMatrix)    # faster version for square matrices
 	s = size(m, 1)
 	t = zeros(s, s)

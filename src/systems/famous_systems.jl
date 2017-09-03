@@ -13,7 +13,9 @@ using DynamicalSystems, StaticArrays
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
 ```math
-\lambda = 3
+\dot{X} &=& \sigma(Y-X) \\
+\dot{Y} &=& -XZ + \rho X -Y \\
+\dot{Z} &=& XY - \beta Z
 ```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
