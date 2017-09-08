@@ -53,13 +53,11 @@ end
 roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 ```
 ```math
-\\dot{x} = -y-z
-```
-```math
-\\dot{y} = x+ay
-```
-```math
-\\dot{z} = -b + z(x-c)
+\\begin{align*}
+\\dot{x} &= -y-z \\\\
+\\dot{y} &= x+ay \\\\
+\\dot{z} &= -b + z(x-c)
+\\end{align*}
 ```
 This three-dimensional continuous system is due to Rössler [1].
 It is a system that by design behaves similarly
@@ -97,14 +95,12 @@ end
 towel(u0 = [0.085, -0.121, 0.075])
 ```
 ```math
-x_{n+1} = a x_n (1-x_n) -0.05 (y_n +0.35) (1-2z_n)
-```
-```math
-y_{n+1} = 0.1 \\left( \\left( y_n +0.35 \\right)\\left( 1+2z_n\\right) -1 \\right)
-\\left( 1 -1.9 x_n \\right)
-```
-```math
-z_{n+1} = 3.78 z_n (1-z_n) + b y_n
+\\begin{align*}
+x_{n+1} &= a x_n (1-x_n) -0.05 (y_n +0.35) (1-2z_n) \\\\
+y_{n+1} &= 0.1 \\left( \\left( y_n +0.35 \\right)\\left( 1+2z_n\\right) -1 \\right)
+\\left( 1 -1.9 x_n \\right) \\\\
+z_{n+1} &= 3.78 z_n (1-z_n) + b y_n
+\\end{align*}
 ```
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
@@ -138,10 +134,10 @@ end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 standardmap(u0=0.001rand(2); k = 0.971635)
 ```
 ```math
-\\theta_{n+1} = \\theta_n + p_{n+1}
-```
-```math
-p_{n+1} = p_n + k\\sin(\\theta_n)
+\\begin{align*}
+\\theta_{n+1} &= \\theta_n + p_{n+1} \\\\
+p_{n+1} &= p_n + k\\sin(\\theta_n)
+\\end{align*}
 ```
 The standard map (also known as Chirikov standard map) is a two dimensional,
 area-preserving chaotic mapping due to Chirikov [1]. It is one of the most studied
@@ -176,10 +172,10 @@ end
 henon(u0=zeros(2); a = 1.4, b = 0.3)
 ```
 ```math
-x_{n+1} = 1 - ax^2_n+y_n
-```
-```math
-y_{n+1} = bx_n
+\\begin{align*}
+x_{n+1} &= 1 - ax^2_n+y_n \\\\
+y_{n+1} & = bx_n
+\\end{align*}
 ```
 The Hénon map is a two-dimensional mapping due to Hénon [1] that can display a strange
 attractor (at the default parameters). In addition, it also displays many other aspects

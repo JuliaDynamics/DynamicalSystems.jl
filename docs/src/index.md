@@ -21,10 +21,9 @@ This is the (non-final) list of what this package aims to offer:
 2. [Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user](system_definition).
 3. [Lyapunov exponent estimation](lyapunovs).
 4. [Entropy and Attractor Dimension estimation](entropies).
-6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
 6. [Attractor reconstruction, embedding and all that jazz](nlts).
+6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
 7. Numeric Computation of Kolmogorov-Sinai entropy.
 8. Definition of chaos, by Ott.
 7. Chaos control, TBA.
-8. Other stuff I have not yet decided upon, since this is like a pre-alpha version.
 8. Suggest or Contribute more stuff! (see [Contributor Guide](contributors_guide)).

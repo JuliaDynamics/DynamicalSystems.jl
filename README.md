@@ -4,11 +4,7 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 
 | **Documentation**   | [**Package Evaluator**](http://pkg.julialang.org/?pkg=DynamicalSystems#DynamicalSystems) | **Travis**     | **AppVeyor** |
 |:--------:|:-------------------:|:-----------------------:|:-----:|
-| [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://datseris.github.io/DynamicalSystems.jl/latest) | Not yet! | [![Build Status](https://travis-ci.org/Datseris/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/Datseris/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/oabd7hgibx63bo1l?svg=true)](https://ci.appveyor.com/project/Datseris/dynamicalsystems-jl)
-
-*WARNING: This package is currently in Beta. However, you can trust what is written
-in the documentation, because it has been tested. Anything else in the source code
-that is not documented might be incomplete, broken, or give wrong results!*
+|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://datseris.github.io/DynamicalSystems.jl/latest) | [![](http://pkg.julialang.org/badges/DynamicalSystems_0.6.svg)](http://pkg.julialang.org/?pkg=DynamicalSystems) | [![Build Status](https://travis-ci.org/Datseris/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/Datseris/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/oabd7hgibx63bo1l?svg=true)](https://ci.appveyor.com/project/Datseris/dynamicalsystems-jl)
 
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
@@ -21,10 +17,9 @@ This is the (non-final) list of what this package aims to offer:
 3. Lyapunov exponent estimation.
 4. Entropy estimation.
 5. Attractor dimension estimation.
-6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
 6. Attractor reconstruction, embedding and all that jazz.
-7. Numeric Computation of Kolmogorov-Sinai entropy.
-8. Definition of chaos, by Ott.
+6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*, TBA.
+7. Numeric Computation of Kolmogorov-Sinai entropy, TBA.
+8. Definition of chaos, by Ott, TBA,
 7. Chaos control, TBA.
-8. Other stuff I have not yet decided upon, since this is like a pre-alpha version.
 8. Suggest or Contribute more stuff!
