@@ -14,9 +14,9 @@ lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
 ```math
 \\begin{align*}
-\\dot{X} &=& \\sigma(Y-X) \\\\
-\\dot{Y} &=& -XZ + \\rho X -Y \\\\
-\\dot{Z} &=& XY - \\beta Z
+\\dot{X} &= \\sigma(Y-X) \\\\
+\\dot{Y} &= -XZ + \\rho X -Y \\\\
+\\dot{Z} &= XY - \\beta Z
 \\end{align*}
 ```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
