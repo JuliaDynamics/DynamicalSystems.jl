@@ -68,22 +68,21 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
 * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems.
 * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-* `threshold = 10^4*d0` : Threshold to rescale the test trajectory.
+* `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (`timeseries` for more info).
 * `dt = 0.1` : (only for continuous) Time of evolution between each check of
   distance exceeding the `threshold`.
 
-*Warning*: Default values have been choosen to give accurate & fast results for
-maximum lyapunov exponent expected between 0.1 to 1.0. Be sure to adjust
-them properly for your system. Specifically for the continuous systems,
-be sure that `exp(λ*dt) < threshold/d0`.
+This function returns only the final value of the computation of the maximum lyapunov
+exponent. Use the function `lyapunov_full` to get a vector of the convergence
+of the computation versus time.
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
-  d0=1e-9, threshold=10^4*d0)
+  d0=1e-9, threshold=10^3*d0)
 
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
@@ -115,6 +114,53 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
     dist = d0
   end
   λ /= i
+end
+
+
+"""
+```julia
+lyapunov_full(ds::DynamicalSystem, Τ; kwargs...) -> λ_ts, ts
+```
+Do the same as `lyapunov` but return the vector of convergence of the computation
+`λ_ts` versus time `ts`.
+"""
+function lyapunov_full(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
+  d0=1e-9, threshold=10^3*d0)
+
+  threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
+  eom = ds.eom
+  st1 = deepcopy(ds.state)
+
+  # transient system evolution
+  for i in 1:Ttr
+    st1 = eom(st1)
+  end
+
+  st2 = st1 + d0
+  dist = d0*one(eltype(ds.state))
+  λ = zero(eltype(st1))
+  λ_ts = Vector{eltype(st1)}(0)   # the timeseries for the Lyapunov exponent
+  ts = Vector{Int}(0)
+  i::Int = 0
+  while i < N
+    #evolve until rescaling:
+    while dist < threshold
+      st1 = eom(st1)
+      st2 = eom(st2)
+      dist = norm(st1 - st2)
+      i+=1
+      i>=N && break # this line is nessesary for safety! (if systems never go apart)
+    end
+    # local lyapunov exponent is simply the relative distance of the trajectories
+    a = dist/d0
+    λ += log(a)
+    push!(λ_ts, λ/i)
+    push!(ts, i)
+    #rescale:
+    st2 = st1 + (st2 - st1)/a
+    dist = d0
+  end
+  return λ_ts, ts
 end
 
 function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
@@ -193,7 +239,7 @@ end
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
 function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
-  d0=1e-9, threshold=10^4*d0, dt = 0.1,
+  d0=1e-9, threshold=10^3*d0, dt = 0.1,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -216,7 +262,7 @@ function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
 end
 
 function lyapunov(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
-  d0=1e-9, threshold=10^4*d0, dt = 0.1)
+  d0=1e-9, threshold=10^3*d0, dt = 0.1)
 
 
   dist = d0*one(eltype(integ1.u))
@@ -261,7 +307,7 @@ Compute the timeseries of the maximum Lyapunov exponent. This function
 should be used to check the convergence of the series.
 """
 function lyapunov_full(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
-  d0=1e-9, threshold=10^4*d0, dt = 0.1,
+  d0=1e-9, threshold=10^3*d0, dt = 0.1,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -284,7 +330,7 @@ function lyapunov_full(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
 end
 
 function lyapunov_full(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
-  d0=1e-9, threshold=10^4*d0, dt = 0.1)
+  d0=1e-9, threshold=10^3*d0, dt = 0.1)
 
 
   dist = d0*one(eltype(integ1.u))
