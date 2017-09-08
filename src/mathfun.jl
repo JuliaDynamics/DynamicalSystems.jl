@@ -194,5 +194,5 @@ function qr_sq(m::SArray{Tuple{D,D},T,2,L}) where {D, T<:Real, L}
 	 	r[k, j] = 0.0
 	end
     R = SMatrix{D,D}(r)
-	return (m*inv(R), diag(R))
+	return (m*inv(R), R)
 end

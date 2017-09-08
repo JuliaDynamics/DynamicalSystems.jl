@@ -1,5 +1,7 @@
 ti = time()
 
+# Mathematics:
+include("math_tests.jl")
 # System Evolution:
 include(joinpath("systems", "discrete_systems.jl"))
 include(joinpath("systems", "continuous_systems.jl"))

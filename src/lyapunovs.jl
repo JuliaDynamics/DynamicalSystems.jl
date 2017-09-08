@@ -49,11 +49,11 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
     Q, R = qr_sq(K)
     for i in 1:D
-      λ[i] += log(abs(R[i]))
+      λ[i] += log(abs(R[i, i]))
     end
   end
   λ./N
-end# this works. add tests and good to go.
+end
 
 """
 ```julia
