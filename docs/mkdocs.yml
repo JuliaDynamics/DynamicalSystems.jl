@@ -1,5 +1,5 @@
 site_name:           DynamicalSystems.jl
-repo_url:            https://github.com/Datseris/DynamicalSystems.jl
+repo_url:            https://github.com/JuliaDynamics/DynamicalSystems.jl
 site_description:    A Julia package for the exploration of continuous and discrete dynamical systems.
 site_author:         George Datseris
 
@@ -11,7 +11,7 @@ extra:
     accent: 'deep orange'
   social:
     - type: 'github'
-      link: 'https://github.com/Datseris/DynamicalBilliards.jl'
+      link: 'https://github.com/JuliaDynamics/DynamicalBilliards.jl'
 
 markdown_extensions:
   - pymdownx.arithmatex
