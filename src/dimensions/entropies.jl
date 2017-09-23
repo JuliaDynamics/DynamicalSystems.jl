@@ -5,11 +5,12 @@ export non0hist, genentropy, renyi, shannon, hartley
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indeces and the values are the amount of
     # datapoints in each bin
-    d = Dict{SVector{D, Int}, Int}()
+    d = Dict{SVector{D, T}, Int}()
     mini = minima(data)
     for point in data
         # index of datapoint in the ranges space:
-        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
+        # Maybe it is not necessary to convert floor to Int
+        ind::SVector{D, T} = floor((point - mini)/ε)
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
@@ -58,11 +59,15 @@ sum-normalized.
 
 log base-e is used in both cases, i.e. units of "nat".
 
-The Rényi entropy `R_α(p) = (1/1-α)*sum(pi^α for pi ∈ p)`
+The Rényi entropy
+```math
+R_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
+```
 generalizes other known entropies,
 like e.g. the information entropy
-(α = 1, see *the* Shannon paper [2]), the maximum entropy (α = 0, also known as
-Hartley entropy), or the correlation entropy (α = 2, also known as collision entropy).
+(``\alpha = 1``, see *the* Shannon paper [2]), the maximum entropy (``\alpha=0``,
+also known as Hartley entropy), or the correlation entropy
+(``\\alpha = 2``, also known as collision entropy).
 
 The following aliases are provided:
 
