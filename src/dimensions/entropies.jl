@@ -5,12 +5,12 @@ export non0hist, genentropy, renyi, shannon, hartley
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indeces and the values are the amount of
     # datapoints in each bin
-    d = Dict{SVector{D, T}, Int}()
+    d = Dict{SVector{D, Int}, Int}()
     mini = minima(data)
     for point in data
         # index of datapoint in the ranges space:
-        # Maybe it is not necessary to convert floor to Int
-        ind::SVector{D, T} = floor((point - mini)/ε)
+        # It is not necessary to convert floor to Int (dunno why)
+        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
