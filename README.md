@@ -1,5 +1,7 @@
 # DynamicalSystems.jl
 
+![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gifv)
+
 A Julia package for the exploration of continuous and discrete dynamical systems.
 
 | **Documentation**   | [**Package Evaluator**](http://pkg.julialang.org/?pkg=DynamicalSystems#DynamicalSystems) | **Travis**     | **AppVeyor** | Gitter |

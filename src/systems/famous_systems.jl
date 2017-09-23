@@ -86,6 +86,36 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
   return ContinuousDS(u0, eom_roessler!, jacob_roessler)
 end
 
+"""
+    double_pendulum(u0=rand(4); g=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
+Famous chaotic double pendulum system (also used for our logo!). Keywords
+are gravity, lengths of each rod and mass of each ball (all assumed SI units).
+
+The variables order is [θ1, dθ1/dt, θ2, dθ2/dt].
+
+Jacobian is not created!
+"""
+function double_pendulum(u0=rand(4); g=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
+  @inline @inbounds function eom_dp!(du, state)
+    du[1] = state[2]
+
+    del_ = state[3] - state[1]
+    den1 = (M1 + M2)*L1 - M2*L1*cos(del_)*cos(del_)
+    du[2] = (M2*L1*state[2]*state[2]*sin(del_)*cos(del_) +
+               M2*G*sin(state[3])*cos(del_) +
+               M2*L2*state[4]*state[4]*sin(del_) -
+               (M1 + M2)*G*sin(state[1]))/den1
+
+    du[3] = state[4]
+
+    den2 = (L2/L1)*den1
+    du[4] = (-M2*L2*state[4]*state[4]*sin(del_)*cos(del_) +
+               (M1 + M2)*G*sin(state[1])*cos(del_) -
+               (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
+               (M1 + M2)*G*sin(state[3]))/den2
+  end
+  return ContinuousDS(u0, eom_dp!, nothing)
+end
 
 #######################################################################################
 #                                     Discrete                                        #
