@@ -1,4 +1,4 @@
-![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gifv)
+![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
 # Introduction
 `DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading

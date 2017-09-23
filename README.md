@@ -1,6 +1,6 @@
 # DynamicalSystems.jl
 
-![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gifv)
+![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
 A Julia package for the exploration of continuous and discrete dynamical systems.
 
