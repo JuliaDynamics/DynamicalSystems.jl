@@ -65,7 +65,7 @@ R_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
 ```
 generalizes other known entropies,
 like e.g. the information entropy
-(``\alpha = 1``, see *the* Shannon paper [2]), the maximum entropy (``\alpha=0``,
+(``\\alpha = 1``, see *the* Shannon paper [2]), the maximum entropy (``\\alpha=0``,
 also known as Hartley entropy), or the correlation entropy
 (``\\alpha = 2``, also known as collision entropy).
 

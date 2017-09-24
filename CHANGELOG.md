@@ -1,3 +1,6 @@
+# v0.3.0:
+* Added method to estimate optimal delay time `estimate_delay`.
+
 # v0.2.0: Major Improvements and new features
 + Improved algorithm for deducing best boxsizes (using `min_pairwise_distance`)
 + All numerical data is now structured and expected to be in the `Dataset` Type,
