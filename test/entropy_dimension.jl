@@ -1,6 +1,6 @@
 using Base.Test, DynamicalSystems
 
-test_value(val, vmin, vmax) = @test vmin <= val <= vmax
+test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax
 
 println("\nTesting generalized entropy (renyi) & linear scaling...")
 @testset "Generalized Dimensions" begin

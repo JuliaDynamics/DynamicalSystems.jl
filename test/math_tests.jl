@@ -1,4 +1,5 @@
 using DynamicalSystems, Base.Test, StaticArrays
+println("\nTesting custom QR-decomposition...")
 
 @testset "QR-decomposition" begin
     tol = 1e-10

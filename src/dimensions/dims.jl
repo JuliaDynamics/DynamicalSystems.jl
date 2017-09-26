@@ -8,38 +8,36 @@ export linear_region, linear_regions
 Check if `a` is evenly spaced.
 """
 function isevenly(a::AbstractVector)
-  test = a[2] - a[1]
-  for i in 2:length(a)-1
-    if !(a[i+1] - a[i] ≈ test)
-      return false
+    test = a[2] - a[1]
+    for i in 2:length(a)-1
+        if !(a[i+1] - a[i] ≈ test)
+            return false
+        end
     end
-  end
-  true
+    true
 end
 
 """
-```julia
-linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
-```
+    linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
 Call `linear_regions`, identify the largest linear region (`max_linear_region`)
 and approximate the slope of this region using least squares fit.
 Return the indeces where
 the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
 """
 function linear_region(x::AbstractVector, y::AbstractVector;
-  dxi::Int = 1, tol::Real = 0.2)
+    dxi::Int = 1, tol::Real = 0.2)
 
-  # Find biggest linear region:
-  reg_ind = max_linear_region(linear_regions(x,y; dxi=dxi, tol=tol)...)
-  # Prepare least squares fit:
-  xfit = view(x, reg_ind[1]:reg_ind[2])
-  yfit = view(y, reg_ind[1]:reg_ind[2])
-  p0 = [1.0, 1.0]
-  model(x, p) = p[1].*x .+ p[2]
-  # Find fit of tangent:
-  fit = curve_fit(model, xfit, yfit, p0)
-  approx_tang = fit.param[1]
-  return reg_ind, approx_tang
+    # Find biggest linear region:
+    reg_ind = max_linear_region(linear_regions(x,y; dxi=dxi, tol=tol)...)
+    # Prepare least squares fit:
+    xfit = view(x, reg_ind[1]:reg_ind[2])
+    yfit = view(y, reg_ind[1]:reg_ind[2])
+    p0 = [1.0, 1.0]
+    model(x, p) = p[1].*x .+ p[2]
+    # Find fit of tangent:
+    fit = curve_fit(model, xfit, yfit, p0)
+    approx_tang = fit.param[1]
+    return reg_ind, approx_tang
 end
 
 """
@@ -47,21 +45,19 @@ end
 Find the biggest linear region and return it.
 """
 function max_linear_region(lrs::Vector{Int}, tangents::Vector{Float64})
-  dis = 0
-  tagind = 0
-  for i in 1:length(lrs)-1
-    if lrs[i+1] - lrs[i] > dis
-      dis = lrs[i+1] - lrs[i]
-      tagind = i
+    dis = 0
+    tagind = 0
+    for i in 1:length(lrs)-1
+        if lrs[i+1] - lrs[i] > dis
+            dis = lrs[i+1] - lrs[i]
+            tagind = i
+        end
     end
-  end
-  return [lrs[tagind], lrs[tagind+1]]
+    return [lrs[tagind], lrs[tagind+1]]
 end
 
 """
-```julia
-linear_regions(x, y; dxi::Int = 1, tol = 0.2) -> (lrs, tangents)
-```
+    linear_regions(x, y; dxi::Int = 1, tol = 0.2) -> (lrs, tangents)
 Identify regions where the curve `y(x)` is linear, by scanning the
 `x`-axis every `dxi` indeces (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
 and so on if `dxi=5`).
@@ -75,38 +71,38 @@ Return the indeces of `x` that correspond to linear regions, `lrs`,
 and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
 """
 function linear_regions(x::AbstractVector, y::AbstractVector;
-  dxi::Int = 1, tol::Real = 0.2)
+    dxi::Int = 1, tol::Real = 0.2)
 
-  maxit = length(x) ÷ dxi
+    maxit = length(x) ÷ dxi
 
-  tangents = Float64[slope(view(x, 1:max(dxi, 2)), view(y, 1:max(dxi, 2)))]
+    tangents = Float64[slope(view(x, 1:max(dxi, 2)), view(y, 1:max(dxi, 2)))]
 
-  prevtang = tangents[1]
-  lrs = Int[1] #start of first linear region is always 1
-  lastk = 1
+    prevtang = tangents[1]
+    lrs = Int[1] #start of first linear region is always 1
+    lastk = 1
 
-  # Start loop over all partitions of `x` into `dxi` intervals:
-  for k in 1:maxit-1
-    tang = slope(view(x, k*dxi:(k+1)*dxi), view(y, k*dxi:(k+1)*dxi))
-    if isapprox(tang, prevtang, rtol=tol)
-      # Tanget is similar with initial previous one (based on tolerance)
-      continue
-    else
-      # Tangent is not similar.
-      # Push new tangent for a new linear region
-      push!(tangents, tang)
+    # Start loop over all partitions of `x` into `dxi` intervals:
+    for k in 1:maxit-1
+        tang = slope(view(x, k*dxi:(k+1)*dxi), view(y, k*dxi:(k+1)*dxi))
+        if isapprox(tang, prevtang, rtol=tol)
+            # Tanget is similar with initial previous one (based on tolerance)
+            continue
+        else
+            # Tangent is not similar.
+            # Push new tangent for a new linear region
+            push!(tangents, tang)
 
-      # Set the START of a new linear region
-      # which is also the END of the previous linear region
-      push!(lrs, k*dxi)
-      lastk = k
+            # Set the START of a new linear region
+            # which is also the END of the previous linear region
+            push!(lrs, k*dxi)
+            lastk = k
+        end
+
+        # Set new previous tangent (only if it was not the same as current)
+        prevtang = tang
     end
-
-    # Set new previous tangent (only if it was not the same as current)
-    prevtang = tang
-  end
-  push!(lrs, length(x))
-  return lrs, tangents
+    push!(lrs, length(x))
+    return lrs, tangents
 end
 
 """
@@ -115,10 +111,10 @@ Perform linear fit to `y(x)` using the module `LsqFit` and return the calculated
 slope.
 """
 function slope(xfit, yfit)
-  p0 = [(yfit[end] - yfit[1])/(xfit[end] - xfit[1]), yfit[1]]
-  model(x, p) = p[1].*x .+ p[2]
-  # Find fit of tangent:
-  curve_fit(model, xfit, yfit, p0).param[1]
+    p0 = [(yfit[end] - yfit[1])/(xfit[end] - xfit[1]), yfit[1]]
+    model(x, p) = p[1].*x .+ p[2]
+    # Find fit of tangent:
+    curve_fit(model, xfit, yfit, p0).param[1]
 end
 
 # This function exists ONLY FOR TESTING! Do not use it elsewhere!
@@ -148,27 +144,25 @@ kaplanyorke_dim
 magnitude(x::Real) = round(log10(x))
 
 """
-```julia
-estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 2)
-```
-Return a `k`-element logspace from the magnitude + `z` of the biggest absolute
+    estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 2)
+Return a `k`-element `logspace` from the magnitude + `z` of the biggest absolute
 value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
 function estimate_boxsizes(data::Dataset{D, T, V};
-  k::Int = 12, z = 0, w = 2) where {D, T<:Number, V}
+    k::Int = 12, z = 0, w = 2) where {D, T<:Number, V}
 
-  mindist = min_pairwise_distance(data)[2]
-  maxv = -Inf
-  for point in data
-    ma = maximum(point)
-    maxv = (ma > maxv) ? ma : maxv
-  end
-  lower = magnitude(mindist)
-  if 10.0^lower < mindist
-    lower += 1
-  end
-  logspace(magnitude(maxv)+z, lower+w, k)
+    mindist = min_pairwise_distance(data)[2]
+    maxv = -Inf
+    for point in data
+        ma = maximum(point)
+        maxv = (ma > maxv) ? ma : maxv
+    end
+    lower = magnitude(mindist)
+    if 10.0^lower < mindist
+        lower += 1
+    end
+    logspace(magnitude(maxv)+z, lower+w, k)
 end
 
 estimate_boxsizes(ts::AbstractMatrix; kwargs...) =
@@ -200,12 +194,12 @@ The following aliases are provided:
   * α = 2 : `correlation_dim`, `collision_dim`
 """
 function generalized_dim(α, data::Dataset)
-  es = estimate_boxsizes(data)
-  dd = zeros(es)
-  for i in 1:length(es)
-    dd[i] = genentropy(α, es[i], data)
-  end
-  return linear_region(-log.(es), dd)[2]
+    es = estimate_boxsizes(data)
+    dd = zeros(es)
+    for i in 1:length(es)
+        dd[i] = genentropy(α, es[i], data)
+    end
+    return linear_region(-log.(es), dd)[2]
 end
 generalized_dim(α, matrix::AbstractMatrix) =
 generalized_dim(α, convert(Dataset, matrix))
@@ -223,12 +217,10 @@ boxcounting_dim = capacity_dim
 information_dim(args...) = generalized_dim(1, args...)
 
 """
-```julia
-kaplanyorke_dim(lyapunovs::AbstractVector)
-```
+    kaplanyorke_dim(lyapunovs::AbstractVector)
 Calculate the Kaplan-Yorke dimension [1] (aka Lyapunov dimension).
 This simply is the point where
-`cumsum(lyapunovs)` becomes zero (interpolated). Returns the dimension of the system
+`cumsum(lyapunovs)` becomes zero (interpolated). Returns the length of the vector
 if the sum of the exponents never becomes negative.
 
 [1] :  J. Kaplan & J. Yorke,
@@ -236,23 +228,23 @@ if the sum of the exponents never becomes negative.
 Lecture Notes in Mathematics vol. **730**, Springer (1979)
 """
 function kaplanyorke_dim(v::AbstractVector)
-  issorted(v, rev = true) || throw(ArgumentError(
-  "The lyapunov vector must be sorted from most positive to most negative"))
+    issorted(v, rev = true) || throw(ArgumentError(
+    "The lyapunov vector must be sorted from most positive to most negative"))
 
-  s = cumsum(v); k = length(v)
-  # Find k such that sum(λ_i for i in 1:k) is still possitive
-  for i in eachindex(s)
-    if s[i] < 0
-      k = i-1
-      break
+    s = cumsum(v); k = length(v)
+    # Find k such that sum(λ_i for i in 1:k) is still possitive
+    for i in eachindex(s)
+        if s[i] < 0
+            k = i-1
+            break
+        end
     end
-  end
 
-  if k == 0
-    return zero(v[1])
-  elseif k < length(v)
-    return k + s[k]/abs(v[k+1])
-  else
-    return typeof(v[1])(length(v))
-  end
+    if k == 0
+        return zero(v[1])
+    elseif k < length(v)
+        return k + s[k]/abs(v[k+1])
+    else
+        return typeof(v[1])(length(v))
+    end
 end
