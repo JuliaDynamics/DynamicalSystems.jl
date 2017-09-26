@@ -22,6 +22,7 @@ The Type representing such systems is called `DiscreteDS`:
 ```@docs
 DiscreteDS
 ```
+---
 
 The documentation string of the constructor is perfectly self-contained, but for the sake of clarity we will go through all the steps in the following.
 
@@ -79,6 +80,7 @@ are defined in a similar manner with the discrete systems:
 ```@docs
 ContinuousDS
 ```
+---
 There are two major differences compared to the discrete case:
 
 1. The second field `eom!` ends with an `!` to remind users that it is an in-place
@@ -125,13 +127,13 @@ evolve
 evolve!
 timeseries
 ```
-
+---
 In addition, interfaces are provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
 ```@docs
 ODEProblem
 ODEIntegrator
 ```
-
+---
 
 ## Numerical Data
 Numerical data in `DynamicalSystems.jl` are represented by a structure called
@@ -139,6 +141,7 @@ Numerical data in `DynamicalSystems.jl` are represented by a structure called
 ```@docs
 Dataset
 ```
+---
 In essence a `Dataset` is simply a container for a `Vector` of `Vector`s, but only for
 cases where the all inner vectors are of equal size.
 However, it
@@ -170,6 +173,7 @@ ts = timeseries(ds, 10.0)
 All of these functions have very similar documentation strings:
 
 1. Call signature (parameters of the system are always passed as keyword arguments).
+1. Equations of the system in $\LaTeX$ (how cool is that!).
 1. Introductory text about what this system is and who introduced it first.
 2. Couple of sentences that contain cool science info about the system.
 3. Reference to the original papers.

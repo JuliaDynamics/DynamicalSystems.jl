@@ -14,6 +14,7 @@ The generalized entropy is a concept mainly attributed to Rényi (see below).
 ```@docs
 genentropy
 ```
+---
 Basically, given a [dataset](system_definition/#numerical-data) you can
 partition it into boxes to calculate an entropy.
 
@@ -28,6 +29,7 @@ The function used internally is `non0hist`:
 ```@docs
 non0hist
 ```
+---
 It typically outperforms traditional histograms
 by **several orders of magnitude** in both memory and speed. You can compare
 `DynamicalSystems.perform_non0hist` with `fit(Histogram, ...)` of [`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/)
@@ -58,6 +60,7 @@ dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
 ```
+---
 As stated clearly, this call performs a lot of automated steps. One is always better
 better of performing the steps one by one to attain maximum control.
 
@@ -83,6 +86,7 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 ```@docs
 kaplanyorke_dim
 ```
+---
 Notice that calling this function requires you to pass the lyapunov exponents in an
 ordered vector form (largest to smallest). Example:
 ```julia

@@ -5,7 +5,7 @@ using Distances: Metric, Cityblock, Euclidean
 
 export reconstruct, Cityblock, Euclidean, AbstractNeighborhood
 export FixedMassNeighborhood, FixedSizeNeighborhood, numericallyapunov
-export estimate_delay
+export estimate_delay, neighborhood, Reconstruction
 #####################################################################################
 #                            Reconstruction Object                                  #
 #####################################################################################
@@ -19,7 +19,7 @@ The `n`th row of this object is formally the `D`-dimensional vector:
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
 
-See [`reconstruct`](@ref) for usage.
+See `reconstruct` for usage.
 """
 type Reconstruction{V<:AbstractVector, T<:Real, D, τ}
     s::V
@@ -80,8 +80,8 @@ end
 end
 
 """
-    reconstruct(s::AbstractVector, D::Int, τ::Int) -> R
-Create and return an efficient [`Reconstruction`](@ref) data structure that serves as
+    reconstruct(s::AbstractVector, D::Int, τ::Int) -> R::Reconstruction
+Create and return an efficient `Reconstruction` data structure that serves as
 the
 delay coordinates embedding [1, 2] reconstruction of the signal `s`.
 The reconstuction has
@@ -89,7 +89,7 @@ dimension `D` and delay `τ` (measured in indices). This object can have same
 invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
-`R` interfaces `s` and can be accessed similarly to a [`Dataset`](@ref):
+`R` interfaces `s` and can be accessed similarly to a `Dataset`:
 ```julia
 R = reconstruct(s, 4, 1) # delay coords. reconstruction of dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
@@ -103,7 +103,7 @@ it is first converted to a `Dataset` at each call.
 This means that you should first convert it yourself, using `Dataset(R)` if you
 call functions like `generalized_dim` multiple times.
 
-The methods `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
+The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
 that `length(R) = length(s) - (D-1)*τ` (i.e. the amount of D-dimensional points
 "contained" in `R`) but `size(R) = (length(R), D)`.
 
@@ -225,7 +225,6 @@ end
 
 # Neighborhoods:
 """
-    AbstractNeighborhood
 Supertype of methods for deciding the neighborhood of points for a given point.
 
 Concrete types:
@@ -238,7 +237,7 @@ Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space, irrespectively of the `distance` used in the
 computation of the lyapunov exponent.
 
-To apply these types use [`neighborhood`](@ref) or [`numericallyapunov`](@ref).
+To apply these types use `neighborhood` or `numericallyapunov`.
 """
 abstract type AbstractNeighborhood end
 struct FixedMassNeighborhood <: AbstractNeighborhood
@@ -286,7 +285,7 @@ end
 ```julia
 numericallyapunov(R::Reconstruction, ks;  refstates, distance, method)
 ```
-Return `[E(k) for k ∈ ks]`, where `E(k)` is the average logarithmic distance for
+Return `E = [E(k) for k ∈ ks]`, where `E(k)` is the average logarithmic distance for
 nearby states that are evolved in time for `k` steps. If the reconstruction
 exhibits exponential divergence of nearby states, then it should clearly hold:
 ```math
@@ -295,7 +294,7 @@ E(k) \\approx \\lambda\\Delta t k + E(0)
 for a **well defined region** in the `k` axis, where ``\\lambda`` is
 the approximated
 maximum Lyapunov exponent. `Δt` is the time between samples in the
-original timeseries (it only makes sense if the original system was Continuous).
+original timeseries.
 You can use `linear_region(ks, E)` to identify the slope immediatelly, assuming you
 have choosen sufficiently small `ks` such that the linear scaling region is bigger
 than the saturated region.
@@ -313,7 +312,7 @@ One should then be careful to choose a sufficiently small `ks` range (normally
 up to 20 is enough).
 
 The following keywords tune the algorithm behavior:
-* `refstates::AbstractVector{Int} = length(R) - length(ks)` : Vector of indices
+* `refstates::AbstractVector{Int} = 1:(length(R) - length(ks))` : Vector of indices
   that notes which
   states of the reconstruction should be used as "reference states", which means
   that the algorithm is applied for all state indices contained in `refstates`.
@@ -324,16 +323,17 @@ The following keywords tune the algorithm behavior:
   choice which has fundamental impact on the algorithm.
 * `method::AbstractNeighborhood = FixedMassNeighborhood(1)` : The method to
   be used when evaluating
-  the neighborhood of each reference state. See [`neighborhood`](@ref)
-  or [`AbstractNeighborhood`](@ref) for more info on this choice.
+  the neighborhood of each reference state. See
+  `AbstractNeighborhood` for more info on this choice.
 
 If the `Metric` is `Euclidean()` then calculate the Euclidean distance of the
-full `D`-dimensional points.
+full `D`-dimensional points (distance ``d_E`` in ref. [1]).
 If however the `Metric` is `Cityblock()`, calculate
 the absolute distance of **only the first elements** of the `m+k` and `n+k` points
 of the
-reconstruction `R` (which are the `m+k` and `n+k` elements of vector `R.s`).
-Notice that
+reconstruction `R`, which are the `m+k` and `n+k` elements of vector `R.s` (distance
+``d_F`` in
+ref. [1]). Notice that
 the distances used are defined in the package `Distances.jl`, but are re-exported
 in `DynamicalSystems.jl` for ease-of-use (the actual `evaluate` is not used - the
 distances are used for dispatch purposes *only*).
@@ -341,9 +341,11 @@ distances are used for dispatch purposes *only*).
 It is shown in [1] that the second type of distance
 function makes little difference in the lyapunov estimation versus e.g. the
 Euclidean distance, but it is **much cheaper to evaluate**, since due to smart
-indexing as well as the usage of `reinterpret`, you only need to
-perform one subtraction and one absolute value *without even ever creating a new
-SVector from the very start of the function*!
+indexing you only need to
+perform one subtraction and one absolute value!
+
+This function assumes that the Thieler window [1] is the same as the delay time:
+``w  \\equiv \\tau``.
 
 [1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
 (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)
@@ -351,9 +353,10 @@ SVector from the very start of the function*!
 [2] : Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """
 function numericallyapunov(R, ks;
-    refstates = 1:length(R) - length(ks),
-    distance = Euclidean(), method = FixedMassNeighborhood(1))
-    return numericallyapunov(R, ks, refstates, distance, method)
+                           refstates = 1:(length(R) - length(ks)),
+                           distance = Cityblock(),
+                           method = FixedMassNeighborhood(1))
+    Ek = numericallyapunov(R, ks, refstates, distance, method)
 end
 
 function numericallyapunov(R::Reconstruction{V, T, D, τ},
@@ -393,12 +396,11 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
         point = td[n]
         ⋓ = neighborhood(n, point, tree, method)
         for m in ⋓
-            # What needs to be addressed:
             # If `m` is nearer to the end of the timeseries than k allows
-            # is it completely skipped (and length(⋓) reduced)?
-            # Or do you continue up to certain k only?...
-            # For now I am skipping the point if it exceeds threshold
-            if m > timethres
+            # is it completely skipped (and length(⋓) reduced).
+            # If m is closer to n than the Thieler window allows, also skip.
+            # It is assumed that w = τ (the Thieler window is the delay time)
+            if m > timethres || abs(m - n) <= τ
                 skippedm += 1
                 continue
             end
@@ -418,7 +420,10 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     end
     #plot E[k] versus k and boom, you got lyapunov in the linear scaling region.
     if skippedn >= length(ℜ)
-        error("skippedn == length(ℜ)")
+        ers = "skippedn == length(ℜ)\n"
+        ers*= "Could happen because the all neighbors fall within the Thieler "
+        ers*= "window. Fix: increase neighborhood size."
+        error(ers)
     end
     E ./= length(ℜ) - skippedn
 end

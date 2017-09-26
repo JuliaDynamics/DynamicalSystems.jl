@@ -11,6 +11,7 @@ The function `lyapunovs` calculates the entire spectrum of the exponents of a sy
 ```@docs
 lyapunovs
 ```
+---
 As you can see, the documentation string is detailed and self-contained. For example,
 the lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
 is calculated as:
@@ -41,6 +42,7 @@ more efficiently than getting the first result of `lyapunovs`:
 ```@docs
 lyapunov
 ```
+---
 For example:
 ```julia
 using DynamicalSystems

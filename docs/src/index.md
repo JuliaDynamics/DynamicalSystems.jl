@@ -24,7 +24,7 @@ This is the (non-final) list of what this package aims to offer:
 3. [Lyapunov exponent estimation](lyapunovs).
 4. [Entropy and Attractor Dimension estimation](entropies).
 6. [Attractor reconstruction, embedding and all that jazz](nlts).
-6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
+6. [Entropy/Attractor dimension/Lyapunov exponents for *numerical data*](nlts/#numerical-lyapunov-estimation).
 7. Numeric Computation of Kolmogorov-Sinai entropy.
 8. Definition of chaos, by Ott.
 9. GALI method for estimating chaotic behavior, TBA.

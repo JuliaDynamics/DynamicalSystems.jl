@@ -93,8 +93,9 @@ are gravity, lengths of each rod and mass of each ball (all assumed SI units).
 
 The variables order is [θ1, dθ1/dt, θ2, dθ2/dt].
 
-Jacobian is not created! So no `lyapunovs` for you! 
-(please contribute the Jacobian).
+Jacobian is not created! So no `lyapunovs` for you!
+
+(please contribute the Jacobian and the e.o.m. in LaTeX :smile:)
 """
 function double_pendulum(u0=rand(4); g=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
   @inline @inbounds function eom_dp!(du, state)
