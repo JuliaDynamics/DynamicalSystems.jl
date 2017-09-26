@@ -227,7 +227,7 @@ end
 """
 Supertype of methods for deciding the neighborhood of points for a given point.
 
-Concrete types:
+Concrete subtypes:
 * `FixedMassNeighborhood(K::Int)` : The neighborhood of a point consists of the `K`
   nearest neighbors of the point.
 * `FixedSizeNeighborhood(ϵ::Real)` : The neighborhood of a point consists of all
