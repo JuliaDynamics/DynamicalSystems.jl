@@ -382,8 +382,8 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     timethres = length(R) - length(ks)
     if maximum(ℜ) > timethres
         erstr = "Maximum index of reference states is > length(R) - length(ks) "
-        erstr*= "and the algorith cannot be performed on it. You have to choose "
-        erstr*= "reference state indices of at most length(R) - length(ks)."
+        erstr*= "and the algorithm cannot be performed on it. You have to choose "
+        erstr*= "reference state indices of at most up to length(R) - length(ks)."
         throw(ArgumentError(erstr))
     end
     skippedm = 0; skippedn = 0
