@@ -344,7 +344,7 @@ Euclidean distance, but it is **much cheaper to evaluate**, since due to smart
 indexing you only need to
 perform one subtraction and one absolute value!
 
-This function assumes that the Thieler window [1] is the same as the delay time:
+This function assumes that the Theiler window [1] is the same as the delay time:
 ``w  \\equiv \\tau``.
 
 [1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
@@ -398,8 +398,8 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
         for m in ⋓
             # If `m` is nearer to the end of the timeseries than k allows
             # is it completely skipped (and length(⋓) reduced).
-            # If m is closer to n than the Thieler window allows, also skip.
-            # It is assumed that w = τ (the Thieler window is the delay time)
+            # If m is closer to n than the Theiler window allows, also skip.
+            # It is assumed that w = τ (the Theiler window is the delay time)
             if m > timethres || abs(m - n) <= τ
                 skippedm += 1
                 continue
@@ -421,7 +421,7 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     #plot E[k] versus k and boom, you got lyapunov in the linear scaling region.
     if skippedn >= length(ℜ)
         ers = "skippedn == length(ℜ)\n"
-        ers*= "Could happen because the all neighbors fall within the Thieler "
+        ers*= "Could happen because the all neighbors fall within the Theiler "
         ers*= "window. Fix: increase neighborhood size."
         error(ers)
     end
