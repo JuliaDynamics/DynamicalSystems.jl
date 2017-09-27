@@ -308,8 +308,7 @@ calculated as the "time" index `k` increases. The average of the above over
 all neighborhood states over all reference states is the returned result. Notice
 that this linear scaling region (if it exists) is very "short" versus `k` due
 to no states being arbitrarily close and nonlinear folding taking place.
-One should then be careful to choose a sufficiently small `ks` range (normally
-up to 20 is enough).
+One should then be careful to choose a sufficiently small `ks` range.
 
 The following keywords tune the algorithm behavior:
 * `refstates::AbstractVector{Int} = 1:(length(R) - length(ks))` : Vector of indices
