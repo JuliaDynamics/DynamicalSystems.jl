@@ -24,6 +24,8 @@ abstract type AbstractDataset{D} end
 @inline Base.start(d::AbstractDataset) = 1
 @inline Base.next(d::AbstractDataset, state) = (d[state], state + 1)
 @inline Base.done(d::AbstractDataset, state) = state >= length(d.data) + 1
+# Append
+Base.append!(d1::AbstractDataset, d2::AbstractDataset) = append!(d1.data, d2.data)
 
 # Other commonly used functions:
 @inline Base.push!(d::AbstractDataset, new_item) = push!(d.data, new_item)
