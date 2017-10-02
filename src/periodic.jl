@@ -1,15 +1,12 @@
+using StaticArrays
 import Base: *
+import StaticArrays: SMatrix
+using Combinatorics: permutations, multiset_permutations
 
-# Method to find unstable periodic orbits of any map:
-_plot_dataset(d::Dataset; kwargs...) = _plot_dataset(d.data; kwargs...)
-function _plot_dataset(S::Vector{SVector{2,T}}; kwargs...) where {T}
-    mat = Matrix{T}(length(S), D)
-    for i in 1:length(S)
-      mat[i,:] .= S[i]
-    end
-    PyPlot.scatter(view(mat, :, 1), view(mat, :, 1), kwargs...)
-end
-function _phasespace(ds; xs = linspace(0, 2π, 20), ys = linspace(0, 2π, 20),
+export lambdamatrix, lambdaperms, periodicorbits
+
+# Plotting utilities, used only for testing:
+function plot_phasespace(ds; xs = linspace(0, 2π, 20), ys = linspace(0, 2π, 20),
     maxiters = 1000)
     f = ds.eom
     dataset = timeseries(ds, maxiters)
@@ -29,107 +26,206 @@ end
 
 
 """
-    LambdaMatrix{T<:Real}
-Type representing the matrix ``\\mathbf{\\Lambda}_k`` used to create a new
-dynamical system with some unstable fixed points turned to stable. See eq. (1)
-of [1]. `D` is the dimension of the matrix (and thus of the dynamical system).
+    lambdamatrix(λ, inds::Vector{Int}, sings) -> Λk
+Return the matrix ``\\mathbf{\\Lambda}_k`` used to create a new
+dynamical system with some unstable fixed points turned to stable
+(see `periodicorbits`).
 
-# Fields
-* `λ::T`
-* `ind::Vector{Int}`
-* `sings::Vector{Int8}`
+### Arguments:
 
-`λ` is the multiplier of the ``C_k`` matrix, with `0<λ<1`.
-`ind` is a vector of integers.
-The ith entry of this vector gives the *row* of the nonzero element of the ith
-column of `Ck`. This element is +1 if `signs[i] > 0` and -1 otherwise. Each element
-of `ind` **must be unique** such that the resulting matrix is orthogonal
-**and** represents the group of special reflections and permutations.
+1. `λ<:Real` : the multiplier of the ``C_k`` matrix, with `0<λ<1`.
+2. `inds::Vector{Int}` : vector of integers.
+   The `i`th entry of this vector gives the *row* of the nonzero element of the ith
+   column of ``C_k``. Each element
+   of `inds` **must be unique** such that the resulting matrix is orthogonal
+   **and** represents the group of special reflections and permutations.
+3. `sings::Vector` : The element of the `i`th column of ``C_k`` is +1
+   if `signs[i] > 0` and -1 otherwise.
 
-Besides the default constructor, the following is also provided:
+Deciding the appropriate values for `λ, inds, sings` is not trivial. However, in
+publication [2] there is a lot of information that can help with that decision.
 
-    LambdaMatrix(λ, D::Integer, random::Bool = true)
-If `random == true` construct a `LambdaMatrix` of dimension `D` with a
-"random" ``C_k`` matrix, by using `randperm(D)` as well as random `signs`. Else,
-use `ind = collect(1:D)` and `sings = ones(Int8, D)`.
-
-All possible combinations for `ind` and `sings` can be obtained by:
+    lambdamatrix(λ, D::Integer)
+Create a random ``\\mathbf{\\Lambda}_k`` by randomly generating
+an `inds` and a `sings` from all possible combinations. The *collections*
+of all these combinations can be obtained by:
 ```julia
-using Combinatorics
-indperms = collect(permutations([1:D;], D))
-p = falses(D); singsperm = [p[:]]
-for i = 1:D
-    p[i] = true
-    append!(singsperm, multiset_permutations(p, D))
-end
+indperms, singperms = lambdaperms(D)
 ```
+
+[2] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119
+"""
+function lambdamatrix(λ::Real, inds::AbstractVector{<:Integer},
+    sings::AbstractVector{<:Real})
+
+    D = length(inds)
+    D != length(sings) && throw(ArgumentError("inds and sings must have equal size."))
+    0 < λ < 1 || throw(ArgumentError("λ must be in (0,1)"))
+    unique(inds)!=inds && throw(ArgumentError("All elements of inds must be unique."))
+    # This has to be improved to not create intermediate arrays!!!
+    a = zeros(typeof(λ), (D,D))
+    for i in 1:D
+        a[(i-1)*D + inds[i]] = λ*(sings[i] > 0 ? +1 : -1)
+    end
+    return SMatrix{D,D}(a)
+end
+
+function lambdamatrix(λ::T, D::Integer) where {T<:Real}
+    positions = randperm(D)
+    signs = rand(Bool, D)
+    lambdamatrix(λ, positions, signs)
+end
+
+"""
+    lambdaperms(D) -> indperms, singperms
+Return two collections that each contain all possible permutation of indices (total of
+``D!``) and sings (total of ``2^D``) for dimension `D` (see `lambdamatrix`).
+"""
+function lambdaperms(D::Integer)
+    indperms = collect(permutations([1:D;], D))
+    p = trues(D)
+    singperms = [p[:]] #need p[:] because p is mutated afterwards
+    for i = 1:D
+        p[i] = false; append!(singperms, multiset_permutations(p, D))
+    end
+    return indperms, singperms
+end
+
+
+"""
+    periodicorbits(ds::DiscreteDS, o, ics, [λs, indss, singss]; kwargs...) -> FP
+Find stable and unstable fixed points `FP` the system `ds` of order `o`
+using the algorithm
+due to Schmelcher & Diakonos [1], which turns unstable fixed points of the original
+map to dissipatively stable through the transformation:
+```math
+\\mathbf{x}_{n+1} = S_k(\\mathbf{x}_n) = \\mathbf{x}_n +
+\\mathbf{\\Lambda}_k\\left(\\mathbf{f}^{(o)}(\\mathbf{x}_n) - \\mathbf{x}_n\\right)
+```
+with ``\\mathbf{f}`` = `ds.eom`.
+`ics` is a collection of initial conditions (`SVector`s) to be evolved.
+
+The optional arguments `λs, indss, singss` **must be containers** of appropriate
+values, besides `λs` which can also be a number. The elements of those lists
+are passed to: `lambdamatrix(λ, inds, sings)`, which creates the appropriate
+``\\mathbf{\\Lambda}_k`` matrix. See the documentation of `lambdamatrix` to choose
+these values properly. If these arguments are not given,
+a random permutation will be chosen for them (with `λ=0.001`).
+
+**All initial conditions are
+evolved for all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to extremely
+long computation times (so be wise on your choice of `λs, indss, singss`).
+
+The following *keyword* arguments fine-tune the algorithm convergence and output
+(i.c. stands for initial condition):
+
+* `maxiters::Int = 100000` : Maximum amount of iterations an i.c. will be iterated
+   before claiming it has not converged.
+* `disttol = 1e-10` : Distance tolerance. If the 2-norm of a previous state with
+   the next one is `≤ disttol` then it has converged to a fixed point.
+* `inftol = 10.0` : If a state reaches `norm(state) ≥ inftol` it is assumed that
+   it has escaped to infinity (and is thus abandoned).
+* `roundtol::Int = 8` : The found fixed points are rounded
+   to `roundtol` digits before pushed into the list of returned fixed points `FP`.
+   This is done so that `FP` doesn't contain many duplicate fixed points (notice
+   that this has nothing to do with `disttol`).
 
 [1] : P. Schmelcher & F. Diakonos, Phys. Rev. Lett **78**, pp 4733 (1997)
 """
-struct LambdaMatrix{T<:Real}
-    λ::T
-    ind::Vector{Int}
-    sings::Vector{Int8}
-end
-
-dimension(L::LambdaMatrix) = size(L.Ck)[1]
-
-function LambdaMatrix(λ::T, D::Integer, random::Bool = true) where {T<:Real}
-    if random
-        positions = randperm(D)
-        signs = [rand(Bool) ? Int8(1) : Int8(-1) for i in 1:D]
-    else
-        positions = collect(1:D)
-        signs = ones(Int8, D)
+function periodicorbits(ds::DiscreteDS{D, T, F, J},
+                        o::Integer,
+                        ics::AbstractArray{SVector{D,T}},
+                        λs,
+                        indss,
+                        singss;
+                        maxiters::Int = 100000,
+                        disttol::Real = 1e-10,
+                        inftol::Real = 10.0,
+                        roundtol::Int = 8) where {D, T, F, J}
+    f = ds.eom
+    FP = SVector{D, T}[]
+    for λ in λs
+        for inds in indss
+            for sings in singss
+                Λ = lambdamatrix(λ, inds, sings)
+                _periodicorbits!(FP, f, o, ics, Λ, maxiters, disttol, inftol, roundtol)
+            end
+        end
     end
-    return LambdaMatrix(λ, positions, signs)
+    return FP
 end
 
-function *(Λ::LambdaMatrix, s::SVector{D,T}) where {D, T}
-    gen = (Λ.λ*Λ.sings[i]*s[Λ.ind[i]] for i in 1:D)
-    SVector{D,T}(gen...)
+function periodicorbits(ds::DiscreteDS{D, T, F, J},
+                        o::Integer,
+                        ics::AbstractArray{SVector{D,T}};
+                        maxiters::Int = 100000,
+                        disttol::Real = 1e-10,
+                        inftol::Real = 10.0,
+                        roundtol::Int = 8) where {D, T, F, J}
+    f = ds.eom
+    FP = SVector{D, T}[]
+    Λ = lambdamatrix(0.001, dimension(ds))
+    _periodicorbits!(FP, f, o, ics, Λ, maxiters, disttol, inftol, roundtol)
+    return FP
 end
 
-# All possible `ind`` (without the sign part)
-# allCk = [nthperm([1:D;], n) for n in 1:factorial(D)]
-
-ds = Systems.standardmap()
-xs = linspace(0, 2π, 20); ys = linspace(0, 2π, 20)
-o = order = 4
-D = dimension(ds); T = eltype(ds.state)
-
-maxiter = 100000
-roundtol = 4
-disttol = 1e-12
-FP = SVector{D,T}[]
-
-f = ds.eom
-
-for i in 1:4
-    Λ = LambdaMatrix(0.005, D, true)
+function _periodicorbits!(
+    FP, f, o, ics, Λ, maxiter, disttol, inftol, roundtol)
 
     Sk = (state) -> state + Λ*(iterate(state, f, o) - state)
 
-
-    for x in xs
-        for y in ys
-            st = SVector{2}(x, y)
-
-            for i in 1:maxiter
-                prevst = st
-                st = Sk(prevst)
-                if norm(prevst - st) < 1e-10
-                    unist = round.(st, roundtol)
-                    !(unist in FP) && push!(FP, unist)
-                    break
-                end
+    for st in ics
+        for i in 1:maxiter
+            prevst = st
+            st = Sk(prevst)
+            norm(st) > inftol && break
+            if norm(prevst - st) < 1e-10
+                unist = round.(st, roundtol)
+                !(unist ∈ FP) && push!(FP, unist)
+                break
             end
         end
     end
 end
 
-length(FP) == 0 && error("no point converged")
-FP = Dataset(FP)
+function iterate(state, f::Function, i::Integer=1)
+    for j in 1:i
+        state = f(state)
+    end
+    return state
+end
+
+# Testing:
+ds = Systems.standardmap()
+xs = range(0, 2π/25, 26); ys = range(0, 2π/25, 26)
+ics = [SVector{2}(x,y) for x in xs for y in ys]
+
+# All permutations of [±1, ±1]:
+singss = [[+1, +1], [-1, -1], [+1, -1], [-1, +1]]
+# I know from personal research I only need this `inds`:
+indss = [[1,2]] # <- must be container of vectors!!!
+λs = 0.001 # <- only this allowed to not be vector.
+
+# delete these:
+maxiters = 100000
+disttol = 1e-10
+inftol = 10.0
+roundtol = 8
+
 using PyPlot
-_phasespace(ds)
-_plot_dataset(FP)
+
+orders = [2, 3, 4, 5, 6, 8]
+markers = ["s", "^", "D", "p", "h", "8"]
+
+plot_phasespace(ds)
+ALLFP = Any[]
+
+for (i, o) in enumerate(orders)
+    FP = periodicorbits(ds, o, ics, λs, indss, singss)
+    push!(ALLFP, FP)
+    PyPlot.plot([s[1] for s in FP], [s[2] for s in FP],
+    marker=markers[i], markersize=10.0 + (8-o), linewidth=0.0,
+    label = "order $o", markeredgecolor = "yellow")
+end
+legend(loc="top right")
+#works. gg.

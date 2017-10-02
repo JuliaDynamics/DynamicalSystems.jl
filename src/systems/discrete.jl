@@ -112,12 +112,6 @@ function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
     return ds.state
 end
 
-function iterate(state, f::Function, i::Int=1)
-    for _ in 1:i
-        state = f(state)
-    end
-    return state
-end
 
 """
 ```julia
@@ -129,7 +123,7 @@ manipulate this object.
 
 For the discrete case, `T` is an integer and a `T×D` dataset is returned
 (`D` is the system dimensionality). For the
-continuous case, a `W×D` matrix is returned, with `W = length(0:dt:T)` with
+continuous case, a `W×D` dataset is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).
 ## Keywords:
 * `dt = 0.05` : (only for continuous) Time step of value output during the solving

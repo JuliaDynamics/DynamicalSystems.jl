@@ -1,4 +1,3 @@
-
 """
 Sub-module of the module `DynamicalSystems`, which contains pre-defined
 famous systems.
@@ -32,19 +31,19 @@ Default values are the ones used in the original paper.
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
 function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
-  @inline @inbounds function eom_lorenz!(du, u)
-    du[1] = σ*(u[2]-u[1])
-    du[2] = u[1]*(ρ-u[3]) - u[2]
-    du[3] = u[1]*u[2] - β*u[3]
-  end
-  @inline @inbounds function jacob_lorenz(u)
-    i = one(eltype(u))
-    o = zero(eltype(u))
-    @SMatrix [-σ*i           σ*i    zero(i);
-              (ρ*i - u[3])   (-i)   (-u[1]);
-              u[2]           u[1]   (-β*i) ]
-  end# should give exponents [0.9056, 0, -14.5723]
-  return ContinuousDS(u0, eom_lorenz!, jacob_lorenz)
+    @inline @inbounds function eom_lorenz!(du, u)
+        du[1] = σ*(u[2]-u[1])
+        du[2] = u[1]*(ρ-u[3]) - u[2]
+        du[3] = u[1]*u[2] - β*u[3]
+    end
+    @inline @inbounds function jacob_lorenz(u)
+        i = one(eltype(u))
+        o = zero(eltype(u))
+        @SMatrix [-σ*i           σ*i    zero(i);
+                  (ρ*i - u[3])   (-i)   (-u[1]);
+                  u[2]           u[1]   (-β*i) ]
+    end# should give exponents [0.9056, 0, -14.5723]
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz)
 end
 
 
@@ -71,18 +70,18 @@ Default values are the same as the original paper.
 [1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-  @inline @inbounds function eom_roessler!(du, u)
-    du[1] = -u[2]-u[3]
-    du[2] = u[1] + a*u[2]
-    du[3] = b + u[3]*(u[1] - c)
-  end
-  @inline @inbounds function jacob_roessler(u)
-    i = one(eltype(u))
-    o = zero(eltype(u))
-    @SMatrix [o     -i      -i;
-              i      a       o;
-              u[3]   o       u[1] - c]
-  end
+    @inline @inbounds function eom_roessler!(du, u)
+        du[1] = -u[2]-u[3]
+        du[2] = u[1] + a*u[2]
+        du[3] = b + u[3]*(u[1] - c)
+    end
+    @inline @inbounds function jacob_roessler(u)
+        i = one(eltype(u))
+        o = zero(eltype(u))
+        @SMatrix [o     -i      -i;
+                  i      a       o;
+                  u[3]   o       u[1] - c]
+    end
   return ContinuousDS(u0, eom_roessler!, jacob_roessler)
 end
 
@@ -98,25 +97,25 @@ Jacobian is not created! So no `lyapunovs` for you!
 (please contribute the Jacobian and the e.o.m. in LaTeX :smile:)
 """
 function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
-  @inline @inbounds function eom_dp!(du, state)
-    du[1] = state[2]
+    @inline @inbounds function eom_dp!(du, state)
+        du[1] = state[2]
 
-    del_ = state[3] - state[1]
-    den1 = (M1 + M2)*L1 - M2*L1*cos(del_)*cos(del_)
-    du[2] = (M2*L1*state[2]*state[2]*sin(del_)*cos(del_) +
-               M2*G*sin(state[3])*cos(del_) +
-               M2*L2*state[4]*state[4]*sin(del_) -
-               (M1 + M2)*G*sin(state[1]))/den1
+        del_ = state[3] - state[1]
+        den1 = (M1 + M2)*L1 - M2*L1*cos(del_)*cos(del_)
+        du[2] = (M2*L1*state[2]*state[2]*sin(del_)*cos(del_) +
+                   M2*G*sin(state[3])*cos(del_) +
+                   M2*L2*state[4]*state[4]*sin(del_) -
+                   (M1 + M2)*G*sin(state[1]))/den1
 
-    du[3] = state[4]
+        du[3] = state[4]
 
-    den2 = (L2/L1)*den1
-    du[4] = (-M2*L2*state[4]*state[4]*sin(del_)*cos(del_) +
-               (M1 + M2)*G*sin(state[1])*cos(del_) -
-               (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
-               (M1 + M2)*G*sin(state[3]))/den2
-  end
-  return ContinuousDS(u0, eom_dp!, nothing)
+        den2 = (L2/L1)*den1
+        du[4] = (-M2*L2*state[4]*state[4]*sin(del_)*cos(del_) +
+                   (M1 + M2)*G*sin(state[1])*cos(del_) -
+                   (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
+                   (M1 + M2)*G*sin(state[3]))/den2
+    end
+    return ContinuousDS(u0, eom_dp!, nothing)
 end
 
 #######################################################################################
@@ -146,19 +145,19 @@ Default values are the ones used in the original paper.
 [1] : O. E. Rössler, Phys. Lett. **71A**, pp 155 (1979)
 """
 function towel(u0=[0.085, -0.121, 0.075])
-  @inline @inbounds function eom_towel(x)
+    @inline @inbounds function eom_towel(x)
     x1, x2, x3 = x[1], x[2], x[3]
     SVector( 3.8*x1*(1-x1) - 0.05*(x2+0.35)*(1-2*x3),
     0.1*( (x2+0.35)*(1-2*x3) - 1 )*(1 - 1.9*x1),
     3.78*x3*(1-x3)+0.2*x2 )
-  end
+    end
 
-  @inline @inbounds function jacob_towel(x)
-    @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
-    -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
-    0.0  0.2  3.78(1-2x[3]) ]
-  end
-  return DiscreteDS(u0, eom_towel, jacob_towel)
+    @inline @inbounds function jacob_towel(x)
+        @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
+        -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
+        0.0  0.2  3.78(1-2x[3]) ]
+        end
+    return DiscreteDS(u0, eom_towel, jacob_towel)
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 """
@@ -191,11 +190,20 @@ are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """
 function standardmap(u0=0.001rand(2); k = 0.971635)
-  @inline @inbounds eom_standard(x) =
-  SVector{2}(mod2pi(x[1] + x[2] + k*sin(x[1])), mod2pi(x[2] + k*sin(x[1])))
-  @inline @inbounds jacob_standard(x) =
-  @SMatrix [1 + k*cos(x[1])    1;
-            k*cos(x[1])        1]
+    const twopi = 2π
+    @inline @inbounds function eom_standard(x)
+        theta = x[1]; p = x[2]
+        p+=k*sin(theta)
+        theta += p
+        while theta >= twopi; theta -= twopi; end
+        while theta < 0; theta += twopi; end
+        while p >= twopi; p -= twopi; end
+        while p < 0; p += twopi; end
+        return SVector(theta, p)
+    end
+    @inline @inbounds jacob_standard(x) =
+    @SMatrix [1 + k*cos(x[1])    1;
+              k*cos(x[1])        1]
   return DiscreteDS(u0, eom_standard, jacob_standard)
 end
 
@@ -221,9 +229,9 @@ Default values are the ones used in the original paper.
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
-  @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
-  @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-  return DiscreteDS(u0, eom_henon, jacob_henon)
+    @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
+    @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
+    return DiscreteDS(u0, eom_henon, jacob_henon)
 end # should give lyapunov exponents [0.4189, -1.6229]
 
 """
@@ -245,9 +253,9 @@ be universal by Feigenbaum [2].
 [2] : M. J. Feigenbaum, J. Stat. Phys. **19**, pp 25 (1978)
 """
 function logistic(x0=rand(); r = 4.0)
-  @inline eom_logistic(x) = r*x*(1-x)
-  @inline deriv_logistic(x) = r*(1-2x)
-  return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
+    @inline eom_logistic(x) = r*x*(1-x)
+    @inline deriv_logistic(x) = r*(1-2x)
+    return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
 end
 
 
