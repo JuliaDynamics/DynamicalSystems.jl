@@ -2,7 +2,12 @@
 
 # Introduction
 `DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
-on the field of Chaos, nonlinear dynamics and dynamical systems in general. The package
+on the field of Chaos, nonlinear dynamics and dynamical systems in general. You
+can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
+to dynamical systems and Julia as well as for asking questions about the packages of the
+JuliaDynamics organization!
+
+Currently the package
 treats the following types of dynamical systems:
 
 * [Discrete Maps](system_definition/#discrete-systems)

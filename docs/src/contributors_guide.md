@@ -7,7 +7,7 @@ to be a useful tool for scientists working on nonlinear dynamics and
 in general dynamical systems.
 
 For such a feat to be accomplished, many different methods across this interdisciplinary
-fiend have to be not only implemented but suggested in the first place!
+field have to be not only implemented but suggested in the first place!
 
 For a something to be implemented
 in this package, the following steps have to happen:
