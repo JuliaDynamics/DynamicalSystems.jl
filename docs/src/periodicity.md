@@ -1,7 +1,8 @@
 ## Detecting Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
 of low dimensional dynamical systems is affected by the position and the stability
-properties of the unstable periodic orbits existing in the chaotic sea.
+properties of the [unstable periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits)
+existing in the chaotic sea.
 
 Finding unstable (or stable) periodic orbits in the sea of a discrete mapping analytically
 rapidly becomes *impossible* for higher orders of Fixed Points.

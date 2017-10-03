@@ -114,7 +114,7 @@ The following *keyword* arguments fine-tune the algorithm convergence and output
    *if* they are not already contained in `FP`.
    This is done so that `FP` doesn't contain duplicate fixed points (notice
    that this has nothing to do with `disttol`). Turn this to `16` to get the full
-   precision of the algorithm
+   precision of the algorithm.
 
 [1] : P. Schmelcher & F. K. Diakonos, Phys. Rev. Lett. **78**, pp 4733 (1997)
 
