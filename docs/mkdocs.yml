@@ -1,6 +1,6 @@
 site_name:           DynamicalSystems.jl
 repo_url:            https://github.com/JuliaDynamics/DynamicalSystems.jl
-site_description:    A Julia package for the exploration of continuous and discrete dynamical systems.
+site_description:    A Julia package for the exploration of chaos in continuous and discrete dynamical systems.
 site_author:         George Datseris
 
 theme:               'material'
@@ -35,4 +35,5 @@ pages:
 - Lyapunov Exponents: lyapunovs.md
 - Entropies and Dimensions: entropies.md
 - Nonlinear Timeseries Analysis: nlts.md
+- Periodicity: periodicity.md
 - Contributor Guide: contributors_guide.md
