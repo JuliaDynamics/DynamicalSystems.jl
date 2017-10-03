@@ -50,7 +50,7 @@ println("\nTesting finding stable & unstable fixed points...")
 @testset "Standard Map" begin
 
     ds = Systems.standardmap()
-    xs = linspace(0, 2π, 21); ys = copy(xs)
+    xs = linspace(0, 2π, 11); ys = copy(xs)
     ics = [SVector{2}(x,y) for x in xs for y in ys]
 
     # All permutations of [±1, ±1]:
