@@ -35,14 +35,19 @@ with
 numericallyapunov
 ```
 ---
-### Algorithm Tuning
-This function has a total of 4 different approaches for the algorithmic process, by
+### Neighborhoods
+The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
-The methods for the neighborhoods are subtypes of `AbstractNeighborhood`:
+
+The methods for the neighborhoods are subtypes of `AbstractNeighborhood`, and offer
+a convenient way to find neighboring points to a given point in a dataset.
 ```@docs
 AbstractNeighborhood
+neighborhood
 ```
 ---
+As you can see, the function `neighborhood` is generally applicable!
+
 ### Example of Numerical Lyapunov computation
 ```julia
 using DynamicalSystems, PyPlot

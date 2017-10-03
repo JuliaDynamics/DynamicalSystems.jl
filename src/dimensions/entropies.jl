@@ -3,7 +3,7 @@ export non0hist, genentropy, renyi, shannon, hartley
 @inbounds function perform_non0hist{D, T<:Real, V}(data::Dataset{D,T, V}, ranges, ε)
     L = length(data)
     # `d` is a dictionary that contains all the histogram information
-    # the keys are the bin edges indeces and the values are the amount of
+    # the keys are the bin edges indices and the values are the amount of
     # datapoints in each bin
     d = Dict{SVector{D, Int}, Int}()
     mini = minima(data)

@@ -2,10 +2,11 @@ using NearestNeighbors, Requires, StaticArrays
 using LsqFit: curve_fit
 using StatsBase: autocor
 using Distances: Metric, Cityblock, Euclidean
+import NearestNeighbors: KDTree
 
 export reconstruct, Cityblock, Euclidean, AbstractNeighborhood
 export FixedMassNeighborhood, FixedSizeNeighborhood, numericallyapunov
-export estimate_delay, neighborhood, Reconstruction
+export estimate_delay, neighborhood, Reconstruction, KDTree
 #####################################################################################
 #                            Reconstruction Object                                  #
 #####################################################################################
@@ -124,7 +125,7 @@ end
 """
     localextrema(y) -> max_ind, min_ind
 Find the local extrema of given array `y`, by scanning point-by-point. Return the
-indeces of the maxima (`max_ind`) and the indeces of the minima (`min_ind`).
+indices of the maxima (`max_ind`) and the indices of the minima (`min_ind`).
 """
 function localextrema end
 @inbounds function localextrema(y)
@@ -228,16 +229,16 @@ end
 Supertype of methods for deciding the neighborhood of points for a given point.
 
 Concrete subtypes:
-* `FixedMassNeighborhood(K::Int)` : The neighborhood of a point consists of the `K`
+* `FixedMassNeighborhood(K::Int)`  : The neighborhood of a point consists of the `K`
   nearest neighbors of the point.
 * `FixedSizeNeighborhood(ϵ::Real)` : The neighborhood of a point consists of all
-  neighbors of that have distance < `ϵ` from the point.
+  neighbors that have distance < `ϵ` from the point.
 
 Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space, irrespectively of the `distance` used in the
-computation of the lyapunov exponent.
+function `numericallyapunov`.
 
-To apply these types use `neighborhood` or `numericallyapunov`.
+See also `neighborhood` or `numericallyapunov`.
 """
 abstract type AbstractNeighborhood end
 struct FixedMassNeighborhood <: AbstractNeighborhood
@@ -251,21 +252,28 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 
 """
     neighborhood(n, point, tree::KDTree, method::AbstractNeighborhood)
-Return a vector of indeces which are the neighborhood of `point`, whose index
+Return a vector of indices which are the neighborhood of `point`, whose index
 in the original data is `n`. Both `point` and `n` must be provided because the
 `tree` has indices in different sorting (thus making `tree.data[n]` incorrect).
-The pre-computed tree is made with `tree = KDTree(Dataset(R).data, Euclidean())`
-where `R` is a `Reconstruction` object (such that `point = R[n]`).
+The `method` can be a subtype of `AbstractNeighborhood` (see its documentation
+string for more).
 
-The `method` can be a subtype of `AbstractNeighborhood`:
-* FixedMassNeighborhood(K) : The neighborhood consists of the `K` nearest neighbors
-  of the `point` within the given `tree`.
-* FixedSizeNeighborhood(ϵ) : The neighborhood consists of all neighbors of `point`
-  within the `tree` that have distance < ϵ from `point`.
+`neighborhood` can be used for *any* dataset. Just do:
+```julia
+R = some_dataset
+tree = KDTree(R)
+neigh = neighborhood(n, R[n], tree, method)
+```
+where `R` can be *either* a `Dataset` or a `Reconstruction`.
 
-Notice that these distances are always computed using the `Euclidean()` distance
-in `D`-dimensional space, irrespectively of the `distance` used in the
-computation of the lyapunov exponent.
+Notice that the distances in the trees are always computed using the `Euclidean()`
+distance in `D`-dimensional space, irrespectively of the `distance` used in the
+`numericallyapunov` function.
+
+`neighborhood` **simply interfaces** the functions
+`knn` and `inrange` from
+[NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) by using
+the last argument, `method`.
 """
 function neighborhood(
     n, point, tree::KDTree, method::FixedMassNeighborhood)
@@ -278,6 +286,11 @@ function neighborhood(
     deleteat!(idxs, findin(idxs, n)) # unfortunately this has to be done...
     return idxs
 end
+neighborhood(n, point, tree::KDTree) =
+neighborhood(n, point, tree, FixedMassNeighborhood(1))
+
+KDTree(D::Dataset) = KDTree(D.data, Euclidean())
+KDTree(R::Reconstruction) = KDTree(Dataset(R).data, Euclidean())
 
 
 
@@ -334,24 +347,23 @@ reconstruction `R`, which are the `m+k` and `n+k` elements of vector `R.s` (dist
 ``d_F`` in
 ref. [1]). Notice that
 the distances used are defined in the package `Distances.jl`, but are re-exported
-in `DynamicalSystems.jl` for ease-of-use (the actual `evaluate` is not used - the
+in `DynamicalSystems.jl` for ease-of-use (the
 distances are used for dispatch purposes *only*).
 
 It is shown in [1] that the second type of distance
 function makes little difference in the lyapunov estimation versus e.g. the
-Euclidean distance, but it is **much cheaper to evaluate**, since due to smart
-indexing you only need to
+Euclidean distance, but it is **much cheaper to evaluate**, you only need to
 perform one subtraction and one absolute value!
 
-This function assumes that the Theiler window [1] is the same as the delay time:
-``w  \\equiv \\tau``.
+This function assumes that the Theiler window (see [1]) is the same as the delay time:
+``w  = \\tau``.
 
 [1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
 (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)
 
 [2] : Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """
-function numericallyapunov(R, ks;
+function numericallyapunov(R::Reconstruction, ks;
                            refstates = 1:(length(R) - length(ks)),
                            distance = Cityblock(),
                            method = FixedMassNeighborhood(1))
@@ -364,7 +376,7 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
                            distance::Metric,
                            method::AbstractNeighborhood) where {V, T, D, τ}
 
-    # ℜ = \Re<tab> = set of indeces that have the points that one finds neighbors.
+    # ℜ = \Re<tab> = set of indices that have the points that one finds neighbors.
     # n belongs in ℜ and R[n] is the "reference state".
     # Thus, ℜ contains all the reference states the algorithm will iterate over.
     # ℜ is not estimated. it is given by the user. Most common choice:
@@ -374,10 +386,6 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     # which is evaluated for each n and for the given neighborhood method
 
     # Initialize:
-    E = zeros(T, length(ks))
-    E_n = copy(E); E_m = copy(E)
-    td = Dataset(R).data #tree data
-    tree = KDTree(td, Euclidean()) # this creates a copy of `td`
     timethres = length(R) - length(ks)
     if maximum(ℜ) > timethres
         erstr = "Maximum index of reference states is > length(R) - length(ks) "
@@ -385,6 +393,10 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
         erstr*= "reference state indices of at most up to length(R) - length(ks)."
         throw(ArgumentError(erstr))
     end
+    E = zeros(T, length(ks))
+    E_n = copy(E); E_m = copy(E)
+    td = Dataset(R).data #tree data
+    tree = KDTree(td, Euclidean()) # this creates a copy of `td`
     skippedm = 0; skippedn = 0
 
     for n in ℜ
@@ -420,7 +432,7 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     #plot E[k] versus k and boom, you got lyapunov in the linear scaling region.
     if skippedn >= length(ℜ)
         ers = "skippedn == length(ℜ)\n"
-        ers*= "Could happen because the all neighbors fall within the Theiler "
+        ers*= "Could happen because all the neighbors fall within the Theiler "
         ers*= "window. Fix: increase neighborhood size."
         error(ers)
     end
