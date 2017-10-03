@@ -5,25 +5,6 @@ using Combinatorics: permutations, multiset_permutations
 
 export lambdamatrix, lambdaperms, periodicorbits
 
-# Plotting utilities, used only for testing:
-function plot_phasespace(ds; xs = linspace(0, 2π, 20), ys = linspace(0, 2π, 20),
-    maxiters = 1000)
-    f = ds.eom
-    dataset = timeseries(ds, maxiters)
-    for x in xs
-        for y in ys
-            ds.state = SVector{2}(x, y)
-            append!(dataset, timeseries(ds, maxiters))
-        end
-    end
-    m = Matrix(dataset)
-    PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
-    PyPlot.xlim(xs[1], xs[end])
-    PyPlot.ylim(ys[1], ys[end])
-end
-
-
-
 
 """
     lambdamatrix(λ, inds::Vector{Int}, sings) -> Λk
@@ -34,16 +15,16 @@ dynamical system with some unstable fixed points turned to stable
 ### Arguments:
 
 1. `λ<:Real` : the multiplier of the ``C_k`` matrix, with `0<λ<1`.
-2. `inds::Vector{Int}` : vector of integers.
-   The `i`th entry of this vector gives the *row* of the nonzero element of the ith
+2. `inds::Vector{Int}` :
+   The `i`th entry of this vector gives the *row* of the nonzero element of the `i`th
    column of ``C_k``. Each element
    of `inds` **must be unique** such that the resulting matrix is orthogonal
-   **and** represents the group of special reflections and permutations.
-3. `sings::Vector` : The element of the `i`th column of ``C_k`` is +1
-   if `signs[i] > 0` and -1 otherwise.
+   *and* represents the group of special reflections and permutations.
+3. `sings::Vector{<:Real}` : The element of the `i`th column of ``C_k`` is +1
+   if `signs[i] > 0` and -1 otherwise (`sings` can also be `Bool` vector).
 
 Deciding the appropriate values for `λ, inds, sings` is not trivial. However, in
-publication [2] there is a lot of information that can help with that decision.
+ref. [3] there is a lot of information that can help with that decision.
 
     lambdamatrix(λ, D::Integer)
 Create a random ``\\mathbf{\\Lambda}_k`` by randomly generating
@@ -53,7 +34,7 @@ of all these combinations can be obtained by:
 indperms, singperms = lambdaperms(D)
 ```
 
-[2] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119
+[3] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119 (2000)
 """
 function lambdamatrix(λ::Real, inds::AbstractVector{<:Integer},
     sings::AbstractVector{<:Real})
@@ -78,7 +59,7 @@ end
 
 """
     lambdaperms(D) -> indperms, singperms
-Return two collections that each contain all possible permutation of indices (total of
+Return two collections that each contain all possible combinations of indices (total of
 ``D!``) and sings (total of ``2^D``) for dimension `D` (see `lambdamatrix`).
 """
 function lambdaperms(D::Integer)
@@ -93,7 +74,7 @@ end
 
 
 """
-    periodicorbits(ds::DiscreteDS, o, ics, [λs, indss, singss]; kwargs...) -> FP
+    periodicorbits(ds::DiscreteDS, o, ics [, λs, indss, singss] ; kwargs...) -> FP
 Find stable and unstable fixed points `FP` the system `ds` of order `o`
 using the algorithm
 due to Schmelcher & Diakonos [1], which turns unstable fixed points of the original
@@ -103,7 +84,7 @@ map to dissipatively stable through the transformation:
 \\mathbf{\\Lambda}_k\\left(\\mathbf{f}^{(o)}(\\mathbf{x}_n) - \\mathbf{x}_n\\right)
 ```
 with ``\\mathbf{f}`` = `ds.eom`.
-`ics` is a collection of initial conditions (`SVector`s) to be evolved.
+`ics` is a collection of initial conditions (container of `SVector`s) to be evolved.
 
 The optional arguments `λs, indss, singss` **must be containers** of appropriate
 values, besides `λs` which can also be a number. The elements of those lists
@@ -114,7 +95,10 @@ a random permutation will be chosen for them (with `λ=0.001`).
 
 **All initial conditions are
 evolved for all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to extremely
-long computation times (so be wise on your choice of `λs, indss, singss`).
+long computation times (so be wise on your choice of `λs, indss, singss`)!
+
+Notice that by appropriately choosing various values for `λ`, one can sort periodic
+orbits from e.g. least unstable to most unstable, see [2] for details.
 
 The following *keyword* arguments fine-tune the algorithm convergence and output
 (i.c. stands for initial condition):
@@ -126,11 +110,14 @@ The following *keyword* arguments fine-tune the algorithm convergence and output
 * `inftol = 10.0` : If a state reaches `norm(state) ≥ inftol` it is assumed that
    it has escaped to infinity (and is thus abandoned).
 * `roundtol::Int = 8` : The found fixed points are rounded
-   to `roundtol` digits before pushed into the list of returned fixed points `FP`.
-   This is done so that `FP` doesn't contain many duplicate fixed points (notice
+   to `roundtol` digits before pushed into the list of returned fixed points `FP`,
+   *if* they are not already contained in `FP`.
+   This is done so that `FP` doesn't contain duplicate fixed points (notice
    that this has nothing to do with `disttol`).
 
-[1] : P. Schmelcher & F. Diakonos, Phys. Rev. Lett **78**, pp 4733 (1997)
+[1] : P. Schmelcher & F. K. Diakonos, Phys. Rev. Lett. **78**, pp 4733 (1997)
+
+[2] : F. K. Diakonos *et al.*, Phys. Rev. Lett. **81**, pp 4349 (1998)
 """
 function periodicorbits(ds::DiscreteDS{D, T, F, J},
                         o::Integer,
@@ -195,37 +182,20 @@ function iterate(state, f::Function, i::Integer=1)
     return state
 end
 
-# Testing:
-ds = Systems.standardmap()
-xs = range(0, 2π/25, 26); ys = range(0, 2π/25, 26)
-ics = [SVector{2}(x,y) for x in xs for y in ys]
 
-# All permutations of [±1, ±1]:
-singss = [[+1, +1], [-1, -1], [+1, -1], [-1, +1]]
-# I know from personal research I only need this `inds`:
-indss = [[1,2]] # <- must be container of vectors!!!
-λs = 0.001 # <- only this allowed to not be vector.
-
-# delete these:
-maxiters = 100000
-disttol = 1e-10
-inftol = 10.0
-roundtol = 8
-
-using PyPlot
-
-orders = [2, 3, 4, 5, 6, 8]
-markers = ["s", "^", "D", "p", "h", "8"]
-
-plot_phasespace(ds)
-ALLFP = Any[]
-
-for (i, o) in enumerate(orders)
-    FP = periodicorbits(ds, o, ics, λs, indss, singss)
-    push!(ALLFP, FP)
-    PyPlot.plot([s[1] for s in FP], [s[2] for s in FP],
-    marker=markers[i], markersize=10.0 + (8-o), linewidth=0.0,
-    label = "order $o", markeredgecolor = "yellow")
+# Plotting utilities, used only for testing:
+function _plot_phasespace(ds; xs = linspace(0, 2π, 20), ys = linspace(0, 2π, 20),
+    maxiters = 1000)
+    f = ds.eom
+    dataset = timeseries(ds, maxiters)
+    for x in xs
+        for y in ys
+            ds.state = SVector{2}(x, y)
+            append!(dataset, timeseries(ds, maxiters))
+        end
+    end
+    m = Matrix(dataset)
+    PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
+    PyPlot.xlim(xs[1], xs[end])
+    PyPlot.ylim(ys[1], ys[end])
 end
-legend(loc="top right")
-#works. gg.
