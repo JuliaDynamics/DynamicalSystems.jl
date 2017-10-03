@@ -31,10 +31,10 @@ This is the (non-final) list of what this package aims to offer:
 4. [Entropy and Attractor Dimension estimation](entropies).
 6. [Attractor reconstruction, embedding and all that jazz](nlts).
 6. [Entropy/Attractor dimension/Lyapunov exponents for *numerical data*](nlts/#numerical-lyapunov-estimation).
+* [Finding unstable periodic orbits of any period of Discrete maps](periodicity).
 
 The following methods are currently "wanted features", that will be implemented soon:
 
 * Numeric Computation of Kolmogorov-Sinai entropy.
 * Definition of chaos, by Ott.
 * GALI method for estimating chaotic behavior, TBA.
-* Finding unstable periodic orbits of any period of Discrete maps, TBA.

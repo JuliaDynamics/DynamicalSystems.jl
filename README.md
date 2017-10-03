@@ -12,15 +12,26 @@ See the [documentation](https://JuliaDynamics.github.io/DynamicalSystems.jl/late
 
 This is the (non-final) list of what this package aims to offer:
 
-1. Intuitive, consistent APIs for the definition of dynamical systems.
+## Contents
+This is the (non-final) list of what this package offers:
+
+1. Intuitive, consistent APIs for the definition of general dynamical systems.
 2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 3. Lyapunov exponent estimation.
-4. Entropy estimation.
-5. Attractor dimension estimation.
-6. Attractor reconstruction, embedding and all that jazz.
-6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*, TBA.
-7. Numeric Computation of Kolmogorov-Sinai entropy, TBA.
-8. Definition of chaos, by Ott, TBA,
-9. GALI method for estimating chaotic behavior, TBA.
-1. Finding unstable periodic orbits of any period of Discrete maps, TBA.
-8. Suggest or Contribute more stuff!
+4. Entropy and Attractor Dimension estimation.
+6. Attractor reconstruction, delay coordinates embedding and all that jazz.
+6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
+7. Finding unstable periodic orbits of any period of Discrete maps.
+
+The following methods are currently "wanted features", that will be implemented soon:
+
+* Numeric Computation of Kolmogorov-Sinai entropy.
+* Definition of chaos, by Ott.
+* GALI method for estimating chaotic behavior, TBA.
+
+## Double pendulum video:
+Checkout this *amazing* video by Cormullion, featuring the `Systems.double_pendulum()`
+from our package:
+
+[![Double Pendulums Video](http://img.youtube.com/vi/vLDpLxU2fEg/0.jpg)](
+https://www.youtube.com/watch?v=vLDpLxU2fEg)
