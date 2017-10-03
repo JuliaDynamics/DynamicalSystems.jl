@@ -1,5 +1,5 @@
 using DynamicalSystems, Base.Test
-using Distances: Metric, Cityblock, Euclidean, evaluate
+using Distances: Cityblock, Euclidean
 
 test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax
 
@@ -26,9 +26,10 @@ println("\nTesting delay coordinates reconstruction...")
     end
     ks = 1:20
     @testset "Numerical Lyapunov" begin
-        for meth in [FixedMassNeighborhood(1), FixedMassNeighborhood(4),
+        @testset "meth = $meth" for meth in
+            [FixedMassNeighborhood(1), FixedMassNeighborhood(4),
             FixedSizeNeighborhood(0.01)]
-            @testset "distance = $di" for di in [Euclidean()]
+            @testset "distance = $di" for di in [Euclidean(), Cityblock()]
                 for D in [2, 4]
                     R = reconstruct(x, D, 1)
                     E = numericallyapunov(R, ks,

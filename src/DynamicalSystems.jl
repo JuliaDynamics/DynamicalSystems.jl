@@ -35,7 +35,7 @@ include("dimensions/dims.jl")
 # Nonlinear Timeseries Analysis:
 include("delay_coords.jl")
 
-# Periodic Orbits:
+# Periodicity:
 include("periodic.jl")
 
 end # module

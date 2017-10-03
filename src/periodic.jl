@@ -109,11 +109,12 @@ The following *keyword* arguments fine-tune the algorithm convergence and output
    the next one is `≤ disttol` then it has converged to a fixed point.
 * `inftol = 10.0` : If a state reaches `norm(state) ≥ inftol` it is assumed that
    it has escaped to infinity (and is thus abandoned).
-* `roundtol::Int = 8` : The found fixed points are rounded
+* `roundtol::Int = 4` : The found fixed points are rounded
    to `roundtol` digits before pushed into the list of returned fixed points `FP`,
    *if* they are not already contained in `FP`.
    This is done so that `FP` doesn't contain duplicate fixed points (notice
-   that this has nothing to do with `disttol`).
+   that this has nothing to do with `disttol`). Turn this to `16` to get the full
+   precision of the algorithm
 
 [1] : P. Schmelcher & F. K. Diakonos, Phys. Rev. Lett. **78**, pp 4733 (1997)
 
@@ -128,7 +129,7 @@ function periodicorbits(ds::DiscreteDS{D, T, F, J},
                         maxiters::Int = 100000,
                         disttol::Real = 1e-10,
                         inftol::Real = 10.0,
-                        roundtol::Int = 8) where {D, T, F, J}
+                        roundtol::Int = 4) where {D, T, F, J}
     f = ds.eom
     FP = SVector{D, T}[]
     for λ in λs
@@ -148,7 +149,7 @@ function periodicorbits(ds::DiscreteDS{D, T, F, J},
                         maxiters::Int = 100000,
                         disttol::Real = 1e-10,
                         inftol::Real = 10.0,
-                        roundtol::Int = 8) where {D, T, F, J}
+                        roundtol::Int = 4) where {D, T, F, J}
     f = ds.eom
     FP = SVector{D, T}[]
     Λ = lambdamatrix(0.001, dimension(ds))

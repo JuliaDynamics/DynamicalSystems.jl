@@ -1,7 +1,8 @@
 # v.4.0:
 * Increased speed of Standard Map system (by using `while` instead of `mod`).
-* Added a huuuge method due to Schmelcher & Diakonos which finds unstable fixed points
-  of any order for discrete maps!
+* Added a huuuge method due to Schmelcher & Diakonos which finds stable and
+  unstable fixed points of any order for discrete maps!
+* Added `append!` method for `Dataset`.
 
 # v0.3.0:
 * Added method to estimate optimal delay time `estimate_delay`.

@@ -6,8 +6,11 @@ properties of the unstable periodic orbits existing in the chaotic sea.
 Finding unstable (or stable) periodic orbits in the sea of a discrete mapping analytically
 rapidly becomes *impossible* for higher orders of Fixed Points.
 Fortunately there is a numeric algorithm due to
-Schmelcher & Diakonos which allows such a computation. This is done through
-the functions `periodicorbits` and `lambdamatrix`:
+Schmelcher & Diakonos which allows such a computation. Notice that even though
+the algorithm can find stable fixed points, it is mainly aimed at *unstable* ones and
+may not work for all stable ones.
+
+The functions `periodicorbits` and `lambdamatrix` implement the algorithm:
 ```@docs
 periodicorbits
 lambdamatrix
@@ -22,14 +25,14 @@ We will also only use one `λ` value, and a 25×25 density of initial conditions
 using DynamicalSystems, PyPlot
 
 ds = Systems.standardmap()
-xs = range(0, 2π/25, 26); ys = range(0, 2π/25, 26)
+xs = linspace(0, 2π, 21); ys = copy(xs)
 ics = [SVector{2}(x,y) for x in xs for y in ys]
 
 # All permutations of [±1, ±1]:
 singss = [[+1, +1], [-1, -1], [+1, -1], [-1, +1]]
 # I know from personal research I only need this `inds`:
 indss = [[1,2]] # <- must be container of vectors!!!
-λs = 0.001 # <- only this allowed to not be vector (could also be vector)
+λs = 0.005 # <- only this allowed to not be vector (could also be vector)
 
 orders = [2, 3, 4, 5, 6, 8]
 ALLFP = Any[]
@@ -44,11 +47,12 @@ println("Total time: $((time() - ttt)/60) mins.")
 
 
 # Create phase-space plot:
-dataset = timeseries(ds, maxiters)
+iters = 1000
+dataset = timeseries(ds, iters)
 for x in xs
     for y in ys
         ds.state = SVector{2}(x, y)
-        append!(dataset, timeseries(ds, maxiters))
+        append!(dataset, timeseries(ds, iters))
     end
 end
 m = Matrix(dataset)
@@ -73,7 +77,7 @@ ylabel("\$p\$")
 ```
 
 After 3 to 5 minutes, you will get this plot:
-![Imgur](https://i.imgur.com/fq69HB9.png)
+![Imgur](https://i.imgur.com/Pj5sxKA.png)
 
 You can confirm for yourself that this is correct, for many reasons:
 
