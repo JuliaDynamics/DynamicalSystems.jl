@@ -24,7 +24,7 @@ the documentation string of [`?lyapunovs`](https://datseris.github.io/DynamicalS
 
 Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
 help make this package better without having to write a single line of code!
-Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This would give us an
+Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
 accurate lower bound of users that this package has already helped!
 
 ## Contents
@@ -38,8 +38,5 @@ This is the (non-final) list of what this package aims to offer:
 6. [Entropy/Attractor dimension/Lyapunov exponents for *numerical data*](nlts/#numerical-lyapunov-estimation).
 * [Finding unstable periodic orbits of any period of Discrete maps](periodicity).
 
-The following methods are currently "wanted features", that will be implemented soon:
-
-* Numeric Computation of Kolmogorov-Sinai entropy.
-* Definition of chaos, by Ott.
-* GALI method for estimating chaotic behavior, TBA.
+The [wanted features GitHub page](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3Awanted_feature) lists features that are wanted by the package,
+and are open to contributors.
