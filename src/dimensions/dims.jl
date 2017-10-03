@@ -21,7 +21,7 @@ end
     linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
 Call `linear_regions`, identify the largest linear region (`max_linear_region`)
 and approximate the slope of this region using least squares fit.
-Return the indeces where
+Return the indices where
 the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
 """
 function linear_region(x::AbstractVector, y::AbstractVector;
@@ -59,7 +59,7 @@ end
 """
     linear_regions(x, y; dxi::Int = 1, tol = 0.2) -> (lrs, tangents)
 Identify regions where the curve `y(x)` is linear, by scanning the
-`x`-axis every `dxi` indeces (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
+`x`-axis every `dxi` indices (e.g. at `x[1] to x[5], x[5] to x[10], x[10] to x[15]`
 and so on if `dxi=5`).
 
 If the slope (calculated using `LsqFit`) of a region of width `dxi` is
@@ -67,7 +67,7 @@ approximatelly equal to that of the previous region,
 within tolerance `tol`,
 then these two regions belong to the same linear region.
 
-Return the indeces of `x` that correspond to linear regions, `lrs`,
+Return the indices of `x` that correspond to linear regions, `lrs`,
 and the approximated `tangents` at each region. `lrs` is a vector of `Int`.
 """
 function linear_regions(x::AbstractVector, y::AbstractVector;

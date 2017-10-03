@@ -33,17 +33,19 @@ Base.append!(d1::AbstractDataset, d2::AbstractDataset) = append!(d1.data, d2.dat
 
 """
     Dataset{D, T, V} <: AbstractDataset{D}
-A `Dataset` is an interface for vectors of vectors, inspired by
-RecursiveArrayTools.jl. It contains **equally-sized datapoints** of length `D`,
+A `Dataset` is an interface for vectors of vectors, originally inspired by
+[RecursiveArrayTools.jl](https://github.com/JuliaDiffEq/RecursiveArrayTools.jl).
+It contains **equally-sized datapoints** of length `D`,
 represented by vectors of type `V`, containing numbers of type `T`.
 
-This data representation is most of the time better than having a `Matrix`, but can be
-used exactly like a matrix that has each of the columns be the timeseries of each of
-the dynamic variables. For example,
+This data representation is more efficient than having a `Matrix` and also leads
+to faster numerical computation of other quantities (like e.g. entropies). However,
+it can be used exactly like a matrix that has each of the columns be the
+timeseries of each of the dynamic variables. For example,
 ```julia
 data = timeseries(ds, 100.0) #this gives a dataset that behaves like a matrix
-data[:, 2] # this is the vector of the second variable timeseries
-data[1] == data[1, :] # this is the first datapoint of the dataset
+data[:, 2] # this is the second variable timeseries
+data[1] == data[1, :] # this is the first datapoint of the dataset (D-dimensional)
 data[5, 3] # this is the value of the third variable, at the 5th timepoint
 ```
 

@@ -4,10 +4,12 @@ of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_ex
 
 The naming comes after Aleksandr M. Lyapunov, a Russian mathematician/physicist that had major impact on the analysis of the stability of systems.
 
-## Dynamical Systems
-For systems where the equations of motion are known, there two functions related with the computation of lyapunov exponents: `lyapunovs` and `lyapunov`.
-### Lyapunov Spectrum
-The function `lyapunovs` calculates the entire spectrum of the exponents of a system:
+This page treats systems where the equations of motion are known. If instead
+you have numerical data, see the nonlinear [timeseries analysis page](nlts).
+
+## Lyapunov Spectrum
+The function `lyapunovs` calculates the entire spectrum of the Lyapunov
+exponents of a system:
 ```@docs
 lyapunovs
 ```
@@ -36,7 +38,7 @@ dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
 [0.999176, 0.000774754, -14.6666]
 ```
 
-### Maximum Lyapunov Exponent
+## Maximum Lyapunov Exponent
 The function `lyapunov` calculates the maximum lyapunov exponent of a system, much
 more efficiently than getting the first result of `lyapunovs`:
 ```@docs
@@ -61,6 +63,10 @@ ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
 # result:
 0.06957484163052223
 ```
+## Convergence Timeseries
+The above functions converge to values with increasing time. One may want to see
+the convergence timeseries of the Lyapunov exponents for better fine-tuning
+of parameters of the algorithms.
 
-## Numerical Data
-TBA
+*This feature is coming soon! See [this GitHub issue](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues/18) if you
+want to contribute.*
