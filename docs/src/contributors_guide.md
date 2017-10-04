@@ -3,7 +3,7 @@
 coding.**
 
 The ultimate goal for `DynamicalSystems.jl` is
-to be a useful tool for scientists working on nonlinear dynamics and
+to be a useful tool for scientists working on chaos & nonlinear dynamics and
 in general dynamical systems.
 
 For such a feat to be accomplished, many different methods across this interdisciplinary
@@ -38,8 +38,9 @@ solving the [GitHub issues](https://github.com/Datseris/DynamicalSystems.jl/issu
 If you have any idea about how to improve
 this package please do not hesitate to [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) and share your ideas!
 
-Lastly, you can always help this package simply by *using it* and report
-any unexpected behavior!
+Don't forget; you always help this package simply by *using it* and reporting
+any unexpected behavior! So far we had very few testers and tested on a small
+subset of dynamical systems thus any extra testing is welcomed!
 
 ## Examples of new things you could contribute
 

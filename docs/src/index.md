@@ -1,13 +1,8 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
-## Introduction
+# Introduction
 `DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
 on the fields of Chaos, nonlinear dynamics and dynamical systems in general.
-
-You
-can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
-to dynamical systems and Julia as well as for asking questions about the packages of the
-JuliaDynamics organization!
 
 One of a major goals of this package is to be completely transparent as to what is
 going on "under the hood". In scientific research, you never want to use *black boxes*,
@@ -16,6 +11,11 @@ making the source code clear and easy to understand for even novice users. Secon
 almost every documentation string gives
 **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
 the documentation string of [`?lyapunovs`](https://datseris.github.io/DynamicalSystems.jl/latest/lyapunovs/#DynamicalSystems.lyapunovs) will cite relevant publications for the definition and computation of the lyapunov spectrum.
+
+*You
+can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
+to dynamical systems and Julia as well as for asking questions about the packages of the
+JuliaDynamics organization!*
 
 Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
 help make this package better without having to write a single line of code!
