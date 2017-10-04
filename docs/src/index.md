@@ -31,6 +31,7 @@ accurate lower bound of users that this package has already helped!
 This is the list of what this package currently offer (updated very frequently):
 
 1. [System Definition](system_definition)
+
     * Intuitive, consistent APIs for the definition of general dynamical systems
     * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
     * Interface for [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/index.html) for flexible integration of continuous system.
@@ -39,10 +40,12 @@ This is the list of what this package currently offer (updated very frequently):
     * Library of predefined well-known dynamical systems that have been used extensively in scientific research.
 
 2. [Lyapunov Exponents](lyapunovs)
+
     * Maximum Lyapunov exponent for both discrete and continuous systems.
     * Lyapunov *spectrum* for both discrete and continuous systems.
 
 3. [Entropies and Dimensions](entropies)
+
     * Generalized (Renyi) entropy and all related entropies.
     * Ultra-fast and cheap method for computing entropies of large datasets without ever having to worry about memory overflow. It uses typically 3-6 orders of magnitude less time and memory than traditional histogram-based methods.
     * Generalized Dimensions (e.g. capacity dimension, information dimension, etc.).
@@ -51,13 +54,15 @@ This is the list of what this package currently offer (updated very frequently):
     * Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region (used e.g. in estimating dimensions of chaotic tractors).
     * Methods for detecting best algorithmic parameters for calculating attractor dimensions, including a fast implementation of minimum pairwise distance of a `Dataset`.
 
-3. [Nonlinear Timeseries Analysis](nlts)
+4. [Nonlinear Timeseries Analysis](nlts)
+
     * Flexible and abstracted `Reconstruction` interface, that creates the delay-coordinates reconstruction of a 1D timeseries efficiently.
     * Methods for estimating good `Reconstruction` parameters (delay and dimension).
     * *Four* different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries.
     * Fast computation of the above algorithms made possible by the interaction of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl), multiple dispatch and smart indexing (through the `Reconstruction` abstraction).
 
 5. [Periodicity](periodicity)
+
     * Numerical method to find unstable and stable fixed points of *any order* of a discrete map (of any dimensionality). Fixed points of order $n>1$ are simply periodic orbits of order $n.$
     * Convenience functions for defining and realizing all possible combinations of$\mathbf{\Lambda}_k$ matrices required in the above method.
 
