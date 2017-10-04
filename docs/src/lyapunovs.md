@@ -30,7 +30,7 @@ Similarly, for a continuous system, e.g. the Lorenz system, you would do:
 using DynamicalSystems
 
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
-issubtype(typeof(ds), ContinuousDS) # true
+issubtype(typeof(ds), ContinuousDynamicalSystem) # true
 
 λλ = lyapunovs(lor, 10000,
 dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
