@@ -2,10 +2,11 @@ using StaticArrays, ForwardDiff, Requires
 
 export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension
 
-abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 #####################################################################################
 #                                   Constructors                                    #
 #####################################################################################
+"Abstract type representing discrete systems."
+abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).

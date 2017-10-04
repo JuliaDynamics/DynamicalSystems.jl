@@ -7,10 +7,7 @@ and discrete dynamical systems.
 module DynamicalSystems
 
 """
-Abstract type representing a dynamical system. Has the following concrete sub-types:
-* `DiscreteDS1D`
-* `DiscreteDS`
-* `ContinuousDS`
+Abstract type representing a dynamical system.
 """
 abstract type DynamicalSystem end
 

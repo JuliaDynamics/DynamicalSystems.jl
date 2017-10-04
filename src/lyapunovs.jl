@@ -187,7 +187,7 @@ lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=
 #####################################################################################
 #                              Lyapunov Helpers                                     #
 #####################################################################################
-function tangentbundle_setup_integrator(ds::ContinuousDS, t_final;
+function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
   diff_eq_kwargs=Dict())
 
   D = dimension(ds)
@@ -238,7 +238,7 @@ end
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
-function lyapunov(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
+function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   d0=1e-9, threshold=10^3*d0, dt = 0.1,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
@@ -288,7 +288,7 @@ function lyapunov(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
         warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
         warn(warnstr)
         errorstr = "Parameters choosen for `lyapunov` with "
-        errorstr*= "`ContinuousDS` are not fitted for the algorithm."
+        errorstr*= "`ContinuousDynamicalSystem` are not fitted for the algorithm."
         throw(ArgumentError(errorstr))
       end
       λ += log(a)
@@ -306,7 +306,7 @@ end
 Compute the timeseries of the maximum Lyapunov exponent. This function
 should be used to check the convergence of the series.
 """
-function lyapunov_full(ds::ContinuousDS, T = 10000.0; Ttr = 0.0,
+function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   d0=1e-9, threshold=10^3*d0, dt = 0.1,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
@@ -358,7 +358,7 @@ function lyapunov_full(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
         warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
         warn(warnstr)
         errorstr = "Parameters choosen for `lyapunov` with "
-        errorstr*= "`ContinuousDS` are not fitted for the algorithm."
+        errorstr*= "`ContinuousDynamicalSystem` are not fitted for the algorithm."
         throw(ArgumentError(errorstr))
       end
       λ += log(a)
@@ -375,7 +375,7 @@ function lyapunov_full(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
 end
 
 
-function lyapunovs(ds::ContinuousDS, N::Real=1000;
+function lyapunovs(ds::ContinuousDynamicalSystem, N::Real=1000;
   Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
 
   tstops = dt:dt:N*dt
