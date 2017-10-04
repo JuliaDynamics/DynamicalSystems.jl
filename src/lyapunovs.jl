@@ -254,7 +254,7 @@ function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 .+ displacement(st1, d0)
+  ds.state = displacement.(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
@@ -321,7 +321,7 @@ function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 .+ displacement(st1, d0)
+  ds.state = displacement.(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
