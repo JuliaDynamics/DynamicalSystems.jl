@@ -83,15 +83,15 @@ function tangentbundle_setup_integrator(ds::system2, t_final)
   f = ds.eom
   jac = ds.jacob
 
-  function tbeom2(t, u)
-    return SMatrix{3, 4}(f(u)..., (jac(view(u, :, 1))*view(u, :, 2:4))...)
-  end
-
-  # Different approach that makes an SMatrix first for multiplication:
-  function tbeom3(t, u)
-    mm = SMatrix{3,3}(u[:, 2:4])
-    return SMatrix{3, 4}(f(u)..., jac(u[:, 1])*mm...)
-  end
+  # function tbeom2(t, u)
+  #   return SMatrix{3, 4}(f(u)..., (jac(view(u, :, 1))*view(u, :, 2:4))...)
+  # end
+  #
+  # # Different approach that makes an SMatrix first for multiplication:
+  # function tbeom3(t, u)
+  #   mm = SMatrix{3,3}(u[:, 2:4])
+  #   return SMatrix{3, 4}(f(u)..., jac(u[:, 1])*mm...)
+  # end
 
   # Approach 3 without splatting
   function tbeom4(t, u)

@@ -14,25 +14,29 @@ The generalized entropy is a concept mainly attributed to Rényi (see below).
 ```@docs
 genentropy
 ```
-Basically, given a dataset you can calculate an entropy by first partitioning it into
-boxes.
+---
+Basically, given a [dataset](system_definition/#numerical-data) you can
+partition it into boxes to calculate an entropy.
 
 !!! tip "Worried about memory overflow? Don't be!"
     Partitioning the dataset (i.e. doing a *histogram*) is in general a costly
     operation that depends exponentially on the number of dimensions of the system.
-    However, in this specific case the partition process has some special aspects that can be taken advantage
-    of, reducing tremendously the memory allocation and spent time.
+    However, in this specific case the partition process has some special aspects
+    that can be taken advantage
+    of, reducing tremendously the memory allocation and spent time!
 
 The function used internally is `non0hist`:
 ```@docs
 non0hist
 ```
+---
 It typically outperforms traditional histograms
 by **several orders of magnitude** in both memory and speed. You can compare
-`DynamicalSystems.perform_non0hist` with `DynamicalSystems.perform_non0hist_statsbase`
+`DynamicalSystems.perform_non0hist` with `fit(Histogram, ...)` of [`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/)
 for specific numbers on your machine.
 
-For example, the Shannon entropy of a coin-flip process should be one bit, [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
+For example, the Shannon entropy of a coin-flip process should be one bit,
+[by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
 ```julia
 using DynamicalSystems
 y = Int.(rand(Bool, 10000)) # just some coin tosses
@@ -56,9 +60,9 @@ dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
 ```
+---
 As stated clearly, this call performs a lot of automated steps. One is always better
-better of performing the steps one by one to attain maximum control. Nevertheless the
-automated steps are not "bad" and will give sensible results.
+better of performing the steps one by one to attain maximum control.
 
 For example, we will calculate the dimensions of the strange attractors of the
 [Hénon map](system_definition/#DynamicalSystems.Systems.henon) and the [Lorenz system](system_definition/#DynamicalSystems.Systems.lorenz):
@@ -82,6 +86,7 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 ```@docs
 kaplanyorke_dim
 ```
+---
 Notice that calling this function requires you to pass the lyapunov exponents in an
 ordered vector form (largest to smallest). Example:
 ```julia

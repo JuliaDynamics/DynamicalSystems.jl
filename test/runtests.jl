@@ -1,6 +1,7 @@
 ti = time()
 
-
+# Mathematics:
+include("math_tests.jl")
 # System Evolution:
 include(joinpath("systems", "discrete_systems.jl"))
 include(joinpath("systems", "continuous_systems.jl"))
@@ -11,6 +12,8 @@ include(joinpath("lyapunovs", "continuous_lyapunov.jl"))
 include("entropy_dimension.jl")
 # Nonlinear Timeseries Analysis:
 include("nlts_tests.jl")
+# Periodicity:
+include("periodicity_tests.jl")
 
 ti = time() - ti
 println("\nTest took total time of:")

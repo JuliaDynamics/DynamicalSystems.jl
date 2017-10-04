@@ -7,7 +7,6 @@ and discrete dynamical systems.
 module DynamicalSystems
 
 """
-    DynamicalSystem
 Abstract type representing a dynamical system. Has the following concrete sub-types:
 * `DiscreteDS1D`
 * `DiscreteDS`
@@ -18,22 +17,25 @@ abstract type DynamicalSystem end
 export DynamicalSystem, Systems
 
 # Mathematics:
+include("systems/dataset.jl")
 include("mathfun.jl")
 
 # System definition and evolution:
-include(joinpath("systems", "dataset.jl"))
-include(joinpath("systems", "discrete.jl"))
-include(joinpath("systems", "continuous.jl"))
-include(joinpath("systems", "famous_systems.jl"))
+include("systems/discrete.jl")
+include("systems/continuous.jl")
+include("systems/famous_systems.jl")
 
 # Lyapunovs:
 include("lyapunovs.jl")
 
 # Entropies and Dimension Estimation:
-include(joinpath("dimensions", "entropies.jl"))
-include(joinpath("dimensions", "dims.jl"))
+include("dimensions/entropies.jl")
+include("dimensions/dims.jl")
 
 # Nonlinear Timeseries Analysis:
-include(joinpath("nlts", "delay_coords.jl"))
+include("delay_coords.jl")
+
+# Periodicity:
+include("periodic.jl")
 
 end # module

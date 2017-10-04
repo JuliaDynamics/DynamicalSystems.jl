@@ -1,4 +1,4 @@
-using OrdinaryDiffEq, Requires
+using OrdinaryDiffEq, Requires, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
 
@@ -11,8 +11,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator
     ContinuousDS(state, eom! [, jacob]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system, stored in the data format
-  of `StaticArray`'s `SVector`.
+* `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
@@ -26,16 +25,16 @@ do not have to provide it necessarily to the constructor (but then you can't use
 functions).
 """
 mutable struct ContinuousDS{T<:AbstractVector, F, J} <: DynamicalSystem
-  state::T
-  eom!::F
-  jacob::J
+    state::T
+    eom!::F
+    jacob::J
 end
 # Constructor without Jacobian (nothing in the field)
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
 dimension(ds::ContinuousDS) = length(ds.state)
 #######################################################################################
-#                         Interface to DifferentialEquations.jl                       #
+#                         Interface to DifferentialEquations                          #
 #######################################################################################
 """
 ```julia
@@ -46,8 +45,8 @@ system information (t0 is zero).
 This can be passed directly into `solve` from `DifferentialEquations`.
 """
 function ODEProblem(ds::ContinuousDS, t)
-  odef = (t, u, du) -> ds.eom!(du, u)
-  OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
+    odef = (t, u, du) -> ds.eom!(du, u)
+    OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
 end
 
 """
@@ -66,18 +65,18 @@ do so by using the symbol `:solver`, e.g.:
 `using OrdinaryDiffEq` to access the solvers.
 """
 function ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs = Dict())
-  prob = ODEProblem(ds, t)
-  # Check if there is a solver in the keywords:
-  if haskey(diff_eq_kwargs, :solver)
-    solver = diff_eq_kwargs[:solver]
-    pop!(diff_eq_kwargs, :solver)
-    integrator = init(prob, solver; diff_eq_kwargs...,
-    save_first=false, save_everystep=false)
-  else
-    integrator = init(prob, Tsit5(); diff_eq_kwargs...,
-    save_first=false, save_everystep=false)
-  end
-  return integrator
+    prob = ODEProblem(ds, t)
+    # Check if there is a solver in the keywords:
+    if haskey(diff_eq_kwargs, :solver)
+        solver = diff_eq_kwargs[:solver]
+        pop!(diff_eq_kwargs, :solver)
+        integrator = init(prob, solver; diff_eq_kwargs...,
+        save_first=false, save_everystep=false)
+    else
+        integrator = init(prob, Tsit5(); diff_eq_kwargs...,
+        save_first=false, save_everystep=false)
+    end
+    return integrator
 end
 
 """
@@ -86,14 +85,14 @@ Solve the `prob` using `solve` and return the solution.
 """
 function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
   # Check if there is a solver in the keywords:
-  if haskey(diff_eq_kwargs, :solver)
-    solver = diff_eq_kwargs[:solver]
-    pop!(diff_eq_kwargs, :solver)
-    sol = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)
-  else
-    sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
-  end
-  return sol
+    if haskey(diff_eq_kwargs, :solver)
+        solver = diff_eq_kwargs[:solver]
+        pop!(diff_eq_kwargs, :solver)
+        sol = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)
+    else
+        sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
+    end
+    return sol.u
 end
 
 #######################################################################################
@@ -101,37 +100,30 @@ end
 #######################################################################################
 # See discrete.jl for the documentation string
 function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
-  prob = ODEProblem(ds, t)
-  return get_sol(prob, diff_eq_kwargs)[end]
+    prob = ODEProblem(ds, t)
+    return get_sol(prob, diff_eq_kwargs)[end]
 end
 function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
-  ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
-  return ds.state
+    ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
+    return ds.state
 end
 
 # See discrete.jl for the documentation string
 function timeseries(ds::ContinuousDS, T::Real;
-  dt::Real=0.05, diff_eq_kwargs = Dict())
+    dt::Real=0.05, diff_eq_kwargs = Dict())
 
-  # Necessary due to DifferentialEquations:
-  if !issubtype(typeof(T), AbstractFloat)
-    T = convert(Float64, T)
-  end
-  T<=0 && throw(ArgumentError("Total time `T` must be positive."))
+    # Necessary due to DifferentialEquations:
+    if !issubtype(typeof(T), AbstractFloat)
+        T = convert(Float64, T)
+    end
+    T<=0 && throw(ArgumentError("Total time `T` must be positive."))
 
-  D = dimension(ds)
-  t = zero(T):dt:T #time vector
-  prob = ODEProblem(ds, T)
-  kw = Dict{Symbol, Any}(diff_eq_kwargs) #nessesary conversion to add :saveat
-  kw[:saveat] = t
-  sol = get_sol(prob, kw)
-  TS = zeros(eltype(ds.state), length(t), D)
-  for j in 1:D
-    TS[:, j] .= sol[j,:]
-  end
-  # using: transpose(hcat(get_sol(prob, diff_eq_kwargs).u...))
-  # is so absurdly tragically slower.
-  return TS
+    D = dimension(ds)
+    t = zero(T):dt:T #time vector
+    prob = ODEProblem(ds, T)
+    kw = Dict{Symbol, Any}(diff_eq_kwargs) #nessesary conversion to add :saveat
+    kw[:saveat] = t
+    return Dataset(get_sol(prob, kw))
 end
 
 #######################################################################################
@@ -139,18 +131,18 @@ end
 #######################################################################################
 import Base.show
 function Base.show(io::IO, s::ContinuousDS{S, F, J}) where
-  {S<:ANY, F<:ANY, J<:ANY}
-  N = length(s.state)
-  print(io, "$N-dimensional continuous dynamical system:\n",
-  "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+    {S<:ANY, F<:ANY, J<:ANY}
+    N = length(s.state)
+    print(io, "$N-dimensional continuous dynamical system:\n",
+    "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
-  function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
+function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
     {S<:ANY, F<:ANY, J<:ANY}
     N = length(s.state)
     t = Juno.render(i, Juno.defaultrepr(s))
     t[:head] = Juno.render(i, Text("$N-dimensional continuous dynamical system"))
     t
-  end
+end
 end

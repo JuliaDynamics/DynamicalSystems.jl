@@ -1,6 +1,6 @@
 site_name:           DynamicalSystems.jl
-repo_url:            https://github.com/Datseris/DynamicalSystems.jl
-site_description:    A Julia package for the exploration of continuous and discrete dynamical systems.
+repo_url:            https://github.com/JuliaDynamics/DynamicalSystems.jl
+site_description:    A Julia package for the exploration of chaos in continuous and discrete dynamical systems.
 site_author:         George Datseris
 
 theme:               'material'
@@ -11,22 +11,21 @@ extra:
     accent: 'deep orange'
   social:
     - type: 'github'
-      link: 'https://github.com/Datseris/DynamicalBilliards.jl'
+      link: 'https://github.com/JuliaDynamics/DynamicalBilliards.jl'
 
 markdown_extensions:
+  - pymdownx.arithmatex
   - admonition
   - codehilite
   - extra
   - tables
   - fenced_code
-  - mdx_math
 
 extra_css:
   - assets/Documenter.css
 
 extra_javascript:
-  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
-  - assets/mathjaxhelper.js
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
 docs_dir: 'build'
 
@@ -36,4 +35,5 @@ pages:
 - Lyapunov Exponents: lyapunovs.md
 - Entropies and Dimensions: entropies.md
 - Nonlinear Timeseries Analysis: nlts.md
+- Periodicity: periodicity.md
 - Contributor Guide: contributors_guide.md

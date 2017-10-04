@@ -18,15 +18,20 @@ println("\nTesting continuous system lyapunov exponents...")
   end
 
   # @testset "lyapunovs ForwardDiff" begin
-  #   λ = lyapunovs(ds2, 2e4)
+  #   λ = lyapunovs(ds2, 1e5)
   #   @test 0.89 < λ[1] < 0.91
   #   @test -0.001 < λ[2] < 0.01
   #   @test -14.6 < λ[3] < -14.5
   # end
 
   @testset "lyapunov" begin
-    λ1 = lyapunov(ds, 10000.0)
+    T = 10000.0
+    λ1 = lyapunov(ds, T)
     @test 0.89 < λ1 < 0.92
+    λ_ts, tvec = lyapunov_full(ds, 10000.0)
+    @test 0.89 < λ_ts[end] < 0.92
+    @test tvec[end] <= T
+    @test size(λ_ts, 1) == size(tvec, 1)
   end
 end
 #=

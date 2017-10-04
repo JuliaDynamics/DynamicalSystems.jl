@@ -1,4 +1,4 @@
-println("Testing discrete system evolution...")
+println("\nTesting continuous system evolution...")
 using StaticArrays, Base.Test, DynamicalSystems
 
 @testset "Logistic Map" begin
