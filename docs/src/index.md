@@ -1,18 +1,13 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
-# Introduction
+## Introduction
 `DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
-on the field of Chaos, nonlinear dynamics and dynamical systems in general. You
+on the fields of Chaos, nonlinear dynamics and dynamical systems in general.
+
+You
 can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
 to dynamical systems and Julia as well as for asking questions about the packages of the
 JuliaDynamics organization!
-
-Currently the package
-treats the following types of dynamical systems:
-
-* [Discrete Maps](system_definition/#discrete-systems)
-* [Continuous Flows](system_definition/#continuous-systems)
-* [Numerical Data](system_definition/#numerical-data)
 
 One of a major goals of this package is to be completely transparent as to what is
 going on "under the hood". In scientific research, you never want to use *black boxes*,
@@ -28,7 +23,14 @@ Also, if you find this package helpful please consider staring it on [GitHub](ht
 accurate lower bound of users that this package has already helped!
 
 ## Contents
-This is the list of what this package currently offer (updated very frequently):
+Currently the package
+allows for the following types of dynamical systems:
+
+* [Discrete Maps](system_definition/#discrete-systems)
+* [Continuous Flows](system_definition/#continuous-systems)
+* [Numerical Data](system_definition/#numerical-data)
+
+This is the list of methods and algorithms this package currently offers (updated very frequently):
 
 ### [System Definition](system_definition)
 * Intuitive, consistent APIs for the definition of general dynamical systems
