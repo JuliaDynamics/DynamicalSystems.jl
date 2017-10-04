@@ -240,7 +240,7 @@ end
 #####################################################################################
 function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   d0=1e-9, threshold=10^3*d0, dt = 0.1,
-  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
+  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0), displacement = +)
 
   check_tolerances(d0, diff_eq_kwargs)
   D = dimension(ds)
@@ -254,7 +254,7 @@ function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 .+ d0
+  ds.state = st1 .+ displacement(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
@@ -263,7 +263,6 @@ end
 
 function lyapunov(integ1::ODEIntegrator, integ2::ODEIntegrator, T::Real;
   d0=1e-9, threshold=10^3*d0, dt = 0.1)
-
 
   dist = d0*one(eltype(integ1.u))
   λ = zero(eltype(integ1.u))
@@ -307,7 +306,7 @@ Compute the timeseries of the maximum Lyapunov exponent. This function
 should be used to check the convergence of the series.
 """
 function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
-  d0=1e-9, threshold=10^3*d0, dt = 0.1,
+  d0=1e-9, threshold=10^3*d0, dt = 0.1, displacement = +,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -322,7 +321,7 @@ function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = st1 .+ d0
+  ds.state = st1 .+ displacement(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
