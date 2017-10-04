@@ -1,4 +1,8 @@
-# v.4.0:
+# v0.5.0:
+* Added a new supertype `ContinuousDynamicalSystem`.
+* **BREAKING** : `ContinuousDS` is now a subtype of `ContinuousDynamicalSystem`.
+
+# v0.4.0:
 * Increased speed of Standard Map system (by using `while` instead of `mod`).
 * Added a huuuge method due to Schmelcher & Diakonos which finds stable and
   unstable fixed points of any order for discrete maps!

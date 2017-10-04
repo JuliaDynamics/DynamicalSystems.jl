@@ -7,8 +7,11 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 #######################################################################################
 #                                     Constructors                                    #
 #######################################################################################
+"Abstract type representing continuous systems."
+abstract type ContinuousDynamicalSystem <: DynamicalSystem end
+
 """
-    ContinuousDS(state, eom! [, jacob]) <: DynamicalSystem
+    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
@@ -24,7 +27,7 @@ Because the `jacob` function is only necessary for a small subset of algorithms,
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
-mutable struct ContinuousDS{T<:AbstractVector, F, J} <: DynamicalSystem
+mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
     state::T
     eom!::F
     jacob::J
