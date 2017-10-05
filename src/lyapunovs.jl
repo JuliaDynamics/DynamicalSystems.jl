@@ -74,6 +74,11 @@ evolves two neighboring trajectories while constantly rescaling one of the two.
   `DifferentialEquations` package (`timeseries` for more info).
 * `dt = 0.1` : (only for continuous) Time of evolution between each check of
   distance exceeding the `threshold`.
+* `displacement = .+` : (only for continuous) Function of the form `f(state, d0)`
+  which given a `state` and `d0` produces a new state that is (approximately) `d0`
+  far away from the given `state` but in the way the user wants. To be used for
+  Hamiltonian systems, where the test trajectory must be choosen such that it
+  would have the same energy as the reference trajectory.
 
 This function returns only the final value of the computation of the maximum lyapunov
 exponent. Use the function `lyapunov_full` to get a vector of the convergence
@@ -240,7 +245,7 @@ end
 #####################################################################################
 function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   d0=1e-9, threshold=10^3*d0, dt = 0.1,
-  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0), displacement = +)
+  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0), displacement = .+)
 
   check_tolerances(d0, diff_eq_kwargs)
   D = dimension(ds)
@@ -254,7 +259,7 @@ function lyapunov(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = displacement.(st1, d0)
+  ds.state .= displacement(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
@@ -306,7 +311,7 @@ Compute the timeseries of the maximum Lyapunov exponent. This function
 should be used to check the convergence of the series.
 """
 function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
-  d0=1e-9, threshold=10^3*d0, dt = 0.1, displacement = +,
+  d0=1e-9, threshold=10^3*d0, dt = 0.1, displacement = .+,
   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0))
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -321,7 +326,7 @@ function lyapunov_full(ds::ContinuousDynamicalSystem, T = 10000.0; Ttr = 0.0,
   st1 = ds.state
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  ds.state = displacement.(st1, d0)
+  ds.state .= displacement(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
   ds.state = st1
