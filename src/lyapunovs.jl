@@ -68,9 +68,9 @@ evolves two neighboring trajectories (one given and one test)
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-If `ret_con = Val{true}` return the convergence timeseries of the lyapunov exponent
-`λts` as well as the corresponding time vector `ts`. If `ret_con = Val{false}`
-return the converged value `λts[end]` instead.
+If `ret_con` is `Val{true}` return the convergence timeseries of the lyapunov exponent
+`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}`
+(default) return the converged lyapunov value `λts[end]` instead.
 
 ### Keyword Arguments:
 
@@ -80,7 +80,7 @@ return the converged value `λts[end]` instead.
   * `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
   * `diff_eq_kwargs = Dict()` : (only for continuous)
     Keyword arguments passed into the solvers of the
-    `DifferentialEquations` package (`timeseries` for more info).
+    `DifferentialEquations` package (see `timeseries` for more info).
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
     distance exceeding the `threshold`.
   * `rescale! = (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqrt(D))`
@@ -88,14 +88,14 @@ return the converged value `λts[end]` instead.
     **[continuous system case]**
     The function used to rescale the test trajectory to be nearby the first trajectory.
     It must be an in-place function of the form `rescale!(state2, state1, d0)`, which
-    mutates the array `state2` to be in distance `d0` from `state1` (please be as
-    exact as possible with the distance). This can be useful in e.g. Hamiltonian
+    mutates the `state2` to be in distance (approximately) `d0` from `state1`.
+    This can be useful in e.g. Hamiltonian
     systems where one would like the test trajectory to have the same energy
     as the given trajectory.
 
   * `rescale = (state1, d0) -> state1 + d0/sqrt(D)`
 
-    **[continuous system case]** Same as `rescale!` but since discrete systems work
+    **[discrete system case]** Same as `rescale!` but since discrete systems work
     with `SVectors` the method is not in-place anymore.
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
@@ -235,10 +235,10 @@ function lyapunov(ds::ContinuousDynamicalSystem{D},
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
 
+  # Create a copy integrator with different state
+  # (workaround until https://github.com/JuliaDiffEq/DiffEqBase.jl/issues/58 is solved)
   prob = integ1.sol.prob
-  displacement!(prob.u0, ds.state, d0)
-  integ4 = init(prob4, Tsit5())
-
+  rescale!(prob.u0, ds.state, d0)
   if haskey(diff_eq_kwargs, :solver)
     integ2 = init(prob, diff_eq_kwargs[:solver])
   else
@@ -267,7 +267,7 @@ function lyapunov(integ1::ODEIntegrator,
                   broadcast!(+, state2, state1, d0/sqrt(D))
                   )
 
-  dist = d0*one(eltype(integ1.u))
+  dist = ad0 = norm(integ1.u .- integ2.u)
   λ = zero(eltype(integ1.u))
   λ_ts = Vector{eltype(integ1.u)}(0)   # the timeseries for the Lyapunov exponent
   ts = Vector{eltype(T)}(0)            # the time points of the timeseries
@@ -284,7 +284,7 @@ function lyapunov(integ1::ODEIntegrator,
     # Rescale:
     if dist ≥ threshold
       # add computed scale to accumulator (scale = local lyaponov exponent):
-      a = dist/d0
+      a = dist/ad0
       # Warning message for bad decision of `thershold` or `d0`:
       if a > threshold/d0 && i ≤ 1
         warnstr = "Distance between test and original trajectory exceeded threshold "
@@ -295,14 +295,15 @@ function lyapunov(integ1::ODEIntegrator,
         errorstr*= "`ContinuousDynamicalSystem` are not fitted for the algorithm."
         throw(ArgumentError(errorstr))
       end
-      λ += log(a)
+      λ += log(a); i = 0
       push!(λ_ts, λ/τ)
       push!(ts, τ)
       # Rescale and reset everything:
       rescale!(integ2.u, integ1.u, d0)
       u_modified!(integ2, true)
       set_proposed_dt!(integ2, integ1)
-      dist = d0; i = 0
+      # ad0 is defined because a user-defined `rescale!` may not give distance exactly d0
+      dist = ad0 = norm(integ1.u .- integ2.u)
     end
   end
   λ_ts, ts
