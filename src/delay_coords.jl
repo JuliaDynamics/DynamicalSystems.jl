@@ -6,7 +6,7 @@ import NearestNeighbors: KDTree
 
 export reconstruct, Cityblock, Euclidean, AbstractNeighborhood
 export FixedMassNeighborhood, FixedSizeNeighborhood, numericallyapunov
-export estimate_delay, neighborhood, Reconstruction, KDTree
+export estimate_delay, neighborhood, Reconstruction, KDTree, Reconstruction
 #####################################################################################
 #                            Reconstruction Object                                  #
 #####################################################################################
@@ -19,8 +19,9 @@ The `n`th row of this object is formally the `D`-dimensional vector:
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
+which is created only on demand.
 
-See `reconstruct` for usage.
+See [`reconstruct`](@ref) for usage.
 """
 type Reconstruction{V<:AbstractVector, T<:Real, D, τ}
     s::V
@@ -82,7 +83,7 @@ end
 
 """
     reconstruct(s::AbstractVector, D::Int, τ::Int) -> R::Reconstruction
-Create and return an efficient `Reconstruction` data structure that serves as
+Create and return an efficient [`Reconstruction`](@ref) data structure that serves as
 the
 delay coordinates embedding [1, 2] reconstruction of the signal `s`.
 The reconstuction has
@@ -90,7 +91,7 @@ dimension `D` and delay `τ` (measured in indices). This object can have same
 invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
-`R` interfaces `s` and can be accessed similarly to a `Dataset`:
+`R` interfaces `s` and can be accessed similarly to a [`Dataset`](@ref):
 ```julia
 R = reconstruct(s, 4, 1) # delay coords. reconstruction of dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
@@ -102,7 +103,7 @@ construction of `R`)*
 `R` can also be given to all functions that accept a `Dataset`, but
 it is first converted to a `Dataset` at each call.
 This means that you should first convert it yourself, using `Dataset(R)` if you
-call functions like `generalized_dim` multiple times.
+call functions like [`generalized_dim`](@ref) multiple times.
 
 The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
 that `length(R) = length(s) - (D-1)*τ` (i.e. the amount of D-dimensional points
@@ -178,7 +179,8 @@ end
 
 """
     estimate_delay(s) -> τ
-Estimate an optimal delay by performing an exponential fit to
+Estimate an optimal delay to be used in [`reconstruct`](@ref),
+by performing an exponential fit to
 the `abs.(c)` with `c` the auto-correlation function of `s`.
 Return the exponential decay time `τ` rounded to an integer.
 """
@@ -236,9 +238,9 @@ Concrete subtypes:
 
 Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space, irrespectively of the `distance` used in the
-function `numericallyapunov`.
+function [`numericallyapunov`](@ref).
 
-See also `neighborhood` or `numericallyapunov`.
+See also [`neighborhood`](@ref) or [`numericallyapunov`](@ref).
 """
 abstract type AbstractNeighborhood end
 struct FixedMassNeighborhood <: AbstractNeighborhood
@@ -255,7 +257,7 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 Return a vector of indices which are the neighborhood of `point`, whose index
 in the original data is `n`. Both `point` and `n` must be provided because the
 `tree` has indices in different sorting (thus making `tree.data[n]` incorrect).
-The `method` can be a subtype of `AbstractNeighborhood` (see its documentation
+The `method` can be a subtype of [`AbstractNeighborhood`](@ref) (see its documentation
 string for more).
 
 `neighborhood` can be used for *any* dataset. Just do:
@@ -264,7 +266,7 @@ R = some_dataset
 tree = KDTree(R)
 neigh = neighborhood(n, R[n], tree, method)
 ```
-where `R` can be *either* a `Dataset` or a `Reconstruction`.
+where `R` can be *either* a [`Dataset`](@ref) or a [`Reconstruction`](@ref).
 
 Notice that the distances in the trees are always computed using the `Euclidean()`
 distance in `D`-dimensional space, irrespectively of the `distance` used in the
@@ -299,7 +301,8 @@ KDTree(R::Reconstruction) = KDTree(Dataset(R).data, Euclidean())
 numericallyapunov(R::Reconstruction, ks;  refstates, distance, method)
 ```
 Return `E = [E(k) for k ∈ ks]`, where `E(k)` is the average logarithmic distance for
-nearby states that are evolved in time for `k` steps. If the reconstruction
+nearby states that are evolved in time for `k` steps (`k` must be integer).
+If the reconstruction
 exhibits exponential divergence of nearby states, then it should clearly hold:
 ```math
 E(k) \\approx \\lambda\\Delta t k + E(0)
@@ -308,8 +311,9 @@ for a **well defined region** in the `k` axis, where ``\\lambda`` is
 the approximated
 maximum Lyapunov exponent. `Δt` is the time between samples in the
 original timeseries.
-You can use `linear_region(ks, E)` to identify the slope immediatelly, assuming you
-have choosen sufficiently small `ks` such that the linear scaling region is bigger
+You can use [`linear_region`](@ref) with arguments `(ks, E)` to identify the slope
+immediatelly, assuming you
+have choosen sufficiently good `ks` such that the linear scaling region is bigger
 than the saturated region.
 
 The algorithm used in this function is due to Parlitz [1], which itself
@@ -318,13 +322,11 @@ each reference state a neighborhood is evaluated. Then, for each point in this
 neighborhood, the logarithmic distance between reference state and neighborhood
 state is
 calculated as the "time" index `k` increases. The average of the above over
-all neighborhood states over all reference states is the returned result. Notice
-that this linear scaling region (if it exists) is very "short" versus `k` due
-to no states being arbitrarily close and nonlinear folding taking place.
-One should then be careful to choose a sufficiently small `ks` range.
+all neighborhood states over all reference states is the returned result.
 
 The following keywords tune the algorithm behavior:
-* `refstates::AbstractVector{Int} = 1:(length(R) - length(ks))` : Vector of indices
+
+* `refstates::AbstractVector{Int} = 1:(length(R) - ks[end])` : Vector of indices
   that notes which
   states of the reconstruction should be used as "reference states", which means
   that the algorithm is applied for all state indices contained in `refstates`.
@@ -364,7 +366,7 @@ This function assumes that the Theiler window (see [1]) is the same as the delay
 [2] : Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """
 function numericallyapunov(R::Reconstruction, ks;
-                           refstates = 1:(length(R) - length(ks)),
+                           refstates = 1:(length(R) - ks[end]),
                            distance = Cityblock(),
                            method = FixedMassNeighborhood(1))
     Ek = numericallyapunov(R, ks, refstates, distance, method)
@@ -380,17 +382,17 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     # n belongs in ℜ and R[n] is the "reference state".
     # Thus, ℜ contains all the reference states the algorithm will iterate over.
     # ℜ is not estimated. it is given by the user. Most common choice:
-    # ℜ = 1:(length(R) - length(ks))
+    # ℜ = 1:(length(R) - ks[end])
 
     # ⩅(n) = \Cup<tab> = neighborhood of reference state n
     # which is evaluated for each n and for the given neighborhood method
 
     # Initialize:
-    timethres = length(R) - length(ks)
+    timethres = length(R) - ks[end]
     if maximum(ℜ) > timethres
-        erstr = "Maximum index of reference states is > length(R) - length(ks) "
+        erstr = "Maximum index of reference states is > length(R) - ks[end] "
         erstr*= "and the algorithm cannot be performed on it. You have to choose "
-        erstr*= "reference state indices of at most up to length(R) - length(ks)."
+        erstr*= "reference state indices of at most up to length(R) - ks[end]."
         throw(ArgumentError(erstr))
     end
     E = zeros(T, length(ks))
@@ -415,8 +417,8 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
                 skippedm += 1
                 continue
             end
-            for k in ks #ks should be small (of order 10 to 100 MAX)
-                E_m[k] = log(delay_distance(distance, R, m, n, k))
+            for (j, k) in enumerate(ks) #ks should be small (of order 10 to 100 MAX)
+                E_m[j] = log(delay_distance(distance, R, m, n, k))
             end
             E_n .+= E_m # no need to reset E_m
         end

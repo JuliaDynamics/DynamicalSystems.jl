@@ -19,10 +19,10 @@ end
 
 """
     linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
-Call `linear_regions`, identify the largest linear region (`max_linear_region`)
+Call [`linear_regions`](@ref), identify the largest linear region
 and approximate the slope of this region using least squares fit.
 Return the indices where
-the region starts and stops (`x[ind1:ind2]`) as well as the approximated `slope`.
+the region starts and stops (`x[ind1:ind2]`) as well as the approximated slope.
 """
 function linear_region(x::AbstractVector, y::AbstractVector;
     dxi::Int = 1, tol::Real = 0.2)
@@ -124,7 +124,7 @@ function _plot_lrs(x, y, lrs, tangents)
   end
 end
 
-function _plot_lrs(x, y, tol::Real)
+function _plot_lrs(x, y, tol)
   lrs, tang = linear_regions(x, y; tol = tol)
   _plot_lrs(x, y, lrs, tang)
 end
@@ -170,9 +170,9 @@ estimate_boxsizes(convert(Dataset, ts); kwargs...)
 
 """
     generalized_dim(α, dataset) -> D_α
-Return the `α` order generalized dimension that corresponds to the given dataset.
-This quantity corresponds to the
-power law exponent of the scaling of the `genentropy` versus the box size `ε`.
+Return the ``\\alpha`` order generalized dimension that corresponds to the
+given dataset. The dimension is approximated by the
+power law exponent of the scaling of the [`genentropy`](@ref) versus the box size `ε`.
 
 **WARNING** - This call performs a lot of automated steps:
 
@@ -181,7 +181,7 @@ power law exponent of the scaling of the `genentropy` versus the box size `ε`.
      calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
   3. The curve d(x) is decomposed into linear regions, using `linear_regions(x, d)`.
   4. The biggest linear region is chosen, and a fit for the slope of that
-     region is performed using the package `LsqFit` (see `linear_region`).
+     region is performed using the function [`linear_region`](@ref).
   5. This fitted slope is returned.
 
 By doing these steps one by one yourself, you can adjust the keyword arguments
@@ -216,12 +216,16 @@ boxcounting_dim = capacity_dim
 "information_dim(args...) = generalized_dim(1, args...)"
 information_dim(args...) = generalized_dim(1, args...)
 
+
+
 """
     kaplanyorke_dim(lyapunovs::AbstractVector)
 Calculate the Kaplan-Yorke dimension [1] (aka Lyapunov dimension).
 This simply is the point where
 `cumsum(lyapunovs)` becomes zero (interpolated). Returns the length of the vector
 if the sum of the exponents never becomes negative.
+
+Useful in combination with [`lyapunovs`](@ref).
 
 [1] :  J. Kaplan & J. Yorke,
 *Chaotic behavior of multidimensional difference equations*,
