@@ -225,7 +225,8 @@ function lyapunov(ds::ContinuousDynamicalSystem,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(ds) where B
+                  rescale! = default_rescale(ds)
+                  ) where B
 
   check_tolerances(d0, diff_eq_kwargs)
   T = convert(eltype(ds.state), T)

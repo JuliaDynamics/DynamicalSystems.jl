@@ -53,7 +53,7 @@ One-dimensional discrete dynamical system.
   a state: `deriv(x) -> Real`. If it is not provided by the user
   it is created automatically using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem{1}
+mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
     state::S
     eom::F
     deriv::D
@@ -63,7 +63,7 @@ function DiscreteDS1D(x0, eom)
     DiscreteDS1D(x0, eom, ForwardDiff_der)
 end
 
-dimension(::DiscreteDS{D, T, F, J})  where {D, T, F, J} = D
+dimension(ds::DiscreteDS) = length(ds.state)
 dimension(::DiscreteDS1D) = 1
 
 #####################################################################################
