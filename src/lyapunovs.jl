@@ -68,8 +68,9 @@ evolves two neighboring trajectories (one given and one test)
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-If `ret_con` is `Val{true}` return the convergence timeseries of the lyapunov exponent
-`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}`
+If `ret_con` is `Val{true}()` return the convergence timeseries of the lyapunov
+exponent
+`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}()`
 (default) return the converged lyapunov value `λts[end]` instead.
 
 ### Keyword Arguments:
@@ -213,20 +214,20 @@ end
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
 function default_rescale(ds)
-  D = dimension(DS)
-  (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqrt(D))
+  sqD = sqrt(dimension(ds))
+  (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqD)
 end
 
 function lyapunov(ds::ContinuousDynamicalSystem,
-                  T::Real = 10000.0,
-                  return_convergence::Val{B} = Val{false};
+                  T::Real,
+                  return_convergence::Val{B} = Val{false}();
                   Ttr = 0.0,
                   d0=1e-9,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
                   rescale! = default_rescale(ds)
-                  ) where B
+                  ) where {B}
 
   check_tolerances(d0, diff_eq_kwargs)
   T = convert(eltype(ds.state), T)

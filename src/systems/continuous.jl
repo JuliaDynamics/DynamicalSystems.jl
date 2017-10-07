@@ -27,7 +27,7 @@ Because the `jacob` function is only necessary for a small subset of algorithms,
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
-mutable struct ContinuousDS{D, T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
+mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
     state::T
     eom!::F
     jacob::J
@@ -134,14 +134,16 @@ end
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
-function Base.show(io::IO, s::ContinuousDS{D, S, F, J}) where {D, S, F, J}
+function Base.show(io::IO, s::ContinuousDS{S, F, J}) where {S, F, J}
+    D = dimension(ds)
     print(io, "$D-dimensional continuous dynamical system:\n",
     "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
-function Juno.render(i::Juno.Inline, s::ContinuousDS{D, S, F, J}) where
-    {D, S, F, J}
+function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
+    {S, F, J}
+    D = dimension(ds)
     t = Juno.render(i, Juno.defaultrepr(s))
     t[:head] = Juno.render(i, Text("$D-dimensional continuous dynamical system"))
     t
