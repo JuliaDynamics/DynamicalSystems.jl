@@ -1,6 +1,7 @@
 export non0hist, genentropy, renyi, shannon, hartley
 
-@inbounds function perform_non0hist{D, T<:Real, V}(data::Dataset{D,T, V}, ranges, ε)
+@inbounds function perform_non0hist(
+    data::Dataset{D,T, V}, ranges, ε) where {D, T<:Real, V}
     L = length(data)
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indices and the values are the amount of
@@ -9,9 +10,13 @@ export non0hist, genentropy, renyi, shannon, hartley
     mini = minima(data)
     for point in data
         # index of datapoint in the ranges space:
-        # It is not necessary to convert floor to Int (dunno why)
-        ind::SVector{D, Int} = SVector{D}(
-        ( Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D )...)
+        It is not necessary to convert floor to Int (dunno why)
+        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
+
+        # Curiously, this is actually slower:
+        # ind = SVector{D, Int}(
+        # ( Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D )...)
+
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
