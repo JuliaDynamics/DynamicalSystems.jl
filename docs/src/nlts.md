@@ -172,5 +172,7 @@ ylabel("E - E(0)")
 title("Continuous Reconstruction Lyapunov")
 tight_layout()
 ```
+which produces:
+![Continuous Reconstruction exaple](https://i.imgur.com/lgyGLDv.png)
 As you can see, using ``\\tau = 15`` makes almost no sense! The estimates with
 `τ = 7` though are very good (the actual value is around `λ = 0.89...`).
