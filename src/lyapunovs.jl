@@ -60,7 +60,7 @@ end
 
 """
 ```julia
-lyapunov(ds::DynamicalSystem{D}, Τ, ret_con::Val{B} = Val{false}; kwargs...)
+lyapunov(ds::DynamicalSystem, Τ, ret_con::Val{B} = Val{false}; kwargs...)
 ```
 Calculate the maximum lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
@@ -212,7 +212,12 @@ end
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
-function lyapunov(ds::ContinuousDynamicalSystem{D},
+function default_rescale(ds)
+  D = dimension(DS)
+  (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqrt(D))
+end
+
+function lyapunov(ds::ContinuousDynamicalSystem,
                   T::Real = 10000.0,
                   return_convergence::Val{B} = Val{false};
                   Ttr = 0.0,
@@ -220,9 +225,7 @@ function lyapunov(ds::ContinuousDynamicalSystem{D},
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = (state2, state1, d0) ->
-                  broadcast!(+, state2, state1, d0/sqrt(D))
-                  ) where {D, B}
+                  rescale! = default_rescale(ds) where B
 
   check_tolerances(d0, diff_eq_kwargs)
   T = convert(eltype(ds.state), T)
