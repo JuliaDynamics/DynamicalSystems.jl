@@ -82,7 +82,8 @@ a side note, be sure that you have enough data points, otherwise the values you 
 get will never be correct, as is demonstrated by
 J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
-### Kaplan-Yorke Dimension (aka Lyapunov Dimension)
+### Kaplan-Yorke Dimension
+Also known as Lyapunov Dimension:
 ```@docs
 kaplanyorke_dim
 ```

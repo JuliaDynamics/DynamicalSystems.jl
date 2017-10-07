@@ -10,7 +10,7 @@ export non0hist, genentropy, renyi, shannon, hartley
     mini = minima(data)
     for point in data
         # index of datapoint in the ranges space:
-        It is not necessary to convert floor to Int (dunno why)
+        # It is necessary to convert floor to Int (dunno why)
         ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
 
         # Curiously, this is actually slower:
@@ -23,7 +23,6 @@ export non0hist, genentropy, renyi, shannon, hartley
     end
     return [val/L for val in values(d)]
 end
-
 
 """
 ```julia
@@ -49,6 +48,7 @@ function non0hist end
 end
 non0hist(ε::Real, matrix::AbstractMatrix) =
 non0hist(ε, convert(Dataset, matrix))
+
 
 
 """
