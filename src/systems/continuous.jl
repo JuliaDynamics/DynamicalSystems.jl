@@ -8,11 +8,11 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 #                                     Constructors                                    #
 #######################################################################################
 "Abstract type representing continuous systems."
-abstract type ContinuousDynamicalSystem{D} <: DynamicalSystem{D} end
+abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem{D}
-`D`-dimensional continuous dynamical system.
+    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem
+    Continuous dynamical system with dimension D = length(state)
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -27,20 +27,16 @@ Because the `jacob` function is only necessary for a small subset of algorithms,
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
-mutable struct ContinuousDS{D, T<:AbstractVector, F, J} <: ContinuousDynamicalSystem{D}
+mutable struct ContinuousDS{D, T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
     state::T
     eom!::F
     jacob::J
 end
-function ContinuousDS(state, eom!, jacob)
-    T = typeof(state); F = typeof(eom!); J = typeof(jacob)
-    D = length(state)
-    ContinuousDS{D, T, F, J}(state, eom!, jacob)
-end
+
 # Constructor without Jacobian (nothing in the field)
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
-dimension(::ContinuousDS{D, T, F, J}) where {D, T, F, J} = D
+dimension(ds::ContinuousDS) = length(ds.state)
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################

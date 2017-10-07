@@ -9,7 +9,7 @@ module DynamicalSystems
 """
 Abstract type representing a dynamical system.
 """
-abstract type DynamicalSystem{D} end
+abstract type DynamicalSystem end
 
 export DynamicalSystem, Systems
 
