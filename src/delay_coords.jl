@@ -21,7 +21,7 @@ The `n`th row of this object is formally the `D`-dimensional vector:
 ```
 which is created only on demand.
 
-See `reconstruct` for usage.
+See [`reconstruct`](@ref) for usage.
 """
 type Reconstruction{V<:AbstractVector, T<:Real, D, τ}
     s::V
@@ -91,7 +91,7 @@ dimension `D` and delay `τ` (measured in indices). This object can have same
 invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
-`R` interfaces `s` and can be accessed similarly to a `Dataset`:
+`R` interfaces `s` and can be accessed similarly to a [`Dataset`](@ref):
 ```julia
 R = reconstruct(s, 4, 1) # delay coords. reconstruction of dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
@@ -103,7 +103,7 @@ construction of `R`)*
 `R` can also be given to all functions that accept a `Dataset`, but
 it is first converted to a `Dataset` at each call.
 This means that you should first convert it yourself, using `Dataset(R)` if you
-call functions like `generalized_dim` multiple times.
+call functions like [`generalized_dim`](@ref) multiple times.
 
 The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
 that `length(R) = length(s) - (D-1)*τ` (i.e. the amount of D-dimensional points
@@ -239,7 +239,7 @@ Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space, irrespectively of the `distance` used in the
 function `numericallyapunov`.
 
-See also `neighborhood` or `numericallyapunov`.
+See also [`neighborhood`](@ref) or `numericallyapunov`.
 """
 abstract type AbstractNeighborhood end
 struct FixedMassNeighborhood <: AbstractNeighborhood

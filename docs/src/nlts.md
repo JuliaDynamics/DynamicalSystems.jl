@@ -125,7 +125,7 @@ Notice that even though this value
 for the Lyapunov exponent is correct, it happened to be correct simply due to the
 jitter of the saturated region. Since the saturated region is much bigger
 than the linear scaling region, if it wasn't that jittery the function
-`linear_region` would not give the scaling of the linear region, but instead
+[`linear_region`](@ref) would not give the scaling of the linear region, but instead
 a slope near 0! (or if you were to give bigger tolerance as a keyword argument)
 
 ### Case of a Continuous system
@@ -163,13 +163,14 @@ for D in [4, 8], τ in [τ1, 15]
   λ2 = linear_region(ks2 .* dt, E2)[2]
 
 
-  # plot(ks1,E1, label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
-  plot(ks2,E2, label = "D=$(D), τ=$(τ), λ=$(round(λ2, 3))", alpha = 0.5)
+  # plot(ks1,E1.-E1[1], label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
+  plot(ks2,E2.-E2[1], label = "D=$(D), τ=$(τ), λ=$(round(λ2, 3))")
 end
 
 legend()
 xlabel("k (0.05×t)")
-ylabel("E")
+ylabel("E - E(0)")
+title("Continuous Reconstruction Lyapunov")
 tight_layout()
 ```
 As you can see, using ``\\tau = 15`` makes almost no sense! The estimates with
