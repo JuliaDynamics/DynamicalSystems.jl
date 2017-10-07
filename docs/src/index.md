@@ -50,8 +50,8 @@ This is the list of methods and algorithms this package currently offers (update
 * Generalized Dimensions (e.g. capacity dimension, information dimension, etc.).
 * Kaplan-Yorke dimension.
 * Partitioning of a function $y(x)$ vs. $x$ into regions where it is approximated by a straight line, using a flexible function with a lot of control over the outcome.
-* Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region (used e.g. in estimating dimensions of chaotic tractors).
-* Methods for detecting best algorithmic parameters for calculating attractor dimensions, including a fast implementation of minimum pairwise distance of a `Dataset`.
+* Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region (used e.g. in estimating dimensions of chaotic attractors).
+* Automated detection of best algorithmic parameters for calculating attractor dimensions.
 
 ### [Nonlinear Timeseries Analysis](nlts)
 * Flexible and abstracted `Reconstruction` interface, that creates the delay-coordinates reconstruction of a 1D timeseries efficiently.
