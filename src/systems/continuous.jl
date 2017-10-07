@@ -8,10 +8,10 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 #                                     Constructors                                    #
 #######################################################################################
 "Abstract type representing continuous systems."
-abstract type ContinuousDynamicalSystem <: DynamicalSystem end
+abstract type ContinuousDynamicalSystem{D} <: DynamicalSystem{D} end
 
 """
-    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem
+    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem{D}
 `D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
@@ -27,15 +27,20 @@ Because the `jacob` function is only necessary for a small subset of algorithms,
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
-mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
+mutable struct ContinuousDS{D, T<:AbstractVector, F, J} <: ContinuousDynamicalSystem{D}
     state::T
     eom!::F
     jacob::J
 end
+function ContinuousDS(state, eom!, jacob)
+    T = typeof(state); F = typeof(eom!); J = typeof(jacob)
+    D = length(state)
+    ContinuousDS{D, T, F, J}(state, eom!, jacob)
+end
 # Constructor without Jacobian (nothing in the field)
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
-dimension(ds::ContinuousDS) = length(ds.state)
+dimension(::ContinuousDS{D, T, F, J}) where {D, T, F, J} = D
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################
@@ -133,19 +138,16 @@ end
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
-function Base.show(io::IO, s::ContinuousDS{S, F, J}) where
-    {S<:ANY, F<:ANY, J<:ANY}
-    N = length(s.state)
-    print(io, "$N-dimensional continuous dynamical system:\n",
+function Base.show(io::IO, s::ContinuousDS{D, S, F, J}) where {D, S, F, J}
+    print(io, "$D-dimensional continuous dynamical system:\n",
     "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
-function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
-    {S<:ANY, F<:ANY, J<:ANY}
-    N = length(s.state)
+function Juno.render(i::Juno.Inline, s::ContinuousDS{D, S, F, J}) where
+    {D, S, F, J}
     t = Juno.render(i, Juno.defaultrepr(s))
-    t[:head] = Juno.render(i, Text("$N-dimensional continuous dynamical system"))
+    t[:head] = Juno.render(i, Text("$D-dimensional continuous dynamical system"))
     t
 end
 end

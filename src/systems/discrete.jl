@@ -6,7 +6,7 @@ export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension
 #                                   Constructors                                    #
 #####################################################################################
 "Abstract type representing discrete systems."
-abstract type DiscreteDynamicalSystem <: DynamicalSystem end
+abstract type DiscreteDynamicalSystem{D} <: DynamicalSystem{D} end
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
@@ -24,7 +24,7 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 If the `jacob` is not provided by the user, it is created efficiently
 using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem{D}
     state::SVector{D,T}
     eom::F
     jacob::J
@@ -36,8 +36,10 @@ function DiscreteDS(u0::AbstractVector, eom)
     return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
-    su0 = SVector{length(u0)}(u0)
-    return DiscreteDS(su0, eom, jac)
+    D = length(u0)
+    su0 = SVector{D}(u0)
+    T = eltype(su0); F = typeof(eom); J = typeof(jac)
+    return DiscreteDS{D, T, F, J}(su0, eom, jac)
 end
 
 """
@@ -51,19 +53,19 @@ One-dimensional discrete dynamical system.
   a state: `deriv(x) -> Real`. If it is not provided by the user
   it is created automatically using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem{1}
     state::S
     eom::F
     deriv::D
 end
 function DiscreteDS1D(x0, eom)
-    fd_deriv(x) = ForwardDiff.derivative(eom, x)
-    DiscreteDS1D(x0, eom, fd_deriv)
+    ForwardDiff_der(x) = ForwardDiff.derivative(eom, x)
+    DiscreteDS1D(x0, eom, ForwardDiff_der)
 end
 
-
-dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
+dimension(::DiscreteDS{D, T, F, J})  where {D, T, F, J} = D
 dimension(::DiscreteDS1D) = 1
+
 #####################################################################################
 #                               System Evolution                                    #
 #####################################################################################
