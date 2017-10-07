@@ -26,6 +26,14 @@ println("D2 - D1 = $(abs(D2- D1))")
 ```
 The 2 numbers `D1` and `D2` are **very close**, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
 
+## Estimating Reconstruction Parameters
+The following functions are provided estimate good values that can be used in
+[`reconstruct`](@ref):
+```
+estimate_delay
+```
+More coming soon!
+
 ## Numerical Lyapunov Estimation
 Given any timeseries, one can first `reconstruct` it, and then calculate a maximum
 lyapunov exponent for it, provided that the system the timeseries was recorded
@@ -121,4 +129,48 @@ than the linear scaling region, if it wasn't that jittery the function
 a slope near 0! (or if you were to give bigger tolerance as a keyword argument)
 
 ### Case of a Continuous system
-To-do.
+The process for continuous systems works identically with discrete, but one must be
+a bit more thoughtful when choosing parameters. The following example
+has comments to help the users get familiar with the process:
+```julia
+using DynamicalSystems, PyPlot
+
+ds = Systems.lorenz() # Max lyapunov is around 0.90
+# create a timeseries of 1 dimension
+dt = 0.05
+x = timeseries(ds, 1000.0; dt = dt)[:, 1]
+
+τ1 = estimate_delay(x) #gives 7
+
+# Reconstruct it (see section on estimating parameters)
+figure()
+for D in [4, 8], τ in [τ1, 15]
+  R = reconstruct(x, D, τ)
+
+  # I now know that I have to use much bigger ks than 1:20, as in the
+  # continuous case! (See reference given in `numericallyapunovs`)
+  ks1 = 0:200
+  # I also know that I do not need that dense computations, since 1 increment
+  # in k means increment of 0.05 real time
+  ks2 = 0:4:200
+
+  # Calculate lyapunovs:
+  method = FixedMassNeighborhood(5) #5 nearest neighbors of each state
+
+  # E1 = numericallyapunov(R, ks1; method = method)
+  # λ1 = linear_region(ks1 .* dt, E1)[2]
+  E2 = numericallyapunov(R, ks2; method = method)
+  λ2 = linear_region(ks2 .* dt, E2)[2]
+
+
+  # plot(ks1,E1, label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
+  plot(ks2,E2, label = "D=$(D), τ=$(τ), λ=$(round(λ2, 3))", alpha = 0.5)
+end
+
+legend()
+xlabel("k (0.05×t)")
+ylabel("E")
+tight_layout()
+```
+As you can see, using ``\\tau = 15`` makes almost no sense! The estimates with
+`τ = 7` though are very good (the actual value is around `λ = 0.89...`).

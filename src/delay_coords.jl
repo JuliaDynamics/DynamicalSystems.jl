@@ -19,6 +19,7 @@ The `n`th row of this object is formally the `D`-dimensional vector:
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
+which is created only on demand.
 
 See `reconstruct` for usage.
 """
@@ -299,7 +300,8 @@ KDTree(R::Reconstruction) = KDTree(Dataset(R).data, Euclidean())
 numericallyapunov(R::Reconstruction, ks;  refstates, distance, method)
 ```
 Return `E = [E(k) for k ∈ ks]`, where `E(k)` is the average logarithmic distance for
-nearby states that are evolved in time for `k` steps. If the reconstruction
+nearby states that are evolved in time for `k` steps (`k` must be integer).
+If the reconstruction
 exhibits exponential divergence of nearby states, then it should clearly hold:
 ```math
 E(k) \\approx \\lambda\\Delta t k + E(0)
@@ -324,7 +326,7 @@ to no states being arbitrarily close and nonlinear folding taking place.
 One should then be careful to choose a sufficiently small `ks` range.
 
 The following keywords tune the algorithm behavior:
-* `refstates::AbstractVector{Int} = 1:(length(R) - length(ks))` : Vector of indices
+* `refstates::AbstractVector{Int} = 1:(length(R) - ks[end])` : Vector of indices
   that notes which
   states of the reconstruction should be used as "reference states", which means
   that the algorithm is applied for all state indices contained in `refstates`.
@@ -364,7 +366,7 @@ This function assumes that the Theiler window (see [1]) is the same as the delay
 [2] : Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """
 function numericallyapunov(R::Reconstruction, ks;
-                           refstates = 1:(length(R) - length(ks)),
+                           refstates = 1:(length(R) - ks[end]),
                            distance = Cityblock(),
                            method = FixedMassNeighborhood(1))
     Ek = numericallyapunov(R, ks, refstates, distance, method)
@@ -380,17 +382,17 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     # n belongs in ℜ and R[n] is the "reference state".
     # Thus, ℜ contains all the reference states the algorithm will iterate over.
     # ℜ is not estimated. it is given by the user. Most common choice:
-    # ℜ = 1:(length(R) - length(ks))
+    # ℜ = 1:(length(R) - ks[end])
 
     # ⩅(n) = \Cup<tab> = neighborhood of reference state n
     # which is evaluated for each n and for the given neighborhood method
 
     # Initialize:
-    timethres = length(R) - length(ks)
+    timethres = length(R) - ks[end]
     if maximum(ℜ) > timethres
-        erstr = "Maximum index of reference states is > length(R) - length(ks) "
+        erstr = "Maximum index of reference states is > length(R) - ks[end] "
         erstr*= "and the algorithm cannot be performed on it. You have to choose "
-        erstr*= "reference state indices of at most up to length(R) - length(ks)."
+        erstr*= "reference state indices of at most up to length(R) - ks[end]."
         throw(ArgumentError(erstr))
     end
     E = zeros(T, length(ks))
@@ -415,8 +417,8 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
                 skippedm += 1
                 continue
             end
-            for k in ks #ks should be small (of order 10 to 100 MAX)
-                E_m[k] = log(delay_distance(distance, R, m, n, k))
+            for (j, k) in enumerate(ks) #ks should be small (of order 10 to 100 MAX)
+                E_m[j] = log(delay_distance(distance, R, m, n, k))
             end
             E_n .+= E_m # no need to reset E_m
         end
