@@ -68,9 +68,9 @@ evolves two neighboring trajectories (one given and one test)
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-If `ret_con` is `Val{true}()` return the convergence timeseries of the lyapunov
+If `ret_con` is `Val{true}` return the convergence timeseries of the lyapunov
 exponent
-`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}()`
+`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}`
 (default) return the converged lyapunov value `λts[end]` instead.
 
 ### Keyword Arguments:
@@ -220,7 +220,7 @@ end
 
 function lyapunov(ds::ContinuousDynamicalSystem,
                   T::Real,
-                  return_convergence::Val{B} = Val{false}();
+                  return_convergence::Type{Val{B}} = Val{false};
                   Ttr = 0.0,
                   d0=1e-9,
                   threshold=10^3*d0,
