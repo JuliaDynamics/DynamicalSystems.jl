@@ -215,7 +215,7 @@ end
 #####################################################################################
 function default_rescale(ds)
   sqD = sqrt(dimension(ds))
-  (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqD)
+  return (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqD)
 end
 
 function lyapunov(ds::ContinuousDynamicalSystem,
@@ -268,7 +268,7 @@ function lyapunov(integ1::ODEIntegrator,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(length(integ1.u))
+                  rescale! = default_rescale(ds)
                   )
 
   dist = ad0 = norm(integ1.u .- integ2.u)
