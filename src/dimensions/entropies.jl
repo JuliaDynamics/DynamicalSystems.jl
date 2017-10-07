@@ -10,8 +10,8 @@ export non0hist, genentropy, renyi, shannon, hartley
     for point in data
         # index of datapoint in the ranges space:
         # It is not necessary to convert floor to Int (dunno why)
-        ind::SVector{D, Int} = SVector{3}(
-        (Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D)...)
+        ind::SVector{D, Int} = SVector{D}(
+        ( Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D )...)
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1

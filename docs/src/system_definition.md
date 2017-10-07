@@ -136,7 +136,7 @@ ODEIntegrator
 ---
 
 ## Numerical Data
-Numerical data in `DynamicalSystems.jl` are represented by a structure called
+Numerical data in `DynamicalSystems.jl` is represented by a structure called
 `Dataset`:
 ```@docs
 Dataset
