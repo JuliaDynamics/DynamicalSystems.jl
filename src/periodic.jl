@@ -10,7 +10,7 @@ export lambdamatrix, lambdaperms, periodicorbits
     lambdamatrix(λ, inds::Vector{Int}, sings) -> Λk
 Return the matrix ``\\mathbf{\\Lambda}_k`` used to create a new
 dynamical system with some unstable fixed points turned to stable
-(see `periodicorbits`).
+(see [`periodicorbits`](@ref)).
 
 ### Arguments:
 
@@ -23,8 +23,11 @@ dynamical system with some unstable fixed points turned to stable
 3. `sings::Vector{<:Real}` : The element of the `i`th column of ``C_k`` is +1
    if `signs[i] > 0` and -1 otherwise (`sings` can also be `Bool` vector).
 
+
 Deciding the appropriate values for `λ, inds, sings` is not trivial. However, in
-ref. [3] there is a lot of information that can help with that decision.
+ref. [2] there is a lot of information that can help with that decision. Also,
+by appropriately choosing various values for `λ`, one can sort periodic
+orbits from e.g. least unstable to most unstable, see [3] for details.
 
     lambdamatrix(λ, D::Integer)
 Create a random ``\\mathbf{\\Lambda}_k`` by randomly generating
@@ -34,7 +37,9 @@ of all these combinations can be obtained by:
 indperms, singperms = lambdaperms(D)
 ```
 
-[3] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119 (2000)
+[2] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119 (2000)
+
+[3] : F. K. Diakonos *et al.*, Phys. Rev. Lett. **81**, pp 4349 (1998)
 """
 function lambdamatrix(λ::Real, inds::AbstractVector{<:Integer},
     sings::AbstractVector{<:Real})
@@ -60,7 +65,7 @@ end
 """
     lambdaperms(D) -> indperms, singperms
 Return two collections that each contain all possible combinations of indices (total of
-``D!``) and sings (total of ``2^D``) for dimension `D` (see `lambdamatrix`).
+``D!``) and sings (total of ``2^D``) for dimension `D` (see [`lambdamatrix`](@ref)).
 """
 function lambdaperms(D::Integer)
     indperms = collect(permutations([1:D;], D))
@@ -89,16 +94,13 @@ with ``\\mathbf{f}`` = `ds.eom`.
 The optional arguments `λs, indss, singss` **must be containers** of appropriate
 values, besides `λs` which can also be a number. The elements of those lists
 are passed to: `lambdamatrix(λ, inds, sings)`, which creates the appropriate
-``\\mathbf{\\Lambda}_k`` matrix. See the documentation of `lambdamatrix` to choose
-these values properly. If these arguments are not given,
-a random permutation will be chosen for them (with `λ=0.001`).
+``\\mathbf{\\Lambda}_k`` matrix (see [`lambdamatrix`](@ref)
+for more). If these arguments are not given,
+a random permutation will be chosen for them, with `λ=0.001`.
 
 **All initial conditions are
-evolved for all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to extremely
-long computation times (so be wise on your choice of `λs, indss, singss`)!
-
-Notice that by appropriately choosing various values for `λ`, one can sort periodic
-orbits from e.g. least unstable to most unstable, see [2] for details.
+evolved for all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to
+long computation times, so be wise on your choice of `λs, indss, singss`!
 
 The following *keyword* arguments fine-tune the algorithm convergence and output
 (i.c. stands for initial condition):
@@ -117,8 +119,6 @@ The following *keyword* arguments fine-tune the algorithm convergence and output
    precision of the algorithm.
 
 [1] : P. Schmelcher & F. K. Diakonos, Phys. Rev. Lett. **78**, pp 4733 (1997)
-
-[2] : F. K. Diakonos *et al.*, Phys. Rev. Lett. **81**, pp 4349 (1998)
 """
 function periodicorbits(ds::DiscreteDS{D, T, F, J},
                         o::Integer,

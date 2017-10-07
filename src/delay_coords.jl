@@ -83,7 +83,7 @@ end
 
 """
     reconstruct(s::AbstractVector, D::Int, τ::Int) -> R::Reconstruction
-Create and return an efficient `Reconstruction` data structure that serves as
+Create and return an efficient [`Reconstruction`](@ref) data structure that serves as
 the
 delay coordinates embedding [1, 2] reconstruction of the signal `s`.
 The reconstuction has
@@ -179,7 +179,8 @@ end
 
 """
     estimate_delay(s) -> τ
-Estimate an optimal delay by performing an exponential fit to
+Estimate an optimal delay to be used in [`reconstruct`](@ref),
+by performing an exponential fit to
 the `abs.(c)` with `c` the auto-correlation function of `s`.
 Return the exponential decay time `τ` rounded to an integer.
 """
@@ -237,9 +238,9 @@ Concrete subtypes:
 
 Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space, irrespectively of the `distance` used in the
-function `numericallyapunov`.
+function [`numericallyapunov`](@ref).
 
-See also [`neighborhood`](@ref) or `numericallyapunov`.
+See also [`neighborhood`](@ref) or [`numericallyapunov`](@ref).
 """
 abstract type AbstractNeighborhood end
 struct FixedMassNeighborhood <: AbstractNeighborhood
@@ -256,7 +257,7 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 Return a vector of indices which are the neighborhood of `point`, whose index
 in the original data is `n`. Both `point` and `n` must be provided because the
 `tree` has indices in different sorting (thus making `tree.data[n]` incorrect).
-The `method` can be a subtype of `AbstractNeighborhood` (see its documentation
+The `method` can be a subtype of [`AbstractNeighborhood`](@ref) (see its documentation
 string for more).
 
 `neighborhood` can be used for *any* dataset. Just do:
@@ -265,7 +266,7 @@ R = some_dataset
 tree = KDTree(R)
 neigh = neighborhood(n, R[n], tree, method)
 ```
-where `R` can be *either* a `Dataset` or a `Reconstruction`.
+where `R` can be *either* a [`Dataset`](@ref) or a [`Reconstruction`](@ref).
 
 Notice that the distances in the trees are always computed using the `Euclidean()`
 distance in `D`-dimensional space, irrespectively of the `distance` used in the
@@ -310,8 +311,9 @@ for a **well defined region** in the `k` axis, where ``\\lambda`` is
 the approximated
 maximum Lyapunov exponent. `Δt` is the time between samples in the
 original timeseries.
-You can use `linear_region(ks, E)` to identify the slope immediatelly, assuming you
-have choosen sufficiently small `ks` such that the linear scaling region is bigger
+You can use [`linear_region`](@ref) with arguments `(ks, E)` to identify the slope
+immediatelly, assuming you
+have choosen sufficiently good `ks` such that the linear scaling region is bigger
 than the saturated region.
 
 The algorithm used in this function is due to Parlitz [1], which itself
@@ -320,12 +322,10 @@ each reference state a neighborhood is evaluated. Then, for each point in this
 neighborhood, the logarithmic distance between reference state and neighborhood
 state is
 calculated as the "time" index `k` increases. The average of the above over
-all neighborhood states over all reference states is the returned result. Notice
-that this linear scaling region (if it exists) is very "short" versus `k` due
-to no states being arbitrarily close and nonlinear folding taking place.
-One should then be careful to choose a sufficiently small `ks` range.
+all neighborhood states over all reference states is the returned result.
 
 The following keywords tune the algorithm behavior:
+
 * `refstates::AbstractVector{Int} = 1:(length(R) - ks[end])` : Vector of indices
   that notes which
   states of the reconstruction should be used as "reference states", which means

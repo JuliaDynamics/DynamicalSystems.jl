@@ -97,8 +97,7 @@ which gives the result
 ### Bad Time-axis (`ks`) length
 
 !!! danger "Large `ks`"
-    Even though it was stressed in the documentation string of [`numericallyapunov`](@ref),
-    it simply cannot be stressed enough! It is just too easy to overshoot
+    This simply cannot be stressed enough! It is just too easy to overshoot
     the range at which the exponential expansion region is valid!
 
 Let's revisit the example of the previous section:
