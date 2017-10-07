@@ -10,7 +10,8 @@ export non0hist, genentropy, renyi, shannon, hartley
     for point in data
         # index of datapoint in the ranges space:
         # It is not necessary to convert floor to Int (dunno why)
-        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
+        ind::SVector{D, Int} = SVector{3}(
+        (Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D)...)
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
         d[ind] += 1
@@ -50,14 +51,12 @@ non0hist(ε, convert(Dataset, matrix))
 genentropy(α, ε, dataset)
 ```
 Compute the `α` order generalized (Rényi) entropy [1] of a dataset,
-by first partitioning it into boxes of length `ε`.
+by first partitioning it into boxes of length `ε` using [`non0hist`](@ref).
 ```julia
 genentropy(α, p::AbstractArray)
 ```
 Compute the entropy of an Array `p` directly, assuming that `p` is
-sum-normalized.
-
-log base-e is used in both cases, i.e. units of "nat".
+sum-normalized. *log base-e is used in both cases, i.e. units of "nat".*
 
 The Rényi entropy
 ```math
