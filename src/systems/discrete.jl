@@ -6,7 +6,7 @@ export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension
 #                                   Constructors                                    #
 #####################################################################################
 "Abstract type representing discrete systems."
-abstract type DiscreteDynamicalSystem{D} <: DynamicalSystem{D} end
+abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
     DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for `D ≤ 10`).
@@ -24,7 +24,7 @@ abstract type DiscreteDynamicalSystem{D} <: DynamicalSystem{D} end
 If the `jacob` is not provided by the user, it is created efficiently
 using the module `ForwardDiff`.
 """
-mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem{D}
+mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
     state::SVector{D,T}
     eom::F
     jacob::J
