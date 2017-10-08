@@ -242,14 +242,14 @@ function lyapunov(ds::ContinuousDynamicalSystem,
 
   # Create a copy integrator with different state
   # (workaround until https://github.com/JuliaDiffEq/DiffEqBase.jl/issues/58 is solved)
-  prob = integ1.sol.prob
-  rescale!(prob.u0, ds.state, d0)
-  if haskey(diff_eq_kwargs, :solver)
-    integ2 = init(prob, diff_eq_kwargs[:solver])
-  else
-    integ2 = init(prob, Tsit5())
-  end
+  # initialize:
+  st1 = copy(ds.state)
+  integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
+  integ1.opts.advance_to_tstop=true
+  rescale!(ds.state, st1, d0)
+  integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
+  ds.state = st1
 
   λts, ts = lyapunov(integ1, integ2, T;
   d0=d0, threshold=threshold, dt=dt, rescale! = rescale!)
@@ -290,7 +290,7 @@ function lyapunov(integ1::ODEIntegrator,
       # add computed scale to accumulator (scale = local lyaponov exponent):
       a = dist/ad0
       # Warning message for bad decision of `thershold` or `d0`:
-      if a > threshold/d0 && i ≤ 1
+      if a > threshold/ad0 && i ≤ 1
         warnstr = "Distance between test and original trajectory exceeded threshold "
         warnstr*= "after just 1 evolution step. "
         warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
