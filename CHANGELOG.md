@@ -1,6 +1,10 @@
 # v0.5.0:
 * Major bugfix in the `lyapunov` function where the time averaging was actually
   not happening correctly for discrete systems, resulting in slight inaccuracy.
+* Added option to choose whether you want the convergence timeseries for `lyapunov`,
+  for both discrete and continuous systems.
+* Added option to supply your own functions to rescale and initialize the test
+  state in `lyapunov`.
 
 # v0.4.0:
 * Increased speed of Standard Map system (by using `while` instead of `mod`).

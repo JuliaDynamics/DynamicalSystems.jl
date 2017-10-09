@@ -60,7 +60,7 @@ end
 
 """
 ```julia
-lyapunov(ds::DynamicalSystem, Τ, ret_con::Type{Val{B}} = Val{false}; kwargs...)
+lyapunov(ds::DynamicalSystem, Τ, ret_conv = Val{false}; kwargs...)
 ```
 Calculate the maximum lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
@@ -68,9 +68,9 @@ evolves two neighboring trajectories (one called "given" and one called "test")
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-If `ret_con` is `Val{true}` return the convergence timeseries of the lyapunov
+If `ret_conv` is `Val{true}` return the convergence timeseries of the lyapunov
 exponent
-`λts` as well as the corresponding time vector `ts`. If `ret_con` is `Val{false}`
+`λts` as well as the corresponding time vector `ts`. If `ret_conv` is `Val{false}`
 (default) return the converged lyapunov value `λts[end]` instead.
 
 ### Keyword Arguments:
@@ -85,19 +85,21 @@ exponent
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
     distance exceeding the `threshold`.
 
-  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` : A function that given
+  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)`
+    A function that given
     `(st1, d0)` initializes the test state with distance
-    (approximatelly) `d0` from the given state (`st1`).
+    (approximatelly) `d0` from the given state (`st1`). (`D` is the dimension
+    of the system, used in the default expression)
 
   * `rescale = (st2, st1, a) -> @. st1 + (st2 - st1)/a`
 
     The function used to rescale the test state `st2`
-    close to the given state `st1` given the ratio of distances between the two states
-    at the start of evolution, and after exceeding the threshold,
-    i.e. ``a = d(t_1)/d(t_0)``.
-
-    Same as `rescale!` but since discrete systems work
-    with `SVectors` the method is not in-place anymore.
+    close to the given state `st1`, given the ratio of distances `a`
+    between the two states
+    at the start the rescaling process and after exceeding the threshold,
+    i.e. ``a = d(t_i)/d(t_{i-1})``. This function can be used when you want to avoid
+    the test state appearing in a region of the phase-space where it would have
+    different energy or escape to infinity.
 
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
@@ -121,9 +123,21 @@ function lyapunov(ds::DiscreteDS,
         st1 = eom(st1)
     end
 
+    λts, ts = _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
+
+    if B
+        return λts, ts
+    else
+        return λts[end]
+    end
+end
+
+function _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
     st2 = inittest(st1, d0)
     dist = ad0 = norm(st2 - st1)
     λ = zero(eltype(st1))
+    λs = eltype(st1)[]
+    ts = Int[]
     i = 0
     while i < N
         #evolve until rescaling:
@@ -136,12 +150,16 @@ function lyapunov(ds::DiscreteDS,
         # local lyapunov exponent is simply the relative distance of the trajectories
         a = dist/ad0
         λ += log(a)
+        push!(λs, λ/i)
+        push!(ts, i)
         i>=N && break
         #rescale:
         st2 = rescale(st2, st1, a)
         dist = ad0 = norm(st2-st1)
     end
-    λ /= i
+    push!(λs, λ/i)
+    push!(ts, i)
+    return λs, ts
 end
 
 rescale_default = (st2, st1, a) -> @. st1 + (st2 - st1)/a
