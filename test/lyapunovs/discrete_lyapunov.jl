@@ -71,7 +71,7 @@ end
     @test isapprox(λ1, λ2; rtol = 1e-3)
 
     ls, ts = lyapunov(ds1, 1000000, Val{true})
-    @test 0.418 < λs[end] < 0.422
+    @test 0.418 < ls[end] < 0.422
     @test length(ts) == length(ls)
   end
 end
