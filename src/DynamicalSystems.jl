@@ -35,4 +35,9 @@ include("delay_coords.jl")
 # Periodicity:
 include("periodic.jl")
 
+hen = Systems.henon()
+lor = Systems.lorenz()
+lyapunov(hen, 1000)
+lyapunov(lor, 1000.0)
+
 end # module

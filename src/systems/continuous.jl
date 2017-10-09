@@ -12,7 +12,7 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
     ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem
-`D`-dimensional continuous dynamical system.
+    Continuous dynamical system with dimension D = length(state)
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -32,6 +32,7 @@ mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSyste
     eom!::F
     jacob::J
 end
+
 # Constructor without Jacobian (nothing in the field)
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
@@ -133,19 +134,18 @@ end
 #                                 Pretty-Printing                                     #
 #######################################################################################
 import Base.show
-function Base.show(io::IO, s::ContinuousDS{S, F, J}) where
-    {S<:ANY, F<:ANY, J<:ANY}
-    N = length(s.state)
-    print(io, "$N-dimensional continuous dynamical system:\n",
+function Base.show(io::IO, s::ContinuousDS{S, F, J}) where {S, F, J}
+    D = dimension(ds)
+    print(io, "$D-dimensional continuous dynamical system:\n",
     "state: $(s.state)\n", "e.o.m.: $F\n", "jacobian: $J")
 end
 
 @require Juno begin
 function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
-    {S<:ANY, F<:ANY, J<:ANY}
-    N = length(s.state)
+    {S, F, J}
+    D = dimension(ds)
     t = Juno.render(i, Juno.defaultrepr(s))
-    t[:head] = Juno.render(i, Text("$N-dimensional continuous dynamical system"))
+    t[:head] = Juno.render(i, Text("$D-dimensional continuous dynamical system"))
     t
 end
 end

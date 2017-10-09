@@ -36,8 +36,10 @@ function DiscreteDS(u0::AbstractVector, eom)
     return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
 function DiscreteDS(u0::AbstractVector, eom, jac)
-    su0 = SVector{length(u0)}(u0)
-    return DiscreteDS(su0, eom, jac)
+    D = length(u0)
+    su0 = SVector{D}(u0)
+    T = eltype(su0); F = typeof(eom); J = typeof(jac)
+    return DiscreteDS{D, T, F, J}(su0, eom, jac)
 end
 
 """
@@ -57,13 +59,13 @@ mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
     deriv::D
 end
 function DiscreteDS1D(x0, eom)
-    fd_deriv(x) = ForwardDiff.derivative(eom, x)
-    DiscreteDS1D(x0, eom, fd_deriv)
+    ForwardDiff_der(x) = ForwardDiff.derivative(eom, x)
+    DiscreteDS1D(x0, eom, ForwardDiff_der)
 end
 
-
-dimension(::DiscreteDS{D, T, F, J})  where {D<:ANY, T<:ANY, F<:ANY, J<:ANY} = D
+dimension(ds::DiscreteDS) = length(ds.state)
 dimension(::DiscreteDS1D) = 1
+
 #####################################################################################
 #                               System Evolution                                    #
 #####################################################################################
