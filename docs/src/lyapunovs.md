@@ -64,9 +64,28 @@ ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
 0.06957484163052223
 ```
 ## Convergence Timeseries
-The above functions converge to values with increasing time. One may want to see
-the convergence timeseries of the Lyapunov exponents for better fine-tuning
-of parameters of the algorithms.
+As was explained in the documentation of the functions, one can choose to get
+the convergence timeseries of the lyapunov exponents, instead of simply the
+converged values. This can be very helpful if one will e.g. prepare to run a
+lot of simulations and would like to have some optimal keyword parameters for
+optimal convergence.
 
-*This feature is coming soon! See [this GitHub issue](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues/18) if you
-want to contribute.*
+For example
+```julia
+lor = Systems.lorenz() #works for continuous
+hen = Systems.henon()  #works for discrete as well
+
+# use `Val{true}` as the third argument to get convergence info
+ls, ts = lyapunov(hen, 1000000, Val{true}, d0 = 1e-12)
+ls2, ts2 = lyapunov(hen, 100000, Val{true}, d0 = 1e-6, threshold = 1e-4)
+
+using PyPlot
+plot(ts, ls, label = "1: λ = $(ls[end])", linestyle="dashed")
+plot(ts2, ls2, label = "2: λ = $(ls2[end])")
+legend()
+xlabel("n")
+ylabel("λ")
+tight_layout()
+```
+which plots:
+![Convergence timeseries for lyapunov](https://i.imgur.com/MEaXnyB.png)
