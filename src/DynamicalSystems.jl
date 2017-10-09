@@ -35,4 +35,7 @@ include("delay_coords.jl")
 # Periodicity:
 include("periodic.jl")
 
+# ds = Systems.henon()
+# lor = ds.Systems.lorenz()
+
 end # module

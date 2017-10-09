@@ -60,11 +60,11 @@ end
 
 """
 ```julia
-lyapunov(ds::DynamicalSystem, Τ, ret_con::Val{B} = Val{false}; kwargs...)
+lyapunov(ds::DynamicalSystem, Τ, ret_con::Type{Val{B}} = Val{false}; kwargs...)
 ```
 Calculate the maximum lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
-evolves two neighboring trajectories (one given and one test)
+evolves two neighboring trajectories (one called "given" and one called "test")
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
@@ -84,6 +84,19 @@ exponent
     `DifferentialEquations` package (see `timeseries` for more info).
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
     distance exceeding the `threshold`.
+  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` : A function that given
+    `(st1, d0)` initializes the test state with distance
+    (approximatelly) `d0` from the given state (`st1`).
+
+  * `rescale = (st2, st1, a) -> st1 + (st2 - st1)/a`
+
+    **[discrete system case]** The function used to rescale the test state `st2`
+    close to the given state `st1` given the ratio of distances between the two states
+    before and after evolution, ``a = d_i/d_{i-1}``.
+
+    Same as `rescale!` but since discrete systems work
+    with `SVectors` the method is not in-place anymore.
+
   * `rescale! = (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqrt(D))`
 
     **[continuous system case]**
@@ -94,16 +107,16 @@ exponent
     systems where one would like the test trajectory to have the same energy
     as the given trajectory.
 
-  * `rescale = (state1, d0) -> state1 + d0/sqrt(D)`
 
-    **[discrete system case]** Same as `rescale!` but since discrete systems work
-    with `SVectors` the method is not in-place anymore.
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
-function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
-  d0=1e-9, threshold=10^3*d0)
+function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 0,
+  d0=1e-9, threshold=10^3*d0,
+  inittest = inittest_default(dimension(ds)),
+  rescale = rescale_default)
 
+  D = dimension(ds)
   threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
   eom = ds.eom
   st1 = deepcopy(ds.state)
@@ -113,8 +126,8 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
     st1 = eom(st1)
   end
 
-  st2 = st1 + d0
-  dist = d0*one(eltype(ds.state))
+  st2 = inittest(st1, d0)
+  dist = ad0 = norm(st2 - st1)
   λ = zero(eltype(st1))
   i = 0
   while i < N
@@ -126,17 +139,18 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
       i+=1
     end
     # local lyapunov exponent is simply the relative distance of the trajectories
-    a = dist/d0
+    a = dist/ad0
     λ += log(a)
     i>=N && break
     #rescale:
-    st2 = st1 + (st2 - st1)/a
-    dist = d0
+    st2 = rescale(st2, st1, a)
+    dist = ad0 = norm(st2-st1)
   end
   λ /= i
 end
 
-
+rescale_default = (st2, st1, a) -> @. st1 + (st2 - st1)/a
+inittest_default(D) = (state1, d0) -> state1 .+ d0/sqrt(D)
 
 function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
 
@@ -226,7 +240,8 @@ function lyapunov(ds::ContinuousDynamicalSystem,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(dimension(ds))
+                  inittest = inittest_default,
+                  rescale = rescale_default(dimension(ds))
                   ) where {B}
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -246,10 +261,10 @@ function lyapunov(ds::ContinuousDynamicalSystem,
   st1 = copy(ds.state)
   integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ1.opts.advance_to_tstop=true
-  rescale!(ds.state, st1, d0)
+  ds.state .= inittest(st1, d0)
   integ2 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
   integ2.opts.advance_to_tstop=true
-  ds.state = st1
+  ds.state .= st1
 
   λts, ts = lyapunov(integ1, integ2, T;
   d0=d0, threshold=threshold, dt=dt, rescale! = rescale!)
@@ -268,7 +283,7 @@ function lyapunov(integ1::ODEIntegrator,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(dimension(ds))
+                  rescale = rescale_default(dimension(ds))
                   )
 
   dist = ad0 = norm(integ1.u .- integ2.u)
@@ -303,10 +318,11 @@ function lyapunov(integ1::ODEIntegrator,
       push!(λ_ts, λ/τ)
       push!(ts, τ)
       # Rescale and reset everything:
-      rescale!(integ2.u, integ1.u, d0)
+      #integ2.u .= rescale(integ2.u, integ1.u, a)
+      integ2.u = @. integ1.u + (integ2.u - integ1.u)/a
       u_modified!(integ2, true)
       set_proposed_dt!(integ2, integ1)
-      # ad0 is defined because a user-defined `rescale!` may not give distance exactly d0
+      # user-defined `rescale` may not give distance exactly d0
       dist = ad0 = norm(integ1.u .- integ2.u)
     end
   end
