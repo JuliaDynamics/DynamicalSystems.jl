@@ -124,11 +124,11 @@ function lyapunov(ds::DiscreteDS, N::Real = 100000; Ttr::Int = 100,
       st2 = eom(st2)
       dist = norm(st1 - st2)
       i+=1
-      i>=N && break # this line is nessesary for safety! (if systems never go apart)
     end
     # local lyapunov exponent is simply the relative distance of the trajectories
     a = dist/d0
     λ += log(a)
+    i>=N && break
     #rescale:
     st2 = st1 + (st2 - st1)/a
     dist = d0
