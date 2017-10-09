@@ -213,8 +213,8 @@ end
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
-function default_rescale(ds)
-  sqD = sqrt(dimension(ds))
+function default_rescale(D)
+  sqD = sqrt(D)
   return (state2, state1, d0) -> broadcast!(+, state2, state1, d0/sqD)
 end
 
@@ -226,7 +226,7 @@ function lyapunov(ds::ContinuousDynamicalSystem,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(ds)
+                  rescale! = default_rescale(dimension(ds))
                   ) where {B}
 
   check_tolerances(d0, diff_eq_kwargs)
@@ -268,7 +268,7 @@ function lyapunov(integ1::ODEIntegrator,
                   threshold=10^3*d0,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale! = default_rescale(ds)
+                  rescale! = default_rescale(dimension(ds))
                   )
 
   dist = ad0 = norm(integ1.u .- integ2.u)
