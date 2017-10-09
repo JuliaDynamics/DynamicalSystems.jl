@@ -1,6 +1,6 @@
 # v0.5.0:
-* Added a new supertype `ContinuousDynamicalSystem`.
-* **BREAKING** : `ContinuousDS` is now a subtype of `ContinuousDynamicalSystem`.
+* Major bugfix in the `lyapunov` function where the time averaging was actually
+  not happening correctly for discrete systems, resulting in slight inaccuracy.
 
 # v0.4.0:
 * Increased speed of Standard Map system (by using `while` instead of `mod`).
