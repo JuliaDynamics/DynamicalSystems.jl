@@ -184,7 +184,7 @@ by performing an exponential fit to
 the `abs.(c)` with `c` the auto-correlation function of `s`.
 Return the exponential decay time `τ` rounded to an integer.
 """
-function estimate_delay(s::AbstractVector)
+function estimate_delay(x::AbstractVector)
     c = autocor(x, 0:length(x)÷10)
     i = 1
     # Find 0 crossing:
