@@ -58,6 +58,6 @@ end
 
   @testset "lyapunov" begin
     λ1, ts = lyapunov(ds, 10000.0, Val{true}, dt =  1.0, Ttr = 10.0)
-    @test 0.065 < λ1[end] < 0.075
+    @test 0.06 < λ1[end] < 0.08
   end
 end
