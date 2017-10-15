@@ -32,7 +32,6 @@ The following functions are provided estimate good values that can be used in
 ```
 estimate_delay
 ```
-More coming soon!
 
 ## Numerical Lyapunov Estimation
 Given any timeseries, one can first `reconstruct` it, and then calculate a maximum

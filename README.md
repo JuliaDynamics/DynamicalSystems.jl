@@ -4,7 +4,7 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 
 | **Documentation**   | [**Package Evaluator**](http://pkg.julialang.org/?pkg=DynamicalSystems#DynamicalSystems) | **Travis**     | **AppVeyor** | Gitter |
 |:--------:|:-------------------:|:-----------------------:|:-----:|:-----:|
-|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![](http://pkg.julialang.org/badges/DynamicalSystems_0.6.svg)](http://pkg.julialang.org/?pkg=DynamicalSystems) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/oabd7hgibx63bo1l?svg=true)](https://ci.appveyor.com/project/JuliaDynamics/dynamicalsystems-jl) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
+|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![](http://pkg.julialang.org/badges/DynamicalSystems_0.6.svg)](http://pkg.julialang.org/?pkg=DynamicalSystems) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/iqss550vb2dik7b2?svg=true)](https://ci.appveyor.com/project/JuliaDynamics/dynamicalsystems-jl) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
 
 `DynamicalSystems.jl` aims to be a useful companion for students and scientists treading
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
