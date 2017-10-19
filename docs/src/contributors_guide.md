@@ -33,18 +33,18 @@ that refer methods that we would want to have in our package are labeled as
 to some of them!
 
 Of course, you can always contribute in the enhancement of the existing package by
-solving the [GitHub issues](https://github.com/Datseris/DynamicalSystems.jl/issues).
+solving the some of the existing issues.
 
 If you have any idea about how to improve
 this package please do not hesitate to [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) and share your ideas!
 
 Don't forget; you always help this package simply by *using it* and reporting
 any unexpected behavior! So far we had very few testers and tested on a small
-subset of dynamical systems thus any extra testing is welcomed!
+subset of dynamical systems! Thus any extra testing is welcomed!
 
 ## Examples of new things you could contribute
 
-* Any method that calculates a quantity that has been used in at least one published
+* Any method that calculates a quantity that has been used in at least one scientific
   (and peer-reviewed) journal.
 * Any kind of new **Type** of Dynamical system, provided it is also used in research.
   If you do want to make something like this, please make it a subtype
@@ -61,7 +61,7 @@ Notice that the above are not conclusive, but only examples!
 * For new methods and systems please always have very clear and self-contained
   documentation strings.
 * Have enough comments in your code so that somebody that knows the method,
-  can also understand the code.
+  can also understand the code immediately.
 * Always have a reference to the original work that first introduces the method
   or the system that you are using. You should put this reference
   to the main function's documentation string.

@@ -46,8 +46,7 @@ isapprox(sh, log(2),  rtol = 1e-3) # true!
 Because all entropies are calculated on base-e, the unit of measurement is "nat", and
 one bit is log(2)×nat.
 
-### Kolmogorov-Sinai Entropy
-TBA.
+
 
 ## Attractor Dimension Estimation
 There are numerous methods that one can use to calculate a so-called "dimension" of a
@@ -61,8 +60,17 @@ dimension, called *generalized dimension*:
 generalized_dim
 ```
 ---
-As stated clearly, this call performs a lot of automated steps. One is always better
-better of performing the steps one by one to attain maximum control.
+As stated clearly, this call performs a lot of automated steps by calling the following functions with default arguments:
+```@docs
+estimate_boxsizes
+linear_regions
+linear_region
+```
+---
+
+#### Example
+
+*One is better off (if possible) performing the automated steps one by one to attain maximum control.*
 
 For example, we will calculate the dimensions of the strange attractors of the
 [Hénon map](system_definition/#DynamicalSystems.Systems.henon) and the [Lorenz system](system_definition/#DynamicalSystems.Systems.lorenz):

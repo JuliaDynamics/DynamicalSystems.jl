@@ -140,29 +140,29 @@ x = timeseries(ds, 1000.0; dt = dt)[:, 1]
 
 τ1 = estimate_delay(x) #gives 7
 
-# Reconstruct it (see section on estimating parameters)
+# Reconstruct it
 figure()
 for D in [4, 8], τ in [τ1, 15]
-  R = reconstruct(x, D, τ)
+    R = reconstruct(x, D, τ)
 
-  # I now know that I have to use much bigger ks than 1:20, as in the
-  # continuous case! (See reference given in `numericallyapunovs`)
-  ks1 = 0:200
-  # I also know that I do not need that dense computations, since 1 increment
-  # in k means increment of 0.05 real time
-  ks2 = 0:4:200
+    # I now know that I have to use much bigger ks than 1:20, because this is a
+    # continuous case! (See reference given in `numericallyapunovs`)
+    ks1 = 0:200
+    # I also know that I do not need that dense computations, since 1 increment
+    # in k means increment of 0.05 real time
+    ks2 = 0:4:200
 
-  # Calculate lyapunovs:
-  method = FixedMassNeighborhood(5) #5 nearest neighbors of each state
+    # Calculate lyapunovs:
+    method = FixedMassNeighborhood(5) #5 nearest neighbors of each state
 
-  # E1 = numericallyapunov(R, ks1; method = method)
-  # λ1 = linear_region(ks1 .* dt, E1)[2]
-  E2 = numericallyapunov(R, ks2; method = method)
-  λ2 = linear_region(ks2 .* dt, E2)[2]
+    # E1 = numericallyapunov(R, ks1; method = method)
+    # λ1 = linear_region(ks1 .* dt, E1)[2]
+    E2 = numericallyapunov(R, ks2; method = method)
+    λ2 = linear_region(ks2 .* dt, E2)[2]
 
 
-  # plot(ks1,E1.-E1[1], label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
-  plot(ks2,E2.-E2[1], label = "D=$(D), τ=$(τ), λ=$(round(λ2, 3))")
+    # plot(ks1,E1.-E1[1], label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
+    plot(ks2,E2.-E2[1], label = "D=$(D), τ=$(τ), λ=$(round(λ2, 3))")
 end
 
 legend()
@@ -173,5 +173,5 @@ tight_layout()
 ```
 which produces:
 ![Continuous Reconstruction exaple](https://i.imgur.com/lgyGLDv.png)
-As you can see, using ``\\tau = 15`` makes almost no sense! The estimates with
-`τ = 7` though are very good (the actual value is around `λ = 0.89...`).
+As you can see, using $\tau = 15$ makes almost no sense! The estimates with
+`τ = 7` though are very good (the actual value is around `λ ≈ 0.89...`).

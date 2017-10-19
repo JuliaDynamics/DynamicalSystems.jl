@@ -4,12 +4,11 @@ of low dimensional dynamical systems is affected by the position and the stabili
 properties of the [unstable periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits)
 existing in the chaotic sea.
 
-Finding unstable (or stable) periodic orbits in the sea of a discrete mapping analytically
-rapidly becomes *impossible* for higher orders of Fixed Points.
+Finding unstable (or stable) periodic orbits of a discrete mapping analytically
+rapidly becomes *impossible* for higher orders of fixed points.
 Fortunately there is a numeric algorithm due to
 Schmelcher & Diakonos which allows such a computation. Notice that even though
-the algorithm can find stable fixed points, it is mainly aimed at *unstable* ones and
-may not work for all stable ones.
+the algorithm can find stable fixed points, it is mainly aimed at *unstable* ones.
 
 The functions `periodicorbits` and `lambdamatrix` implement the algorithm:
 ```@docs
@@ -30,13 +29,15 @@ xs = linspace(0, 2π, 21); ys = copy(xs)
 ics = [SVector{2}(x,y) for x in xs for y in ys]
 
 # All permutations of [±1, ±1]:
-singss = [[+1, +1], [-1, -1], [+1, -1], [-1, +1]]
+singss = lambdaperms(2)[2] # second entry are the signs
+
 # I know from personal research I only need this `inds`:
 indss = [[1,2]] # <- must be container of vectors!!!
+
 λs = 0.005 # <- only this allowed to not be vector (could also be vector)
 
 orders = [2, 3, 4, 5, 6, 8]
-ALLFP = Any[]
+ALLFP = Vector{SVector{2, Float64}}[]
 
 ttt = time()
 for o in orders

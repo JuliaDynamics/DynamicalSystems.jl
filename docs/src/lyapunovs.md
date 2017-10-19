@@ -5,7 +5,7 @@ of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_ex
 The naming comes after Aleksandr M. Lyapunov, a Russian mathematician/physicist that had major impact on the analysis of the stability of systems.
 
 This page treats systems where the equations of motion are known. If instead
-you have numerical data, see the nonlinear [timeseries analysis page](nlts).
+you have numerical data, see the [nonlinear timeseries analysis page](nlts).
 
 ## Lyapunov Spectrum
 The function `lyapunovs` calculates the entire spectrum of the Lyapunov
@@ -67,7 +67,7 @@ ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
 As was explained in the documentation of the functions, one can choose to get
 the convergence timeseries of the lyapunov exponents, instead of simply the
 converged values. This can be very helpful if one will e.g. prepare to run a
-lot of simulations and would like to have some optimal keyword parameters for
+lot of simulations and would like to have some adjusted parameters for
 optimal convergence.
 
 For example

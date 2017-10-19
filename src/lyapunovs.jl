@@ -6,7 +6,7 @@ export lyapunovs, lyapunov
 ```julia
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
-Calculate the spectrum of lyapunov [1] exponents of `ds` by applying the
+Calculate the spectrum of Lyapunov exponents [1] of `ds` by applying the
 QR-decomposition method `N` times (see method "H2" of [2], or directly the original
 paper(s) [3]).
 Returns a vector with the *final*
@@ -62,16 +62,16 @@ end
 ```julia
 lyapunov(ds::DynamicalSystem, Τ, ret_conv = Val{false}; kwargs...)
 ```
-Calculate the maximum lyapunov exponent `λ` using a method due to Benettin [1],
+Calculate the maximum Lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
 evolves two neighboring trajectories (one called "given" and one called "test")
 while constantly rescaling the test one.
 `T`  denotes the total time of evolution (should be `Int` for discrete systems).
 
-If `ret_conv` is `Val{true}` return the convergence timeseries of the lyapunov
+If `ret_conv` is `Val{true}` return the convergence timeseries of the Lyapunov
 exponent
 `λts` as well as the corresponding time vector `ts`. If `ret_conv` is `Val{false}`
-(default) return the converged lyapunov value `λts[end]` instead.
+(default) return the converged Lyapunov value `λts[end]` instead.
 
 ### Keyword Arguments:
 
@@ -88,8 +88,8 @@ exponent
   * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)`
     A function that given
     `(st1, d0)` initializes the test state with distance
-    (approximatelly) `d0` from the given state (`st1`). (`D` is the dimension
-    of the system, used in the default expression)
+    `d0` from the given state `st1`. (`D` is the dimension
+    of the system)
 
   * `rescale = (st2, st1, a) -> @. st1 + (st2 - st1)/a`
 
@@ -186,8 +186,10 @@ function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
 end
 lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=Ttr)
 
+
+
 #####################################################################################
-#                              Lyapunov Helpers                                     #
+#                          Continuous Lyapunov Helpers                              #
 #####################################################################################
 function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
   diff_eq_kwargs=Dict())
@@ -236,6 +238,8 @@ function check_tolerances(d0, dek)
         warn("Relative tolerance (reltol) of integration is much bigger than `d0`.")
     end
 end
+
+
 
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
@@ -326,8 +330,8 @@ function lyapunov(integ1::ODEIntegrator,
             push!(λ_ts, λ/τ)
             push!(ts, τ)
             # Rescale and reset everything:
-            #integ2.u .= rescale(integ2.u, integ1.u, a)
-            integ2.u = @. integ1.u + (integ2.u - integ1.u)/a
+            integ2.u .= rescale(integ2.u, integ1.u, a)
+            # integ2.u = @. integ1.u + (integ2.u - integ1.u)/a
             u_modified!(integ2, true)
             set_proposed_dt!(integ2, integ1)
             # user-defined `rescale` may not give distance exactly d0

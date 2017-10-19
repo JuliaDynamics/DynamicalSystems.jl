@@ -31,10 +31,10 @@ orbits from e.g. least unstable to most unstable, see [3] for details.
 
     lambdamatrix(λ, D::Integer)
 Create a random ``\\mathbf{\\Lambda}_k`` by randomly generating
-an `inds` and a `sings` from all possible combinations. The *collections*
+an `inds` and a `signs` from all possible combinations. The *collections*
 of all these combinations can be obtained by:
 ```julia
-indperms, singperms = lambdaperms(D)
+indperms, signperms = lambdaperms(D)
 ```
 
 [2] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119 (2000)
@@ -65,7 +65,7 @@ end
 """
     lambdaperms(D) -> indperms, singperms
 Return two collections that each contain all possible combinations of indices (total of
-``D!``) and sings (total of ``2^D``) for dimension `D` (see [`lambdamatrix`](@ref)).
+``D!``) and signs (total of ``2^D``) for dimension `D` (see [`lambdamatrix`](@ref)).
 """
 function lambdaperms(D::Integer)
     indperms = collect(permutations([1:D;], D))
@@ -167,9 +167,9 @@ function _periodicorbits!(
             prevst = st
             st = Sk(prevst)
             norm(st) > inftol && break
-            if norm(prevst - st) < 1e-10
+            if norm(prevst - st) < disttol
                 unist = round.(st, roundtol)
-                !(unist ∈ FP) && push!(FP, unist)
+                unist ∉ FP && push!(FP, unist)
                 break
             end
         end

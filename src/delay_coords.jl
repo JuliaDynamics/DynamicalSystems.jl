@@ -11,7 +11,7 @@ export estimate_delay, neighborhood, Reconstruction, KDTree, Reconstruction
 #                            Reconstruction Object                                  #
 #####################################################################################
 """
-    Reconstruction{V, T, D, τ}
+    Reconstruction{V, T, D, τ} <: AbstractDataset{D}
 `D`-dimensional reconstruction object with delay `τ`, created from a vector `s::V`.
 `s` is the only field of `Reconstruction`.
 
@@ -19,11 +19,11 @@ The `n`th row of this object is formally the `D`-dimensional vector:
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
-which is created only on demand.
+which is created only on demand. (``s`` = `R.s` with `R` the `Reconstruction` object)
 
 See [`reconstruct`](@ref) for usage.
 """
-type Reconstruction{V<:AbstractVector, T<:Real, D, τ}
+type Reconstruction{V<:AbstractVector, T<:Real, D, τ} <: AbstractDataset{D}
     s::V
 end
 
@@ -214,18 +214,6 @@ end
 
 
 
-# Trees:
-# Crazy hacking cheating tree that contains 1-dimensional points LOLZIES
-function treedata(R::Reconstruction{V, T, D, τ}, di::Cityblock) where {V, T, D, τ}
-    SX = reinterpret(SVector{1, T}, R.s, (length(R.s),))
-end
-# Tree based on the fact that the Euclidean distance will be used
-function treedata(R::Reconstruction{V, T, D, τ}, di::Euclidean) where {V, T, D, τ}
-    Dataset(R).data
-end
-
-
-
 # Neighborhoods:
 """
 Supertype of methods for deciding the neighborhood of points for a given point.
@@ -256,11 +244,10 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
     neighborhood(n, point, tree::KDTree, method::AbstractNeighborhood)
 Return a vector of indices which are the neighborhood of `point`, whose index
 in the original data is `n`. Both `point` and `n` must be provided because the
-`tree` has indices in different sorting (thus making `tree.data[n]` incorrect).
-The `method` can be a subtype of [`AbstractNeighborhood`](@ref) (see its documentation
-string for more).
+`tree` has indices in different sorting.
+The `method` can be a subtype of [`AbstractNeighborhood`](@ref).
 
-`neighborhood` can be used for *any* dataset. Just do:
+For example:
 ```julia
 R = some_dataset
 tree = KDTree(R)
@@ -270,7 +257,7 @@ where `R` can be *either* a [`Dataset`](@ref) or a [`Reconstruction`](@ref).
 
 Notice that the distances in the trees are always computed using the `Euclidean()`
 distance in `D`-dimensional space, irrespectively of the `distance` used in the
-`numericallyapunov` function.
+[`numericallyapunov`](@ref) function.
 
 `neighborhood` **simply interfaces** the functions
 `knn` and `inrange` from
@@ -312,6 +299,7 @@ the approximated
 maximum Lyapunov exponent. `Δt` is the time between samples in the
 original timeseries.
 You can use [`linear_region`](@ref) with arguments `(ks, E)` to identify the slope
+(= ``\\lambda``)
 immediatelly, assuming you
 have choosen sufficiently good `ks` such that the linear scaling region is bigger
 than the saturated region.
@@ -332,13 +320,12 @@ The following keywords tune the algorithm behavior:
   that the algorithm is applied for all state indices contained in `refstates`.
 * `distance::Metric = Cityblock()` : The distance function used in the
   logarithmic distance of nearby states. The allowed distances are `Cityblock()`
-  and `Euclidean()` from the
-  package `Distances.jl` (re-exported here). See below for more info on this
+  and `Euclidean()`. See below for more info on this
   choice which has fundamental impact on the algorithm.
 * `method::AbstractNeighborhood = FixedMassNeighborhood(1)` : The method to
   be used when evaluating
   the neighborhood of each reference state. See
-  `AbstractNeighborhood` for more info on this choice.
+  [`AbstractNeighborhood`](@ref) for more info on this choice.
 
 If the `Metric` is `Euclidean()` then calculate the Euclidean distance of the
 full `D`-dimensional points (distance ``d_E`` in ref. [1]).
@@ -351,11 +338,6 @@ ref. [1]). Notice that
 the distances used are defined in the package `Distances.jl`, but are re-exported
 in `DynamicalSystems.jl` for ease-of-use (the
 distances are used for dispatch purposes *only*).
-
-It is shown in [1] that the second type of distance
-function makes little difference in the lyapunov estimation versus e.g. the
-Euclidean distance, but it is **much cheaper to evaluate**, you only need to
-perform one subtraction and one absolute value!
 
 This function assumes that the Theiler window (see [1]) is the same as the delay time:
 ``w  = \\tau``.

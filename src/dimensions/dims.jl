@@ -1,5 +1,5 @@
 using LsqFit: curve_fit
-export linear_region, linear_regions
+export linear_region, linear_regions, estimate_boxsizes
 #######################################################################################
 # Functions and methods to deduce linear scaling regions
 #######################################################################################
@@ -20,7 +20,7 @@ end
 """
     linear_region(x, y; dxi::Int = 1, tol = 0.2) -> ([ind1, ind2], slope)
 Call [`linear_regions`](@ref), identify the largest linear region
-and approximate the slope of this region using least squares fit.
+and approximate the slope of the entire region using least squares fit.
 Return the indices where
 the region starts and stops (`x[ind1:ind2]`) as well as the approximated slope.
 """
@@ -179,7 +179,7 @@ power law exponent of the scaling of the [`genentropy`](@ref) versus the box siz
   1. A vector of box sizes is decided by calling `es = estimate_boxsizes(dataset)`.
   2. For each element of `es` the appropriate entropy is
      calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
-  3. The curve d(x) is decomposed into linear regions, using `linear_regions(x, d)`.
+  3. The curve d(x) is decomposed into linear regions, using [`linear_regions`](@ref)`(x, d)`.
   4. The biggest linear region is chosen, and a fit for the slope of that
      region is performed using the function [`linear_region`](@ref).
   5. This fitted slope is returned.

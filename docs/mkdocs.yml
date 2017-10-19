@@ -7,8 +7,8 @@ theme:               'material'
 
 extra:
   palette:
-    primary: 'teal'
-    accent: 'deep orange'
+    primary: 'deep purple'
+    accent: 'teal'
   social:
     - type: 'github'
       link: 'https://github.com/JuliaDynamics/DynamicalBilliards.jl'

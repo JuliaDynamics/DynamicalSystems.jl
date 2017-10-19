@@ -50,7 +50,7 @@ This can be passed directly into `solve` from `DifferentialEquations`.
 """
 function ODEProblem(ds::ContinuousDS, t)
     odef = (t, u, du) -> ds.eom!(du, u)
-    OrdinaryDiffEq.ODEProblem(odef, ds.state, (zero(t), t))
+    OrdinaryDiffEq.ODEProblem(odef, copy(ds.state), (zero(t), t))
 end
 
 """
