@@ -1,3 +1,5 @@
+* Bugfix where `periodicorbits` was not considering `disttol` keyword.
+
 # v0.4.5:
 * Major bugfix in the `lyapunov` function where the time averaging was actually
   not happening correctly for discrete systems, resulting in slight inaccuracy.
