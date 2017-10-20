@@ -66,7 +66,15 @@ Calculate the maximum Lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
 evolves two neighboring trajectories (one called "given" and one called "test")
 while constantly rescaling the test one.
-`T`  denotes the total time of evolution (should be `Int` for discrete systems).
+`T`  denotes the total time of evolution (should be `Int` for discrete systems). The
+Lyapunov exponent is the average of the time-local Lyapunov exponents,
+meaning
+```math
+\\lambda = \\frac{1}{t_{n}}\\sum_{i=1}^{n}
+\\ln\\left( a_i \\right),\\quad a_i = \\frac{d(t_{i})}{d(t_{i-1})}
+```
+with ``d(t_i)`` the distance between test and given trajectory at
+time ``t_i``, which is also the time of the ``i``-th rescaling.
 
 If `ret_conv` is `Val{true}` return the convergence timeseries of the Lyapunov
 exponent
@@ -78,8 +86,10 @@ exponent
   * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
     algorithm. Should be `Int` for discrete systems.
   * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-  * `threshold = 10^3*d0` : Threshold to rescale the test trajectory.
-  * `diff_eq_kwargs = Dict()` : (only for continuous)
+  * `threshold = 10^3*d0` : Whenever the distance between given and test trajectory
+    exceeds `threshold`, the test
+    trajectory is rescaled back to having distance `d0` from the given trajectory.
+  * `diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0)` : (only for continuous)
     Keyword arguments passed into the solvers of the
     `DifferentialEquations` package (see `timeseries` for more info).
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
@@ -99,7 +109,9 @@ exponent
     at the start the rescaling process and after exceeding the threshold,
     i.e. ``a = d(t_i)/d(t_{i-1})``. This function can be used when you want to avoid
     the test state appearing in a region of the phase-space where it would have
-    different energy or escape to infinity.
+    different energy or escape to infinity. Notice however, that the default
+    function is such that it rescales along the direction of maximal expansion.
+    The accuracy of the algorithm is significantly reduced if this is not the case.
 
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
@@ -146,6 +158,7 @@ function _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
             st2 = eom(st2)
             dist = norm(st1 - st2)
             i+=1
+            i>=N && break
         end
         # local lyapunov exponent is simply the relative distance of the trajectories
         a = dist/ad0
@@ -232,10 +245,14 @@ function check_tolerances(d0, dek)
     atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
     rtol = haskey(dek, :reltol) ? dek[:reltol] : defrtol
     if atol > 10d0
-        warn("Absolute tolerance (abstol) of integration is much bigger than `d0`.")
+        warnstr = "Absolute tolerance (abstol) of integration is much bigger than "
+        warnstr*= "`d0`! It is highly suggested to increase it using `diff_eq_kwargs`."
+        warn(warnstr)
     end
     if rtol > 10d0
-        warn("Relative tolerance (reltol) of integration is much bigger than `d0`.")
+        warnstr = "Relative tolerance (reltol) of integration is much bigger than "
+        warnstr*= "`d0`! It is highly suggested to increase it using `diff_eq_kwargs`."
+        warn(warnstr)
     end
 end
 
