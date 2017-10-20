@@ -71,7 +71,7 @@ Lyapunov exponent is the average of the time-local Lyapunov exponents,
 meaning
 ```math
 \\lambda = \\frac{1}{t_{n}}\\sum_{i=1}^{n}
-\\ln\\left( a_i \\right),\\quad a_i = \\frac{d(t_{i})}{d(t_{i-1})}
+\\ln\\left( a_i \\right),\\quad a_i = \\frac{d(t_{i})}{d_0}
 ```
 with ``d(t_i)`` the distance between test and given trajectory at
 time ``t_i``, which is also the time of the ``i``-th rescaling.
@@ -95,7 +95,7 @@ exponent
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
     distance exceeding the `threshold`.
 
-  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)`
+  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` :
     A function that given
     `(st1, d0)` initializes the test state with distance
     `d0` from the given state `st1`. (`D` is the dimension
@@ -107,7 +107,7 @@ exponent
     close to the given state `st1`, given the ratio of distances `a`
     between the two states
     at the start the rescaling process and after exceeding the threshold,
-    i.e. ``a = d(t_i)/d(t_{i-1})``. This function can be used when you want to avoid
+    i.e. ``a = d(t_i)/d_0``. This function can be used when you want to avoid
     the test state appearing in a region of the phase-space where it would have
     different energy or escape to infinity. Notice however, that the default
     function is such that it rescales along the direction of maximal expansion.
