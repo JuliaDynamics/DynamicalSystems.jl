@@ -22,6 +22,13 @@ help make this package better without having to write a single line of code!
 Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
 accurate lower bound of users that this package has already helped!
 
+## Installation
+This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
+
+Bug-fixes and upgrades are constantly fed to the master branch and for this it is
+also advised to use `Pkg.checkout("DynamicalSystems")` after installing. This ensures
+that you get all the bug-fixes without having to wait for a formal release tag.
+
 ## Contents
 
 ### [System Definition](system_definition)

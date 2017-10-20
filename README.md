@@ -10,7 +10,12 @@ A Julia package for the exploration of continuous and discrete dynamical systems
 on the field of Chaos, nonlinear dynamics and dynamical systems in general.
 See the [documentation](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) for more.
 
-This is the (non-final) list of what this package aims to offer:
+## Installation
+This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
+
+Bug-fixes and upgrades are constantly fed to the master branch and for this it is
+also advised to use `Pkg.checkout("DynamicalSystems")` after installing. This ensures
+that you get all the bug-fixes without having to wait for a formal release tag.
 
 ## Contents
 This is the (non-final) list of what this package offers:
@@ -23,11 +28,14 @@ This is the (non-final) list of what this package offers:
 6. Entropy/Attractor dimension/Lyapunov exponents for *numerical data*.
 7. Finding unstable periodic orbits of any period of Discrete maps.
 
-The following methods are currently "wanted features", that will be implemented soon:
+The following are examples of "wanted features", that we would like to
+have in our package and may (*or may not*) be implemented soon.
 
 * Numeric Computation of Kolmogorov-Sinai entropy.
 * Definition of chaos, by Ott.
 * GALI method for estimating chaotic behavior, TBA.
+
+For more, see the The [wanted features GitHub page](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3Awanted_feature) GitHub page.
 
 ## Double pendulum video:
 Checkout this *amazing* video by Cormullion, featuring the `Systems.double_pendulum()`
