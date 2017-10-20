@@ -51,7 +51,9 @@ The following treat systems where the equations of motion are known:
 ### [Entropies and Dimensions](entropies)
 
 1. Generalized (Renyi) entropy and all related entropies: [`genentropy`](@ref).
+
     * Ultra-fast and cheap method for computing entropies of large datasets without ever having to worry about memory overflow.
+
 
 2. Generalized dimensions (e.g. capacity dimension, information dimension, etc.): [`generalized_dim`](@ref).
 3. Kaplan-Yorke dimension: [`kaplanyorke_dim`](@ref).
@@ -60,18 +62,20 @@ The following treat systems where the equations of motion are known:
 And, in order to automatically deduce dimensions, we also offer methods for:
 
 * Partitioning a function $y(x)$ vs. $x$ into regions where it is approximated by a straight line, using a flexible algorithm with a lot of control over the outcome. See [`linear_regions`](@ref).
-    * Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region.
+* Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region.
 
 ### [Nonlinear Timeseries Analysis](nlts)
 
 1. Flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a 1D timeseries efficiently.
 2. Methods for estimating good `Reconstruction` parameters (delay and dimension).
 3. *Four* different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured 1-dimensional timeseries: [`numericallyapunov`](@ref).
+
     * Fast computation of the above algorithms made possible by the interaction of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl), multiple dispatch and smart indexing (through the `Reconstruction` abstraction).
 
 ### [Periodicity](periodicity)
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
+
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 
 ### Wanted Features
