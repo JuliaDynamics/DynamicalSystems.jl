@@ -27,9 +27,12 @@ accurate lower bound of users that this package has already helped!
 ### [System Definition](system_definition)
 
 * Intuitive, consistent APIs for the definition of general dynamical systems. The currently supported system types are:
+
     * [Discrete Maps](system_definition/#discrete-systems)
     * [Continuous Flows](system_definition/#continuous-systems)
     * [Numerical Data](system_definition/#numerical-data)
+
+
 * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 * Interface for [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/index.html) for flexible integration of continuous system.
 * Well-defined functions for (numerically) evolving dynamical systems.
