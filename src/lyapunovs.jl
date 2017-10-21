@@ -259,13 +259,13 @@ function check_tolerances(d0, dek)
     atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
     rtol = haskey(dek, :reltol) ? dek[:reltol] : defrtol
     if atol > 10d0
-        warnstr = "Absolute tolerance (abstol) of integration is much bigger than "
-        warnstr*= "`d0`! It is highly suggested to increase it using `diff_eq_kwargs`."
+        warnstr = "Absolute tolerance (abstol) of integration is much larger than "
+        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
         warn(warnstr)
     end
     if rtol > 10d0
-        warnstr = "Relative tolerance (reltol) of integration is much bigger than "
-        warnstr*= "`d0`! It is highly suggested to increase it using `diff_eq_kwargs`."
+        warnstr = "Relative tolerance (reltol) of integration is much larger than "
+        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
         warn(warnstr)
     end
 end
