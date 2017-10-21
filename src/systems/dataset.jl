@@ -155,3 +155,31 @@ function Base.show(io::IO, d::Dataset{D, T, V}) where {D, T, V}
     println(io, "$D-dimensional Dataset with $n points:")
     print(io, Text(s))
 end
+
+
+#####################################################################################
+#                                 Minima and Maxima                                 #
+#####################################################################################
+function minima(data::Dataset{D, T, V}) where {D, T<:Real, V}
+    m = zeros(T, D) .+ T(Inf)
+    for point in data
+        for i in 1:D
+            if point[i] < m[i]
+                m[i] = point[i]
+            end
+        end
+    end
+    return SVector{D,T}(m)
+end
+
+function maxima(data::Dataset{D, T, V}) where {D, T<:Real, V}
+    m = zeros(T, D) .+ T(-Inf)
+    for point in data
+        for i in 1:D
+            if point[i] > m[i]
+                m[i] = point[i]
+            end
+        end
+    end
+    return SVector{D, T}(m)
+end

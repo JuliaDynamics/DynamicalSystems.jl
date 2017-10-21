@@ -52,16 +52,16 @@ using DynamicalSystems
 henon = Systems.henon()
 λ = lyapunov(henon, 10000, d0 = 1e-7, threshold = 1e-4, Ttr = 100)
 # result:
-0.42011626111385747
+0.420...
 ```
 The same is done for continuous systems:
 ```julia
 using DynamicalSystems, OrdinaryDiffEq
 
 ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
-λ = lyapunov(ross, 10000, dt = 0.5, diff_eq_kwargs = Dict(:solver => Vern8()))
+λ = lyapunov(ross, 100000, dt = 10.0, diff_eq_kwargs = Dict(:solver => Vern8(), :abstol=>1e-9, :reltol=>1e-9), Ttr = 100.0)
 # result:
-0.06957484163052223
+0.0711...
 ```
 ## Convergence Timeseries
 As was explained in the documentation of the functions, one can choose to get

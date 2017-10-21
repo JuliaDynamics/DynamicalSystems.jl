@@ -34,6 +34,7 @@ function min_pairwise_distance(cts::AbstractMatrix)
 end
 
 min_pairwise_distance(d::Dataset) = min_pairwise_distance(d.data)
+
 function min_pairwise_distance(
     pts::Union{Vector{Vector{T}}, Vector{SVector{D,T}}}) where {D,T<:Real}
     tree = KDTree(pts)
@@ -50,32 +51,6 @@ function min_pairwise_distance(
     return min_pair, min_d
 end
 
-#####################################################################################
-#                                 Minima and Maxima                                 #
-#####################################################################################
-function minima(data::Dataset{D, T, V}) where {D, T<:Real, V}
-    m = zeros(T, D) .+ T(Inf)
-    for point in data
-        for i in 1:D
-            if point[i] < m[i]
-                m[i] = point[i]
-            end
-        end
-    end
-    return SVector{D,T}(m)
-end
-
-function maxima(data::Dataset{D, T, V}) where {D, T<:Real, V}
-    m = zeros(T, D) .+ T(-Inf)
-    for point in data
-        for i in 1:D
-            if point[i] > m[i]
-                m[i] = point[i]
-            end
-        end
-    end
-    return SVector{D, T}(m)
-end
 
 #####################################################################################
 #                                      QR                                           #
