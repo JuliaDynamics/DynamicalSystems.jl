@@ -6,11 +6,13 @@ on the fields of Chaos, nonlinear dynamics and dynamical systems in general.
 
 One of a major goals of this package is to be completely transparent as to what is
 going on "under the hood". In scientific research, you never want to use *black boxes*,
-e.g. functions that give a result without telling you how it was calculated. `DynamicalSystems.jl` battles this in 2 ways: Firstly, it is written entirely in Julia,
+e.g. functions that give a result without telling you how it was calculated. `DynamicalSystems.jl` battles this in 3 ways: Firstly, it is written entirely in Julia,
 making the source code clear and easy to understand for even novice users. Secondly,
 almost every documentation string gives
 **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
-the documentation string of [`lyapunovs`](@ref) will cite relevant publications for the definition and computation of the lyapunov spectrum.
+the documentation string of [`lyapunovs`](@ref) will cite relevant publications for the definition and computation of the lyapunov spectrum. Thirdly, all documentation strings
+for all exported names have very detailed descriptions of the algorithms (whenever
+it is possible).
 
 *You
 can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
@@ -28,6 +30,9 @@ This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install 
 Bug-fixes and upgrades are constantly fed to the master branch and for this it is
 also advised to use `Pkg.checkout("DynamicalSystems")` after installing. This ensures
 that you get all the bug-fixes without having to wait for a formal release tag.
+
+*The [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) documentation refers to the version of the package installed with `Pkg.add()`. The [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation refers to the version under development, obtained with `Pkg.checkout("DynamicalSystems")`.*
+
 
 ## Contents
 
