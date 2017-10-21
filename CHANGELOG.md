@@ -1,4 +1,8 @@
+# v0.5.0:
 * Bugfix where `periodicorbits` was not considering `disttol` keyword.
+* Removed `rescale` argument from `lyapunov`. This is technically breaking.
+* Bugfixes in `lyapunov`.
+* Improved default parameters in `lyapunov` as well as type-stability.
 
 # v0.4.5:
 * Major bugfix in the `lyapunov` function where the time averaging was actually

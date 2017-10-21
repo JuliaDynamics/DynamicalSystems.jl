@@ -86,7 +86,7 @@ exponent
   * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
     algorithm. Should be `Int` for discrete systems.
   * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-  * `threshold = 10^3*d0` : Whenever the distance between given and test trajectory
+  * `threshold = 1e-5` : Whenever the distance between given and test trajectory
     exceeds `threshold`, the test
     trajectory is rescaled back to having distance `d0` from the given trajectory.
   * `diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0)` : (only for continuous)
@@ -98,21 +98,15 @@ exponent
   * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` :
     A function that given
     `(st1, d0)` initializes the test state with distance
-    `d0` from the given state `st1`. (`D` is the dimension
-    of the system)
-
-  * `rescale = (st2, st1, a) -> @. st1 + (st2 - st1)/a`
-
-    The function used to rescale the test state `st2`
-    close to the given state `st1`, given the ratio of distances `a`
-    between the two states
-    at the start the rescaling process and after exceeding the threshold,
-    i.e. ``a = d(t_i)/d_0``. This function can be used when you want to avoid
+    `d0` from the given state `st1` (`D` is the dimension
+    of the system). This function can be used when you want to avoid
     the test state appearing in a region of the phase-space where it would have
-    different energy or escape to infinity. Notice however, that the default
-    function is such that it rescales along the direction of maximal expansion.
-    The accuracy of the algorithm is significantly reduced if this is not the case.
+    e.g. different energy or escape to infinity.
 
+For the continuous case, the algorithm becomes faster with increasing `dt`, since
+integration is interrupted less frequenty. For the fastest performance you want to
+fine-tune `dt, d0, threshold` such that you have the minimum amount of rescalings
+but you want to still be well within the linearized dynamics region.
 
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
@@ -121,32 +115,31 @@ function lyapunov(ds::DiscreteDS,
                   return_convergence::Type{Val{B}} = Val{false};
                   Ttr::Int = 0,
                   d0=1e-9,
-                  threshold=10^3*d0,
-                  inittest = inittest_default(dimension(ds)),
-                  rescale = rescale_default
+                  threshold=1e-5,
+                  inittest = inittest_default(dimension(ds))
                   ) where {B}
 
     threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
     eom = ds.eom
     st1 = deepcopy(ds.state)
+    st2 = inittest(st1, d0)
 
     # transient system evolution
     for i in 1:Ttr
         st1 = eom(st1)
     end
 
-    λts, ts = _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
-
     if B
+        λts, ts = _lyapunov_full(eom, st1, st2, N, d0, threshold)
         return λts, ts
     else
-        return λts[end]
+        λ = _lyapunov_final(eom, st1, st2, N, d0, threshold)
+        return λ
     end
 end
 
-function _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
-    st2 = inittest(st1, d0)
-    dist = ad0 = norm(st2 - st1)
+function _lyapunov_full(eom, st1, st2, N, d0, threshold)
+    dist = d0
     λ = zero(eltype(st1))
     λs = eltype(st1)[]
     ts = Int[]
@@ -161,21 +154,42 @@ function _lyapunov(eom, st1, N, d0, threshold, rescale, inittest)
             i>=N && break
         end
         # local lyapunov exponent is simply the relative distance of the trajectories
-        a = dist/ad0
+        a = dist/d0
         λ += log(a)
         push!(λs, λ/i)
         push!(ts, i)
         i>=N && break
         #rescale:
-        st2 = rescale(st2, st1, a)
-        dist = ad0 = norm(st2-st1)
+        st2 = st1 + (st2 - st1)/a #must rescale in direction of difference
+        dist = d0
     end
-    push!(λs, λ/i)
-    push!(ts, i)
     return λs, ts
 end
 
-rescale_default = (st2, st1, a) -> @. st1 + (st2 - st1)/a
+function _lyapunov_final(eom, st1, st2, N, d0, threshold)
+    dist = d0
+    λ = zero(eltype(st1))
+    i = 0
+    while i < N
+        #evolve until rescaling:
+        while dist < threshold
+            st1 = eom(st1)
+            st2 = eom(st2)
+            dist = norm(st1 - st2)
+            i+=1
+            i>=N && break
+        end
+        # local lyapunov exponent is simply the relative distance of the trajectories
+        a = dist/d0
+        λ += log(a)
+        i>=N && break
+        #rescale:
+        st2 = st1 + (st2 - st1)/a #must rescale in direction of difference
+        dist = d0
+    end
+    return λ/i
+end
+
 inittest_default(D) = (state1, d0) -> state1 .+ d0/sqrt(D)
 
 function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
@@ -266,11 +280,10 @@ function lyapunov(ds::ContinuousDynamicalSystem,
                   return_convergence::Type{Val{B}} = Val{false};
                   Ttr = 0.0,
                   d0=1e-9,
-                  threshold=10^3*d0,
-                  dt = 0.1,
+                  threshold=1e-5,
+                  dt = 1.0,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
                   inittest = inittest_default(dimension(ds)),
-                  rescale = rescale_default
                   ) where {B}
 
     check_tolerances(d0, diff_eq_kwargs)
@@ -279,10 +292,6 @@ function lyapunov(ds::ContinuousDynamicalSystem,
 
     # Transient system evolution
     Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-
-    # initialize:
-    integ1 = ODEIntegrator(ds, T; diff_eq_kwargs=diff_eq_kwargs)
-    integ1.opts.advance_to_tstop=true
 
     # Create a copy integrator with different state
     # (workaround for https://github.com/JuliaDiffEq/DiffEqBase.jl/issues/58)
@@ -295,68 +304,100 @@ function lyapunov(ds::ContinuousDynamicalSystem,
     integ2.opts.advance_to_tstop=true
     ds.state .= st1
 
-    λts, ts = lyapunov(integ1, integ2, T;
-    d0=d0, threshold=threshold, dt=dt, rescale = rescale)
-
     if B
+        λts::Vector{Float64}, ts::Vector{Float64} =
+        lyapunov_full(integ1, integ2, T, d0=d0, threshold, dt, diff_eq_kwargs)
         return λts, ts
     else
-        return λts[end]
+        λ::Float64 =
+        lyapunov_final(integ1, integ2, T, d0, threshold, dt, diff_eq_kwargs)
+        return λ
     end
 end
 
-function lyapunov(integ1::ODEIntegrator,
+function lyapunov_full(integ1::ODEIntegrator,
                   integ2::ODEIntegrator,
-                  T::Real;
+                  T::Real,
                   d0=1e-9,
-                  threshold=10^3*d0,
+                  threshold=1e-5,
                   dt = 0.1,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
-                  rescale = rescale_default
                   )
 
-    dist = ad0 = norm(integ1.u .- integ2.u)
-    λ = zero(eltype(integ1.u))
-    λ_ts = Vector{eltype(integ1.u)}(0)   # the timeseries for the Lyapunov exponent
-    ts = Vector{eltype(T)}(0)            # the time points of the timeseries
+    dist = d0
+    λ::Float64 = 0.0
+    λ_ts::Vector{Float64} = [0.0]  # the timeseries for the Lyapunov exponent
+    ts::Vector{Float64} = [0.0]    # the time points of the timeseries
     i = 0;
     tvector = dt:dt:T
 
     # start evolution and rescaling:
     for τ in tvector
         # evolve until rescaling:
-        push!(integ1.opts.tstops, τ); step!(integ1)
-        push!(integ2.opts.tstops, τ); step!(integ2)
+        push!(integ1.opts.tstops, τ)
+        step!(integ1)
+        push!(integ2.opts.tstops, τ)
+        step!(integ2)
         dist = norm(integ1.u .- integ2.u)
-        i += 1
         # Rescale:
         if dist ≥ threshold
             # add computed scale to accumulator (scale = local lyaponov exponent):
-            a = dist/ad0
-            # Warning message for bad decision of `thershold` or `d0`:
-            if a > threshold/ad0 && i ≤ 1
-                warnstr = "Distance between test and original trajectory "
-                warnstr*= "exceeded threshold after just 1 evolution step. "
-                warnstr*= "Please decrease `dt`, increase `threshold` or decrease `d0`."
-                warn(warnstr)
-                errorstr = "Bad parameters choosen for `lyapunov` with "
-                errorstr*= "`ContinuousDynamicalSystem`."
-                throw(ArgumentError(errorstr))
-            end
-            λ += log(a); i = 0
+            a = dist/d0
+            λ += log(a)
             push!(λ_ts, λ/τ)
             push!(ts, τ)
             # Rescale and reset everything:
-            integ2.u .= rescale(integ2.u, integ1.u, a)
-            # integ2.u = @. integ1.u + (integ2.u - integ1.u)/a
+            # Must rescale towards difference direction:
+            @. integ2.u = integ1.u + (integ2.u - integ1.u)/a
             u_modified!(integ2, true)
             set_proposed_dt!(integ2, integ1)
-            # user-defined `rescale` may not give distance exactly d0
-            dist = ad0 = norm(integ1.u .- integ2.u)
+            dist = d0
         end
     end
     λ_ts, ts
 end
+
+function lyapunov_final(integ1::ODEIntegrator,
+                  integ2::ODEIntegrator,
+                  T::Real,
+                  d0=1e-9,
+                  threshold=10^5*d0,
+                  dt = 0.1,
+                  diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
+                  )
+
+    dist = d0
+    λ::Float64 = 0.0
+    i = 0;
+    tvector = dt:dt:T
+    finalτ = dt
+
+    # start evolution and rescaling:
+    for τ in tvector
+        # evolve until rescaling:
+        push!(integ1.opts.tstops, τ)
+        step!(integ1)
+        push!(integ2.opts.tstops, τ)
+        step!(integ2)
+        dist = norm(integ1.u .- integ2.u)
+        # Rescale:
+        if dist ≥ threshold
+            # add computed scale to accumulator (scale = local lyaponov exponent):
+            a = dist/d0
+            λ += log(a)
+            finalτ = τ
+            # Rescale and reset everything:
+            # Must rescale towards difference direction:
+            @. integ2.u = integ1.u + (integ2.u - integ1.u)/a
+            u_modified!(integ2, true)
+            set_proposed_dt!(integ2, integ1)
+            dist = d0
+        end
+    end
+    return λ/finalτ
+end
+
+
 
 
 
