@@ -306,7 +306,7 @@ function lyapunov(ds::ContinuousDynamicalSystem,
 
     if B
         λts::Vector{Float64}, ts::Vector{Float64} =
-        lyapunov_full(integ1, integ2, T, d0=d0, threshold, dt, diff_eq_kwargs)
+        lyapunov_full(integ1, integ2, T, d0, threshold, dt, diff_eq_kwargs)
         return λts, ts
     else
         λ::Float64 =
