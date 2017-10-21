@@ -115,6 +115,13 @@ function Base.reinterpret(::Type{Dataset}, mat::Array{T,2}) where {T<:Real}
     Dataset(reinterpret(SVector{D, T}, mat, (N,)))
 end
 
+function Base.convert(::Type{Dataset}, y::Vector{T}) where {T}
+    data = reinterpret(SVector{1,T}, y, (length(y),))
+    return Dataset(data)
+end
+
+
+
 ### Pretty printing
 function matstring(d::Dataset)
     N = length(d); D = dimension(d)

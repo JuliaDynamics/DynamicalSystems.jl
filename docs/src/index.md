@@ -33,6 +33,7 @@ that you get all the bug-fixes without having to wait for a formal release tag.
 
 *The [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) documentation refers to the version of the package installed with `Pkg.add()`. The [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation refers to the version under development, obtained with `Pkg.checkout("DynamicalSystems")`.*
 
+To ensure that your installation works perfectly, you can use `Pkg.test("DynamicalSystems")`.
 
 ## Contents
 

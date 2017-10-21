@@ -4,7 +4,7 @@ println("\nTesting continuous system evolution...")
 @testset "Lorenz System" begin
 
   lo11 = Systems.lorenz()
-  lo22 = ContinuousDS(lo11.state, lo11.eom!)
+  lo22 = ContinuousDS(copy(lo11.state), lo11.eom!)
   lo33 = Systems.lorenz(big.([0.0, 10.0, 0.0]))
 
   @testset "Construction" begin

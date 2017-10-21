@@ -39,15 +39,15 @@ wish to keep information about the edges of the binning as well
 as the zero elements.
 """
 function non0hist end
-@inbounds function non0hist{D, T<:Real, V}(ε::Real, data::Dataset{D, T, V})
+@inbounds function non0hist(ε::Real, data::Dataset{D, T, V}) where {D, T<:Real, V}
     # Initialize:
     mini = minima(data); maxi = maxima(data)
     ranges = [mini[i]:ε:maxi[i]+ε for i in 1:D]
     # Perform Histogram:
     perform_non0hist(data, ranges, ε)
 end
-non0hist(ε::Real, matrix::AbstractMatrix) =
-non0hist(ε, convert(Dataset, matrix))
+
+non0hist(ε::Real, matrix) = non0hist(ε, convert(Dataset, matrix))
 
 
 
@@ -89,7 +89,7 @@ function genentropy(α::Real, ε::Real, data::Dataset)
     p = non0hist(ε, data)
     return genentropy(α, p)
 end
-genentropy(α::Real, ε::Real, matrix::AbstractMatrix) =
+genentropy(α::Real, ε::Real, matrix) =
 genentropy(α, ε, convert(Dataset, matrix))
 
 function genentropy{T<:Real}(α::Real, p::AbstractArray{T})

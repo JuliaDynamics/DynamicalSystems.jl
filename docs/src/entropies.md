@@ -39,12 +39,12 @@ For example, the Shannon entropy of a coin-flip process should be one bit,
 [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
 ```julia
 using DynamicalSystems
-y = Int.(rand(Bool, 10000)) # just some coin tosses
+y = Float64.(rand(Bool, 10000)) # just some coin tosses
 sh = shannon(0.01, y)       # ≡ genentropy(1, 0.01, y)
 isapprox(sh, log(2),  rtol = 1e-3) # true!
 ```
-Because all entropies are calculated on base-e, the unit of measurement is "nat", and
-one bit is log(2)×nat.
+Because all entropies are calculated on base-$e$, the unit of measurement is "nat"
+and one bit is log(2)×nat.
 
 
 

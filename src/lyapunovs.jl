@@ -370,7 +370,7 @@ function lyapunov_final(integ1::ODEIntegrator,
                   )
 
     dist = d0
-    λ::eltype(iteg1.u) = 0.0
+    λ::eltype(integ1.u) = 0.0
     i = 0;
     tvector = dt:dt:T
     finalτ = dt
