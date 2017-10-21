@@ -287,6 +287,8 @@ function lyapunov(ds::ContinuousDynamicalSystem,
                   ) where {B}
 
     check_tolerances(d0, diff_eq_kwargs)
+    S = eltype(ds)
+
     T = convert(eltype(ds.state), T)
     threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
@@ -305,11 +307,11 @@ function lyapunov(ds::ContinuousDynamicalSystem,
     ds.state .= st1
 
     if B
-        λts::Vector{Float64}, ts::Vector{Float64} =
+        λts::Vector{S}, ts::Vector{S} =
         lyapunov_full(integ1, integ2, T, d0, threshold, dt, diff_eq_kwargs)
         return λts, ts
     else
-        λ::Float64 =
+        λ::S =
         lyapunov_final(integ1, integ2, T, d0, threshold, dt, diff_eq_kwargs)
         return λ
     end
@@ -324,10 +326,11 @@ function lyapunov_full(integ1::ODEIntegrator,
                   diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0),
                   )
 
+    S = eltype(integ1.u)
     dist = d0
-    λ::Float64 = 0.0
-    λ_ts::Vector{Float64} = [0.0]  # the timeseries for the Lyapunov exponent
-    ts::Vector{Float64} = [0.0]    # the time points of the timeseries
+    λ::S = 0.0
+    λ_ts::Vector{S} = [0.0]  # the timeseries for the Lyapunov exponent
+    ts::Vector{typeof(dt)} = [0.0]    # the time points of the timeseries
     i = 0;
     tvector = dt:dt:T
 
@@ -367,7 +370,7 @@ function lyapunov_final(integ1::ODEIntegrator,
                   )
 
     dist = d0
-    λ::Float64 = 0.0
+    λ::eltype(iteg1.u) = 0.0
     i = 0;
     tvector = dt:dt:T
     finalτ = dt

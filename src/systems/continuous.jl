@@ -37,6 +37,7 @@ end
 ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
 
 dimension(ds::ContinuousDS) = length(ds.state)
+Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = eltype(T)
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################
