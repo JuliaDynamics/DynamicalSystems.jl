@@ -35,6 +35,7 @@ that you get all the bug-fixes without having to wait for a formal release tag.
 
 To ensure that your installation works perfectly, you can use `Pkg.test("DynamicalSystems")`.
 
+
 ## Contents
 
 ### [System Definition](system_definition)
@@ -79,9 +80,9 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 ### [Nonlinear Timeseries Analysis](nlts)
 
-1. Flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a 1D timeseries efficiently.
+1. Flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
 2. Methods for estimating good `Reconstruction` parameters (delay and dimension).
-3. *Four* different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured 1-dimensional timeseries: [`numericallyapunov`](@ref).
+3. *Four* different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
 
     * Fast computation of the above algorithms made possible by the interaction of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl), multiple dispatch and smart indexing (through the `Reconstruction` abstraction).
 

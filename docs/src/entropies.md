@@ -77,11 +77,11 @@ For example, we will calculate the dimensions of the strange attractors of the
 ```julia
 using DynamicalSystems
 hen = Systems.henon(-rand(2))
-ts = timeseries(hen, 200000)
+ts = trajectory(hen, 200000)
 D_hen = information_dim(ts)
 
 lor = Systems.lorenz(rand(3))
-ts = timeseries(lor, 5000, dt = 0.05)
+ts = trajectory(lor, 5000, dt = 0.05)
 D_lor = capacity_dim(ts)
 ```
 You will find that `D_hen` is around `1.2` and `D_lor` is around `1.95`, both of which

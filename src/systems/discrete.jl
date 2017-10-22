@@ -1,6 +1,6 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, DiscreteDS1D, evolve, evolve!, timeseries, dimension
+export DiscreteDS, DiscreteDS1D, evolve, evolve!, trajectory, dimension
 
 #####################################################################################
 #                                   Constructors                                    #
@@ -74,15 +74,16 @@ dimension(::DiscreteDS1D) = 1
 Evolve a `ds` for total "time" `T` and return the `final_state` (does not change
 `ds.state`).
 For discrete systems `T` corresponds to steps and
-thus it must be integer. See `timeseries` for using `diff_eq_kwargs`.
+thus it must be integer. See [`trajectory`](@ref) for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
-Use `timeseries` if you want to produce timeseries of the system. If you want to
+Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
+If you want to
 perform step-by-step evolution of a continuous system, use
 `ODEIntegrator(ds, t_final)` and
 the `step!(integrator)` function provided by `DifferentialEquations`.
 
-See also `evolve!`.
+See also [`evolve!`](@ref).
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state
@@ -98,16 +99,16 @@ end
 Evolve (in-place) a dynamical system for total "time" `T`, setting the final
 state as the system's state.
 For discrete systems `T` corresponds to steps and
-thus it must be integer. See `timeseries` for using `diff_eq_kwargs`.
-See `timeseries` for using `diff_eq_kwargs`.
+thus it must be integer. See [`trajectory`](@ref) for using `diff_eq_kwargs`.
 
 This function *does not store* any information about intermediate steps.
-Use `timeseries` if you want to produce timeseries of the system. If you want to
+Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
+If you want to
 perform step-by-step evolution of a continuous system, use
 `ODEIntegrator(ds, t_final)` and
 the `step!(integrator)` function provided by `DifferentialEquations`.
 
-See also `evolve`.
+See also [`evolve`](@ref).
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state
@@ -118,10 +119,10 @@ end
 
 """
 ```julia
-timeseries(ds::DynamicalSystem, T; kwargs...) -> dataset
+trajectory(ds::DynamicalSystem, T; kwargs...) -> dataset
 ```
-Return a dataset what will contain the timeseries of the sytem,
-after evolving it for time `T`. See `Dataset` for info on how to
+Return a dataset what will contain the trajectory of the sytem,
+after evolving it for time `T`. See [`Dataset`](@ref) for info on how to
 manipulate this object.
 
 For the discrete case, `T` is an integer and a `T×D` dataset is returned
@@ -139,7 +140,7 @@ continuous case, a `W×D` dataset is returned, with `W = length(0:dt:T)` with
   `Dict(:solver => DP5(), :maxiters => 1e9)`. This requires you to have been first
   `using OrdinaryDiffEq` to access the solvers.
 """
-function timeseries(ds::DiscreteDS, N::Real)
+function trajectory(ds::DiscreteDS, N::Real)
     st = ds.state
     ts = [st]
     f = ds.eom
@@ -150,7 +151,7 @@ function timeseries(ds::DiscreteDS, N::Real)
     return Dataset(ts)
 end
 
-function timeseries(ds::DiscreteDS1D, N::Int)
+function trajectory(ds::DiscreteDS1D, N::Int)
     x = deepcopy(ds.state)
     f = ds.eom
     ts = Vector{typeof(x)}(N)

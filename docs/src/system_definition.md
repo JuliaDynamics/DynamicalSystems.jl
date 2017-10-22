@@ -12,6 +12,22 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
     This additional variable will serve as
     the "time" in your equations of motion.
 
+!!! info "Trajectory and Timeseries"
+    The word "timeseries" can be very confusing, because it can mean a one-dimensional
+    timeseries or a multi-dimensional timeseries. To resolve this confusion, in
+    `DynamicalSystems.jl` we have the following convention: **"timeseries"** always
+    refers to a one-dimensional vector of numbers, which exists with respect to
+    some other one-dimensional vector of numbers that corresponds to a time-vector.
+    On the other hand,
+    the word **"trajectory"** is used to refer to a *multi-dimensional* timeseries,
+    which is of course simply a group/set of one-dimensional timeseries.
+
+    Note that the data representation of a "trajectory" in Julia may vary: from
+    a 2D Matrix to independent Vectors. In our package, a trajectory is always
+    represented using a [`Dataset`](@ref), which is a `Vector` of `SVector`s, and
+    each `SVector` represents a data-point (the values of the variables at a given
+    time-point).
+
 
 ## Discrete Systems
 Discrete systems are of the form:
@@ -73,9 +89,9 @@ using `ForwardDiff.jl`.
 
 ## Continuous Systems
 Continuous systems of the form
-$$
+```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
-$$
+```
 are defined in a similar manner with the discrete systems:
 ```@docs
 ContinuousDS
@@ -125,7 +141,7 @@ These are the functions related to system-evolution:
 ```@docs
 evolve
 evolve!
-timeseries
+trajectory
 ```
 ---
 In addition, interfaces are provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
@@ -147,16 +163,17 @@ cases where the all inner vectors are of equal size.
 However, it
 is visually represented as a matrix, similarly to how numerical data would be printed
 on a spreadsheet (with time being the *column* direction). It also offers a lot more
-functionality and pretty-printing. Besides the examples in the documentation string,
+functionality than just pretty-printing.
+Besides the examples in the documentation string,
 you can also do:
 ```julia
-data = timeseries(hen, 10000)
+data = trajectory(hen, 10000)
 for point in data
 # do stuff with each datapoint (vector with as many elements as system dimension)
 end
 ```
 
-All functions that manipulate and use data are expecting a `Dataset` instance. If given
+All functions of our package that manipulate and use data are expecting a `Dataset` instance. If given
 a matrix, they will first convert to `Dataset`. This means that you should first
 convert your data to a `Dataset` if you want to call functions more than once, to avoid
 constantly converting.
@@ -167,7 +184,7 @@ like:
 ```julia
 using DynamicalSystems
 ds = Systems.lorenz(ρ = 32.0)
-ts = timeseries(ds, 10.0)
+ts = trajectory(ds, 10.0)
 ```
 
 All of these functions have very similar documentation strings:

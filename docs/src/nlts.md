@@ -1,6 +1,6 @@
 # Nonlinear Timeseries Analysis
 ## Delay Coordinates Reconstruction
-A mono-dimensional timeseries recorded in some manner from a dynamcal system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is
+A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is
 what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem).
 
 In `DynamicalSystems.jl` this is done through the `reconstruct` interface:
@@ -14,7 +14,7 @@ attractor dimension:
 ```julia
 using DynamicalSystems
 he = Systems.henon()
-ts = timeseries(he, 100000)
+ts = trajectory(he, 100000)
 D1 = information_dim(ts) # around 1.20
 x = ts[:, 1] # some "recorded" timeseries
 R = reconstruct(x, 2, 1) # delay coords. reconstruction of dimension 2 and delay 1
@@ -60,7 +60,7 @@ As you can see, the function `neighborhood` is generally applicable!
 using DynamicalSystems, PyPlot
 
 ds = Systems.henon()
-data = timeseries(ds, 100000)
+data = trajectory(ds, 100000)
 x = data[:, 1]
 
 ks = 1:20
@@ -102,7 +102,7 @@ which gives the result
 Let's revisit the example of the previous section:
 ```julia
 ds = Systems.henon()
-data = timeseries(ds, 100000)
+data = trajectory(ds, 100000)
 x = data[:, 1]
 ```
 The timeseries of length 100000 could be considered big. A time length of 100 seems
@@ -136,7 +136,7 @@ using DynamicalSystems, PyPlot
 ds = Systems.lorenz() # Max lyapunov is around 0.90
 # create a timeseries of 1 dimension
 dt = 0.05
-x = timeseries(ds, 1000.0; dt = dt)[:, 1]
+x = trajectory(ds, 1000.0; dt = dt)[:, 1]
 
 τ1 = estimate_delay(x) #gives 7
 

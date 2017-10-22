@@ -33,17 +33,23 @@ Base.append!(d1::AbstractDataset, d2::AbstractDataset) = append!(d1.data, d2.dat
 
 """
     Dataset{D, T} <: AbstractDataset{D}
-A `Dataset` is an interface for vectors of vectors, originally inspired by
-[RecursiveArrayTools.jl](https://github.com/JuliaDiffEq/RecursiveArrayTools.jl).
+A dedicated interface for datasets, i.e. vectors of vectors.
 It contains **equally-sized datapoints** of length `D`,
 represented by `SVector{D, T}`, containing numbers of type `T`.
 
-This data representation is more efficient than having a `Matrix` and also leads
+`Dataset` has methods for iterating, `convert`, `push!`, `append!` and other
+basic functions.
+
+The internal data representation is more efficient than having a `Matrix` and
+also leads
 to faster numerical computation of other quantities (like e.g. entropies). However,
 it can be used exactly like a matrix that has each of the columns be the
-timeseries of each of the dynamic variables. For example,
+timeseries of each of the dynamic variables. [`trajectory`](@ref) always returns
+a `Dataset`.
+
+For example,
 ```julia
-data = timeseries(ds, 100.0) #this gives a dataset that behaves like a matrix
+data = trajectory(ds, 100.0) #this gives a dataset that behaves like a matrix
 data[:, 2] # this is the second variable timeseries
 data[1] == data[1, :] # this is the first datapoint of the dataset (D-dimensional)
 data[5, 3] # this is the value of the third variable, at the 5th timepoint
@@ -55,7 +61,7 @@ that each column of the matrix represents one dynamic variable. If instead each
 column of the matrix represents a datapoint, use `reinterpret(Dataset, matrix)`.
 
 If you have various timeseries vectors `x, y, z, ...` pass them like
-`Dataset(x, y, z, ...)`.`
+`Dataset(x, y, z, ...)`.
 """
 struct Dataset{D, T<:Number} <: AbstractDataset{D}
     data::Vector{SVector{D,T}}
@@ -63,12 +69,13 @@ end
 
 function Dataset(v::Vector{Vector{T}}) where {T<:Number}
     D = length(v[1])
-    data = SVector{D, T}[]
+    L = length(v)
+    data = Vector{SVector{3,Float64}}(L)
     for i in 1:length(v)
         D != length(v[i]) && throw(ArgumentError(
         "All data-points in a Dataset must have same size"
         ))
-        push!(data, SVector{D,T}(v[i]))
+        data[i] = SVector{D,T}(v[i])
     end
     return Dataset{D, T}(data)
 end

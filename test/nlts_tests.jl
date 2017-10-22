@@ -6,7 +6,7 @@ test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax
 println("\nTesting delay coordinates reconstruction...")
 @testset "Henon Reconstruction" begin
     ds = Systems.henon()
-    data = timeseries(ds, 100000)
+    data = trajectory(ds, 100000)
     x = data[:, 1] # some "recorded" timeseries
     @testset "Sizes" begin
         for τ in [1, 2, 7]

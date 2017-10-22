@@ -1,3 +1,11 @@
+# v0.6.0:
+* Many minor bugfixes and many corrections to the documentation examples.
+* `Dataset` now always converts the input into vector of `SVectors` for better
+  interaction with NearestNeighbors.jl
+* **[BREAKING]** : `timeseries` function was renamed to `trajectory`.
+    * Now the documentation is clear: `trajectory` means a set of one-dimensional
+      timeseries (or a *multi-dimensional* timeseries), while `timeseries` always means a one-dimensional timeseries
+
 # v0.5.0:
 * Bugfix where `periodicorbits` was not considering `disttol` keyword.
 * Removed `rescale` argument from `lyapunov`. This is technically breaking.
