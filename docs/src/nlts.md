@@ -29,7 +29,7 @@ The 2 numbers `D1` and `D2` are **very close**, but of course I knew before-hand
 ## Estimating Reconstruction Parameters
 The following functions are provided estimate good values that can be used in
 [`reconstruct`](@ref):
-```
+```@docs
 estimate_delay
 ```
 
