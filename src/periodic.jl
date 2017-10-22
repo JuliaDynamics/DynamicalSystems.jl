@@ -188,11 +188,11 @@ end
 function _plot_phasespace(ds; xs = linspace(0, 2π, 20), ys = linspace(0, 2π, 20),
     maxiters = 1000)
     f = ds.eom
-    dataset = timeseries(ds, maxiters)
+    dataset = trajectory(ds, maxiters)
     for x in xs
         for y in ys
             ds.state = SVector{2}(x, y)
-            append!(dataset, timeseries(ds, maxiters))
+            append!(dataset, trajectory(ds, maxiters))
         end
     end
     m = Matrix(dataset)

@@ -36,7 +36,7 @@ end
 min_pairwise_distance(d::Dataset) = min_pairwise_distance(d.data)
 
 function min_pairwise_distance(
-    pts::Union{Vector{Vector{T}}, Vector{SVector{D,T}}}) where {D,T<:Real}
+    pts::Vector{SVector{D,T}}) where {D,T<:Real}
     tree = KDTree(pts)
     min_d = eltype(pts[1])(Inf)
     min_pair = (0, 0)

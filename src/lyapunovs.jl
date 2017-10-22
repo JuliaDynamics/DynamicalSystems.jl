@@ -18,7 +18,7 @@ values of the lyapunov exponents in descending order.
   between sucessive orthonormalization steps.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
-  `DifferentialEquations` package (see `timeseries` for more info).
+  `DifferentialEquations` package (see [`trajectory`](@ref) for more info).
 
 [1] : A. M. Lyapunov, *The General Problem of the Stability of Motion*,
 Taylor & Francis (1992)
@@ -91,7 +91,7 @@ exponent
     trajectory is rescaled back to having distance `d0` from the given trajectory.
   * `diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0)` : (only for continuous)
     Keyword arguments passed into the solvers of the
-    `DifferentialEquations` package (see `timeseries` for more info).
+    `DifferentialEquations` package (see [`trajectory`](@ref) for more info).
   * `dt = 0.1` : (only for continuous) Time of evolution between each check of
     distance exceeding the `threshold`.
 
@@ -329,7 +329,7 @@ function lyapunov_full(integ1::ODEIntegrator,
     S = eltype(integ1.u)
     dist = d0
     λ::S = 0.0
-    λ_ts::Vector{S} = [0.0]  # the timeseries for the Lyapunov exponent
+    λ_ts::Vector{S} = [0.0]  # the traject for the Lyapunov exponent
     ts::Vector{typeof(dt)} = [0.0]    # the time points of the timeseries
     i = 0;
     tvector = dt:dt:T

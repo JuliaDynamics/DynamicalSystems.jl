@@ -149,8 +149,8 @@ Return a `k`-element `logspace` from the magnitude + `z` of the biggest absolute
 value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
-function estimate_boxsizes(data::Dataset{D, T, V};
-    k::Int = 12, z = 0, w = 2) where {D, T<:Number, V}
+function estimate_boxsizes(data::Dataset{D, T};
+    k::Int = 12, z = 0, w = 2) where {D, T<:Number}
 
     mindist = min_pairwise_distance(data)[2]
     maxv = -Inf

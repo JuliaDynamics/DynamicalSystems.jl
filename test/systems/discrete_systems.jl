@@ -7,15 +7,15 @@ using StaticArrays, Base.Test, DynamicalSystems
   d2 = DiscreteDS1D(0.1, d1.eom)
   d3 = DiscreteDS1D(big(0.1), d1.eom, d1.deriv)
 
-  @testset "Evolution & Timeseries" begin
+  @testset "Evolution & trajectory" begin
     st1 = evolve!(d1)
     st2 = evolve!(d2)
     st3 = evolve!(d3)
     @test st1 == st2
     @test st1 ≈ st3
     @test typeof(st3) == BigFloat
-    ts1 = timeseries(d1, 100)
-    ts3 = timeseries(d3, 100)
+    ts1 = trajectory(d1, 100)
+    ts3 = trajectory(d3, 100)
     @test ts1[10] ≈ ts3[10]
     @test eltype(ts3) == BigFloat
   end
@@ -35,7 +35,7 @@ end
   s2 = DiscreteDS(0.1ones(3), s1.eom)
   s4 = DiscreteDS(round.(big.(0.1ones(3)),3), s1.eom, s1.jacob)
 
-  @testset "Evolution & Timeseries" begin
+  @testset "Evolution & trajectory" begin
     st1 = evolve(s1)
     st2 = evolve(s2)
     st4 = evolve(s4)
@@ -47,9 +47,9 @@ end
     @test s1.state ≈ s2.state
     @test s2.state ≈ s4.state
 
-    ts = timeseries(s1, 100)
+    ts = trajectory(s1, 100)
     @test size(ts) == (100, 3)
-    ts4 = timeseries(s4, 100)
+    ts4 = trajectory(s4, 100)
     @test size(ts4) == (100, 3)
     @test eltype(ts4) == BigFloat
     @test isapprox.(ts[10, :],ts4[10, :]) == trues(3)

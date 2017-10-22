@@ -32,18 +32,24 @@ Base.append!(d1::AbstractDataset, d2::AbstractDataset) = append!(d1.data, d2.dat
 @inline dimension(::AbstractDataset{D}) where {D} = D
 
 """
-    Dataset{D, T, V} <: AbstractDataset{D}
-A `Dataset` is an interface for vectors of vectors, originally inspired by
-[RecursiveArrayTools.jl](https://github.com/JuliaDiffEq/RecursiveArrayTools.jl).
+    Dataset{D, T} <: AbstractDataset{D}
+A dedicated interface for datasets, i.e. vectors of vectors.
 It contains **equally-sized datapoints** of length `D`,
-represented by vectors of type `V`, containing numbers of type `T`.
+represented by `SVector{D, T}`, containing numbers of type `T`.
 
-This data representation is more efficient than having a `Matrix` and also leads
+`Dataset` has methods for iterating, `convert`, `push!`, `append!` and other
+basic functions.
+
+The internal data representation is more efficient than having a `Matrix` and
+also leads
 to faster numerical computation of other quantities (like e.g. entropies). However,
 it can be used exactly like a matrix that has each of the columns be the
-timeseries of each of the dynamic variables. For example,
+timeseries of each of the dynamic variables. [`trajectory`](@ref) always returns
+a `Dataset`.
+
+For example,
 ```julia
-data = timeseries(ds, 100.0) #this gives a dataset that behaves like a matrix
+data = trajectory(ds, 100.0) #this gives a dataset that behaves like a matrix
 data[:, 2] # this is the second variable timeseries
 data[1] == data[1, :] # this is the first datapoint of the dataset (D-dimensional)
 data[5, 3] # this is the value of the third variable, at the 5th timepoint
@@ -55,21 +61,23 @@ that each column of the matrix represents one dynamic variable. If instead each
 column of the matrix represents a datapoint, use `reinterpret(Dataset, matrix)`.
 
 If you have various timeseries vectors `x, y, z, ...` pass them like
-`Dataset(x, y, z, ...)`.`
+`Dataset(x, y, z, ...)`.
 """
-struct Dataset{
-    D, T<:Number, V<:Union{Vector{T}, SVector{D,T}}} <: AbstractDataset{D}
-    data::Vector{V}
+struct Dataset{D, T<:Number} <: AbstractDataset{D}
+    data::Vector{SVector{D,T}}
 end
-Dataset(v::Vector{SVector{D,T}}) where {D, T<:Number} = Dataset{D, T, SVector{D,T}}(v)
+
 function Dataset(v::Vector{Vector{T}}) where {T<:Number}
     D = length(v[1])
+    L = length(v)
+    data = Vector{SVector{3,Float64}}(L)
     for i in 1:length(v)
         D != length(v[i]) && throw(ArgumentError(
         "All data-points in a Dataset must have same size"
         ))
+        data[i] = SVector{D,T}(v[i])
     end
-    return Dataset{D, T, Vector{T}}(v)
+    return Dataset{D, T}(data)
 end
 
 function Dataset(vecs::Vararg{Vector{T}}) where {T<:Real}
@@ -88,11 +96,10 @@ function Dataset(vecs::Vararg{Vector{T}}) where {T<:Real}
     return Dataset(data)
 end
 
-@inline Base.eltype{D, T, V}(d::Dataset{D, T, V}) = T
-@inline vectype{D, T, V}(::Dataset{D, T, V}) = V
+@inline Base.eltype(d::Dataset{D, T}) where {D,T} = T
 
 # Conversions:
-function Base.convert{D, T}(::Type{Matrix}, d::Dataset{D,T})
+function Base.convert(::Type{Matrix}, d::Dataset{D,T}) where {D, T}
   mat = Matrix{T}(length(d), D)
   for i in 1:length(d)
     mat[i,:] .= d.data[i]
@@ -140,14 +147,14 @@ function matstring(d::Dataset)
 end
 
 @require Juno begin
-    function Juno.render(i::Juno.Inline, d::Dataset{D, T, V}) where {D, T, V}
+    function Juno.render(i::Juno.Inline, d::Dataset{D, T}) where {D, T}
     N = length(d)
     tos = matstring(d)
     Juno.render(Juno.Tree(Text(tos), []))
     end
 end
 
-function Base.show(io::IO, d::Dataset{D, T, V}) where {D, T, V}
+function Base.show(io::IO, d::Dataset{D, T}) where {D, T}
     mat = convert(Matrix, d)
     n = length(d)
     s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
@@ -160,7 +167,7 @@ end
 #####################################################################################
 #                                 Minima and Maxima                                 #
 #####################################################################################
-function minima(data::Dataset{D, T, V}) where {D, T<:Real, V}
+function minima(data::Dataset{D, T}) where {D, T<:Real}
     m = zeros(T, D) .+ T(Inf)
     for point in data
         for i in 1:D
@@ -172,7 +179,7 @@ function minima(data::Dataset{D, T, V}) where {D, T<:Real, V}
     return SVector{D,T}(m)
 end
 
-function maxima(data::Dataset{D, T, V}) where {D, T<:Real, V}
+function maxima(data::Dataset{D, T}) where {D, T<:Real}
     m = zeros(T, D) .+ T(-Inf)
     for point in data
         for i in 1:D

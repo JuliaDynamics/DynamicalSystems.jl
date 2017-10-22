@@ -114,7 +114,7 @@ function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
 end
 
 # See discrete.jl for the documentation string
-function timeseries(ds::ContinuousDS, T::Real;
+function trajectory(ds::ContinuousDS, T::Real;
     dt::Real=0.05, diff_eq_kwargs = Dict())
 
     # Necessary due to DifferentialEquations:

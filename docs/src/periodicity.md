@@ -50,11 +50,11 @@ println("Total time: $((time() - ttt)/60) mins.")
 
 # Create phase-space plot:
 iters = 1000
-dataset = timeseries(ds, iters)
+dataset = trajectory(ds, iters)
 for x in xs
     for y in ys
         ds.state = SVector{2}(x, y)
-        append!(dataset, timeseries(ds, iters))
+        append!(dataset, trajectory(ds, iters))
     end
 end
 m = Matrix(dataset)

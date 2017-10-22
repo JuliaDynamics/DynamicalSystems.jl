@@ -30,17 +30,17 @@ println("\nTesting continuous system evolution...")
     @test lo11.state ≈ lo33.state
   end
 
-  @testset "Timeseries" begin
-    # timeseries pure:
-    ts1 = timeseries(lo11, 2.0)
-    ts3 = timeseries(lo33, 2.0)
+  @testset "trajectory" begin
+    # trajectory pure:
+    ts1 = trajectory(lo11, 2.0)
+    ts3 = trajectory(lo33, 2.0)
     @test eltype(ts3[1]) == BigFloat
     @test size(ts1) == size(ts3)
     @test ts1[end, :] ≈ ts3[end,:]
-    # timeseries with diff_eq_kwargs and dt:
-    ts1 = timeseries(lo11, 2.0; dt=0.1,
+    # trajectory with diff_eq_kwargs and dt:
+    ts1 = trajectory(lo11, 2.0; dt=0.1,
     diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-    ts3 = timeseries(lo33, 2.0; dt=0.1,
+    ts3 = trajectory(lo33, 2.0; dt=0.1,
     diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
     @test size(ts1) == size(ts3)
     @test ts1[end, :] ≈ ts3[end,:]

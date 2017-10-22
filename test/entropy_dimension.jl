@@ -6,7 +6,7 @@ println("\nTesting generalized entropy (renyi) & linear scaling...")
 @testset "Generalized Dimensions" begin
   @testset "Henon Map" begin
     ds = Systems.henon()
-    ts = timeseries(ds, 200000)
+    ts = trajectory(ds, 200000)
     mat = convert(Matrix, ts)
     # Test call with dataset
     renyi(1, 0.001, ts)
@@ -22,7 +22,7 @@ println("\nTesting generalized entropy (renyi) & linear scaling...")
   end
   @testset "Lorenz System" begin
     ds = Systems.lorenz()
-    ts = timeseries(ds, 5000)
+    ts = trajectory(ds, 5000)
     es = logspace(1, -3, 11)
     dd = zeros(es)
     for q in [0,1,2]
@@ -42,7 +42,7 @@ end
 println("\nTesting dimension calls (all names)...")
 @testset "Dimension calls" begin
   ds = Systems.henon()
-  ts = timeseries(ds, 20000)
+  ts = trajectory(ds, 20000)
   # Test call with dataset
   test_value(generalized_dim(1.32, ts), 1.1, 1.3)
   test_value(capacity_dim(ts), 1.1, 1.3)
