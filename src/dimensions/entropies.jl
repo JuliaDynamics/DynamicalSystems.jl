@@ -1,7 +1,7 @@
 export non0hist, genentropy, renyi, shannon, hartley
 
 @inbounds function perform_non0hist(
-    data::Dataset{D,T, V}, ranges, ε) where {D, T<:Real, V}
+    data::Dataset{D, T}, ranges, ε) where {D, T<:Real}
     L = length(data)
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indices and the values are the amount of
@@ -39,7 +39,7 @@ wish to keep information about the edges of the binning as well
 as the zero elements.
 """
 function non0hist end
-@inbounds function non0hist(ε::Real, data::Dataset{D, T, V}) where {D, T<:Real, V}
+@inbounds function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
     # Initialize:
     mini = minima(data); maxi = maxima(data)
     ranges = [mini[i]:ε:maxi[i]+ε for i in 1:D]
@@ -69,7 +69,7 @@ R_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
 ```
 generalizes other known entropies,
 like e.g. the information entropy
-(``\\alpha = 1``, see *the* Shannon paper [2]), the maximum entropy (``\\alpha=0``,
+(``\\alpha = 1``, see [2]), the maximum entropy (``\\alpha=0``,
 also known as Hartley entropy), or the correlation entropy
 (``\\alpha = 2``, also known as collision entropy).
 
