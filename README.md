@@ -13,9 +13,8 @@ See the [documentation](https://JuliaDynamics.github.io/DynamicalSystems.jl/late
 ## Installation
 This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
 
-Bug-fixes and upgrades are constantly fed to the master branch and for this it is
-also advised to use `Pkg.checkout("DynamicalSystems")` after installing. This ensures
-that you get all the bug-fixes without having to wait for a formal release tag.
+Bug-fixes and upgrades are constantly fed to the master branch, which accessed with `Pkg.checkout("DynamicalSystems")` after installing. On the other hand the master
+branch may also have breaking changes and therefore caution is advised!
 
 ## Contents
 This is the (non-final) list of what this package offers:

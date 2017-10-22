@@ -27,9 +27,8 @@ accurate lower bound of users that this package has already helped!
 ## Installation
 This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
 
-Bug-fixes and upgrades are constantly fed to the master branch and for this it is
-also advised to use `Pkg.checkout("DynamicalSystems")` after installing. This ensures
-that you get all the bug-fixes without having to wait for a formal release tag.
+Bug-fixes and upgrades are constantly fed to the master branch, which accessed with `Pkg.checkout("DynamicalSystems")` after installing. On the other hand the master
+branch may also have breaking changes and therefore caution is advised!
 
 *The [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) documentation refers to the version of the package installed with `Pkg.add()`. The [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation refers to the version under development, obtained with `Pkg.checkout("DynamicalSystems")`.*
 
