@@ -70,7 +70,7 @@ end
 function Dataset(v::Vector{Vector{T}}) where {T<:Number}
     D = length(v[1])
     L = length(v)
-    data = Vector{SVector{3,Float64}}(L)
+    data = Vector{SVector{D, T}}(L)
     for i in 1:length(v)
         D != length(v[i]) && throw(ArgumentError(
         "All data-points in a Dataset must have same size"
@@ -109,9 +109,10 @@ end
 
 function Base.convert(::Type{Dataset}, mat::AbstractMatrix)
     D = size(mat, 2); T = eltype(mat)
-    d = SVector{D, T}[]
-    for i in 1:size(mat, 1)
-        push!(d, SVector{D, T}(view(mat, i, :)))
+    L = size(mat, 1)
+    d = Vector{SVector{D, T}}(L)
+    for i in 1:L
+        d[i] = SVector{D, T}(view(mat, i, :))
     end
     return Dataset(d)
 end

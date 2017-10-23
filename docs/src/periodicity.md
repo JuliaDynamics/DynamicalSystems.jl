@@ -22,7 +22,7 @@ For example, let's find the fixed points of the [Standard Map](system_definition
 and 8. We will use all permutations for the `signs` but only one for the `inds`.
 We will also only use one `λ` value, and a 21×21 density of initial conditions:
 ```julia
-using DynamicalSystems, PyPlot
+using DynamicalSystems, PyPlot, StaticArrays
 
 ds = Systems.standardmap()
 xs = linspace(0, 2π, 21); ys = copy(xs)

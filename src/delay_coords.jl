@@ -54,9 +54,10 @@ end
 end
 # Conversions:
 @inbounds function Dataset(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ}
-    data = SVector{D, T}[]
-    for i in 1:length(R)
-        push!(data, R[i])
+    L = length(R)
+    data = Vector{SVector{D, T}}(L)
+    for i in 1:L
+        data[i] = R[i]
     end
     return Dataset(data)
 end
