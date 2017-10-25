@@ -5,6 +5,8 @@
 * **[BREAKING]** : `timeseries` function was renamed to `trajectory`.
     * Now the documentation is clear: `trajectory` means a set of one-dimensional
       timeseries (or a *multi-dimensional* timeseries), while `timeseries` always means a one-dimensional timeseries
+* Removed function `perform_non0hist`, as it had no reason to exist.
+
 
 # v0.5.0:
 * Bugfix where `periodicorbits` was not considering `disttol` keyword.

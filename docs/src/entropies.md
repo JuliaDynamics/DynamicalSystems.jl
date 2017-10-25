@@ -24,27 +24,25 @@ partition it into boxes to calculate an entropy.
     However, in this specific case the partition process has some special aspects
     that can be taken advantage
     of, reducing tremendously the memory allocation and spent time!
+    You can compare
+    [`non0hist`](@ref) with `fit(Histogram, ...)` of [`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/)
+    for specific numbers on your machine.
 
-The function used internally is `non0hist`:
+The function used internally by `genentropy` is `non0hist`:
 ```@docs
 non0hist
 ```
 ---
-It typically outperforms traditional histograms
-by **several orders of magnitude** in both memory and speed. You can compare
-`DynamicalSystems.perform_non0hist` with `fit(Histogram, ...)` of [`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/)
-for specific numbers on your machine.
-
 For example, the Shannon entropy of a coin-flip process should be one bit,
 [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
 ```julia
 using DynamicalSystems
-y = Float64.(rand(Bool, 10000)) # just some coin tosses
-sh = shannon(0.01, y)       # ≡ genentropy(1, 0.01, y)
-isapprox(sh, log(2),  rtol = 1e-3) # true!
+y = Float64.(rand(Bool, 1000000)) # just some coin tosses
+sh = shannon(0.1, y)  # ≡ genentropy(1, 0.0, y)
+isapprox(sh, log(2),  rtol = 1e-6) # true!
 ```
 Because all entropies are calculated on base-$e$, the unit of measurement is "nat"
-and one bit is log(2)×nat.
+and one bit is $\log(2)\times$nat.
 
 
 

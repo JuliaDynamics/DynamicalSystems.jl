@@ -1,36 +1,12 @@
 export non0hist, genentropy, renyi, shannon, hartley
 
-@inbounds function perform_non0hist(
-    data::Dataset{D, T}, ranges, ε) where {D, T<:Real}
-    L = length(data)
-    # `d` is a dictionary that contains all the histogram information
-    # the keys are the bin edges indices and the values are the amount of
-    # datapoints in each bin
-    d = Dict{SVector{D, Int}, Int}()
-    mini = minima(data)
-    for point in data
-        # index of datapoint in the ranges space:
-        # It is necessary to convert floor to Int (dunno why)
-        ind::SVector{D, Int} = @. Int(floor( (point - mini)/ε))
-
-        # Curiously, this is actually slower:
-        # ind = SVector{D, Int}(
-        # ( Int(floor( (point[i] - mini[i])/ε) ) for i in 1:D )...)
-
-        # Add 1 to the bin that contains the datapoint:
-        haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
-        d[ind] += 1
-    end
-    return [val/L for val in values(d)]
-end
-
 """
 ```julia
 non0hist(ε, dataset)
 ```
 Partition a dataset into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
-**discarding all zero** elements. This method is extremely effecient in both memory
+**discarding all zero** elements. This method is effecient in both memory
 and speed, because it uses a dictionary to collect the information of bins with
 elements, while it completely disregards empty bins.
 
@@ -38,13 +14,25 @@ Use e.g. `fit(Histogram, ...)` from `StatsBase` if you
 wish to keep information about the edges of the binning as well
 as the zero elements.
 """
-function non0hist end
-@inbounds function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
+function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
     # Initialize:
-    mini = minima(data); maxi = maxima(data)
-    ranges = [mini[i]:ε:maxi[i]+ε for i in 1:D]
+    mini = minima(data)
+    L = length(data)
     # Perform Histogram:
-    perform_non0hist(data, ranges, ε)
+    # `d` is a dictionary that contains all the histogram information
+    # the keys are the bin edges indices and the values are the amount of
+    # datapoints in each bin
+    d = Dict{SVector{D, Int}, Int}()
+    for point in data
+        # index of datapoint in the ranges space:
+        # It is necessary to convert floor to Int (dunno why)
+        ind::SVector{D, Int} = floor.(Int, (point .- mini)./ε)
+
+        # Add 1 to the bin that contains the datapoint:
+        haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
+        d[ind] += 1
+    end
+    return collect(values(d))./L
 end
 
 non0hist(ε::Real, matrix) = non0hist(ε, convert(Dataset, matrix))
