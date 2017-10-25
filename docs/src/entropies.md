@@ -75,7 +75,7 @@ For example, we will calculate the dimensions of the strange attractors of the
 ```julia
 using DynamicalSystems
 hen = Systems.henon(-rand(2))
-ts = trajectory(hen, 200000)
+ts = trajectory(hen, 1000000)
 D_hen = information_dim(ts)
 
 lor = Systems.lorenz(rand(3))
@@ -97,5 +97,5 @@ Notice that calling this function requires you to pass the lyapunov exponents in
 ordered vector form (largest to smallest). Example:
 ```julia
 hen = Systems.henon()
-D_kp = kaplanyorke_dim(lyapunovs(hen, 200000))
+D_kp = kaplanyorke_dim(lyapunovs(hen, 1000000))
 ```
