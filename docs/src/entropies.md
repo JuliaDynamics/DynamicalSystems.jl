@@ -93,7 +93,7 @@ Also known as Lyapunov Dimension:
 kaplanyorke_dim
 ```
 ---
-Notice that calling this function requires you to pass the lyapunov exponents in an
+Notice that calling this function requires you to pass the Lyapunov exponents in an
 ordered vector form (largest to smallest). Example:
 ```julia
 hen = Systems.henon()
