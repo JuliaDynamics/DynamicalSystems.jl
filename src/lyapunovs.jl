@@ -79,7 +79,8 @@ time ``t_i``, which is also the time of the ``i``-th rescaling.
 If `ret_conv` is `Val{true}` return the convergence timeseries of the Lyapunov
 exponent
 `λts` as well as the corresponding time vector `ts`. If `ret_conv` is `Val{false}`
-(default) return the converged Lyapunov value `λts[end]` instead.
+(default) return the converged Lyapunov value `λts[end]` instead. The number of
+rescalings happened is also given, as it is equal to `length(λts)`.
 
 ### Keyword Arguments:
 

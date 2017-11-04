@@ -96,19 +96,8 @@ end
 
 """
     evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict()) -> ds
-Evolve (in-place) a dynamical system for total "time" `T`, setting the final
-state as the system's state.
-For discrete systems `T` corresponds to steps and
-thus it must be integer. See [`trajectory`](@ref) for using `diff_eq_kwargs`.
-
-This function *does not store* any information about intermediate steps.
-Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
-If you want to
-perform step-by-step evolution of a continuous system, use
-`ODEIntegrator(ds, t_final)` and
-the `step!(integrator)` function provided by `DifferentialEquations`.
-
-See also [`evolve`](@ref).
+Same as [`evolve`](@ref), but also updates the system's `state` field with the final
+state after evolution.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state

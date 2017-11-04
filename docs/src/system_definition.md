@@ -134,8 +134,8 @@ ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
 ## System evolution
 `DynamicalSystems.jl` provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module `DifferentialEquations.jl`, with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
 
-Notice that if you want to do repeated evolutions of a system, use the
-`evolve!(::ODEProblem)` interface, which does not create a new `ODEProblem` every time.
+Notice that if you want to do repeated evolutions of a system, you should use the
+`ODEIntegrator(ds::DynamicalSystem)` (see below).
 
 These are the functions related to system-evolution:
 ```@docs
