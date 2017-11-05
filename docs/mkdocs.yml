@@ -3,15 +3,15 @@ repo_url:            https://github.com/JuliaDynamics/DynamicalSystems.jl
 site_description:    A Julia package for the exploration of chaos in continuous and discrete dynamical systems.
 site_author:         George Datseris
 
-theme:               'material'
-
-extra:
+theme:
+  name: 'material'
   palette:
     primary: 'deep purple'
     accent: 'teal'
+extra:
   social:
     - type: 'github'
-      link: 'https://github.com/JuliaDynamics/DynamicalBilliards.jl'
+      link: 'https://github.com/JuliaDynamics/DynamicalSystems.jl'
 
 markdown_extensions:
   - pymdownx.arithmatex
@@ -36,4 +36,5 @@ pages:
 - Entropies and Dimensions: entropies.md
 - Nonlinear Timeseries Analysis: nlts.md
 - Periodicity: periodicity.md
+- Chaos Detection: chaos_detection.md
 - Contributor Guide: contributors_guide.md
