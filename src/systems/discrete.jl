@@ -80,7 +80,7 @@ This function *does not store* any information about intermediate steps.
 Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
 If you want to
 perform step-by-step evolution of a continuous system, use
-`ODEIntegrator(ds, t_final)` and
+`ODEIntegrator(ds, args...)` and
 the `step!(integrator)` function provided by `DifferentialEquations`.
 
 See also [`evolve!`](@ref).
