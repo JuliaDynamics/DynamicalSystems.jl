@@ -24,7 +24,8 @@ end
 
 """
     gali(ds::DynamicalSystem, k::Int, tmax [, ws]; kwargs...) -> GALI_k, t
-Compute ``\\text{GALI}_k`` [1] for a given `k` up to time `tmax`. Return
+Compute ``\\text{GALI}_k`` [1] for a given `k` up to time `tmax` (preferably
+small). Return
 ``\\text{GALI}_k(t)`` and time vector ``t``.
 
 `ws` is an optional argument
@@ -60,8 +61,8 @@ then it holds
       t^{-(2k - D)}, & \\text{if} \\;\\;  D/2 < k \\le D
     \\end{cases}
 ```
-Traditionally, if ``\\text{GALI}_k(t)`` does not exceed the `threshold` until `tmax`,
-the given orbit is said to be chaotic.
+Traditionally, if ``\\text{GALI}_k(t)`` does not exceed the `threshold` until `tmax`
+the given orbit is said to be chaotic: `ischaotic = t < tmax`.
 
 The entirety of our implementation is not based on the original paper, but rather in
 the method described in [2], which uses the product of the singular values of ``A``,
@@ -117,7 +118,7 @@ function gali(ds::ContinuousDS, k::Int, tmax::Real;
 end
 
 function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::AbstractVector;
-    threshold = 1e-12, dt = 0.5)
+    threshold = 1e-12, dt = 0.5,  diff_eq_kwargs = Dict())
     WS = cat(2, ws...)
     gali(ds, k, tmax, WS;
     threshold = threshold, dt = dt, diff_eq_kwargs = diff_eq_kwargs)
@@ -125,6 +126,7 @@ end
 
 @inbounds function gali(integrator, k, W, tmax, dt, threshold)
 
+    warn("GALI has *not* been tested with periodic orbits of continuous systems!")
     rett = 0:dt:tmax
     gali_k = ones(eltype(W), length(rett))
 
@@ -144,7 +146,7 @@ end
         end
         # Calculate singular values:
         zs = svdfact(view(W, :, 2:k+1))[:S]
-        gali_k[ti] =  prod(zs)
+        gali_k[ti] = prod(zs)
         if gali_k[ti] < threshold
             break
         end
@@ -204,3 +206,37 @@ end
 
     return gali_k[1:ti], rett[1:ti]
 end
+
+
+# using PyPlot
+# figure()
+# ds = Systems.henonhelies([0.00, -0.375, 0.01, 0.01])
+# dt = 0.5
+# diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
+# tr = trajectory(ds, 1000.0, dt=dt, diff_eq_kwargs = diffeq)
+#
+# subplot(2,1,1)
+# plot(tr[:,1], tr[:,2], alpha = 0.5, label="orbit",marker="o",markersize=5, linewidth=0)
+# legend()
+#
+# subplot(2,1,2)
+# for k in [2,3,4]
+#     g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-15)
+#     loglog(t, 1./t.^(2k-4), label="exp. k=$k")
+#     loglog(t, g, label="GALI_$(k)")
+# end
+# legend()
+# tight_layout()
+
+# bouhouhou it doesn't give power-law for regular motion... :(
+#
+#
+# k = 4
+# D = dimension(ds)
+# ws = qr(rand(D, D))[1][:, 1:k]
+# veom! = variational_eom_gali(ds, k)
+# W = cat(2, ds.state, ws)
+# prob = ODEProblem(veom!, W, (zero(dt), oftype(dt, tmax)))
+#
+# integrator = init(prob, Tsit5(),
+# save_everystep=false, dense=false)

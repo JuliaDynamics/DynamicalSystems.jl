@@ -64,27 +64,23 @@ tight_layout()
 
 and the same process with a regular orbit:
 ```julia
-using DynamicalSystems, PyPlot
+using DynamicalSystems, PyPlot, OrdinaryDiffEq
 figure()
-ds = Systems.henonhelies([0, 0.1, 0.5, 0.0])
+ds = Systems.henonhelies([0.00, -0.375, 0.01, 0.01])
 dt = 0.5
-
-tr = trajectory(ds, 10000.0, dt=dt)
+diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
+tr = trajectory(ds, 1000.0, dt=dt, diff_eq_kwargs = diffeq)
 
 subplot(2,1,1)
-plot(tr[:,1], tr[:,2], alpha = 0.5, label="orbit")
+plot(tr[:,1], tr[:,2], alpha = 0.5, label="orbit",marker="o",markersize=5, linewidth=0)
 legend()
 
 subplot(2,1,2)
-ls = lyapunovs(ds, 1000.0, dt=dt)
-
 for k in [2,3,4]
-    ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, k, tmax; dt = dt)
+    g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-15)
     loglog(t, 1./t.^(2k-4), label="exp. k=$k")
     loglog(t, g, label="GALI_$(k)")
 end
 legend()
 tight_layout()
-
 ```

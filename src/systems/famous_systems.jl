@@ -247,6 +247,31 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
   return DiscreteDS(u0, eom_standard, jacob_standard)
 end
 
+function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
+    ks = ones(M), γ = 1.0)
+    T = eltype(u0)
+    const twopi = 2π
+    thetaidx = (1:M)
+    pidx = (M+1:2M)
+    @inbounds function eom_coupledsm!(x)
+        θs = @view x[thetaidx]
+        ps = @view x[pidx]
+        @. ps = mod2pi(
+                ps + ks*sin(θs)
+                -γ*(sin(circshift(θs, 1) - θs) + sin(circshift(θs, -1) - θs)))
+        @. θs = mod2pi(θs + ps)
+    end
+    @inbounds function jacob_coupledsm!(J, x)
+    end
+
+
+    return BigDiscreteDS
+end
+
+
+
+
+
 """
 ```julia
 henon(u0=zeros(2); a = 1.4, b = 0.3)
