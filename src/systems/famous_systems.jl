@@ -118,7 +118,44 @@ function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 
     return ContinuousDS(u0, eom_dp!, nothing)
 end
 
-# function henonhelies()
+"""
+    henonhelies(u0=[0, -0.25, 0.42081,0]; λ = 1)
+```math
+\\begin{aligned}
+\\dot{x} &= p_x \\\\
+\\dot{y} &= p_y \\\\
+\\dot{p}_x &= -x -2\\lambda xy \\\\
+\\dot{p}_y &= -y -\\lambda (x^2 - y^2)
+\\end{aligned}
+```
+
+The Hénon–Heiles system [1] was introduced as a simplification of the motion
+of a star around a galactic center. It was originally intended to study the
+existence of a "third integral of motion" (which would make this 4D system integrable).
+In that search, the authors encountered chaos, as the third integral existed
+for only but a few initial conditions.
+
+The default initial condition is a typical chaotic orbit.
+
+[1] : Hénon, M. & Heiles, C., The Astronomical Journal **69**, pp 73–79 (1964)
+"""
+function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    @inline @inbounds function eom_hh!(du, u)
+        du[1] = u[3]
+        du[2] = u[4]
+        du[3] = -u[1] - 2λ*u[1]*u[2]
+        du[4] = -u[2] -λ*(u[1]^2 - u[2]^2)
+    end
+    @inline @inbounds function jacob_hh(u)
+        @SMatrix [o    o     i    o;
+                  o    o     o    i;
+                  -i   -2λ*u[2]   o    o;
+                  -2λ*u[1]  -1-2λ*u[2]  o   o]
+    end
+    return ContinuousDS(u0, eom_hh!, jacob_hh)
+end
 
 #######################################################################################
 #                                     Discrete                                        #
@@ -187,7 +224,8 @@ destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle varia
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
-[1] : B. V. Chirikov, Preprint N. **267**, Institute of Nuclear Physics, Novosibirsk (1969)
+[1] : B. V. Chirikov, Preprint N. **267**, Institute of
+Nuclear Physics, Novosibirsk (1969)
 
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """

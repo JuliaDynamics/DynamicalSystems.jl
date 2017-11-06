@@ -1,37 +1,45 @@
-#####################################################################################
-#                            Variational Equations                                  #
-#####################################################################################
-function variational_eom(ds::DiscreteDS)
-    @inline veom(u) = ds.jacob(u)*u
-    return veom
-end
-
-
-# variational equations:
-#
-# Maps:
-# Jacobian × State
-# Flows:
-# Jacobians × Vector INTEGRATE? see lecture notes
-
+export gali
 #####################################################################################
 #                                        GALI                                       #
 #####################################################################################
+function variational_eom_gali(ds::ContinuousDS, k::Int)
+    jac = ds.jacob
+    f! = ds.eom!
+    # the equations of motion `veom!` evolve the system and the
+    # deviation vectors
+    # The e.o.m. for the system is f!(t, u , du).
+    # The e.o.m. for the deviation vectors are tricky;
+    # u[:, i] is the i deviation vector, for i≥2
+    veom! = (t, u, du) -> begin
+        J = jac(view(u, :, 1))
+        f!(view(du, :, 1), u)
+        for i in 1:k
+            du[:, i+1] .= J*view(u, :, i+1)
+        end
+    end
+    return veom!
+end
+
+
+
 """
-    gali(ds::DynamicalSystem, k::Int, tmax [, Ws]; kwargs...) -> GALI_k, t
+    gali(ds::DynamicalSystem, k::Int, tmax [, ws]; kwargs...) -> GALI_k, t
 Compute ``\\text{GALI}_k`` [1] for a given `k` up to time `tmax`. Return
 ``\\text{GALI}_k(t)`` and time vector ``t``.
 
-`Ws` is an optional argument
-containing the deviation vectors ``w_i`` for ``i \\in [1,k]``. If not given,
+`ws` is an optional argument
+containing the deviation vectors ``w_i`` for ``i \\in [1,k]``, expected either
+as a matrix with each column a deviation vector, or as a vector of vectors.
+If not given,
 random orthonormal vectors are chosen using `qr`.
 
-### Keywords
+## Keywords
 * `threshold` : If `GALI_k` reaches the threshold iteration is terminated.
   Default values are `1e-15` for discrete and `1e-12` for continuous systems.
 * `dt=0.1` : Time step of integration for continuous systems.
+* `diff_eq_kwargs` : See [`trajectory`](@ref).
 
-### Description
+## Description
 The Generalized Alignment Index,
 ``\\text{GALI}_k``, is an efficient (and very fast) indicator of chaotic or regular
 behavior type in ``D``-dimensional *Hamiltonian* systems (``D`` is number of variables).
@@ -59,7 +67,16 @@ The entirety of our implementation is not based on the original paper, but rathe
 the method described in [2], which uses the product of the singular values of ``A``,
 a matrix that has as *columns* the deviation vectors.
 
-### References
+## Performance Notes
+If you want to do repeated evaluations of `gali` for many initial conditions and for
+continuous systems, you can take advantage of the function:
+
+    gali(integrator, k, W, tmax, dt, threshold)
+
+in conjuction with `reinit!(integrator, W)` (see the source code to
+set-up the `integrator` and `W` for the first time).
+
+## References
 
 [1] : Skokos, C. H. *et al.*, Physica D **231**, pp 30–54 (2007)
 
@@ -67,10 +84,87 @@ a matrix that has as *columns* the deviation vectors.
 (section 5.3.1 and ref. [85] therein), Lecture Notes in Physics **915**,
 Springer (2016)
 """
+function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::Matrix;
+    threshold = 1e-12, dt = 0.5, diff_eq_kwargs = Dict())
+
+    veom! = variational_eom_gali(ds, k)
+    W = cat(2, ds.state, ws)
+    prob = ODEProblem(veom!, W, (zero(dt), oftype(dt, tmax)))
+
+    if haskey(diff_eq_kwargs, :saveat)
+        pop!(diff_eq_kwargs, :saveat)
+    end
+    if haskey(diff_eq_kwargs, :solver)
+        solver = diff_eq_kwargs[:solver]
+        pop!(diff_eq_kwargs, :solver)
+        integrator = init(prob, solver; diff_eq_kwargs...,
+        save_everystep=false, dense=false)
+    else
+        integrator = init(prob, Tsit5(); diff_eq_kwargs...,
+        save_everystep=false, dense=false)
+    end
+
+    return gali(integrator, k, W, tmax, dt, threshold)
+
+end
+
+function gali(ds::ContinuousDS, k::Int, tmax::Real;
+    threshold = 1e-12, dt = 0.5, diff_eq_kwargs = Dict())
+    D = dimension(ds)
+    ws = qr(rand(D, D))[1][:, 1:k]
+    gali(ds, k, tmax, ws;
+    threshold = threshold, dt = dt, diff_eq_kwargs = diff_eq_kwargs)
+end
+
+function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::AbstractVector;
+    threshold = 1e-12, dt = 0.5)
+    WS = cat(2, ws...)
+    gali(ds, k, tmax, WS;
+    threshold = threshold, dt = dt, diff_eq_kwargs = diff_eq_kwargs)
+end
+
+@inbounds function gali(integrator, k, W, tmax, dt, threshold)
+
+    rett = 0:dt:tmax
+    gali_k = ones(eltype(W), length(rett))
+
+    ti=1
+
+    for ti in 2:length(rett)
+        τ = rett[ti]
+        # Evolve:
+        while integrator.t < τ
+            step!(integrator)
+        end
+        # Interpolate:
+        integrator(W, τ)
+        # Normalize
+        for j in 1:k
+            normalize!(view(W, :, j+1))
+        end
+        # Calculate singular values:
+        zs = svdfact(view(W, :, 2:k+1))[:S]
+        gali_k[ti] =  prod(zs)
+        if gali_k[ti] < threshold
+            break
+        end
+    end
+
+    return gali_k[1:ti], rett[1:ti]
+
+end
+
+######### Discrete GALI ##########################
 function gali(ds::DiscreteDS{D, S, F, J}, k::Int, tmax;
     threshold = 1e-15) where {D, S, F, J}
 
     Ws = qr(rand(D, D))[1]
+    return gali(ds, k, tmax, Ws; threshold = threshold)
+end
+
+function gali(ds::DiscreteDS{D, S, F, JJ}, k::Int, tmax, Ws::Matrix;
+    threshold = 1e-15) where {D,S,F,JJ}
+
     ws = Vector{SVector{D, S}}(k)
     for i in 1:k
         ws[i] = SVector{D, S}(Ws[:, i])
@@ -78,14 +172,13 @@ function gali(ds::DiscreteDS{D, S, F, J}, k::Int, tmax;
     return gali(ds, k, tmax, ws; threshold = threshold)
 end
 
-function gali(ds::DiscreteDS{D, S, F, JJ}, k::Int, tmax, ws::Vector{SVector{D,S}};
+@inbounds function gali(ds::DiscreteDS{D, S, F, JJ}, k::Int,
+    tmax, ws::Vector{SVector{D,S}};
     threshold = 1e-15) where {D,S,F,JJ}
-
 
     f = ds.eom
     J = ds.jacob
     x = ds.state
-
 
     rett = 0:Int(tmax)
     gali_k = ones(S, length(rett))

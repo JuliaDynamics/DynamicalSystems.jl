@@ -1,3 +1,8 @@
+* Added the Generalized Alignment Index method: `gali`
+* Added GALI for continuous systems.
+* Added the Henon Helies system in famous_systems. TODO is still to add
+  callbacks that conserve energy.
+
 # v0.6.0:
 * Many minor bugfixes and many corrections to the documentation examples.
 * `Dataset` now always converts the input into vector of `SVectors` for better
