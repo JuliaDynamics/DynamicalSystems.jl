@@ -1,9 +1,11 @@
+# v0.7.0:
 * Added the Generalized Alignment Index method: `gali`
 * Added GALI for continuous systems.
 * Added the Henon Helies system in famous_systems. TODO is still to add
   callbacks that conserve energy.
 * Bugfix of the printing of `Dataset` on Juno.
 * Added `BigDiscreteDS` (still need methods for e.g. lyapunovs).
+  * Still need to add docs for it.
 
 # v0.6.0:
 * Many minor bugfixes and many corrections to the documentation examples.

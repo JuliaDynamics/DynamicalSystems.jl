@@ -8,9 +8,9 @@ using StaticArrays, Base.Test, DynamicalSystems
   d3 = DiscreteDS1D(big(0.1), d1.eom, d1.deriv)
 
   @testset "Evolution & trajectory" begin
-    st1 = evolve!(d1)
-    st2 = evolve!(d2)
-    st3 = evolve!(d3)
+    st1 = (evolve!(d1); d1.state)
+    st2 = (evolve!(d2); d2.state)
+    st3 = (evolve!(d3); d3.state)
     @test st1 == st2
     @test st1 ≈ st3
     @test typeof(st3) == BigFloat

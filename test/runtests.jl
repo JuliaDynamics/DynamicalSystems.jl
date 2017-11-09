@@ -14,6 +14,7 @@ include("entropy_dimension.jl")
 include("nlts_tests.jl")
 # Periodicity:
 include("periodicity_tests.jl")
+# Chaos Detection:
 
 ti = time() - ti
 println("\nTest took total time of:")
