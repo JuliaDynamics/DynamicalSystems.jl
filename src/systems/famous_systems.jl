@@ -157,6 +157,33 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
     return ContinuousDS(u0, eom_hh!, jacob_hh)
 end
 
+# function fpuβ(N::Int, u0 = rand(2N); β = 1)
+#     i = one(eltype(u0))
+#     o = zero(eltype(u0))
+#     J = zeros(eltype(u0), 2N, 2N)
+#     for i in 1:N
+#         J[i, i+N] = 1
+#     end
+#     @inbounds function eom_fpuβ!(du, u)
+#         for i in 1:N
+#             du[i] = u[i+N]
+#             du[i+N] = 2(u[i+1] - u[i]) + 4(u[i+1] - u[i])^3
+#         end
+#         du[N] = u[1]
+#         du[2N] = 2(u[1] - u[N]) + 4(u[1] - u[N])^3
+#     end
+#     @inbounds function jacob_fpuβ(u)
+#         for i in 1:N-1
+#             J[i+N, i]   =-2 - 12(u[i+1] - u[i])^2
+#             J[i+N, i+1] = 2 + 12(u[i+1] - u[i])^2
+#         end
+#         J[2N, N] = -2 - 12(u[1] - u[N])^2
+#         J[2N, 1] =  2 + 12(u[1] - u[N])^2
+#         return SMatrix{2N,2N}(J)
+#     end
+#     return ContinuousDS(u0, eom_fpuβ!, jacob_fpuβ)
+# end
+
 #######################################################################################
 #                                     Discrete                                        #
 #######################################################################################
@@ -248,25 +275,51 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
 end
 
 function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
-    ks = ones(M), γ = 1.0)
-    T = eltype(u0)
-    const twopi = 2π
-    thetaidx = (1:M)
-    pidx = (M+1:2M)
-    @inbounds function eom_coupledsm!(x)
-        θs = @view x[thetaidx]
+    ks = ones(M), Γ = 1.0)
+
+    idxs = 1:M # indexes of thetas
+    idxsm1 = circshift(idxs, +1) #indexes of thetas - 1
+    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
+    pidx = M+1:2M
+    J = zeros(eltype(u0), 2M, 2M)
+    # Set ∂/∂p entries (they are eye(M,M))
+    # And they dont change they are constants
+    for i in idxs
+        J[i, i+M] = 1
+        J[i+M, i+M] = 1
+    end
+    @inbounds function eom_coupledsm!(xnew, x)
+        θs = @view x[idxs]
         ps = @view x[pidx]
-        @. ps = mod2pi(
+        θsp1 = view(x, idxsp1)
+        θsm1 = view(x, idxsm1)
+        @. xnew[pidx] = mod2pi(
                 ps + ks*sin(θs)
-                -γ*(sin(circshift(θs, 1) - θs) + sin(circshift(θs, -1) - θs)))
-        @. θs = mod2pi(θs + ps)
+                -Γ*(sin(θsp1 - θs) + sin(θsm1 - θs)))
+        xnew[idxs] .= mod2pi.(view(xnew, pidx) .+ θs);
     end
+
     @inbounds function jacob_coupledsm!(J, x)
+        # x[i] ≡ θᵢ
+        # x[[idxsp1[i]]] ≡ θᵢ+₁
+        # x[[idxsm1[i]]] ≡ θᵢ-₁
+        for i in idxs
+            cosθ = cos(x[i])
+            cosθp= cos(x[idxsp1[i]] - x[i])
+            cosθm= cos(x[idxsm1[i]] - x[i])
+            J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
+            J[i+M, idxsm1[i]] = - Γ*cosθm
+            J[i+M, idxsp1[i]] = - Γ*cosθp
+            J[i, i] = 1 + J[i+M, i]
+            J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
+            J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
+        end
     end
+    jacob_coupledsm!(J, u0)
 
-
-    return BigDiscreteDS
+    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J)
 end
+
 
 
 

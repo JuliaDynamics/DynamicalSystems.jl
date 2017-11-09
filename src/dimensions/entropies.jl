@@ -6,11 +6,16 @@ non0hist(ε, dataset)
 ```
 Partition a dataset into tabulated intervals (boxes) of
 size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
-**discarding all zero** elements. This method is effecient in both memory
-and speed, because it uses a dictionary to collect the information of bins with
-elements, while it completely disregards empty bins.
+**discarding all zero** elements.
 
-Use e.g. `fit(Histogram, ...)` from `StatsBase` if you
+## Performances Notes
+This method is effecient in both memory
+and speed, because it uses a dictionary to collect the information of bins with
+elements, while it completely disregards empty bins. This allows
+computation of entropies of high-dimensional datasets without memory overflow.
+
+Use e.g. `fit(Histogram, ...)` from
+[`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/) if you
 wish to keep information about the edges of the binning as well
 as the zero elements.
 """
@@ -51,6 +56,7 @@ genentropy(α, p::AbstractArray)
 Compute the entropy of an Array `p` directly, assuming that `p` is
 sum-normalized. *log base-e is used in both cases, i.e. units of "nat".*
 
+## Description
 The Rényi entropy
 ```math
 R_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
@@ -66,6 +72,8 @@ The following aliases are provided:
 * `renyi = genentropy`
 * `shannon(args...) = genentropy(1, args...)`
 * `hartley(args...) = genentropy(0, args...)`
+
+## References
 
 [1] : A. Rényi, *Proceedings of the fourth Berkeley Symposium on Mathematics,
 Statistics and Probability*, pp 547 (1960)

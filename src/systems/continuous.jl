@@ -59,11 +59,13 @@ end
 ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs)
 ```
 Return an `ODEIntegrator`, by first creating an `ODEProblem(ds, t)`.
-This can be used directly with the interfaces of [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/stable/index.html).
+This can be used directly with the interfaces of
+[`DifferentialEquations.jl`](http://docs.juliadiffeq.org/stable/index.html).
 
 `diff_eq_kwargs = Dict()` is a dictionary `Dict{Symbol, ANY}`
 of keyword arguments
-passed into the `init` of the [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/stable/index.html) package,
+passed into the `init` of the
+[`DifferentialEquations.jl`](http://docs.juliadiffeq.org/stable/index.html) package,
 for example `Dict(:abstol => 1e-9)`. If you want to specify a solver,
 do so by using the symbol `:solver`, e.g.:
 `Dict(:solver => DP5(), :tstops => 0:0.01:t)`. This requires you to have been first

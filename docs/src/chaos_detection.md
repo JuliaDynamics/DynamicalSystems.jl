@@ -77,7 +77,7 @@ legend()
 
 subplot(2,1,2)
 for k in [2,3,4]
-    g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-15)
+    g, t = gali(ds, k, 10000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-15)
     loglog(t, 1./t.^(2k-4), label="exp. k=$k")
     loglog(t, g, label="GALI_$(k)")
 end

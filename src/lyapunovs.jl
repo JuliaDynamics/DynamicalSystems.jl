@@ -6,19 +6,31 @@ export lyapunovs, lyapunov
 ```julia
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
-Calculate the spectrum of Lyapunov exponents [1] of `ds` by applying the
-QR-decomposition method `N` times (see method "H2" of [2], or directly the original
-paper(s) [3]).
-Returns a vector with the *final*
-values of the lyapunov exponents in descending order.
-### Keyword Arguments:
+Calculate the spectrum of Lyapunov exponents [1] of `ds` by applying
+a QR-decomposition on the parallelepiped matrix space `N` times. Return the
+spectrum sorted
+from maximum to minimum.
+
+## Keyword Arguments
 * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
   algorithm. Should be `Int` for discrete systems.
 * `dt = 1.0` : (only for continuous) Time of individual evolutions
-  between sucessive orthonormalization steps.
+  between successive orthonormalization steps.
 * `diff_eq_kwargs = Dict()` : (only for continuous)
   Keyword arguments passed into the solvers of the
   `DifferentialEquations` package (see [`trajectory`](@ref) for more info).
+
+## Description
+The method we employ is "H2" of [2], originally stated in [3]. The vectors
+defining a `D`-dimensional parallepiped are evolved using the tangent dynamics
+of the system.
+A QR-decomposition at each step yields the local growth rate for each dimension
+of the parallepiped. The growth rates are
+then averaged over `N` successive steps, yielding the lyapunov exponent spectrum.
+
+For discrete systems the QR-decomposition is performed at *every* step `i ∈ 1:N`.
+
+## References
 
 [1] : A. M. Lyapunov, *The General Problem of the Stability of Motion*,
 Taylor & Francis (1992)
@@ -66,49 +78,56 @@ Calculate the maximum Lyapunov exponent `λ` using a method due to Benettin [1],
 which simply
 evolves two neighboring trajectories (one called "given" and one called "test")
 while constantly rescaling the test one.
-`T`  denotes the total time of evolution (should be `Int` for discrete systems). The
-Lyapunov exponent is the average of the time-local Lyapunov exponents,
-meaning
+`T`  denotes the total time of evolution (should be `Int` for discrete systems).
+
+## Keyword Arguments
+
+* `Ttr = 0` : Extra "transient" time to evolve the system before application of the
+  algorithm. Should be `Int` for discrete systems.
+* `d0 = 1e-9` : Initial & rescaling distance between the two neighboring trajectories.
+* `threshold = 1e-5` : Distance threshold for rescaling.
+* `diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0)` : (only for continuous)
+  Keyword arguments passed into the solvers of the
+  `DifferentialEquations` package (see [`trajectory`](@ref) for more info).
+* `dt = 0.1` : (only for continuous) Time of evolution between each check of
+  distance exceeding the `threshold`.
+
+* `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` :
+  A function that given
+  `(st1, d0)` initializes the test state with distance
+  `d0` from the given state `st1` (`D` is the dimension
+  of the system). This function can be used when you want to avoid
+  the test state appearing in a region of the phase-space where it would have
+  e.g. different energy or escape to infinity.
+
+## Description
+Two neighboring trajectories with initial distance `d0` are evolved in time.
+At time ``d(t_i)`` their distance exceeds the `threshold`, which initializes
+a rescaling of the test trajectory back to having distance `d0` from
+the given one, while the rescaling keeps the distance vector along the maximal
+expansion direction.
+
+The maximum
+Lyapunov exponent is the average of the time-local Lyapunov exponents
 ```math
 \\lambda = \\frac{1}{t_{n}}\\sum_{i=1}^{n}
-\\ln\\left( a_i \\right),\\quad a_i = \\frac{d(t_{i})}{d_0}
+\\ln\\left( a_i \\right),\\quad a_i = \\frac{d(t_{i})}{d_0}.
 ```
-with ``d(t_i)`` the distance between test and given trajectory at
-time ``t_i``, which is also the time of the ``i``-th rescaling.
 
-If `ret_conv` is `Val{true}` return the convergence timeseries of the Lyapunov
+If `ret_conv` is `Val{true}` the function returns the convergence timeseries
+of the Lyapunov
 exponent
 `λts` as well as the corresponding time vector `ts`. If `ret_conv` is `Val{false}`
-(default) return the converged Lyapunov value `λts[end]` instead. The number of
+(default) the converged Lyapunov value `λts[end]` is returned instead. The number of
 rescalings happened is also given, as it is equal to `length(λts)`.
 
-### Keyword Arguments:
-
-  * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
-    algorithm. Should be `Int` for discrete systems.
-  * `d0 = 1e-9` : Initial & rescaling distance between two neighboring trajectories.
-  * `threshold = 1e-5` : Whenever the distance between given and test trajectory
-    exceeds `threshold`, the test
-    trajectory is rescaled back to having distance `d0` from the given trajectory.
-  * `diff_eq_kwargs = Dict(:abstol=>d0, :reltol=>d0)` : (only for continuous)
-    Keyword arguments passed into the solvers of the
-    `DifferentialEquations` package (see [`trajectory`](@ref) for more info).
-  * `dt = 0.1` : (only for continuous) Time of evolution between each check of
-    distance exceeding the `threshold`.
-
-  * `inittest = (st1, d0) -> st1 .+ d0/sqrt(D)` :
-    A function that given
-    `(st1, d0)` initializes the test state with distance
-    `d0` from the given state `st1` (`D` is the dimension
-    of the system). This function can be used when you want to avoid
-    the test state appearing in a region of the phase-space where it would have
-    e.g. different energy or escape to infinity.
-
+## Performance Notes
 For the continuous case, the algorithm becomes faster with increasing `dt`, since
 integration is interrupted less frequenty. For the fastest performance you want to
 fine-tune `dt, d0, threshold` such that you have the minimum amount of rescalings
-but you want to still be well within the linearized dynamics region.
+**while still being well within the linearized dynamics region**.
 
+## References
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)
 """
 function lyapunov(ds::DiscreteDS,

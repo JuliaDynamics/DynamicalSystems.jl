@@ -12,30 +12,31 @@ Return the matrix ``\\mathbf{\\Lambda}_k`` used to create a new
 dynamical system with some unstable fixed points turned to stable
 (see [`periodicorbits`](@ref)).
 
-### Arguments:
+## Arguments
 
 1. `λ<:Real` : the multiplier of the ``C_k`` matrix, with `0<λ<1`.
 2. `inds::Vector{Int}` :
    The `i`th entry of this vector gives the *row* of the nonzero element of the `i`th
-   column of ``C_k``. Each element
-   of `inds` **must be unique** such that the resulting matrix is orthogonal
-   *and* represents the group of special reflections and permutations.
+   column of ``C_k``.
 3. `sings::Vector{<:Real}` : The element of the `i`th column of ``C_k`` is +1
    if `signs[i] > 0` and -1 otherwise (`sings` can also be `Bool` vector).
 
+Calling `lambdamatrix(λ, D::Int)`
+creates a random ``\\mathbf{\\Lambda}_k`` by randomly generating
+an `inds` and a `signs` from all possible combinations. The *collections*
+of all these combinations can be obtained from the function [`lambdaperms`](@ref)
+
+## Description
+Each element
+of `inds` **must be unique** such that the resulting matrix is orthogonal
+*and* represents the group of special reflections and permutations.
 
 Deciding the appropriate values for `λ, inds, sings` is not trivial. However, in
 ref. [2] there is a lot of information that can help with that decision. Also,
 by appropriately choosing various values for `λ`, one can sort periodic
 orbits from e.g. least unstable to most unstable, see [3] for details.
 
-    lambdamatrix(λ, D::Integer)
-Create a random ``\\mathbf{\\Lambda}_k`` by randomly generating
-an `inds` and a `signs` from all possible combinations. The *collections*
-of all these combinations can be obtained by:
-```julia
-indperms, signperms = lambdaperms(D)
-```
+## References
 
 [2] : D. Pingel *et al.*, Phys. Rev. E **62**, pp 2119 (2000)
 
@@ -80,31 +81,21 @@ end
 
 """
     periodicorbits(ds::DiscreteDS, o, ics [, λs, indss, singss] ; kwargs...) -> FP
-Find stable and unstable fixed points `FP` the system `ds` of order `o`
+Find stable and unstable fixed points `FP` of order `o` for the map `ds`
 using the algorithm
-due to Schmelcher & Diakonos [1], which turns unstable fixed points of the original
-map to dissipatively stable through the transformation:
-```math
-\\mathbf{x}_{n+1} = S_k(\\mathbf{x}_n) = \\mathbf{x}_n +
-\\mathbf{\\Lambda}_k\\left(\\mathbf{f}^{(o)}(\\mathbf{x}_n) - \\mathbf{x}_n\\right)
-```
-with ``\\mathbf{f}`` = `ds.eom`.
-`ics` is a collection of initial conditions (container of `SVector`s) to be evolved.
+due to Schmelcher & Diakonos [1].
+`ics` is a collection of initial conditions
+(container of `SVector`s) to be evolved.
 
+## Optional Arguments
 The optional arguments `λs, indss, singss` **must be containers** of appropriate
-values, besides `λs` which can also be a number. The elements of those lists
+values, besides `λs` which can also be a number. The elements of those containers
 are passed to: `lambdamatrix(λ, inds, sings)`, which creates the appropriate
 ``\\mathbf{\\Lambda}_k`` matrix (see [`lambdamatrix`](@ref)
 for more). If these arguments are not given,
 a random permutation will be chosen for them, with `λ=0.001`.
 
-**All initial conditions are
-evolved for all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to
-long computation times, so be wise on your choice of `λs, indss, singss`!
-
-The following *keyword* arguments fine-tune the algorithm convergence and output
-(i.c. stands for initial condition):
-
+## Keyword Arguments
 * `maxiters::Int = 100000` : Maximum amount of iterations an i.c. will be iterated
    before claiming it has not converged.
 * `disttol = 1e-10` : Distance tolerance. If the 2-norm of a previous state with
@@ -117,6 +108,27 @@ The following *keyword* arguments fine-tune the algorithm convergence and output
    This is done so that `FP` doesn't contain duplicate fixed points (notice
    that this has nothing to do with `disttol`). Turn this to `16` to get the full
    precision of the algorithm.
+
+## Descritption
+The algorithm used can detect stable/unstable periodic orbits
+by turning stable/unstable fixed points of the original
+map `ds` to dissipatively stable ones, through the transformation
+```math
+\\mathbf{x}_{n+1} = \\mathbf{x}_n +
+\\mathbf{\\Lambda}_k\\left(f^{(o)}(\\mathbf{x}_n) - \\mathbf{x}_n\\right)
+```
+with ``f`` = `ds.eom`. The index ``k`` counts the various
+possible ``\\mathbf{\\Lambda}_k``.
+
+Note that algorithm is intented for *unstable* orbits, and thus there are cases
+where it may not work for stable orbits.
+
+## Performance Notes
+**All** initial conditions are
+evolved for **all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to
+long computation times, so be wise on your choice of `λs, indss, singss`!
+
+## References
 
 [1] : P. Schmelcher & F. K. Diakonos, Phys. Rev. Lett. **78**, pp 4733 (1997)
 """

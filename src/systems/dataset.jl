@@ -151,7 +151,7 @@ end
     function Juno.render(i::Juno.Inline, d::Dataset{D, T}) where {D, T}
     N = length(d)
     tos = matstring(d)
-    Juno.render(Juno.Tree(Text(tos), []))
+    Juno.render(i, Juno.Tree(Text(tos), []))
     end
 end
 

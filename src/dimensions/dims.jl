@@ -170,16 +170,20 @@ estimate_boxsizes(convert(Dataset, ts); kwargs...)
 
 """
     generalized_dim(α, dataset) -> D_α
-Return the ``\\alpha`` order generalized dimension that corresponds to the
-given dataset. The dimension is approximated by the
-power law exponent of the scaling of the [`genentropy`](@ref) versus the box size `ε`.
+Return the `α` order generalized dimension of the `dataset`.
+
+## Description
+The returned dimension is approximated by the
+(negated) power law exponent of the scaling of the [`genentropy`](@ref)
+versus the box size `ε`.
 
 **WARNING** - This call performs a lot of automated steps:
 
   1. A vector of box sizes is decided by calling `es = estimate_boxsizes(dataset)`.
   2. For each element of `es` the appropriate entropy is
      calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
-  3. The curve d(x) is decomposed into linear regions, using [`linear_regions`](@ref)`(x, d)`.
+  3. The curve `d(x)` is decomposed into linear regions,
+     using [`linear_regions`](@ref)`(x, d)`.
   4. The biggest linear region is chosen, and a fit for the slope of that
      region is performed using the function [`linear_region`](@ref).
   5. This fitted slope is returned.
@@ -221,11 +225,16 @@ information_dim(args...) = generalized_dim(1, args...)
 """
     kaplanyorke_dim(lyapunovs::AbstractVector)
 Calculate the Kaplan-Yorke dimension [1] (aka Lyapunov dimension).
-This simply is the point where
-`cumsum(lyapunovs)` becomes zero (interpolated). Returns the length of the vector
-if the sum of the exponents never becomes negative.
+
+## Description
+The Kaplan-Yorke dimension is simply the point where
+`cumsum(lyapunovs)` becomes zero (interpolated). If
+the sum of the exponents never becomes negative the function
+will return the length of the input vector.
 
 Useful in combination with [`lyapunovs`](@ref).
+
+## References
 
 [1] :  J. Kaplan & J. Yorke,
 *Chaotic behavior of multidimensional difference equations*,
