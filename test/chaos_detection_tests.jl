@@ -8,7 +8,7 @@ println("\nTesting chaos detection algorithms...")
 
 @testset "GALI discrete" begin
 
-    @testset "towel map" begin
+    @testset "Chaotic - towel map" begin
         ds = Systems.towel()
         model(x,p)= @. exp(-p[1]*x)
         ls = lyapunovs(ds, 10000)

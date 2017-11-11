@@ -125,7 +125,7 @@ rescalings happened is also given, as it is equal to `length(λts)`.
 For the continuous case, the algorithm becomes faster with increasing `dt`, since
 integration is interrupted less frequenty. For the fastest performance you want to
 fine-tune `dt, d0, threshold` such that you have the minimum amount of rescalings
-**while still being well within the linearized dynamics region**.
+*while still being well within the linearized dynamics region*.
 
 ## References
 [1] : G. Benettin *et al.*, Phys. Rev. A **14**, pp 2338 (1976)

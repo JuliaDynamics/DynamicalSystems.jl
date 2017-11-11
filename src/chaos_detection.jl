@@ -1,4 +1,4 @@
-export gali
+# export gali
 #####################################################################################
 #                                        GALI                                       #
 #####################################################################################
@@ -81,8 +81,8 @@ continuous systems, you can take advantage of the function:
 
     gali(integrator, k, W, tmax, dt, threshold)
 
-in conjuction with `reinit!(integrator, W)` for various `W` (`W != ws`!).
-See the source code to
+in conjuction with `reinit!(integrator, W)` for various `W=cat(2, state, ws)`.
+See the source code on how to
 set-up the `integrator` and `W` for the first time.
 
 ## References
@@ -229,12 +229,11 @@ end
     jacob! = ds.jacob!
     J = ds.J
     x = copy(ds.state)
-    xprev = copy(x)
-    T = eltype(x)
+    xprev = ds.dummystate
     wsdummy = copy(ws)
 
     rett = 0:Int(tmax)
-    gali_k = ones(T, length(rett))
+    gali_k = ones(eltype(x), length(rett))
 
     ti=1
     zs = zeros(k)
@@ -265,10 +264,15 @@ end
     return gali_k[1:ti], rett[1:ti]
 end
 
-
+#
 # using PyPlot
 # figure()
-# ds = Systems.henonhelies([0.00, -0.375, 0.01, 0.01])
+# sp = [0, .295456, .407308431, 0] #stable periodic orbit
+# qp = [0, .483000, .278980390, 0] #quasiperiodic orbit
+# up = [0, .469120, .291124890, 0] #periodic near unstable periodic orbit
+# ch = [0, .509000, .254624859, 0] #chaotic orbit
+#
+# ds = Systems.henonhelies(sp)
 # dt = 0.5
 # diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
 # tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
@@ -276,12 +280,13 @@ end
 # subplot(2,1,1)
 # plot(tr[:,1], tr[:,3], alpha = 0.5,
 # label="orbit",marker="o",markersize=2, linewidth=0)
+#
 # legend()
 #
 # subplot(2,1,2)
 # for k in [2,3,4]
-#     g, t = gali(ds, k, 10000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
-#     loglog(t, 1./t.^(2k-4), label="exp. k=$k")
+#     g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
+#     loglog(t, 1./t.^(2k-4), label="t^-$(2k-4)")
 #     loglog(t, g, label="GALI_$(k)")
 # end
 # legend()
@@ -304,7 +309,7 @@ end
 # plot(tr[:,1], tr[:,1+M], alpha = 0.5,
 # label="orbit",marker="o", ms=1, linewidth=0)
 # legend()
-#
+# #
 # subplot(2,1,2)
 # for k in [2,3,4]
 #     g, t = gali(ds, k, 1000.0; threshold=1e-12)

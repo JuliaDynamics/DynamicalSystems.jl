@@ -1,9 +1,19 @@
 # Contributor Guide
-**You can contribute to this package even if you are not familiar with Julia or
-coding.**
+*You can contribute to this package even if you are very good with
+coding with Julia.*
 
-The ultimate goal for `DynamicalSystems.jl` is
-to be a useful tool for scientists working on chaos & nonlinear dynamics and
+## Reporting Bugs and other Issues
+The easiest and most common way to improve this package is
+simply by *using it* and reporting
+any unexpected behavior! You can use the
+[DynamicalSystems.jl Issues](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues) page or, if you think it is something minor not worth opening an issue,
+just come over to our [gitter chatroom]((https://gitter.im/JuliaDynamics/Lobby))
+and let us know what the problem is.
+
+## Contributing New Methods and Algorithms
+
+The ultimate goal for DynamicalSystems.jl is
+to be a useful tool for scientists working on chaos, nonlinear dynamics and
 in general dynamical systems.
 
 For such a feat to be accomplished, many different methods across this interdisciplinary
@@ -25,22 +35,17 @@ in this package, the following steps have to happen:
    **reliability of the implementation**.
 
 It is clear that one can contribute to `DynamicalSystems.jl` by contributing in steps
-(1) and (2). Neither of those require any knowledge of coding with Julia.
+(1) and (2). Neither of those require any hardcore coding knowledge with Julia.
 
 For step (1), you can open a new issue at the [DynamicalSystems.jl Issues](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues) page. All issues
 that refer methods that we would want to have in our package are labeled as
 "wanted_feature". You can view the current wanted features [here](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3Awanted_feature) and see for yourself if you can contribute
 to some of them!
 
-Of course, you can always contribute in the enhancement of the existing package by
-solving the some of the existing issues.
-
 If you have any idea about how to improve
 this package please do not hesitate to [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) and share your ideas!
 
-Don't forget; you always help this package simply by *using it* and reporting
-any unexpected behavior! So far we had very few testers and tested on a small
-subset of dynamical systems! Thus any extra testing is welcomed!
+
 
 ## Examples of new things you could contribute
 
@@ -58,8 +63,9 @@ Notice that the above are not conclusive, but only examples!
 
 ## How you should contribute **code**
 
-* For new methods and systems please always have very clear and self-contained
-  documentation strings.
+* For new methods and systems please follow the convention
+  of the documentation strings (do e.g. `?lyapunov` to see how they are
+  structured).
 * Have enough comments in your code so that somebody that knows the method,
   can also understand the code immediately.
 * Always have a reference to the original work that first introduces the method
@@ -71,5 +77,6 @@ Notice that the above are not conclusive, but only examples!
   introduce a new file in the `/src` folder, or even better create your own subfolder, instead of adding code to the existing files.
 
 When enhancing already existing code, make sure to:
+
 * Have enough comments at parts that are not easily understood, so that somebody
   else may continue your work in the future.

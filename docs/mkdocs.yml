@@ -16,15 +16,18 @@ extra:
 markdown_extensions:
   - pymdownx.arithmatex
   - admonition
+  - mdx_math
   - codehilite
   - extra
   - tables
   - fenced_code
 
 extra_css:
-  - assets/Documenter.css
+  - assets\Documenter.css
+
 
 extra_javascript:
+  - assets\mathjaxhelper.js
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
 docs_dir: 'build'
@@ -36,5 +39,5 @@ pages:
 - Entropies and Dimensions: entropies.md
 - Nonlinear Timeseries Analysis: nlts.md
 - Periodicity: periodicity.md
-- Chaos Detection: chaos_detection.md
+# - Chaos Detection: chaos_detection.md
 - Contributor Guide: contributors_guide.md

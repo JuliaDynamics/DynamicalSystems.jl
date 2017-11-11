@@ -30,7 +30,7 @@ Default values are the ones used in the original paper.
 
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
-function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
     @inline @inbounds function eom_lorenz!(du, u)
         du[1] = σ*(u[2]-u[1])
         du[2] = u[1]*(ρ-u[3]) - u[2]
@@ -43,7 +43,8 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
                   (ρ*i - u[3])   (-i)   (-u[1]);
                   u[2]           u[1]   (-β*i) ]
     end# should give exponents [0.9056, 0, -14.5723]
-    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz)
+    name = "Lorenz63 system (σ=$(σ), ρ=$(ρ), β=$(β))"
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz; name = name)
 end
 
 
@@ -82,7 +83,8 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
                   i      a       o;
                   u[3]   o       u[1] - c]
     end
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler)
+    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler; name = name)
 end
 
 """
@@ -115,7 +117,8 @@ function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 
                    (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
                    (M1 + M2)*G*sin(state[3]))/den2
     end
-    return ContinuousDS(u0, eom_dp!, nothing)
+    name = "Double Pendulum system (θ1, dθ1/dt, θ2, dθ2/dt)"
+    return ContinuousDS(u0, eom_dp!, nothing; name = name)
 end
 
 """
@@ -154,7 +157,8 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
                   -i   -2λ*u[2]   o    o;
                   -2λ*u[1]  -1-2λ*u[2]  o   o]
     end
-    return ContinuousDS(u0, eom_hh!, jacob_hh)
+    name = "Hénon-Heiles system (λ=$(λ))"
+    return ContinuousDS(u0, eom_hh!, jacob_hh; name = name)
 end
 
 # function fpuβ(N::Int, u0 = rand(2N); β = 1)
@@ -201,7 +205,7 @@ z_{n+1} &= 3.78 z_n (1-z_n) + b y_n
 ```
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
-having two positive and one negative lyapunov exponent.
+having two positive and one negative Lyapunov exponent.
 
 The name comes from the fact that when plotted looks like a folded towel, in every
 projection.
@@ -222,8 +226,9 @@ function towel(u0=[0.085, -0.121, 0.075])
         @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
         -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
         0.0  0.2  3.78(1-2x[3]) ]
-        end
-    return DiscreteDS(u0, eom_towel, jacob_towel)
+    end
+    name = "Folded towel map"
+    return DiscreteDS(u0, eom_towel, jacob_towel; name = name)
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 """
@@ -271,7 +276,8 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
     @inline @inbounds jacob_standard(x) =
     @SMatrix [1 + k*cos(x[1])    1;
               k*cos(x[1])        1]
-  return DiscreteDS(u0, eom_standard, jacob_standard)
+    name = "Standard map (k=$(k))"
+    return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
 end
 
 function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
@@ -316,8 +322,8 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
         end
     end
     jacob_coupledsm!(J, u0)
-
-    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J)
+    name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
+    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
 end
 
 
@@ -349,7 +355,8 @@ Default values are the ones used in the original paper.
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
     @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-    return DiscreteDS(u0, eom_henon, jacob_henon)
+    name = "Hénon map (a=$(a), b=$(b))"
+    return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
 end # should give lyapunov exponents [0.4189, -1.6229]
 
 """
@@ -373,7 +380,8 @@ be universal by Feigenbaum [2].
 function logistic(x0=rand(); r = 4.0)
     @inline eom_logistic(x) = r*x*(1-x)
     @inline deriv_logistic(x) = r*(1-2x)
-    return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
+    name="Logistic map (r=$r)"
+    return DiscreteDS1D(x0, eom_logistic, deriv_logistic;name=name)
 end
 
 

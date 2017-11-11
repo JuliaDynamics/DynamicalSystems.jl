@@ -11,7 +11,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob]) <: ContinuousDynamicalSystem
+    ContinuousDS(state, eom! [, jacob]; name="") <: ContinuousDynamicalSystem
     Continuous dynamical system with dimension D = length(state)
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
@@ -22,8 +22,11 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 * `jacob` (function) : The function that represents the Jacobian of the system,
   given in the format: `jacob(u) => J` (i.e. returns a matrix). If the matrix is
   an `SMatrix` from `StaticArrays.jl` there are major performance gains.
+* `name::String` : A name for the dynamical system (possibly including parameter
+  values), solely for pretty-printing purposes. Always passed to the constructors
+  as a keyword.
 
-Because the `jacob` function is only necessary for a small subset of algorithms, you
+Because the `jacob` function is only necessary for a subset of algorithms, you
 do not have to provide it necessarily to the constructor (but then you can't use these
 functions).
 """
@@ -31,10 +34,12 @@ mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSyste
     state::T
     eom!::F
     jacob::J
+    name::String
 end
 
-# Constructor without Jacobian (nothing in the field)
-ContinuousDS(state, eom!) = ContinuousDS(state, eom!, nothing)
+# Constructors
+ContinuousDS(state, eom!; name = "") = ContinuousDS(state, eom!, nothing, name)
+ContinuousDS(state, eom!, j!; name="") = ContinuousDS(state, eom!, j!, name)
 
 dimension(ds::ContinuousDS) = length(ds.state)
 Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = eltype(T)
@@ -146,9 +151,14 @@ end
 @require Juno begin
 function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
     {S, F, J}
-    D = dimension(s)
     t = Juno.render(i, Juno.defaultrepr(s))
-    t[:head] = Juno.render(i, Text("$D-dimensional continuous dynamical system"))
+    if ds.name == ""
+        text = "$(dimension(s))-dimensional continuous dynamical system"
+    else
+        text = ds.name
+    end
+    t[:head] = Juno.render(i, Text(text))
+    pop!(t[:children]) # remove name field
     t
 end
 end
