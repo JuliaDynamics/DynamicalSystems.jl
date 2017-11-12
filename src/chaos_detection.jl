@@ -59,7 +59,7 @@ then it holds
 ```math
 \\text{GALI}_k(t) \\approx
     \\begin{cases}
-      \\text{const.}, & \\text{if} \\;\\; 2 \\le k \\le d  \\\\
+      \\text{const.}, & \\text{if} \\;\\; 1 \\le k \\le d  \\\\
       t^{-(k - d)}, & \\text{if} \\;\\;  d < k \\le D - d \\\\
       t^{-(2k - D)}, & \\text{if} \\;\\;  D -s < k \\le D
     \\end{cases}

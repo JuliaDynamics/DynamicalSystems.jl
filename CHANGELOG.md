@@ -1,13 +1,22 @@
 # v0.7.0:
+## Breaking
+Nothing.
+
+## New Additions
 * Added the Generalized Alignment Index method: `gali`
 * Added GALI for continuous systems.
 * Added the Henon Helies system in famous_systems.
-* Change the pretty-printing of all systems, by adding an additional
-  `name` field everywhere that can be used for convenience.
-* Bugfix of the printing of `Dataset` on Juno.
+* Added nonlinearly coupled standard maps in famous systems.
 * Added `BigDiscreteDS` (still need methods for e.g. lyapunovs).
   * Still need to add docs for it.
+
+## Bugfixes and Enhancements
+* Change the pretty-printing of all systems, by adding an additional
+  `name` field everywhere that can be used for convenience.
 * Added automated jacobian computation for `BigDiscreteDS`.
+* Bugfix of the printing of `Dataset` on Juno where the set was always printed
+  on the console.
+
 
 # v0.6.0:
 * Many minor bugfixes and many corrections to the documentation examples.
