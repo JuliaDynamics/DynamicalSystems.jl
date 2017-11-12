@@ -1,5 +1,5 @@
 println("\nTesting continuous system evolution...")
-using StaticArrays, Base.Test, DynamicalSystems
+using StaticArrays, Base.Test
 
 @testset "Logistic Map" begin
 
@@ -66,4 +66,21 @@ end
     @test isapprox.(J1, J4; rtol = 1e-6) == trues(J1)
     @test eltype(J4) == BigFloat
   end
+end
+
+@testset "Coupled standard maps" begin
+    M = 5; ks = 0.5ones(M); Γ = 0.05;
+    ds = Systems.coupledstandardmaps(M, 0.1rand(2M); ks=ks, Γ = Γ)
+
+    u0 = copy(ds.state)
+    st1 = evolve(ds, 100)
+
+    @test st1 != u0
+    @test u0 == ds.state
+    evolve!(ds, 100)
+    @test ds.state == st1
+
+    Jbef = copy(ds.J)
+    ds.jacob!(ds.J, ds.state)
+    @test Jbef != ds.J
 end

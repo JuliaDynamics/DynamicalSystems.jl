@@ -280,6 +280,26 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
     return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
 end
 
+"""
+```julia
+    coupledstandardmaps(M::Int, u0 = 0.001rand(2M); ks = ones(M), Γ = 1.0)
+```
+```math
+\\begin{aligned}
+\\theta_{i}' &= \\theta_i + p_{i}' \\\\
+p_{i}' &= p_i + k_i\\sin(\\theta_i) - \\Gamma \\left[
+\\sin(\\theta_{i+1} - \\theta_{i}) + \\sin(\\theta_{i-1} - \\theta_{i})
+\\right]
+\\end{aligned}
+```
+A discrete system of `M` nonlinearly coupled standard maps, first
+introduced in [1] to study diffusion and chaos thresholds.
+The *total* dimension of the system
+is `2M`. The maps are coupled through `Γ`
+and the `i`-th map has a nonlinear parameter `ks[i]`.
+
+[1] : H. Kantz & P. Grassberger, J. Phys. A **21**, pp 127–133 (1988)
+"""
 function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     ks = ones(M), Γ = 1.0)
 

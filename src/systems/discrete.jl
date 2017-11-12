@@ -25,7 +25,7 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
-If the `jacob` is not provided by the user, it is created efficiently
+If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
@@ -89,13 +89,13 @@ performs all operations `in-place`,
 * `jacob!` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob!(J, x)` which means that given a state-vector
   `x` it writes in-place the Jacobian in `J`.
-* `J::Matrix{T}` : Initialized Jacobian matrix. This field is not
+* `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
   displayed.
 * `dummystate::Vector{T}` : Dummy vector, which most of the time fills the
   role of the previous state in e.g. [`evolve!`](@ref). This field is not
   displayed.
 
-If the `jacob` is not provided by the user, it is created efficiently
+If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
@@ -107,18 +107,18 @@ mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
     name::String
 end
 function BigDiscreteDS(u0, f!, j!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0));name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
 
     dum = copy(u0)
     BigDiscreteDS(u0, f!, j!, J, dum, name)
 end
 function BigDiscreteDS(u0, f!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0));name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
     dum = copy(u0)
 
     cfg = ForwardDiff.JacobianConfig(f!, dum, u0)
     FD_jacob!(J, x) = ForwardDiff.jacobian!(J, f!, dum, x, cfg)
-    return BigDiscreteDS(u0, f!, FD_jacob!!, J, dum, name)
+    return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 
 dimension(::DiscreteDS{D, T, F, J}) where {D, T, F, J} = D

@@ -28,8 +28,8 @@ of all these combinations can be obtained from the function [`lambdaperms`](@ref
 
 ## Description
 Each element
-of `inds` **must be unique** such that the resulting matrix is orthogonal
-*and* represents the group of special reflections and permutations.
+of `inds` *must be unique* such that the resulting matrix is orthogonal
+and represents the group of special reflections and permutations.
 
 Deciding the appropriate values for `λ, inds, sings` is not trivial. However, in
 ref. [2] there is a lot of information that can help with that decision. Also,
@@ -88,7 +88,7 @@ due to Schmelcher & Diakonos [1].
 (container of `SVector`s) to be evolved.
 
 ## Optional Arguments
-The optional arguments `λs, indss, singss` **must be containers** of appropriate
+The optional arguments `λs, indss, singss` *must be containers* of appropriate
 values, besides `λs` which can also be a number. The elements of those containers
 are passed to: `lambdamatrix(λ, inds, sings)`, which creates the appropriate
 ``\\mathbf{\\Lambda}_k`` matrix (see [`lambdamatrix`](@ref)
@@ -124,9 +124,9 @@ Note that algorithm is intented for *unstable* orbits, and thus there are cases
 where it may not work for stable orbits.
 
 ## Performance Notes
-**All** initial conditions are
-evolved for **all** ``\\mathbf{\\Lambda}_k`` which can very quickly lead to
-long computation times, so be wise on your choice of `λs, indss, singss`!
+*All* initial conditions are
+evolved for *all* ``\\mathbf{\\Lambda}_k`` which can very quickly lead to
+long computation times.
 
 ## References
 
