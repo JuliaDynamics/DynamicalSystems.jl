@@ -1,10 +1,31 @@
+# v0.7.0:
+## Breaking
+Nothing.
+
+## New Additions
+* Added the Generalized Alignment Index method: `gali`
+* Added GALI for continuous systems.
+* Added the Henon Helies system in famous_systems.
+* Added nonlinearly coupled standard maps in famous systems.
+* Added `BigDiscreteDS` (still need methods for e.g. lyapunovs).
+  * Still need to add docs for it.
+
+## Bugfixes and Enhancements
+* Change the pretty-printing of all systems, by adding an additional
+  `name` field everywhere that can be used for convenience.
+* Added automated jacobian computation for `BigDiscreteDS`.
+* Bugfix of the printing of `Dataset` on Juno where the set was always printed
+  on the console.
+
+
 # v0.6.0:
 * Many minor bugfixes and many corrections to the documentation examples.
 * `Dataset` now always converts the input into vector of `SVectors` for better
   interaction with NearestNeighbors.jl
 * **[BREAKING]** : `timeseries` function was renamed to `trajectory`.
     * Now the documentation is clear: `trajectory` means a set of one-dimensional
-      timeseries (or a *multi-dimensional* timeseries), while `timeseries` always means a one-dimensional timeseries
+      timeseries (or a *multi-dimensional* timeseries), while `timeseries`
+      always means a one-dimensional timeseries
 * Removed function `perform_non0hist`, as it had no reason to exist.
 
 

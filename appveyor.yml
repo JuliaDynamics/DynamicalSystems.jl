@@ -8,6 +8,14 @@ branches:
     - master
     - /release-.*/
 
+notifications:
+  - provider: Email
+    to:
+      - datseris.george@gmail.com
+    on_build_success: false
+    on_build_failure: true
+    on_build_status_changed: false
+
 install:
   - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
 # Download most recent Julia Windows binary

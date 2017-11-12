@@ -35,4 +35,7 @@ include("delay_coords.jl")
 # Periodicity:
 include("periodic.jl")
 
+# Chaos Detection:
+include("chaos_detection.jl")
+
 end # module

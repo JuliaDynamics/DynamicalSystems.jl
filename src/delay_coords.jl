@@ -15,11 +15,12 @@ export estimate_delay, neighborhood, Reconstruction, KDTree, Reconstruction
 `D`-dimensional reconstruction object with delay `τ`, created from a vector `s::V`.
 `s` is the only field of `Reconstruction`.
 
-The `n`th row of this object is formally the `D`-dimensional vector:
+## Description
+The `n`th row of `Reconstruction` is formally the `D`-dimensional vector
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
-which is created only on demand. (``s`` = `R.s` with `R` the `Reconstruction` object)
+which is created only on demand.
 
 See [`reconstruct`](@ref) for usage.
 """
@@ -88,11 +89,14 @@ Create and return an efficient [`Reconstruction`](@ref) data structure that serv
 the
 delay coordinates embedding [1, 2] reconstruction of the signal `s`.
 The reconstuction has
-dimension `D` and delay `τ` (measured in indices). This object can have same
+dimension `D` and delay `τ` (measured in indices).
+
+## Description
+The reconstruction object `R` can have same
 invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
-`R` interfaces `s` and can be accessed similarly to a [`Dataset`](@ref):
+`R` can be accessed similarly to a [`Dataset`](@ref):
 ```julia
 R = reconstruct(s, 4, 1) # delay coords. reconstruction of dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
@@ -109,6 +113,8 @@ call functions like [`generalized_dim`](@ref) multiple times.
 The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
 that `length(R) = length(s) - (D-1)*τ` (i.e. the amount of D-dimensional points
 "contained" in `R`) but `size(R) = (length(R), D)`.
+
+## References
 
 [1] : F. Takens, *Detecting Strange Attractors in Turbulence — Dynamical
 Systems and Turbulence*, Lecture Notes in Mathematics **366**, Springer (1981)
@@ -217,6 +223,7 @@ end
 
 # Neighborhoods:
 """
+    AbstractNeighborhood
 Supertype of methods for deciding the neighborhood of points for a given point.
 
 Concrete subtypes:
@@ -226,8 +233,7 @@ Concrete subtypes:
   neighbors that have distance < `ϵ` from the point.
 
 Notice that these distances are always computed using the `Euclidean()` distance
-in `D`-dimensional space, irrespectively of the `distance` used in the
-function [`numericallyapunov`](@ref).
+in `D`-dimensional space.
 
 See also [`neighborhood`](@ref) or [`numericallyapunov`](@ref).
 """
@@ -244,11 +250,19 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 """
     neighborhood(n, point, tree::KDTree, method::AbstractNeighborhood)
 Return a vector of indices which are the neighborhood of `point`, whose index
-in the original data is `n`. Both `point` and `n` must be provided because the
-`tree` has indices in different sorting.
-The `method` can be a subtype of [`AbstractNeighborhood`](@ref).
+in the original data is `n`.
 
-For example:
+Both `point` and `n` must be provided because the
+`tree` has indices in different sorting.
+
+The `method` can be a subtype of [`AbstractNeighborhood`](@ref):
+
+* `FixedMassNeighborhood(K::Int)`  : The neighborhood of a point consists of the `K`
+  nearest neighbors of the point.
+* `FixedSizeNeighborhood(ϵ::Real)` : The neighborhood of a point consists of all
+  neighbors that have distance < `ϵ` from the point.
+
+`neighborhood` works for *any* kind of `AbstractDataset`, for example
 ```julia
 R = some_dataset
 tree = KDTree(R)
@@ -260,7 +274,9 @@ Notice that the distances in the trees are always computed using the `Euclidean(
 distance in `D`-dimensional space, irrespectively of the `distance` used in the
 [`numericallyapunov`](@ref) function.
 
-`neighborhood` **simply interfaces** the functions
+## References
+
+`neighborhood` simply interfaces the functions
 `knn` and `inrange` from
 [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) by using
 the last argument, `method`.
@@ -290,6 +306,23 @@ numericallyapunov(R::Reconstruction, ks;  refstates, distance, method)
 ```
 Return `E = [E(k) for k ∈ ks]`, where `E(k)` is the average logarithmic distance for
 nearby states that are evolved in time for `k` steps (`k` must be integer).
+
+## Keyword Arguments
+
+* `refstates::AbstractVector{Int} = 1:(length(R) - ks[end])` : Vector of indices
+  that notes which
+  states of the reconstruction should be used as "reference states", which means
+  that the algorithm is applied for all state indices contained in `refstates`.
+* `method::AbstractNeighborhood = FixedMassNeighborhood(1)` : The method to
+  be used when evaluating
+  the neighborhood of each reference state. See
+  [`AbstractNeighborhood`](@ref) or [`neighborhood`](@ref) for more info.
+* `distance::Metric = Cityblock()` : The distance function used in the
+  logarithmic distance of nearby states. The allowed distances are `Cityblock()`
+  and `Euclidean()`. See below for more info on this choice.
+
+
+## Description
 If the reconstruction
 exhibits exponential divergence of nearby states, then it should clearly hold:
 ```math
@@ -313,21 +346,6 @@ state is
 calculated as the "time" index `k` increases. The average of the above over
 all neighborhood states over all reference states is the returned result.
 
-The following keywords tune the algorithm behavior:
-
-* `refstates::AbstractVector{Int} = 1:(length(R) - ks[end])` : Vector of indices
-  that notes which
-  states of the reconstruction should be used as "reference states", which means
-  that the algorithm is applied for all state indices contained in `refstates`.
-* `distance::Metric = Cityblock()` : The distance function used in the
-  logarithmic distance of nearby states. The allowed distances are `Cityblock()`
-  and `Euclidean()`. See below for more info on this
-  choice which has fundamental impact on the algorithm.
-* `method::AbstractNeighborhood = FixedMassNeighborhood(1)` : The method to
-  be used when evaluating
-  the neighborhood of each reference state. See
-  [`AbstractNeighborhood`](@ref) for more info on this choice.
-
 If the `Metric` is `Euclidean()` then calculate the Euclidean distance of the
 full `D`-dimensional points (distance ``d_E`` in ref. [1]).
 If however the `Metric` is `Cityblock()`, calculate
@@ -342,6 +360,8 @@ distances are used for dispatch purposes *only*).
 
 This function assumes that the Theiler window (see [1]) is the same as the delay time:
 ``w  = \\tau``.
+
+## References
 
 [1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
 (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)

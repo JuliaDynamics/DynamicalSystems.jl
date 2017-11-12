@@ -12,11 +12,11 @@ using DynamicalSystems, StaticArrays
 lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
 ```
 ```math
-\\begin{align*}
+\\begin{aligned}
 \\dot{X} &= \\sigma(Y-X) \\\\
 \\dot{Y} &= -XZ + \\rho X -Y \\\\
 \\dot{Z} &= XY - \\beta Z
-\\end{align*}
+\\end{aligned}
 ```
 The famous three dimensional system due to Lorenz [1], shown to exhibit
 so-called "deterministic nonperiodic flow". It was originally invented to study a
@@ -30,7 +30,7 @@ Default values are the ones used in the original paper.
 
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
-function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
     @inline @inbounds function eom_lorenz!(du, u)
         du[1] = σ*(u[2]-u[1])
         du[2] = u[1]*(ρ-u[3]) - u[2]
@@ -43,7 +43,8 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
                   (ρ*i - u[3])   (-i)   (-u[1]);
                   u[2]           u[1]   (-β*i) ]
     end# should give exponents [0.9056, 0, -14.5723]
-    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz)
+    name = "Lorenz63 system (σ=$(σ), ρ=$(ρ), β=$(β))"
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz; name = name)
 end
 
 
@@ -52,11 +53,11 @@ end
 roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 ```
 ```math
-\\begin{align*}
+\\begin{aligned}
 \\dot{x} &= -y-z \\\\
 \\dot{y} &= x+ay \\\\
 \\dot{z} &= -b + z(x-c)
-\\end{align*}
+\\end{aligned}
 ```
 This three-dimensional continuous system is due to Rössler [1].
 It is a system that by design behaves similarly
@@ -82,7 +83,8 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
                   i      a       o;
                   u[3]   o       u[1] - c]
     end
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler)
+    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler; name = name)
 end
 
 """
@@ -115,8 +117,76 @@ function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 
                    (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
                    (M1 + M2)*G*sin(state[3]))/den2
     end
-    return ContinuousDS(u0, eom_dp!, nothing)
+    name = "Double Pendulum system (θ1, dθ1/dt, θ2, dθ2/dt)"
+    return ContinuousDS(u0, eom_dp!, nothing; name = name)
 end
+
+"""
+    henonhelies(u0=[0, -0.25, 0.42081,0]; λ = 1)
+```math
+\\begin{aligned}
+\\dot{x} &= p_x \\\\
+\\dot{y} &= p_y \\\\
+\\dot{p}_x &= -x -2\\lambda xy \\\\
+\\dot{p}_y &= -y -\\lambda (x^2 - y^2)
+\\end{aligned}
+```
+
+The Hénon–Heiles system [1] was introduced as a simplification of the motion
+of a star around a galactic center. It was originally intended to study the
+existence of a "third integral of motion" (which would make this 4D system integrable).
+In that search, the authors encountered chaos, as the third integral existed
+for only but a few initial conditions.
+
+The default initial condition is a typical chaotic orbit.
+
+[1] : Hénon, M. & Heiles, C., The Astronomical Journal **69**, pp 73–79 (1964)
+"""
+function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    @inline @inbounds function eom_hh!(du, u)
+        du[1] = u[3]
+        du[2] = u[4]
+        du[3] = -u[1] - 2λ*u[1]*u[2]
+        du[4] = -u[2] -λ*(u[1]^2 - u[2]^2)
+    end
+    @inline @inbounds function jacob_hh(u)
+        @SMatrix [o    o     i    o;
+                  o    o     o    i;
+                  -i   -2λ*u[2]   o    o;
+                  -2λ*u[1]  -1-2λ*u[2]  o   o]
+    end
+    name = "Hénon-Heiles system (λ=$(λ))"
+    return ContinuousDS(u0, eom_hh!, jacob_hh; name = name)
+end
+
+# function fpuβ(N::Int, u0 = rand(2N); β = 1)
+#     i = one(eltype(u0))
+#     o = zero(eltype(u0))
+#     J = zeros(eltype(u0), 2N, 2N)
+#     for i in 1:N
+#         J[i, i+N] = 1
+#     end
+#     @inbounds function eom_fpuβ!(du, u)
+#         for i in 1:N
+#             du[i] = u[i+N]
+#             du[i+N] = 2(u[i+1] - u[i]) + 4(u[i+1] - u[i])^3
+#         end
+#         du[N] = u[1]
+#         du[2N] = 2(u[1] - u[N]) + 4(u[1] - u[N])^3
+#     end
+#     @inbounds function jacob_fpuβ(u)
+#         for i in 1:N-1
+#             J[i+N, i]   =-2 - 12(u[i+1] - u[i])^2
+#             J[i+N, i+1] = 2 + 12(u[i+1] - u[i])^2
+#         end
+#         J[2N, N] = -2 - 12(u[1] - u[N])^2
+#         J[2N, 1] =  2 + 12(u[1] - u[N])^2
+#         return SMatrix{2N,2N}(J)
+#     end
+#     return ContinuousDS(u0, eom_fpuβ!, jacob_fpuβ)
+# end
 
 #######################################################################################
 #                                     Discrete                                        #
@@ -126,16 +196,16 @@ end
 towel(u0 = [0.085, -0.121, 0.075])
 ```
 ```math
-\\begin{align*}
+\\begin{aligned}
 x_{n+1} &= a x_n (1-x_n) -0.05 (y_n +0.35) (1-2z_n) \\\\
 y_{n+1} &= 0.1 \\left( \\left( y_n +0.35 \\right)\\left( 1+2z_n\\right) -1 \\right)
 \\left( 1 -1.9 x_n \\right) \\\\
 z_{n+1} &= 3.78 z_n (1-z_n) + b y_n
-\\end{align*}
+\\end{aligned}
 ```
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
-having two positive and one negative lyapunov exponent.
+having two positive and one negative Lyapunov exponent.
 
 The name comes from the fact that when plotted looks like a folded towel, in every
 projection.
@@ -156,8 +226,9 @@ function towel(u0=[0.085, -0.121, 0.075])
         @SMatrix [3.8*(1 - 2x[1]) -0.05*(1-2x[3]) 0.1*(x[2] + 0.35);
         -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
         0.0  0.2  3.78(1-2x[3]) ]
-        end
-    return DiscreteDS(u0, eom_towel, jacob_towel)
+    end
+    name = "Folded towel map"
+    return DiscreteDS(u0, eom_towel, jacob_towel; name = name)
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 """
@@ -165,10 +236,10 @@ end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 standardmap(u0=0.001rand(2); k = 0.971635)
 ```
 ```math
-\\begin{align*}
+\\begin{aligned}
 \\theta_{n+1} &= \\theta_n + p_{n+1} \\\\
 p_{n+1} &= p_n + k\\sin(\\theta_n)
-\\end{align*}
+\\end{aligned}
 ```
 The standard map (also known as Chirikov standard map) is a two dimensional,
 area-preserving chaotic mapping due to Chirikov [1]. It is one of the most studied
@@ -185,7 +256,8 @@ destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle varia
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
-[1] : B. V. Chirikov, Preprint N. **267**, Institute of Nuclear Physics, Novosibirsk (1969)
+[1] : B. V. Chirikov, Preprint N. **267**, Institute of
+Nuclear Physics, Novosibirsk (1969)
 
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """
@@ -204,18 +276,70 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
     @inline @inbounds jacob_standard(x) =
     @SMatrix [1 + k*cos(x[1])    1;
               k*cos(x[1])        1]
-  return DiscreteDS(u0, eom_standard, jacob_standard)
+    name = "Standard map (k=$(k))"
+    return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
 end
+
+function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
+    ks = ones(M), Γ = 1.0)
+
+    idxs = 1:M # indexes of thetas
+    idxsm1 = circshift(idxs, +1) #indexes of thetas - 1
+    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
+    pidx = M+1:2M
+    J = zeros(eltype(u0), 2M, 2M)
+    # Set ∂/∂p entries (they are eye(M,M))
+    # And they dont change they are constants
+    for i in idxs
+        J[i, i+M] = 1
+        J[i+M, i+M] = 1
+    end
+    @inbounds function eom_coupledsm!(xnew, x)
+        θs = @view x[idxs]
+        ps = @view x[pidx]
+        θsp1 = view(x, idxsp1)
+        θsm1 = view(x, idxsm1)
+        @. xnew[pidx] = mod2pi(
+                ps + ks*sin(θs)
+                -Γ*(sin(θsp1 - θs) + sin(θsm1 - θs)))
+        xnew[idxs] .= mod2pi.(view(xnew, pidx) .+ θs);
+    end
+
+    @inbounds function jacob_coupledsm!(J, x)
+        # x[i] ≡ θᵢ
+        # x[[idxsp1[i]]] ≡ θᵢ+₁
+        # x[[idxsm1[i]]] ≡ θᵢ-₁
+        for i in idxs
+            cosθ = cos(x[i])
+            cosθp= cos(x[idxsp1[i]] - x[i])
+            cosθm= cos(x[idxsm1[i]] - x[i])
+            J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
+            J[i+M, idxsm1[i]] = - Γ*cosθm
+            J[i+M, idxsp1[i]] = - Γ*cosθp
+            J[i, i] = 1 + J[i+M, i]
+            J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
+            J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
+        end
+    end
+    jacob_coupledsm!(J, u0)
+    name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
+    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
+end
+
+
+
+
+
 
 """
 ```julia
 henon(u0=zeros(2); a = 1.4, b = 0.3)
 ```
 ```math
-\\begin{align*}
+\\begin{aligned}
 x_{n+1} &= 1 - ax^2_n+y_n \\\\
 y_{n+1} & = bx_n
-\\end{align*}
+\\end{aligned}
 ```
 The Hénon map is a two-dimensional mapping due to Hénon [1] that can display a strange
 attractor (at the default parameters). In addition, it also displays many other aspects
@@ -231,7 +355,8 @@ Default values are the ones used in the original paper.
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
     @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-    return DiscreteDS(u0, eom_henon, jacob_henon)
+    name = "Hénon map (a=$(a), b=$(b))"
+    return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
 end # should give lyapunov exponents [0.4189, -1.6229]
 
 """
@@ -255,7 +380,8 @@ be universal by Feigenbaum [2].
 function logistic(x0=rand(); r = 4.0)
     @inline eom_logistic(x) = r*x*(1-x)
     @inline deriv_logistic(x) = r*(1-2x)
-    return DiscreteDS1D(x0, eom_logistic, deriv_logistic)
+    name="Logistic map (r=$r)"
+    return DiscreteDS1D(x0, eom_logistic, deriv_logistic;name=name)
 end
 
 
