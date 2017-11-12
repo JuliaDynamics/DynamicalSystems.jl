@@ -15,6 +15,7 @@ include("nlts_tests.jl")
 # Periodicity:
 include("periodicity_tests.jl")
 # Chaos Detection:
+include("chaos_detection_tests.jl")
 
 ti = time() - ti
 println("\nTest took total time of:")
