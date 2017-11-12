@@ -146,9 +146,8 @@ See also [`evolve!`](@ref).
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state
-    f = ds.eom
     for i in 1:N
-        st = f(st)
+        st = ds.eom(st)
     end
     return st
 end
@@ -163,12 +162,11 @@ function evolve(ds::BigDiscreteDS, N::Int = 1)
 end
 
 """
-    evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict()) -> ds
+    evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict())
 Same as [`evolve`](@ref), but also updates the system's `state` field with the final
 state after evolution.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
-    st = ds.state
     ds.state = evolve(ds, N)
     return ds
 end

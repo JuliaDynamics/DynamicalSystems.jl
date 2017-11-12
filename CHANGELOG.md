@@ -16,6 +16,8 @@ Nothing.
 * Added automated jacobian computation for `BigDiscreteDS`.
 * Bugfix of the printing of `Dataset` on Juno where the set was always printed
   on the console.
+* Major bugfix in `lyapunov` for `DiscreteDS` where the test state was initialized
+  before the transient iterations!!!
 
 
 # v0.6.0:

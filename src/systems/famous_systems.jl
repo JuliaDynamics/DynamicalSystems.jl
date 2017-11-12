@@ -304,7 +304,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     ks = ones(M), Γ = 1.0)
 
     idxs = 1:M # indexes of thetas
-    idxsm1 = circshift(idxs, +1) #indexes of thetas - 1
+    idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
     idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
     pidx = M+1:2M
     J = zeros(eltype(u0), 2M, 2M)
@@ -314,16 +314,19 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
         J[i, i+M] = 1
         J[i+M, i+M] = 1
     end
+
     @inbounds function eom_coupledsm!(xnew, x)
-        θs = @view x[idxs]
-        ps = @view x[pidx]
-        θsp1 = view(x, idxsp1)
-        θsm1 = view(x, idxsm1)
-        @. xnew[pidx] = mod2pi(
-                ps + ks*sin(θs)
-                -Γ*(sin(θsp1 - θs) + sin(θsm1 - θs)))
-        xnew[idxs] .= mod2pi.(view(xnew, pidx) .+ θs);
+        for i in idxs
+
+            xnew[i+M] = mod2pi(
+                x[i+M] + ks[i]*sin(x[i]) -
+                Γ*(sin(x[idxsp1[i]] - x[i]) + sin(x[idxsm1[i]] - x[i]))
+            )
+
+            xnew[i] = mod2pi(x[i] + xnew[i+M])
+        end
     end
+
 
     @inbounds function jacob_coupledsm!(J, x)
         # x[i] ≡ θᵢ

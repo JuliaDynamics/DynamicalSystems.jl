@@ -101,56 +101,38 @@ BigDiscreteDS
 In this case, *all* operations are done in place both for the equations of motion
 as well as the Jacobian. In addition, the possibility of providing an initialized
 Jacobian allows one to "cheat". For example, let's look at the definition of the
-equations of motion for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
+function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
 ```julia
-function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
-    ks = ones(M), Γ = 1.0)
+idxs = 1:M #indices of the θ coordinates
+J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
+# Set ∂/∂p entries (they are eye(M,M))
+# And they don't change, they are constants
+for i in idxs
+    J[i, i+M] = 1
+    J[i+M, i+M] = 1
+end
 
-    idxs = 1:M # indexes of thetas
-    idxsm1 = circshift(idxs, +1) #indexes of thetas - 1
-    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
-    pidx = M+1:2M
-    J = zeros(eltype(u0), 2M, 2M)
-    # Set ∂/∂p entries (they are eye(M,M))
-    # And they dont change they are constants
+@inbounds function jacob_coupledsm!(J, x)
+    # x[i] ≡ θᵢ
+    # x[[idxsp1[i]]] ≡ θᵢ+₁
+    # x[[idxsm1[i]]] ≡ θᵢ-₁
     for i in idxs
-        J[i, i+M] = 1
-        J[i+M, i+M] = 1
+        cosθ = cos(x[i])
+        cosθp= cos(x[idxsp1[i]] - x[i])
+        cosθm= cos(x[idxsm1[i]] - x[i])
+        J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
+        J[i+M, idxsm1[i]] = - Γ*cosθm
+        J[i+M, idxsp1[i]] = - Γ*cosθp
+        J[i, i] = 1 + J[i+M, i]
+        J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
+        J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
     end
-    @inbounds function eom_coupledsm!(xnew, x)
-        θs = @view x[idxs]
-        ps = @view x[pidx]
-        θsp1 = view(x, idxsp1)
-        θsm1 = view(x, idxsm1)
-        @. xnew[pidx] = mod2pi(
-                ps + ks*sin(θs)
-                -Γ*(sin(θsp1 - θs) + sin(θsm1 - θs)))
-        xnew[idxs] .= mod2pi.(view(xnew, pidx) .+ θs);
-    end
-
-    @inbounds function jacob_coupledsm!(J, x)
-        # x[i] ≡ θᵢ
-        # x[[idxsp1[i]]] ≡ θᵢ+₁
-        # x[[idxsm1[i]]] ≡ θᵢ-₁
-        for i in idxs
-            cosθ = cos(x[i])
-            cosθp= cos(x[idxsp1[i]] - x[i])
-            cosθm= cos(x[idxsm1[i]] - x[i])
-            J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
-            J[i+M, idxsm1[i]] = - Γ*cosθm
-            J[i+M, idxsp1[i]] = - Γ*cosθp
-            J[i, i] = 1 + J[i+M, i]
-            J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
-            J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
-        end
-    end
-    jacob_coupledsm!(J, u0)
-    name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
-    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
 end
 ```
-The function that evaluates the Jacobian (in-place) only bothers to access half
+The function that evaluates the Jacobian (in-place) only accesses half
 of the matrix elements, since the other half is constant and correctly initialized.
+Afterwards this function as well as `J` are passed into the constructor
+with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")`.
 
 
 
