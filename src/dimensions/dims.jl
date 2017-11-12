@@ -1,5 +1,8 @@
 using LsqFit: curve_fit
 export linear_region, linear_regions, estimate_boxsizes
+export boxcounting_dim, capacity_dim, generalized_dim,
+information_dim, correlation_dim, estimate_boxsizes,
+kaplanyorke_dim
 #######################################################################################
 # Functions and methods to deduce linear scaling regions
 #######################################################################################
@@ -136,11 +139,6 @@ end
 #######################################################################################
 # Dimensions
 #######################################################################################
-
-export boxcounting_dim, capacity_dim, generalized_dim,
-information_dim, correlation_dim, collision_dim, estimate_boxsizes,
-kaplanyorke_dim
-
 magnitude(x::Real) = round(log10(x))
 
 """
@@ -174,10 +172,10 @@ Return the `α` order generalized dimension of the `dataset`.
 
 ## Description
 The returned dimension is approximated by the
-(negated) power law exponent of the scaling of the [`genentropy`](@ref)
+(inverse) power law exponent of the scaling of the [`genentropy`](@ref)
 versus the box size `ε`.
 
-**WARNING** - This call performs a lot of automated steps:
+Calling this function performs a lot of automated steps:
 
   1. A vector of box sizes is decided by calling `es = estimate_boxsizes(dataset)`.
   2. For each element of `es` the appropriate entropy is
@@ -195,7 +193,7 @@ The following aliases are provided:
 
   * α = 0 : `boxcounting_dim`, `capacity_dim`
   * α = 1 : `information_dim`
-  * α = 2 : `correlation_dim`, `collision_dim`
+  * α = 2 : `correlation_dim`
 """
 function generalized_dim(α, data::Dataset)
     es = estimate_boxsizes(data)
@@ -211,7 +209,6 @@ generalized_dim(α, convert(Dataset, matrix))
 # Aliases
 "correlation_dim(args...) = generalized_dim(2, args...)"
 correlation_dim(args...) = generalized_dim(2, args...)
-collision_dim = correlation_dim
 
 "capacity_dim(args...) = generalized_dim(0, args...)"
 capacity_dim(args...) = generalized_dim(0, args...)
@@ -224,7 +221,7 @@ information_dim(args...) = generalized_dim(1, args...)
 
 """
     kaplanyorke_dim(lyapunovs::AbstractVector)
-Calculate the Kaplan-Yorke dimension [1] (aka Lyapunov dimension).
+Calculate the Kaplan-Yorke dimension [1] (a.k.a. Lyapunov dimension).
 
 ## Description
 The Kaplan-Yorke dimension is simply the point where
