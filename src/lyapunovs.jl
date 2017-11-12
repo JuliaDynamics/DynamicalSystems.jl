@@ -253,9 +253,9 @@ function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
     tbeom! = (t, u, du) -> begin
         f!(view(du, :, 1), u)
         A_mul_B!(
-        view(du, :, 2:D+1),
-        jac(view(u, :, 1)),
-        view(u, :, 2:D+1)
+            view(du, :, 2:D+1),
+            jac(view(u, :, 1)),
+            view(u, :, 2:D+1)
         )
     end
 

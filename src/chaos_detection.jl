@@ -13,9 +13,9 @@ function variational_eom_gali(ds::ContinuousDS, k::Int)
     veom! = (t, u, du) -> begin
         J = jac(view(u, :, 1))
         f!(view(du, :, 1), u)
-        for i in 1:k
-            du[:, i+1] .= J*view(u, :, i+1)
-        end
+        # for i in 1:k
+        du[:, 2:k+1] .= J*view(u, :, 2:k+1)
+        # end
     end
     return veom!
 end
@@ -59,12 +59,9 @@ then it holds
 ```math
 \\text{GALI}_k(t) \\approx
     \\begin{cases}
-      \\text{const.}, & \\text{if} \\;\\; 2 \\le k \\le d
-      \\;\\; \\text{and}
-      \\;\\; d \\ge 2  \\\\
-      t^{-(k - d)}, & \\text{if} \\;\\;  d < k \\le D - d \\;\\; \\text{and}
-      \\;\\; s\\neq D/2 \\\\
-      t^{-(2k - D)}, & \\text{if} \\;\\;  D/2 -s < k \\le D
+      \\text{const.}, & \\text{if} \\;\\; 2 \\le k \\le d  \\\\
+      t^{-(k - d)}, & \\text{if} \\;\\;  d < k \\le D - d \\\\
+      t^{-(2k - D)}, & \\text{if} \\;\\;  D -s < k \\le D
     \\end{cases}
 ```
 Traditionally, if ``\\text{GALI}_k(t)`` does not become less than
@@ -251,45 +248,90 @@ end
         wsdummy .= ws
         # SVD fact for gali:
         zs .= svdfact(ws)[:S]
+        # println("zs = $zs")
+
         gali_k[ti] =  prod(zs)
         if gali_k[ti] < threshold
             break
         end
-        # println("θ = $(x[1])")
-        # println("J11 = $(J[1,1])")
-        # println("w1 = $(ws[:, 1])")
-        # println()
+        println()
     end
 
     return gali_k[1:ti], rett[1:ti]
 end
 
-#
+
+
+
+
+
+
+
+
+
+
+######################################### TEST
+
+
+
+
+
+
+
+
+
+
+## Continuous test
+
 # using PyPlot
 # figure()
 # sp = [0, .295456, .407308431, 0] #stable periodic orbit
 # qp = [0, .483000, .278980390, 0] #quasiperiodic orbit
 # up = [0, .469120, .291124890, 0] #periodic near unstable periodic orbit
 # ch = [0, .509000, .254624859, 0] #chaotic orbit
+# dt = 0.5
 #
 # ds = Systems.henonhelies(sp)
-# dt = 0.5
+#
 # diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
 # tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 #
-# subplot(2,1,1)
+# subplot(2,2,1)
 # plot(tr[:,1], tr[:,3], alpha = 0.5,
-# label="orbit",marker="o",markersize=2, linewidth=0)
+# label="sp",marker="o",markersize=2, linewidth=0)
 #
 # legend()
 #
-# subplot(2,1,2)
+# subplot(2,2,2)
 # for k in [2,3,4]
 #     g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
 #     loglog(t, 1./t.^(2k-4), label="t^-$(2k-4)")
 #     loglog(t, g, label="GALI_$(k)")
 # end
+# legend(fontsize=14)
+# tight_layout()
+#
+# ds = Systems.henonhelies(ch)
+#
+# diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
+# tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
+#
+# subplot(2,2,3)
+# plot(tr[:,1], tr[:,3], alpha = 0.5,
+# label="ch",marker="o",markersize=2, linewidth=0)
+#
 # legend()
+#
+# subplot(2,2,4)
+# ls = lyapunovs(ds, 10000.0, dt=dt)
+#
+# for k in [2,3,4]
+#     ex = sum(ls[1] - ls[j] for j in 2:k)
+#     g, t = gali(ds, k, 1000; dt = dt)
+#     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
+#     semilogy(t, g, label="GALI_$(k)")
+# end
+# legend(fontsize=14)
 # tight_layout()
 
 # bouhouhou it doesn't give power-law for regular motion... :(
