@@ -94,6 +94,9 @@ perform all operations `in-place`.
 * `dummystate::Vector{T}` : Dummy vector, which most of the time fills the
   role of the previous state in e.g. [`evolve`](@ref). This field is not
   displayed.
+* `name::String` : A name for the dynamical system (possibly including parameter
+  values), solely for pretty-printing purposes. Always passed to the constructors
+  as a keyword.
 
 If the `jacob!` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).

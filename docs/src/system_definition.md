@@ -73,8 +73,7 @@ and the Jacobian function would be created automatically.
 
 
 ### 1-dimensional Discrete Systems
-In the case of maps, there a special structure for one-dimensional systems, since
-they are commonly used in scientific research.
+In the case of maps, there a special structure for one-dimensional systems.
 The syntax is `DiscreteDS1D(state, eom [, deriv])`.
 In this one-dimensional case, you don't need to worry about `StaticArrays.jl`
 because everything is in plain numbers. For example:
@@ -108,7 +107,6 @@ Jacobian allows one to "cheat". For example, let's look at the definition of the
 function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
 ```julia
 ### The following are inside a local scope!
-idxs = 1:M #indices of the θ coordinates
 J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
 # Set ∂/∂p entries (they are eye(M,M))
 # And they don't change, they are constants
