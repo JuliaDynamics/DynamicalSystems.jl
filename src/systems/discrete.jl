@@ -25,7 +25,7 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
-If the `jacob` is not provided by the user, it is created efficiently
+If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
@@ -77,11 +77,11 @@ DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
 
 """
     BigDiscreteDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
-`D`-dimensional discrete dynamical system (used for `D > 10`). This system
-performs all operations `in-place`,
+`D`-dimensional discrete dynamical system (used for `D > 10`). The equations
+for this system
+perform all operations `in-place`.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system, stored in the data format
-  of `StaticArray`'s `SVector`.
+* `state::Vector{T}` : Current state-vector of the system.
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(xnew, x)`
   which means that given a state-vector `x` and another similar one `xnew`,
@@ -89,13 +89,16 @@ performs all operations `in-place`,
 * `jacob!` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob!(J, x)` which means that given a state-vector
   `x` it writes in-place the Jacobian in `J`.
-* `J::Matrix{T}` : Initialized Jacobian matrix. This field is not
+* `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
   displayed.
 * `dummystate::Vector{T}` : Dummy vector, which most of the time fills the
-  role of the previous state in e.g. [`evolve!`](@ref). This field is not
+  role of the previous state in e.g. [`evolve`](@ref). This field is not
   displayed.
+* `name::String` : A name for the dynamical system (possibly including parameter
+  values), solely for pretty-printing purposes. Always passed to the constructors
+  as a keyword.
 
-If the `jacob` is not provided by the user, it is created efficiently
+If the `jacob!` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
@@ -107,18 +110,18 @@ mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
     name::String
 end
 function BigDiscreteDS(u0, f!, j!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0));name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
 
     dum = copy(u0)
     BigDiscreteDS(u0, f!, j!, J, dum, name)
 end
 function BigDiscreteDS(u0, f!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0));name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
     dum = copy(u0)
 
     cfg = ForwardDiff.JacobianConfig(f!, dum, u0)
     FD_jacob!(J, x) = ForwardDiff.jacobian!(J, f!, dum, x, cfg)
-    return BigDiscreteDS(u0, f!, FD_jacob!!, J, dum, name)
+    return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 
 dimension(::DiscreteDS{D, T, F, J}) where {D, T, F, J} = D
@@ -146,9 +149,8 @@ See also [`evolve!`](@ref).
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state
-    f = ds.eom
     for i in 1:N
-        st = f(st)
+        st = ds.eom(st)
     end
     return st
 end
@@ -163,12 +165,11 @@ function evolve(ds::BigDiscreteDS, N::Int = 1)
 end
 
 """
-    evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict()) -> ds
+    evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict())
 Same as [`evolve`](@ref), but also updates the system's `state` field with the final
 state after evolution.
 """
 function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
-    st = ds.state
     ds.state = evolve(ds, N)
     return ds
 end

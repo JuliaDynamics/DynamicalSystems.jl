@@ -70,9 +70,10 @@ hen_nojac = DiscreteDS(rand(2), eom_henon)
 ```
 and the Jacobian function would be created automatically.
 
+
+
 ### 1-dimensional Discrete Systems
-In the case of maps, there a special structure for one-dimensional systems, since
-they are commonly used in scientific research.
+In the case of maps, there a special structure for one-dimensional systems.
 The syntax is `DiscreteDS1D(state, eom [, deriv])`.
 In this one-dimensional case, you don't need to worry about `StaticArrays.jl`
 because everything is in plain numbers. For example:
@@ -87,6 +88,60 @@ logistic = DiscreteDS1D(rand(), eom_logistic(r), deriv_logistic(r))
 Once again, if you skip the derivative functions it will be calculated automatically
 using `ForwardDiff.jl`.
 
+
+### Big Discrete Systems
+At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
+base Arrays, provided that the latter use in-place operations. For cases of
+discrete systems with much higher dimensions
+there is a different type, which we call `BigDiscreteDS`:
+```@docs
+BigDiscreteDS
+```
+---
+In this case, *all* operations are done in place both for the equations of motion
+as well as the Jacobian. Notice that the fields `eom!` and `jacob!` end in a `!` to
+remind users about this fact.
+
+In addition, the possibility of providing an initialized
+Jacobian allows one to "cheat". For example, let's look at the definition of the
+function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
+```julia
+### The following are inside a local scope!
+J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
+# Set ∂/∂p entries (they are eye(M,M))
+# And they don't change, they are constants
+for i in idxs
+    J[i, i+M] = 1
+    J[i+M, i+M] = 1
+end
+
+@inbounds function jacob_coupledsm!(J, x)
+    # x[i] ≡ θᵢ
+    # x[[idxsp1[i]]] ≡ θᵢ+₁
+    # x[[idxsm1[i]]] ≡ θᵢ-₁
+    for i in idxs
+        cosθ = cos(x[i])
+        cosθp= cos(x[idxsp1[i]] - x[i])
+        cosθm= cos(x[idxsm1[i]] - x[i])
+        J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
+        J[i+M, idxsm1[i]] = - Γ*cosθm
+        J[i+M, idxsp1[i]] = - Γ*cosθp
+        J[i, i] = 1 + J[i+M, i]
+        J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
+        J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
+    end
+end
+```
+The function that evaluates the Jacobian (in-place) only accesses half
+of the matrix elements, since the other half is constant and correctly initialized.
+Afterwards this function as well as `J` are passed into the constructor
+with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")`.
+
+
+
+
+
+
 ## Continuous Systems
 Continuous systems of the form
 ```math
@@ -97,16 +152,15 @@ are defined in a similar manner with the discrete systems:
 ContinuousDS
 ```
 ---
-There are two major differences compared to the discrete case:
+There are two major differences compared to the `DiscreteDS` case:
 
 1. The second field `eom!` ends with an `!` to remind users that it is an in-place
    function. This is necessary because the integration of continuous systems using
    [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
-   is much better this way.
-2. Automated Jacobian function evaluation is not yet supported due to the dissonance
-   of the interfaces of [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl) and [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
+   is much faster this way.
+2. Automated Jacobian function evaluation is not yet supported.
 
-Notice that providing a Jacobian is not necessary, since currently it is only used by
+Notice that providing a Jacobian is necessary when you want to use
 the function [`lyapunovs`](lyapunovs/#DynamicalSystems.lyapunovs).
 If you do provide a Jacobian,
 it is best if it returns an `SMatrix`, just like with the discrete systems case.
@@ -132,10 +186,9 @@ ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
 
 
 ## System evolution
-`DynamicalSystems.jl` provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module `DifferentialEquations.jl`, with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
+DynamicalSystems.jl provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module
+[DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html), with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
 
-Notice that if you want to do repeated evolutions of a system, you should use the
-`ODEIntegrator(ds::DynamicalSystem)` (see below).
 
 These are the functions related to system-evolution:
 ```@docs
@@ -149,10 +202,13 @@ In addition, interfaces are provided for usage directly with [DifferentialEquati
 ODEProblem
 ODEIntegrator
 ```
+Notice that if you want to do repeated evolutions of a continuous system,
+you should use the
+`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator)`.
 ---
 
 ## Numerical Data
-Numerical data in `DynamicalSystems.jl` is represented by a structure called
+Numerical data in DynamicalSystems.jl is represented by a structure called
 `Dataset`:
 ```@docs
 Dataset
@@ -184,16 +240,9 @@ like:
 ```julia
 using DynamicalSystems
 ds = Systems.lorenz(ρ = 32.0)
+typeof(ds) # ContinuousDS
 ts = trajectory(ds, 10.0)
 ```
-
-All of these functions have very similar documentation strings:
-
-1. Call signature (parameters of the system are always passed as keyword arguments).
-1. Equations of the system in $\LaTeX$ (how cool is that!).
-1. Introductory text about what this system is and who introduced it first.
-2. Couple of sentences that contain cool science info about the system.
-3. Reference to the original papers.
 
 So far, the predefined systems that exist in the `Systems` sub-module are:
 ```@autodocs

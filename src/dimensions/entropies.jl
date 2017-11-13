@@ -5,8 +5,8 @@ export non0hist, genentropy, renyi, shannon, hartley
 non0hist(ε, dataset)
 ```
 Partition a dataset into tabulated intervals (boxes) of
-size `ε` and return the *sum-normalized* histogram in an **unordered 1D form**,
-**discarding all zero** elements.
+size `ε` and return the sum-normalized histogram in an unordered 1D form,
+discarding all zero elements.
 
 ## Performances Notes
 This method is effecient in both memory
@@ -59,7 +59,7 @@ sum-normalized. *log base-e is used in both cases, i.e. units of "nat".*
 ## Description
 The Rényi entropy
 ```math
-R_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
+D_\\alpha(p) = \\frac{1}{1-\\alpha}\\sum_i p_i^\\alpha
 ```
 generalizes other known entropies,
 like e.g. the information entropy

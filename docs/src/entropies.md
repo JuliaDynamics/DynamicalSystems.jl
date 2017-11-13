@@ -67,9 +67,6 @@ linear_region
 ---
 
 #### Example
-
-*One is better off (if possible) performing the automated steps one by one to attain maximum control.*
-
 For example, we will calculate the dimensions of the strange attractors of the
 [Hénon map](system_definition/#DynamicalSystems.Systems.henon) and the [Lorenz system](system_definition/#DynamicalSystems.Systems.lorenz):
 ```julia
@@ -86,6 +83,8 @@ You will find that `D_hen` is around `1.2` and `D_lor` is around `1.9`. As
 a side note, be sure that you have enough data points, otherwise the values you will
 get will never be correct, as is demonstrated by
 J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
+
+---
 
 ### Kaplan-Yorke Dimension
 Also known as Lyapunov Dimension:

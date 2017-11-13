@@ -16,7 +16,7 @@ export estimate_delay, neighborhood, Reconstruction, KDTree, Reconstruction
 `s` is the only field of `Reconstruction`.
 
 ## Description
-The `n`th row of `Reconstruction` is formally the `D`-dimensional vector
+The ``n``th row of a `Reconstruction` is formally the `D`-dimensional vector
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
@@ -87,7 +87,7 @@ end
     reconstruct(s::AbstractVector, D::Int, τ::Int) -> R::Reconstruction
 Create and return an efficient [`Reconstruction`](@ref) data structure that serves as
 the
-delay coordinates embedding [1, 2] reconstruction of the signal `s`.
+delay coordinates embedding reconstruction of the signal `s`.
 The reconstuction has
 dimension `D` and delay `τ` (measured in indices).
 
@@ -98,7 +98,7 @@ that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
 `R` can be accessed similarly to a [`Dataset`](@ref):
 ```julia
-R = reconstruct(s, 4, 1) # delay coords. reconstruction of dimension 4 and delay 1
+R = reconstruct(s, 4, 1) # dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
 R[1, 2] # Second element of first point of reconstruction, ≡ s[2]
 ```
@@ -319,7 +319,7 @@ nearby states that are evolved in time for `k` steps (`k` must be integer).
   [`AbstractNeighborhood`](@ref) or [`neighborhood`](@ref) for more info.
 * `distance::Metric = Cityblock()` : The distance function used in the
   logarithmic distance of nearby states. The allowed distances are `Cityblock()`
-  and `Euclidean()`. See below for more info on this choice.
+  and `Euclidean()`. See below for more info.
 
 
 ## Description
@@ -328,11 +328,12 @@ exhibits exponential divergence of nearby states, then it should clearly hold:
 ```math
 E(k) \\approx \\lambda\\Delta t k + E(0)
 ```
-for a **well defined region** in the `k` axis, where ``\\lambda`` is
+for a *well defined region* in the `k` axis, where ``\\lambda`` is
 the approximated
-maximum Lyapunov exponent. `Δt` is the time between samples in the
+maximum Lyapunov exponent. ``\\Delta t`` is the time between samples in the
 original timeseries.
-You can use [`linear_region`](@ref) with arguments `(ks, E)` to identify the slope
+You can use [`linear_region`](@ref) with arguments `(ks .* Δt, E)` to
+identify the slope
 (= ``\\lambda``)
 immediatelly, assuming you
 have choosen sufficiently good `ks` such that the linear scaling region is bigger
@@ -346,16 +347,17 @@ state is
 calculated as the "time" index `k` increases. The average of the above over
 all neighborhood states over all reference states is the returned result.
 
-If the `Metric` is `Euclidean()` then calculate the Euclidean distance of the
+If the `Metric` is `Euclidean()` then use the Euclidean distance of the
 full `D`-dimensional points (distance ``d_E`` in ref. [1]).
 If however the `Metric` is `Cityblock()`, calculate
-the absolute distance of **only the first elements** of the `m+k` and `n+k` points
+the absolute distance of *only the first elements* of the `m+k` and `n+k` points
 of the
 reconstruction `R`, which are the `m+k` and `n+k` elements of vector `R.s` (distance
 ``d_F`` in
 ref. [1]). Notice that
-the distances used are defined in the package `Distances.jl`, but are re-exported
-in `DynamicalSystems.jl` for ease-of-use (the
+the distances used are defined in the package
+[Distances.jl](https://github.com/JuliaStats/Distances.jl), but are re-exported
+in DynamicalSystems.jl for ease-of-use (the
 distances are used for dispatch purposes *only*).
 
 This function assumes that the Theiler window (see [1]) is the same as the delay time:

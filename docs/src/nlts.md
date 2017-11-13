@@ -17,14 +17,14 @@ he = Systems.henon()
 ts = trajectory(he, 100000)
 D1 = information_dim(ts) # around 1.20
 x = ts[:, 1] # some "recorded" timeseries
-R = reconstruct(x, 2, 1) # delay coords. reconstruction of dimension 2 and delay 1
+R = reconstruct(x, 2, 1) # delay coords. reconstruction
 R[1] # first point of reconstruction, ≡ (x[1], x[2])
 R[:, 2] # Second COLUMN of the reconstruction, ≡ x[2:end] since τ=1
 D2 = information_dim(R) #around 1.20
 println("D2 - D1 = $(abs(D2- D1))")
 # Prints something like 0.0032000971757613073
 ```
-The 2 numbers `D1` and `D2` are **very close**, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
+The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
 
 ## Estimating Reconstruction Parameters
 The following functions are provided estimate good values that can be used in
@@ -33,9 +33,9 @@ The following functions are provided estimate good values that can be used in
 estimate_delay
 ```
 
-## Numerical Lyapunov Estimation
+## Numerical Lyapunov Exponent
 Given any timeseries, one can first `reconstruct` it, and then calculate a maximum
-lyapunov exponent for it, provided that the system the timeseries was recorded
+Lyapunov exponent for it, provided that the system the timeseries was recorded
 from actually exhibits exponential separation of nearby trajectories. This is done
 with
 ```@docs
@@ -173,5 +173,5 @@ tight_layout()
 ```
 which produces:
 ![Continuous Reconstruction exaple](https://i.imgur.com/lgyGLDv.png)
-As you can see, using $\tau = 15$ makes almost no sense! The estimates with
+As you can see, using `τ = 15` makes almost no sense! The estimates with
 `τ = 7` though are very good (the actual value is around `λ ≈ 0.89...`).

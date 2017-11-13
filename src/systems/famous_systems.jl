@@ -280,11 +280,31 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
     return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
 end
 
+"""
+```julia
+    coupledstandardmaps(M::Int, u0 = 0.001rand(2M); ks = ones(M), Γ = 1.0)
+```
+```math
+\\begin{aligned}
+\\theta_{i}' &= \\theta_i + p_{i}' \\\\
+p_{i}' &= p_i + k_i\\sin(\\theta_i) - \\Gamma \\left[
+\\sin(\\theta_{i+1} - \\theta_{i}) + \\sin(\\theta_{i-1} - \\theta_{i})
+\\right]
+\\end{aligned}
+```
+A discrete system of `M` nonlinearly coupled standard maps, first
+introduced in [1] to study diffusion and chaos thresholds.
+The *total* dimension of the system
+is `2M`. The maps are coupled through `Γ`
+and the `i`-th map has a nonlinear parameter `ks[i]`.
+
+[1] : H. Kantz & P. Grassberger, J. Phys. A **21**, pp 127–133 (1988)
+"""
 function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     ks = ones(M), Γ = 1.0)
 
     idxs = 1:M # indexes of thetas
-    idxsm1 = circshift(idxs, +1) #indexes of thetas - 1
+    idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
     idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
     pidx = M+1:2M
     J = zeros(eltype(u0), 2M, 2M)
@@ -294,16 +314,20 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
         J[i, i+M] = 1
         J[i+M, i+M] = 1
     end
+
     @inbounds function eom_coupledsm!(xnew, x)
-        θs = @view x[idxs]
-        ps = @view x[pidx]
-        θsp1 = view(x, idxsp1)
-        θsm1 = view(x, idxsm1)
-        @. xnew[pidx] = mod2pi(
-                ps + ks*sin(θs)
-                -Γ*(sin(θsp1 - θs) + sin(θsm1 - θs)))
-        xnew[idxs] .= mod2pi.(view(xnew, pidx) .+ θs);
+        for i in idxs
+
+            xnew[i+M] = mod2pi(
+                x[i+M] + ks[i]*sin(x[i]) -
+                Γ*(sin(x[idxsp1[i]] - x[i]) + sin(x[idxsm1[i]] - x[i]))
+            )
+
+            xnew[i] = mod2pi(x[i] + xnew[i+M])
+        end
+        return nothing
     end
+
 
     @inbounds function jacob_coupledsm!(J, x)
         # x[i] ≡ θᵢ
@@ -320,6 +344,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
             J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
             J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
         end
+        return nothing
     end
     jacob_coupledsm!(J, u0)
     name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"

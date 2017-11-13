@@ -41,14 +41,10 @@ Taylor & Francis (1992)
 """
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
-    u = deepcopy(ds.state)
+    u = evolve(ds, Ttr)
     D = length(u)
     eom = ds.eom
     jac = ds.jacob
-    # Transient iterations
-    for i in 1:Ttr
-        u = eom(u)
-    end
 
     # Initialization
     λ = zeros(eltype(u), D)
@@ -66,6 +62,31 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
     end
     λ./N
 end
+
+function lyapunovs(ds::BigDiscreteDS, N::Real; Ttr::Real = 100)
+    # Transient
+    u = evolve(ds, Ttr)
+    # Initialization
+    D = length(u)
+    J = ds.J
+    λ = zeros(eltype(u), D)
+    Q =  eye(eltype(u), D)
+    K = copy(Q)
+    # Main algorithm
+    for i in 1:N
+        ds.dummystate .= u
+        ds.eom!(u, ds.dummystate)
+        ds.jacob!(J, u)
+        A_mul_B!(K, J, Q)
+
+        Q, R = qr_sq(K)
+        for i in 1:D
+            λ[i] += log(abs(R[i, i]))
+        end
+    end
+    λ./N
+end
+
 
 
 
@@ -140,20 +161,15 @@ function lyapunov(ds::DiscreteDS,
                   ) where {B}
 
     threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
-    eom = ds.eom
-    st1 = deepcopy(ds.state)
+
+    st1 = evolve(ds, Ttr)
     st2 = inittest(st1, d0)
 
-    # transient system evolution
-    for i in 1:Ttr
-        st1 = eom(st1)
-    end
-
     if B
-        λts, ts = _lyapunov_full(eom, st1, st2, N, d0, threshold)
+        λts, ts = _lyapunov_full(ds.eom, st1, st2, N, d0, threshold)
         return λts, ts
     else
-        λ = _lyapunov_final(eom, st1, st2, N, d0, threshold)
+        λ = _lyapunov_final(ds.eom, st1, st2, N, d0, threshold)
         return λ
     end
 end
@@ -210,7 +226,91 @@ function _lyapunov_final(eom, st1, st2, N, d0, threshold)
     return λ/i
 end
 
+
+function lyapunov(ds::BigDiscreteDS,
+                  N::Int,
+                  return_convergence::Type{Val{B}} = Val{false};
+                  Ttr::Int = 0,
+                  d0=1e-9,
+                  threshold=1e-5,
+                  inittest = inittest_default(dimension(ds))
+                  ) where {B}
+
+    threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
+
+    st1 = evolve(ds, Ttr)
+    st2 = inittest(st1, d0)
+
+    if B
+        λts, ts = big_lyapunov_full(ds, st1, st2, N, d0, threshold)
+        return λts, ts
+    else
+        λ = big_lyapunov_final(ds, st1, st2, N, d0, threshold)
+        return λ
+    end
+end
+
+function big_lyapunov_full(ds, st1, st2, N, d0, threshold)
+    dist = d0
+    λ = zero(eltype(st1))
+    λs = eltype(st1)[]
+    ts = Int[]
+    i = 0
+    while i < N
+        #evolve until rescaling:
+        while dist < threshold
+            ds.dummystate .= st1
+            ds.eom!(st1, ds.dummystate)
+            ds.dummystate .= st2
+            ds.eom!(st2, ds.dummystate)
+            ds.dummystate .= st1 .- st2
+            dist = norm(ds.dummystate)
+            i+=1
+            i>=N && break
+        end
+        # local lyapunov exponent is simply the relative distance of the trajectories
+        a = dist/d0
+        λ += log(a)
+        push!(λs, λ/i)
+        push!(ts, i)
+        i>=N && break
+        #rescale:
+        @. st2 = st1 + (st2 - st1)/a #must rescale in direction of difference
+        dist = d0
+    end
+    return λs, ts
+end
+
+function big_lyapunov_final(ds, st1, st2, N::Int, d0::Real, threshold::Real)
+    dist::eltype(st1) = d0
+    λ = zero(eltype(st1))
+    i = 0
+    while i < N
+        #evolve until rescaling:
+        while dist < threshold
+            ds.dummystate .= st1
+            ds.eom!(st1, ds.dummystate);
+            ds.dummystate .= st2
+            ds.eom!(st2, ds.dummystate);
+            ds.dummystate .= st1 .- st2
+            dist = norm(ds.dummystate)
+            i+=1
+            i>=N && break
+        end
+        # local lyapunov exponent is simply the relative distance of the trajectories
+        a = dist/d0
+        λ += log(a)
+        i>=N && break
+        #rescale:
+        @. st2 = st1 + (st2 - st1)/a #must rescale in direction of difference
+        dist = d0
+    end
+    return λ/i
+end
+
+
 inittest_default(D) = (state1, d0) -> state1 .+ d0/sqrt(D)
+
 
 function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
 
