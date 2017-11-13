@@ -34,18 +34,4 @@ println("\nTesting custom QR-decomposition...")
             end
         end
     end
-    @testset "Static matrix" begin
-        for i in 1:10
-            A = @SMatrix rand(5,5)
-
-            QA, RA = DynamicalSystems.qr_sq(A)
-            QtA, RtA = qr(A)
-            for i in length(QA)
-                @test isapprox(abs(QA[i]), abs(QtA[i]), rtol = tol)
-            end
-            for i in 1:3
-                @test isapprox(abs(RA[i,i]), abs(RtA[i,i]), rtol = tol)
-            end
-        end
-    end
 end
