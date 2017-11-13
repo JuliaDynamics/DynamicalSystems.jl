@@ -92,17 +92,22 @@ using `ForwardDiff.jl`.
 
 ### Big Discrete Systems
 At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
-base Arrays, provided that the latter use in-place operations. For cases like this
-there is a different type of discrete system, which we call `BigDiscreteDS`:
+base Arrays, provided that the latter use in-place operations. For cases of
+discrete systems with much higher dimensions
+there is a different type, which we call `BigDiscreteDS`:
 ```@docs
 BigDiscreteDS
 ```
 ---
 In this case, *all* operations are done in place both for the equations of motion
-as well as the Jacobian. In addition, the possibility of providing an initialized
+as well as the Jacobian. Notice that the fields `eom!` and `jacob!` end in a `!` to
+remind users about this fact.
+
+In addition, the possibility of providing an initialized
 Jacobian allows one to "cheat". For example, let's look at the definition of the
 function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
 ```julia
+### The following are inside a local scope!
 idxs = 1:M #indices of the θ coordinates
 J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
 # Set ∂/∂p entries (they are eye(M,M))
@@ -139,7 +144,6 @@ with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")
 
 
 
-
 ## Continuous Systems
 Continuous systems of the form
 ```math
@@ -155,7 +159,7 @@ There are two major differences compared to the `DiscreteDS` case:
 1. The second field `eom!` ends with an `!` to remind users that it is an in-place
    function. This is necessary because the integration of continuous systems using
    [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
-   is much better this way.
+   is much faster this way.
 2. Automated Jacobian function evaluation is not yet supported.
 
 Notice that providing a Jacobian is necessary when you want to use

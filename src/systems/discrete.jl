@@ -77,11 +77,11 @@ DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
 
 """
     BigDiscreteDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
-`D`-dimensional discrete dynamical system (used for `D > 10`). This system
-performs all operations `in-place`,
+`D`-dimensional discrete dynamical system (used for `D > 10`). The equations
+for this system
+perform all operations `in-place`.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system, stored in the data format
-  of `StaticArray`'s `SVector`.
+* `state::Vector{T}` : Current state-vector of the system.
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(xnew, x)`
   which means that given a state-vector `x` and another similar one `xnew`,
@@ -92,10 +92,10 @@ performs all operations `in-place`,
 * `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
   displayed.
 * `dummystate::Vector{T}` : Dummy vector, which most of the time fills the
-  role of the previous state in e.g. [`evolve!`](@ref). This field is not
+  role of the previous state in e.g. [`evolve`](@ref). This field is not
   displayed.
 
-If the `jacob` is not provided by the user, it is created automatically
+If the `jacob!` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem

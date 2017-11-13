@@ -64,24 +64,19 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 end
 
 function lyapunovs(ds::BigDiscreteDS, N::Real; Ttr::Real = 100)
-
     # Transient
     u = evolve(ds, Ttr)
-
-    D = length(u)
-    eom! = ds.eom!
-    jac! = ds.jacob!
-    J = ds.J
-
     # Initialization
+    D = length(u)
+    J = ds.J
     λ = zeros(eltype(u), D)
     Q =  eye(eltype(u), D)
     K = copy(Q)
     # Main algorithm
     for i in 1:N
         ds.dummystate .= u
-        eom!(u, ds.dummystate)
-        jac!(J, u)
+        ds.eom!(u, ds.dummystate)
+        ds.jacob!(J, u)
         A_mul_B!(K, J, Q)
 
         Q, R = qr_sq(K)
@@ -247,15 +242,15 @@ function lyapunov(ds::BigDiscreteDS,
     st2 = inittest(st1, d0)
 
     if B
-        λts, ts = big_lyapunov_full(ds.eom!, st1, st2, N, d0, threshold)
+        λts, ts = big_lyapunov_full(ds, st1, st2, N, d0, threshold)
         return λts, ts
     else
-        λ = big_lyapunov_final(ds.eom!, st1, st2, N, d0, threshold)
+        λ = big_lyapunov_final(ds, st1, st2, N, d0, threshold)
         return λ
     end
 end
 
-function big_lyapunov_full(eom!, st1, st2, N, d0, threshold)
+function big_lyapunov_full(ds, st1, st2, N, d0, threshold)
     dist = d0
     λ = zero(eltype(st1))
     λs = eltype(st1)[]
@@ -265,9 +260,9 @@ function big_lyapunov_full(eom!, st1, st2, N, d0, threshold)
         #evolve until rescaling:
         while dist < threshold
             ds.dummystate .= st1
-            eom!(st1, ds.dummystate)
+            ds.eom!(st1, ds.dummystate)
             ds.dummystate .= st2
-            eom!(st2, ds.dummystate)
+            ds.eom!(st2, ds.dummystate)
             ds.dummystate .= st1 .- st2
             dist = norm(ds.dummystate)
             i+=1
@@ -286,7 +281,7 @@ function big_lyapunov_full(eom!, st1, st2, N, d0, threshold)
     return λs, ts
 end
 
-function big_lyapunov_final(eom!, st1, st2, N::Int, d0::Real, threshold::Real)
+function big_lyapunov_final(ds, st1, st2, N::Int, d0::Real, threshold::Real)
     dist::eltype(st1) = d0
     λ = zero(eltype(st1))
     i = 0
@@ -294,9 +289,9 @@ function big_lyapunov_final(eom!, st1, st2, N::Int, d0::Real, threshold::Real)
         #evolve until rescaling:
         while dist < threshold
             ds.dummystate .= st1
-            eom!(st1, ds.dummystate);
+            ds.eom!(st1, ds.dummystate);
             ds.dummystate .= st2
-            eom!(st2, ds.dummystate);
+            ds.eom!(st2, ds.dummystate);
             ds.dummystate .= st1 .- st2
             dist = norm(ds.dummystate)
             i+=1
