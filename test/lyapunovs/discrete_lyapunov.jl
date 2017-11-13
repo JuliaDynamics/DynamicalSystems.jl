@@ -75,3 +75,20 @@ end
     @test length(ts) == length(ls)
   end
 end
+
+@testset "Coupled Standard Maps" begin
+  M = 5;
+  ds = Systems.coupledstandardmaps(5)
+  @testset "lyapunovs" begin
+    ls = lyapunovs(ds, 10000)
+    for i in 1:M
+      @test abs(ls[i] + ls[2M - i + 1]) < 0.01
+    end
+  end
+  @testset "lyapunov" begin
+    l = lyapunov(ds, 10000)
+    @test l > 0
+    ll, tt = lyapunov(ds, 10000, Val{true})
+    @test ll[end] ≈ l
+  end
+end

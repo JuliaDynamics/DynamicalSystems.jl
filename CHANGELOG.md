@@ -1,6 +1,5 @@
 # v0.7.0:
 ## Breaking
-Nothing.
 
 ## New Additions
 * Added the Generalized Alignment Index method: `gali`

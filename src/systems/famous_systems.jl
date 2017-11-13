@@ -325,6 +325,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
 
             xnew[i] = mod2pi(x[i] + xnew[i+M])
         end
+        return nothing
     end
 
 
@@ -343,6 +344,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
             J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
             J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
         end
+        return nothing
     end
     jacob_coupledsm!(J, u0)
     name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
