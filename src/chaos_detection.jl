@@ -13,9 +13,9 @@ function variational_eom_gali(ds::ContinuousDS, k::Int)
     veom! = (t, u, du) -> begin
         J = jac(view(u, :, 1))
         f!(view(du, :, 1), u)
-        # for i in 1:k
-        du[:, 2:k+1] .= J*view(u, :, 2:k+1)
-        # end
+        for i in 1:k
+            du[:, i+1] .= J*view(u, :, i+1)
+        end
     end
     return veom!
 end
@@ -155,6 +155,10 @@ end
         if gali_k[ti] < threshold
             break
         end
+        for j in 1:k
+            normalize!(view(integrator.u, :, j+1))
+        end
+        u_modified!(integrator, true)
     end
 
     return gali_k[1:ti], rett[1:ti]
@@ -226,7 +230,7 @@ end
     jacob! = ds.jacob!
     J = ds.J
     x = copy(ds.state)
-    xprev = ds.dummystate
+    xprev = copy(x)
     wsdummy = copy(ws)
 
     rett = 0:Int(tmax)
@@ -254,7 +258,6 @@ end
         if gali_k[ti] < threshold
             break
         end
-        println()
     end
 
     return gali_k[1:ti], rett[1:ti]
@@ -282,7 +285,7 @@ end
 
 
 ## Continuous test
-
+#
 # using PyPlot
 # figure()
 # sp = [0, .295456, .407308431, 0] #stable periodic orbit
@@ -290,7 +293,7 @@ end
 # up = [0, .469120, .291124890, 0] #periodic near unstable periodic orbit
 # ch = [0, .509000, .254624859, 0] #chaotic orbit
 # dt = 0.5
-#
+# 
 # ds = Systems.henonhelies(sp)
 #
 # diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())

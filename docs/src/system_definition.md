@@ -207,6 +207,56 @@ you should use the
 `ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator)`.
 ---
 
+
+## Coordination with other packages
+You can take advantange of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
+(known as functors) capabilities of Julia, to have a universal definition of your
+equations of motion that fits both the expected structure of DynamicalSystems.jl as well
+as other packages.
+
+For example, take a look at the following code:
+```julia
+struct Lorenz96{T <: Real} # Structure with the parameters of Lorenz96 system
+  F::T
+  N::Int
+  # Inner constructor
+  function (::Type{Lorenz96})(F::Real, N::Integer = 3)
+    @assert N ≥ 3 "`N` must be at least 3"
+    new{typeof(F)}(F, N)
+  end
+end
+
+# Equations of motion as expected by e.g. LTISystems.jl or others
+@inbounds function (obj::Lorenz96{T})(t, x, dx) where T
+  N, F = obj.N, obj.F
+  # 3 edge cases
+  dx[1] = (x[2] - x[N - 1]) * x[N] - x[1] + F
+  dx[2] = (x[3] - x[N]) * x[1] - x[2] + F
+  dx[N] = (x[1] - x[N - 2]) * x[N - 1] - x[N] + F
+  # then the general case
+  for n in 3:(N - 1)
+    dx[n] = (x[n + 1] - x[n - 2]) * x[n - 1] - x[n] + F
+  end
+  return dx
+end
+# Equations of motion as expected by DynamicalSystems.jl
+function (obj::Lorenz96{T})(dx, x) where T
+  return obj(zero(T), x, dx)
+end
+```
+This way you can simply pass the object `Lorenz96` to the constructor of `ContinuousDS`:
+```julia
+using DynamicalSystems
+lor = Lorenz96(0.01, 5) # create struct
+u0 = rand(5)
+ds = ContinuousDS(u0, lor) # pass the struct as "equations of motion"
+traj = trajectory(ds, 100.0) # works!
+```
+
+Notice that this *is not necessary* if you want to incorporate only DifferentialEquations.jl and DynamicalSystems.jl, since we provide interfaces for
+`ODEProblem` and `ODEIntegrator`.
+
+
 ## Numerical Data
 Numerical data in DynamicalSystems.jl is represented by a structure called
 `Dataset`:
