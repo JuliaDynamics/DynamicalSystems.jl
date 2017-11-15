@@ -46,6 +46,18 @@ Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = eltype(T)
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################
+function get_solver!(diff_eq_kwargs::Dict)
+    if haskey(diff_eq_kwargs, :solver)
+        solver = diff_eq_kwargs[:solver]
+        pop!(diff_eq_kwargs, :solver)
+    else
+        solver = Tsit5()
+    end
+    return solver
+end
+
+
+
 """
 ```julia
 ODEProblem(ds::ContinuousDS, t)
@@ -58,6 +70,8 @@ function ODEProblem(ds::ContinuousDS, t)
     odef = (t, u, du) -> ds.eom!(du, u)
     OrdinaryDiffEq.ODEProblem(odef, copy(ds.state), (zero(t), t))
 end
+
+
 
 """
 ```julia
@@ -78,32 +92,21 @@ do so by using the symbol `:solver`, e.g.:
 """
 function ODEIntegrator(ds::ContinuousDS, t; diff_eq_kwargs = Dict())
     prob = ODEProblem(ds, t)
-    # Check if there is a solver in the keywords:
-    if haskey(diff_eq_kwargs, :solver)
-        solver = diff_eq_kwargs[:solver]
-        pop!(diff_eq_kwargs, :solver)
-        integrator = init(prob, solver; diff_eq_kwargs...,
-        save_first=false, save_everystep=false)
-    else
-        integrator = init(prob, Tsit5(); diff_eq_kwargs...,
-        save_first=false, save_everystep=false)
-    end
+    solver = get_solver!(diff_eq_kwargs)
+    integrator = init(prob, solver; diff_eq_kwargs...,
+    save_first=false, save_everystep=false)
     return integrator
 end
+
+
 
 """
     get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
 Solve the `prob` using `solve` and return the solution.
 """
 function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
-  # Check if there is a solver in the keywords:
-    if haskey(diff_eq_kwargs, :solver)
-        solver = diff_eq_kwargs[:solver]
-        pop!(diff_eq_kwargs, :solver)
-        sol = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)
-    else
-        sol = solve(prob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
-    end
+    solver = get_solver!(diff_eq_kwargs)
+    sol = solve(prob, solver; diff_eq_kwargs..., save_everystep=false)
     return sol.u
 end
 

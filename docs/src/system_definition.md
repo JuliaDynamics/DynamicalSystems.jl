@@ -258,7 +258,7 @@ Notice that this *is not necessary* if you want to incorporate only Differential
 
 !!! info "Closures and Functors"
     Julia handles [Closures](https://docs.julialang.org/en/stable/devdocs/functions/#Closures-1) like Functor objects. For our predefined systems we use closures instead of functors,
-    but you can see for yourself that these 2 approaches are equivalent.
+    but you can see for yourself that these 2 approaches are almost the same.
 
 ## Numerical Data
 Numerical data in DynamicalSystems.jl is represented by a structure called

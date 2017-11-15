@@ -100,18 +100,11 @@ function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::Matrix;
     if haskey(diff_eq_kwargs, :saveat)
         pop!(diff_eq_kwargs, :saveat)
     end
-    if haskey(diff_eq_kwargs, :solver)
-        solver = diff_eq_kwargs[:solver]
-        pop!(diff_eq_kwargs, :solver)
-        integrator = init(prob, solver; diff_eq_kwargs...,
-        save_everystep=false, dense=false)
-    else
-        integrator = init(prob, Tsit5(); diff_eq_kwargs...,
-        save_everystep=false, dense=false)
-    end
+    solver = get_solver!(diff_eq_kwargs)
+    integrator = init(prob, solver; diff_eq_kwargs...,
+    save_everystep=false, dense=false)
 
     return gali(integrator, k, W, tmax, dt, threshold)
-
 end
 
 function gali(ds::ContinuousDS, k::Int, tmax::Real;
@@ -293,7 +286,7 @@ end
 # up = [0, .469120, .291124890, 0] #periodic near unstable periodic orbit
 # ch = [0, .509000, .254624859, 0] #chaotic orbit
 # dt = 0.5
-# 
+#
 # ds = Systems.henonhelies(sp)
 #
 # diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())

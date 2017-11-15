@@ -1,4 +1,7 @@
-using Base.Test, DynamicalSystems
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test
 
 test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax
 

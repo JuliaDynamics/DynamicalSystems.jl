@@ -1,4 +1,7 @@
-using DynamicalSystems, StaticArrays, Base.Test
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test, StaticArrays
 
 test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax
 # Known fixed point locations from publication:
