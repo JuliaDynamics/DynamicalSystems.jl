@@ -40,13 +40,12 @@ Taylor & Francis (1992)
 [3] : G. Benettin *et al.*, Meccanica **15**, pp 9-20 & 21-30 (1980)
 """
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
-
+    # Transient
     u = evolve(ds, Ttr)
+    # Initialization
     D = length(u)
     eom = ds.eom
     jac = ds.jacob
-
-    # Initialization
     λ = zeros(eltype(u), D)
     Q = @SMatrix eye(eltype(u), D)
     K = copy(Q)
@@ -55,7 +54,7 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
         u = eom(u)
         K = jac(u)*Q
 
-        Q, R = qr_sq(K)
+        Q, R = qr(K)
         for i in 1:D
             λ[i] += log(abs(R[i, i]))
         end

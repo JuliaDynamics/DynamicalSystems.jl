@@ -1,4 +1,5 @@
-using DynamicalSystems, Base.Test
+using DynamicalSystems
+using Base.Test
 println("\nTesting discrete system lyapunov exponents...")
 
 

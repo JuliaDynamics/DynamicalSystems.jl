@@ -256,6 +256,9 @@ traj = trajectory(ds, 100.0) # works!
 Notice that this *is not necessary* if you want to incorporate only DifferentialEquations.jl and DynamicalSystems.jl, since we provide interfaces for
 `ODEProblem` and `ODEIntegrator`.
 
+!!! info "Closures and Functors"
+    Julia handles [Closures](https://docs.julialang.org/en/stable/devdocs/functions/#Closures-1) like Functor objects. For our predefined systems we use closures instead of functors,
+    but you can see for yourself that these 2 approaches are equivalent.
 
 ## Numerical Data
 Numerical data in DynamicalSystems.jl is represented by a structure called
