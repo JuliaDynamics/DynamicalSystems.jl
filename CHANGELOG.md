@@ -18,16 +18,20 @@
   is similar to how `BigDiscreteDS` operate.
 
 ## New Additions
+* Hypermassive Docs restructuring + upgrade. Now all documentation strings have dedicated
+  sections for calling the function, describing the algorithims, etc. etc.
 * Automatic Jacobian for continuous systems!
+* `BigDiscreteDS` type: a new system type for discrete systems with very high dimensionality.
+* Added automated Jacobian computation for `BigDiscreteDS`.
 * Henon Helies system in famous_systems.
 * Nonlinearly coupled standard maps in famous systems.
-* `BigDiscreteDS` type: a new system type for discrete systems with very high dimensionality.
+
 
 ## Bugfixes and Enhancements
 * **Major** improvements in the speed of all `lyapunovs` functions. Especially the `DiscreteDS` one is now 3 times faster due to the `qr` provided by StaticArrays.jl.
 * Change the pretty-printing of all systems, by adding an additional
   `name` field everywhere that can be used for convenience.
-* Added automated Jacobian computation for `BigDiscreteDS`.
+* Bugfix in `lyapunovs` where `u_modified!(integ, true)` was not used.
 * Bugfix of the printing of `Dataset` on Juno where the set was always printed
   on the console.
 * Major bugfix in `lyapunov` for `DiscreteDS` where the test state was initialized
@@ -35,7 +39,6 @@
 * Many minor bugfixes and many corrections to the documentation examples.
 * `Dataset` now always converts the input into vector of `SVectors` for better
   interaction with NearestNeighbors.jl
-
 * Removed function `perform_non0hist`, as it had no reason to exist.
 
 

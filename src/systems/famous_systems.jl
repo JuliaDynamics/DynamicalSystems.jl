@@ -171,6 +171,44 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
     return ContinuousDS(u0, eom_hh!, jacob_hh!, J; name = name)
 end
 
+
+struct Lorenz96{T <: Real} # Structure with the parameters of Lorenz96 system
+  F::T
+  N::Int
+  # Inner constructor
+  function (::Type{Lorenz96})(F::Real, N::Integer = 3)
+    @assert N ≥ 3 "`N` must be at least 3"
+    new{typeof(F)}(F, N)
+  end
+end
+
+# Equations of motion as expected by e.g. LTISystems.jl or others
+@inbounds function (obj::Lorenz96{T})(t, x, dx) where T
+  N, F = obj.N, obj.F
+  # 3 edge cases
+  dx[1] = (x[2] - x[N - 1]) * x[N] - x[1] + F
+  dx[2] = (x[3] - x[N]) * x[1] - x[2] + F
+  dx[N] = (x[1] - x[N - 2]) * x[N - 1] - x[N] + F
+  # then the general case
+  for n in 3:(N - 1)
+    dx[n] = (x[n + 1] - x[n - 2]) * x[n - 1] - x[n] + F
+  end
+  return dx
+end
+# Equations of motion as expected by DynamicalSystems.jl
+function (obj::Lorenz96{T})(dx, x) where T
+  return obj(zero(T), x, dx)
+end
+"""
+    lorenz96(N::Int, u0 = rand(M); F=0.01)
+`N` is the chain length, `F` the forcing. Jacobian is created automatically.
+"""
+function lorenz96(N::Int, u0 = rand(N); F=0.01)
+    name = "Lorenz96 system, chain of $N (F = $(F))"
+    lor96 = Lorenz96(F, N) # create struct
+    return ContinuousDS(u0, lor96; name = name)
+end
+
 # function fpuβ(N::Int, u0 = rand(2N); β = 1)
 #     i = one(eltype(u0))
 #     o = zero(eltype(u0))

@@ -73,3 +73,47 @@ println("\nTesting continuous system evolution...")
   end
 
 end
+
+@testset "Lorenz96" begin
+    u = ones(5)
+    lo11 = Systems.lorenz96(5, u)
+    lo33 = Systems.lorenz96(5, big.(ones(5)))
+    @testset "Construction" begin
+      @test typeof(lo11) <: ContinuousDS
+      @test typeof(lo33) <: ContinuousDS
+    end
+    @testset "Evolve & kwargs" begin
+      # test evolve(system):
+      st1 = evolve(lo11, 1.0)
+      st3 = evolve(lo33, 1.0)
+      @test st1 ≈ st3
+      # Test evolve(system,keywords):
+      st1 = evolve(lo11, 1.0;
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      st3 = evolve(lo33, 1.0;
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      @test st1 ≈ st3
+      # Test evolve!(system, keywords):
+      evolve!(lo11, 1.0;
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      evolve!(lo33, 1.0;
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      @test lo11.state ≈ lo33.state
+    end
+
+    @testset "trajectory" begin
+      # trajectory pure:
+      ts1 = trajectory(lo11, 2.0)
+      ts3 = trajectory(lo33, 2.0)
+      @test eltype(ts3[1]) == BigFloat
+      @test size(ts1) == size(ts3)
+      @test ts1[end, :] ≈ ts3[end,:]
+      # trajectory with diff_eq_kwargs and dt:
+      ts1 = trajectory(lo11, 2.0; dt=0.1,
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      ts3 = trajectory(lo33, 2.0; dt=0.1,
+      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+      @test size(ts1) == size(ts3)
+      @test ts1[end, :] ≈ ts3[end,:]
+    end
+end

@@ -152,7 +152,7 @@ are defined almost identically with the `BigDiscreteDS` systems:
 ContinuousDS
 ```
 ---
-Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations in normal `Vectors` yields almost no speed benefits in conjuction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html).
+Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html).
 
 As an example, here is the source code that defines the continuous Rössler
 system, from the [Predefined Systems](#predefined-systems):
@@ -182,18 +182,15 @@ ros = roessler()
 
 
 ## System evolution
-DynamicalSystems.jl provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module
-[DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html), with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
-
-
-These are the functions related to system-evolution:
+DynamicalSystems.jl provides convenient interfaces for the evolution of systems.  
+These are the functions related to system evolution:
 ```@docs
 evolve
 evolve!
 trajectory
 ```
 ---
-In addition, interfaces are provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
+Especially in the continuous case, an API is provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
 ```@docs
 ODEProblem
 ODEIntegrator
@@ -205,7 +202,7 @@ you should use the
 
 
 ## Coordination with other packages
-You can take advantange of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
+You can take advantage of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
 (known as functors) capabilities of Julia, to have a universal definition of your
 equations of motion that fits both the expected structure of DynamicalSystems.jl as well
 as other packages.
@@ -245,7 +242,8 @@ This way you can simply pass the object `Lorenz96` to the constructor of `Contin
 using DynamicalSystems
 lor = Lorenz96(0.01, 5) # create struct
 u0 = rand(5)
-ds = ContinuousDS(u0, lor) # pass the struct as "equations of motion"
+# pass the struct as "equations of motion":
+ds = ContinuousDS(u0, lor; name="Lorenz 96 (chain of 5)")
 traj = trajectory(ds, 100.0) # works!
 ```
 
@@ -272,6 +270,8 @@ functionality than just pretty-printing.
 Besides the examples in the documentation string,
 you can also do:
 ```julia
+using DynamicalSystems
+hen == Systems.henon()
 data = trajectory(hen, 10000)
 for point in data
 # do stuff with each datapoint (vector with as many elements as system dimension)
@@ -296,5 +296,5 @@ ts = trajectory(ds, 10.0)
 So far, the predefined systems that exist in the `Systems` sub-module are:
 ```@autodocs
 Modules = [Systems]
-Order   = [:function, :type]
+Order   = [:function]
 ```
