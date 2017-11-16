@@ -368,6 +368,8 @@ function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
     return tb_integ
 end
 
+
+
 function check_tolerances(d0, dek)
     defatol = 1e-6; defrtol = 1e-3
     atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
