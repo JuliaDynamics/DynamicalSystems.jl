@@ -128,6 +128,13 @@ dimension(::DiscreteDS{D, T, F, J}) where {D, T, F, J} = D
 dimension(::DiscreteDS1D) = 1
 dimension(ds::BigDiscreteDS) = length(ds.state)
 
+"""
+    jacobian(ds::DynamicalSystem)
+Return the Jacobian matrix of the equations of motion at the system's state.
+"""
+jacobian(ds::DynamicalSystem) = (ds.jacob!(ds.J, ds.state), ds.J)
+jacobian(ds::DiscreteDS) = ds.jacob(ds.state)
+
 #####################################################################################
 #                               System Evolution                                    #
 #####################################################################################

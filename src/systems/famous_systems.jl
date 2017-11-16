@@ -36,15 +36,20 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
         du[2] = u[1]*(ρ-u[3]) - u[2]
         du[3] = u[1]*u[2] - β*u[3]
     end
-    @inline @inbounds function jacob_lorenz(u)
-        i = one(eltype(u))
-        o = zero(eltype(u))
-        @SMatrix [-σ*i           σ*i    zero(i);
-                  (ρ*i - u[3])   (-i)   (-u[1]);
-                  u[2]           u[1]   (-β*i) ]
-    end# should give exponents [0.9056, 0, -14.5723]
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [-σ*i,        σ*i,    o]
+    J[2,:] .= [ρ*i - u0[3],   -i,   -u0[1]]
+    J[3,:] .= [u0[2],        u0[1],   (-β*i)]
+
+    @inline @inbounds function jacob_lorenz!(J, u)
+        J[2,1] = ρ - u[3]
+        J[2,3] = -u[1]
+        J[3,1] = u[2]; J[3,2] = u[1]
+    end
     name = "Lorenz63 system (σ=$(σ), ρ=$(ρ), β=$(β))"
-    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz; name = name)
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz!, J; name = name)
 end
 
 
@@ -76,15 +81,17 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
         du[2] = u[1] + a*u[2]
         du[3] = b + u[3]*(u[1] - c)
     end
-    @inline @inbounds function jacob_roessler(u)
-        i = one(eltype(u))
-        o = zero(eltype(u))
-        @SMatrix [o     -i      -i;
-                  i      a       o;
-                  u[3]   o       u[1] - c]
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [o, -i,      -i]
+    J[2,:] .= [i,  a,       o]
+    J[3,:] .= [u0[3], o, u0[1] - c]
+    @inline @inbounds function jacob_roessler!(J, u)
+        J[3, 1] = u[3]; J[3,3] = u[1] - c
     end
     name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler; name = name)
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
 end
 
 """
@@ -94,7 +101,7 @@ are gravity (G), lengths of each rod and mass of each ball (all assumed SI units
 
 The variables order is [θ1, dθ1/dt, θ2, dθ2/dt].
 
-Jacobian is not created! So no `lyapunovs` for you!
+Jacobian is created automatically (thus methods that use the Jacobian will be slower)!
 
 (please contribute the Jacobian and the e.o.m. in LaTeX :smile:)
 """
@@ -118,7 +125,7 @@ function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 
                    (M1 + M2)*G*sin(state[3]))/den2
     end
     name = "Double Pendulum system (θ1, dθ1/dt, θ2, dθ2/dt)"
-    return ContinuousDS(u0, eom_dp!, nothing; name = name)
+    return ContinuousDS(u0, eom_dp!; name = name)
 end
 
 """
@@ -151,14 +158,17 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
         du[3] = -u[1] - 2λ*u[1]*u[2]
         du[4] = -u[2] -λ*(u[1]^2 - u[2]^2)
     end
-    @inline @inbounds function jacob_hh(u)
-        @SMatrix [o    o     i    o;
-                  o    o     o    i;
-                  -i   -2λ*u[2]   o    o;
-                  -2λ*u[1]  -1-2λ*u[2]  o   o]
+    J = zeros(eltype(u0), 4, 4)
+    J[1,:] = [o,    o,     i,    o]
+    J[2,:] = [o,    o,     o,    i]
+    J[3,:] = [ -i - 2λ*u0[2],   -2λ*u0[1],   o,   o]
+    J[4,:] = [-2λ*u0[1],  -1-2λ*u0[2],  o,   o]
+    @inline @inbounds function jacob_hh!(J, u)
+        J[3,1] = -i - 2λ*u[2]; J[3,2] = -2λ*u[1]
+        J[4,1] = -2λ*u[1]; J[4,2] =  -1-2λ*u[2]
     end
     name = "Hénon-Heiles system (λ=$(λ))"
-    return ContinuousDS(u0, eom_hh!, jacob_hh; name = name)
+    return ContinuousDS(u0, eom_hh!, jacob_hh!, J; name = name)
 end
 
 # function fpuβ(N::Int, u0 = rand(2N); β = 1)

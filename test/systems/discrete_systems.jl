@@ -1,5 +1,8 @@
 println("\nTesting continuous system evolution...")
-using StaticArrays, Base.Test
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test, StaticArrays
 
 @testset "Logistic Map" begin
 

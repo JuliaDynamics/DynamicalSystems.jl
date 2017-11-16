@@ -147,41 +147,37 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined in a similar manner with the discrete systems:
+are defined almost identically with the `BigDiscreteDS` systems:
 ```@docs
 ContinuousDS
 ```
 ---
-There are two major differences compared to the `DiscreteDS` case:
+Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations in normal `Vectors` yields almost no speed benefits in conjuction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html).
 
-1. The second field `eom!` ends with an `!` to remind users that it is an in-place
-   function. This is necessary because the integration of continuous systems using
-   [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
-   is much faster this way.
-2. Automated Jacobian function evaluation is not yet supported.
-
-Notice that providing a Jacobian is necessary when you want to use
-the function [`lyapunovs`](lyapunovs/#DynamicalSystems.lyapunovs).
-If you do provide a Jacobian,
-it is best if it returns an `SMatrix`, just like with the discrete systems case.
-
-As an example, the continuous Rössler system can be defined as:
+As an example, here is the source code that defines the continuous Rössler
+system, from the [Predefined Systems](#predefined-systems):
 ```julia
-@inline @inbounds function eom_roessler!(du, u)
-    a = 0.2; b = 0.2; c = 5.7
-    du[1] = -u[2]-u[3]
-    du[2] = u[1] + a*u[2]
-    du[3] = b + u[3]*(u[1] - c)
-end
-@inline @inbounds function jacob_roessler(u)
-    i = one(eltype(u))
-    o = zero(eltype(u))
-    @SMatrix [o     -i      -i;
-              i      a       o;
-              u[3]   o       u[1] - c]
+using DynamicalSystems
+function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
+    @inline @inbounds function eom_roessler!(du, u)
+        du[1] = -u[2]-u[3]
+        du[2] = u[1] + a*u[2]
+        du[3] = b + u[3]*(u[1] - c)
+    end
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [o, -i,      -i]
+    J[2,:] .= [i,  a,       o]
+    J[3,:] .= [u0[3], o, u0[1] - c]
+    @inline @inbounds function jacob_roessler!(J, u)
+        J[3, 1] = u[3]; J[3,3] = u[1] - c
+    end
+    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
 end
 
-ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
+ros = roessler()
 ```
 
 
@@ -204,7 +200,7 @@ ODEIntegrator
 ```
 Notice that if you want to do repeated evolutions of a continuous system,
 you should use the
-`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator)`.
+`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator, newstate)` to avoid the intermediate step of creating a `ContinuousDS` each time.
 ---
 
 

@@ -341,19 +341,18 @@ function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
   diff_eq_kwargs=Dict())
 
     D = dimension(ds)
-    f! = ds.eom!
-    jac = ds.jacob
-
     # the equations of motion `tbeom!` evolve the system and the tangent dynamics
     # The e.o.m. for the system is f!(t, u , du).
     # The e.o.m. for the tangent dynamics is simply:
     # dY/dt = J(u) ⋅ Y
-    # with J the Jacobian of the system (NOT the flow), at the current state
+    # with J the Jacobian of the vector field at the current state
     tbeom! = (t, u, du) -> begin
-        f!(view(du, :, 1), u)
+        us = view(u, :, 1)
+        ds.eom!(view(du, :, 1), us)
+        ds.jacob!(ds.J, us)
         A_mul_B!(
             view(du, :, 2:D+1),
-            jac(view(u, :, 1)),
+            ds.J,
             view(u, :, 2:D+1)
         )
     end
