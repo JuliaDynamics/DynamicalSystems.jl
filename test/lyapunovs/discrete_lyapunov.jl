@@ -1,4 +1,7 @@
-using DynamicalSystems, Base.Test
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test
 println("\nTesting discrete system lyapunov exponents...")
 
 

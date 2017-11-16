@@ -1,5 +1,7 @@
-using DynamicalSystems, Base.Test
-using StaticArrays
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test, StaticArrays
 using LsqFit: curve_fit
 
 test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax

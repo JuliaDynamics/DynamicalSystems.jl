@@ -11,7 +11,7 @@ gali
 ### Examples
 Let's see an example for a discrete:
 ```julia
-using DynamicalSystems, PyPlot, LsqFit
+using DynamicalSystems, PyPlot
 
 ds = Systems.towel()
 

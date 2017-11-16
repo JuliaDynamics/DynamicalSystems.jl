@@ -40,13 +40,12 @@ Taylor & Francis (1992)
 [3] : G. Benettin *et al.*, Meccanica **15**, pp 9-20 & 21-30 (1980)
 """
 function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
-
+    # Transient
     u = evolve(ds, Ttr)
+    # Initialization
     D = length(u)
     eom = ds.eom
     jac = ds.jacob
-
-    # Initialization
     λ = zeros(eltype(u), D)
     Q = @SMatrix eye(eltype(u), D)
     K = copy(Q)
@@ -55,7 +54,7 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
         u = eom(u)
         K = jac(u)*Q
 
-        Q, R = qr_sq(K)
+        Q, R = qr(K)
         for i in 1:D
             λ[i] += log(abs(R[i, i]))
         end
@@ -364,15 +363,12 @@ function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
     S = [ds.state eye(eltype(ds.state), D)]
 
     tbprob = ODEProblem(tbeom!, S, (zero(t_final), t_final))
-    if haskey(diff_eq_kwargs, :solver)
-        solver = diff_eq_kwargs[:solver]
-        pop!(diff_eq_kwargs, :solver)
-        tb_integ = init(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
-    else
-        tb_integ = init(tbprob, Tsit5(); diff_eq_kwargs..., save_everystep=false)
-    end
+    solver = get_solver!(diff_eq_kwargs)
+    tb_integ = init(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
     return tb_integ
 end
+
+
 
 function check_tolerances(d0, dek)
     defatol = 1e-6; defrtol = 1e-3
@@ -395,6 +391,39 @@ end
 #####################################################################################
 #                            Continuous Lyapunovs                                   #
 #####################################################################################
+function lyapunovs(ds::ContinuousDynamicalSystem, N::Real=1000;
+    Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
+    # Initialize
+    tstops = dt:dt:N*dt
+    D = dimension(ds)
+    λ = zeros(eltype(ds.state), D)
+    Q = eye(eltype(ds.state), D)
+    # Transient evolution:
+    Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+    # Create integrator for dynamics and tangent space:
+    integ = tangentbundle_setup_integrator(
+    ds, tstops[end]; diff_eq_kwargs = diff_eq_kwargs)
+
+    # Main algorithm
+    for τ in tstops
+        integ.u[:, 2:end] .= Q # update tangent dynamics state (super important!)
+        u_modified!(integ, true)
+        # Integrate
+        while integ.t < τ
+            step!(integ)
+        end
+        # Perform QR (on the tangent flow):
+        Q, R = qr_sq(view(integ.u, :, 2:D+1))
+        # Add correct (positive) numbers to Lyapunov spectrum
+        for j in 1:D
+            λ[j] += log(abs(R[j,j]))
+        end
+    end
+    λ./(integ.t) #return spectrum
+end
+
+
+
 function lyapunov(ds::ContinuousDynamicalSystem,
                   T::Real,
                   return_convergence::Type{Val{B}} = Val{false};
@@ -518,40 +547,4 @@ function lyapunov_final(integ1::ODEIntegrator,
         end
     end
     return λ/finalτ
-end
-
-
-
-
-
-function lyapunovs(ds::ContinuousDynamicalSystem, N::Real=1000;
-    Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
-
-    tstops = dt:dt:N*dt
-    D = dimension(ds)
-    λ = zeros(eltype(ds.state), D)
-    Q = eye(eltype(ds.state), D)
-
-    # Transient evolution:
-    Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-
-    # Create integrator for dynamics and tangent space:
-    integ = tangentbundle_setup_integrator(
-    ds, tstops[end]; diff_eq_kwargs = diff_eq_kwargs)
-    integ.opts.advance_to_tstop=true
-
-    # Main algorithm
-    for τ in tstops
-        integ.u[:, 2:end] .= Q # update tangent dynamics state (super important!)
-        push!(integ.opts.tstops, τ)
-        step!(integ)
-
-        # Perform QR (on the tangent flow):
-        Q, R = qr_sq(view(integ.u, :, 2:D+1))
-        # Add correct (positive) numbers to Lyapunov spectrum
-        for j in 1:D
-            λ[j] += log(abs(R[j,j]))
-        end
-    end
-    λ./(N*dt) #return spectrum
 end

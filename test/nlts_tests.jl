@@ -1,4 +1,7 @@
-using DynamicalSystems, Base.Test
+if current_module() != DynamicalSystems
+  using DynamicalSystems
+end
+using Base.Test
 using Distances: Cityblock, Euclidean
 
 test_value = (val, vmin, vmax) -> @test vmin <= val <= vmax

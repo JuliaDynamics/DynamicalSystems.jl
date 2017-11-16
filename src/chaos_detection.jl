@@ -13,9 +13,9 @@ function variational_eom_gali(ds::ContinuousDS, k::Int)
     veom! = (t, u, du) -> begin
         J = jac(view(u, :, 1))
         f!(view(du, :, 1), u)
-        # for i in 1:k
-        du[:, 2:k+1] .= J*view(u, :, 2:k+1)
-        # end
+        for i in 1:k
+            du[:, i+1] .= J*view(u, :, i+1)
+        end
     end
     return veom!
 end
@@ -100,18 +100,11 @@ function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::Matrix;
     if haskey(diff_eq_kwargs, :saveat)
         pop!(diff_eq_kwargs, :saveat)
     end
-    if haskey(diff_eq_kwargs, :solver)
-        solver = diff_eq_kwargs[:solver]
-        pop!(diff_eq_kwargs, :solver)
-        integrator = init(prob, solver; diff_eq_kwargs...,
-        save_everystep=false, dense=false)
-    else
-        integrator = init(prob, Tsit5(); diff_eq_kwargs...,
-        save_everystep=false, dense=false)
-    end
+    solver = get_solver!(diff_eq_kwargs)
+    integrator = init(prob, solver; diff_eq_kwargs...,
+    save_everystep=false, dense=false)
 
     return gali(integrator, k, W, tmax, dt, threshold)
-
 end
 
 function gali(ds::ContinuousDS, k::Int, tmax::Real;
@@ -155,6 +148,10 @@ end
         if gali_k[ti] < threshold
             break
         end
+        for j in 1:k
+            normalize!(view(integrator.u, :, j+1))
+        end
+        u_modified!(integrator, true)
     end
 
     return gali_k[1:ti], rett[1:ti]
@@ -226,7 +223,7 @@ end
     jacob! = ds.jacob!
     J = ds.J
     x = copy(ds.state)
-    xprev = ds.dummystate
+    xprev = copy(x)
     wsdummy = copy(ws)
 
     rett = 0:Int(tmax)
@@ -254,7 +251,6 @@ end
         if gali_k[ti] < threshold
             break
         end
-        println()
     end
 
     return gali_k[1:ti], rett[1:ti]
@@ -282,7 +278,7 @@ end
 
 
 ## Continuous test
-
+#
 # using PyPlot
 # figure()
 # sp = [0, .295456, .407308431, 0] #stable periodic orbit
