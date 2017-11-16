@@ -11,7 +11,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob!]; name="") <: DynamicalSystem
+    ContinuousDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
@@ -42,6 +42,7 @@ end
 # Constructors
 function ContinuousDS(state, eom!, j!,
     J = zeros(eltype(state), length(state), length(state)); name="")
+    j!(J, state)
     return ContinuousDS(state, eom!, j!, J, name)
 end
 
@@ -50,7 +51,7 @@ function ContinuousDS(state, eom!; name = "")
     du = copy(state)
     J = zeros(T, D, D)
     jcf = ForwardDiff.JacobianConfig(eom!, du, state)
-    ForwardDiff_jacob! = (J, u) -> ForwardDiff.jacobian!(
+    ForwardDiff_jacob!(J, u) = ForwardDiff.jacobian!(
     J, eom!, du, u, jcf)
     ForwardDiff_jacob!(J, state)
     return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
