@@ -11,8 +11,8 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob!]; name="") <: ContinuousDynamicalSystem
-Continuous dynamical system with dimension `D = length(state)`.
+    ContinuousDS(state, eom! [, jacob!]; name="") <: DynamicalSystem
+`D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion

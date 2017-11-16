@@ -15,7 +15,7 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
 !!! info "Trajectory and Timeseries"
     The word "timeseries" can be very confusing, because it can mean a one-dimensional
     timeseries or a multi-dimensional timeseries. To resolve this confusion, in
-    `DynamicalSystems.jl` we have the following convention: **"timeseries"** always
+    DynamicalSystems.jl we have the following convention: **"timeseries"** always
     refers to a one-dimensional vector of numbers, which exists with respect to
     some other one-dimensional vector of numbers that corresponds to a time-vector.
     On the other hand,
@@ -69,8 +69,6 @@ If we did not want to write a Jacobian, we could do
 hen_nojac = DiscreteDS(rand(2), eom_henon)
 ```
 and the Jacobian function would be created automatically.
-
-
 
 ### 1-dimensional Discrete Systems
 In the case of maps, there a special structure for one-dimensional systems.
@@ -179,7 +177,8 @@ end
 
 ros = roessler()
 ```
-
+## Dimension of a System
+The dimension of any sub-type of `DynamicalSystem` is obtained by `D = dimension(ds)`.
 
 ## System evolution
 DynamicalSystems.jl provides convenient interfaces for the evolution of systems.  

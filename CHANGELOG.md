@@ -25,6 +25,7 @@
 * Added automated Jacobian computation for `BigDiscreteDS`.
 * Henon Helies system in famous_systems.
 * Nonlinearly coupled standard maps in famous systems.
+* Lorenz96 in famous_systems.
 
 
 ## Bugfixes and Enhancements
