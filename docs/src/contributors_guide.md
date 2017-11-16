@@ -1,5 +1,5 @@
 # Contributor Guide
-*You can contribute to this package even if you are very good with
+*You can contribute to this package even if you not are very good with
 coding with Julia.*
 
 ## Reporting Bugs and other Issues

@@ -206,7 +206,7 @@ For the discrete case, `T` is an integer and a `T×D` dataset is returned
 (`D` is the system dimensionality). For the
 continuous case, a `W×D` dataset is returned, with `W = length(0:dt:T)` with
 `0:dt:T` representing the time vector (*not* returned).
-## Keywords:
+## Keyword Arguments
 * `dt = 0.05` : (only for continuous) Time step of value output during the solving
   of the continuous system.
 * `diff_eq_kwargs = Dict()` : (only for continuous) A dictionary `Dict{Symbol, ANY}`
