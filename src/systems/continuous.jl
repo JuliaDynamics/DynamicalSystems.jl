@@ -11,38 +11,53 @@ export ContinuousDS, ODEProblem, ODEIntegrator
 abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob]; name="") <: ContinuousDynamicalSystem
-    Continuous dynamical system with dimension D = length(state)
+    ContinuousDS(state, eom! [, jacob!]; name="") <: DynamicalSystem
+`D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
   `du` is the first).
-* `jacob` (function) : The function that represents the Jacobian of the system,
-  given in the format: `jacob(u) => J` (i.e. returns a matrix). If the matrix is
-  an `SMatrix` from `StaticArrays.jl` there are major performance gains.
+* `jacob!` (function) : The function that represents the Jacobian of the system,
+  given in the format: `jacob!(J, u)` which means it is in-place, with the mutated
+  argument being the first.
+* `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
+  displayed.
 * `name::String` : A name for the dynamical system (possibly including parameter
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
-Because the `jacob` function is only necessary for a subset of algorithms, you
-do not have to provide it necessarily to the constructor (but then you can't use these
-functions).
+  If the `jacob` is not provided by the user, it is created automatically
+  using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-mutable struct ContinuousDS{T<:AbstractVector, F, J} <: ContinuousDynamicalSystem
-    state::T
+mutable struct ContinuousDS{T<:Number, F, J} <: ContinuousDynamicalSystem
+    state::Vector{T}
     eom!::F
-    jacob::J
+    jacob!::J
+    J::Matrix{T}
     name::String
 end
 
 # Constructors
-ContinuousDS(state, eom!; name = "") = ContinuousDS(state, eom!, nothing, name)
-ContinuousDS(state, eom!, j!; name="") = ContinuousDS(state, eom!, j!, name)
+function ContinuousDS(state, eom!, j!,
+    J = zeros(eltype(state), length(state), length(state)); name="")
+    return ContinuousDS(state, eom!, j!, J, name)
+end
+
+function ContinuousDS(state, eom!; name = "")
+    D = length(state); T = eltype(state)
+    du = copy(state)
+    J = zeros(T, D, D)
+    jcf = ForwardDiff.JacobianConfig(eom!, du, state)
+    ForwardDiff_jacob! = (J, u) -> ForwardDiff.jacobian!(
+    J, eom!, du, u, jcf)
+    ForwardDiff_jacob!(J, state)
+    return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
+end
 
 dimension(ds::ContinuousDS) = length(ds.state)
-Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = eltype(T)
+Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = T
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################

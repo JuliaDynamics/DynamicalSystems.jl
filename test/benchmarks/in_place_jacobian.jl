@@ -38,7 +38,7 @@ function lorenz2(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
     J[2,:] .= [ρ*i - u0[3],   -i,   -u0[1]]
     J[3,:] .= [u0[2],        u0[1],   (-β*i)]
 
-    @inbounds function jacob_lorenz!(J, u)
+    @inline @inbounds function jacob_lorenz!(J, u)
         J[2,1] = ρ - u[3]
         J[2,3] = -u[1]
         J[3,1] = u[2]; J[3,2] = u[1]

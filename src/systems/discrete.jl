@@ -77,9 +77,9 @@ DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
 
 """
     BigDiscreteDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
-`D`-dimensional discrete dynamical system (used for `D > 10`). The equations
+`D`-dimensional discrete dynamical system (used for big `D`). The equations
 for this system
-perform all operations `in-place`.
+perform all operations *in-place*.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system.
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -124,9 +124,20 @@ function BigDiscreteDS(u0, f!,
     return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 
+"""
+    dimension(ds::DynamicalSystem) -> D
+Return the dimension of the system
+"""
 dimension(::DiscreteDS{D, T, F, J}) where {D, T, F, J} = D
 dimension(::DiscreteDS1D) = 1
 dimension(ds::BigDiscreteDS) = length(ds.state)
+
+"""
+    jacobian(ds::DynamicalSystem)
+Return the Jacobian matrix of the equations of motion at the system's state.
+"""
+jacobian(ds::DynamicalSystem) = (ds.jacob!(ds.J, ds.state), ds.J)
+jacobian(ds::DiscreteDS) = ds.jacob(ds.state)
 
 #####################################################################################
 #                               System Evolution                                    #

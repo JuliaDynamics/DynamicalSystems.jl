@@ -15,7 +15,7 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
 !!! info "Trajectory and Timeseries"
     The word "timeseries" can be very confusing, because it can mean a one-dimensional
     timeseries or a multi-dimensional timeseries. To resolve this confusion, in
-    `DynamicalSystems.jl` we have the following convention: **"timeseries"** always
+    DynamicalSystems.jl we have the following convention: **"timeseries"** always
     refers to a one-dimensional vector of numbers, which exists with respect to
     some other one-dimensional vector of numbers that corresponds to a time-vector.
     On the other hand,
@@ -69,8 +69,6 @@ If we did not want to write a Jacobian, we could do
 hen_nojac = DiscreteDS(rand(2), eom_henon)
 ```
 and the Jacobian function would be created automatically.
-
-
 
 ### 1-dimensional Discrete Systems
 In the case of maps, there a special structure for one-dimensional systems.
@@ -147,69 +145,63 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined in a similar manner with the discrete systems:
+are defined almost identically with the `BigDiscreteDS` systems:
 ```@docs
 ContinuousDS
 ```
 ---
-There are two major differences compared to the `DiscreteDS` case:
+Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html).
 
-1. The second field `eom!` ends with an `!` to remind users that it is an in-place
-   function. This is necessary because the integration of continuous systems using
-   [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
-   is much faster this way.
-2. Automated Jacobian function evaluation is not yet supported.
-
-Notice that providing a Jacobian is necessary when you want to use
-the function [`lyapunovs`](lyapunovs/#DynamicalSystems.lyapunovs).
-If you do provide a Jacobian,
-it is best if it returns an `SMatrix`, just like with the discrete systems case.
-
-As an example, the continuous Rössler system can be defined as:
+As an example, here is the source code that defines the continuous Rössler
+system, from the [Predefined Systems](#predefined-systems):
 ```julia
-@inline @inbounds function eom_roessler!(du, u)
-    a = 0.2; b = 0.2; c = 5.7
-    du[1] = -u[2]-u[3]
-    du[2] = u[1] + a*u[2]
-    du[3] = b + u[3]*(u[1] - c)
-end
-@inline @inbounds function jacob_roessler(u)
-    i = one(eltype(u))
-    o = zero(eltype(u))
-    @SMatrix [o     -i      -i;
-              i      a       o;
-              u[3]   o       u[1] - c]
+using DynamicalSystems
+function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
+    @inline @inbounds function eom_roessler!(du, u)
+        du[1] = -u[2]-u[3]
+        du[2] = u[1] + a*u[2]
+        du[3] = b + u[3]*(u[1] - c)
+    end
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [o, -i,      -i]
+    J[2,:] .= [i,  a,       o]
+    J[3,:] .= [u0[3], o, u0[1] - c]
+    @inline @inbounds function jacob_roessler!(J, u)
+        J[3, 1] = u[3]; J[3,3] = u[1] - c
+    end
+    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
 end
 
-ros = ContinuousDS(rand(3), eom_roessler!, jacob_roessler)
+ros = roessler()
 ```
-
+## Dimension of a System
+The dimension of any sub-type of `DynamicalSystem` is obtained by `D = dimension(ds)`.
 
 ## System evolution
-DynamicalSystems.jl provides convenient interfaces for the evolution of systems. Especially in the continuous case, an interface is provided to the module
-[DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html), with an approach that fits more the structuring of the present package (e.g. time is never passed to the equations of motion).
-
-
-These are the functions related to system-evolution:
+DynamicalSystems.jl provides convenient interfaces for the evolution of systems.  
+These are the functions related to system evolution:
 ```@docs
 evolve
 evolve!
 trajectory
 ```
 ---
-In addition, interfaces are provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
+Especially in the continuous case, an API is provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
 ```@docs
 ODEProblem
 ODEIntegrator
 ```
 Notice that if you want to do repeated evolutions of a continuous system,
 you should use the
-`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator)`.
+`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator, newstate)` to avoid the intermediate step of creating a `ContinuousDS` each time.
 ---
 
 
 ## Coordination with other packages
-You can take advantange of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
+You can take advantage of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
 (known as functors) capabilities of Julia, to have a universal definition of your
 equations of motion that fits both the expected structure of DynamicalSystems.jl as well
 as other packages.
@@ -249,7 +241,8 @@ This way you can simply pass the object `Lorenz96` to the constructor of `Contin
 using DynamicalSystems
 lor = Lorenz96(0.01, 5) # create struct
 u0 = rand(5)
-ds = ContinuousDS(u0, lor) # pass the struct as "equations of motion"
+# pass the struct as "equations of motion":
+ds = ContinuousDS(u0, lor; name="Lorenz 96 (chain of 5)")
 traj = trajectory(ds, 100.0) # works!
 ```
 
@@ -276,6 +269,8 @@ functionality than just pretty-printing.
 Besides the examples in the documentation string,
 you can also do:
 ```julia
+using DynamicalSystems
+hen == Systems.henon()
 data = trajectory(hen, 10000)
 for point in data
 # do stuff with each datapoint (vector with as many elements as system dimension)
@@ -300,5 +295,5 @@ ts = trajectory(ds, 10.0)
 So far, the predefined systems that exist in the `Systems` sub-module are:
 ```@autodocs
 Modules = [Systems]
-Order   = [:function, :type]
+Order   = [:function]
 ```
