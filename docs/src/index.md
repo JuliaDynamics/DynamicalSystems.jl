@@ -91,11 +91,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 
-<!-- ### [Chaos Detection](chaos_detection)
 
-1. Generalized Alignment Index ($\text{GALI}_k$) method for categorizing chaos and regularity in Hamiltonian systems: [`gali`](@ref).
-
-    * For *both* discrete and continuous systems -->
 
 ### Wanted Features
 The [wanted features GitHub page](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3Awanted_feature) lists features that are wanted by the `DynamicalSystems`, and are open to contributors.
