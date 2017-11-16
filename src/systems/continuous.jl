@@ -28,8 +28,8 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
-  If the `jacob` is not provided by the user, it is created automatically
-  using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
+If the `jacob` is not provided by the user, it is created automatically
+using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
 mutable struct ContinuousDS{T<:Number, F, J} <: ContinuousDynamicalSystem
     state::Vector{T}
