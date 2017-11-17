@@ -39,5 +39,5 @@ pages:
 - Entropies and Dimensions: entropies.md
 - Nonlinear Timeseries Analysis: nlts.md
 - Periodicity: periodicity.md
-# - Chaos Detection: chaos_detection.md
+- Chaos Detection: chaos_detection.md
 - Contributor Guide: contributors_guide.md

@@ -162,10 +162,10 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
     J[1,:] = [o,    o,     i,    o]
     J[2,:] = [o,    o,     o,    i]
     J[3,:] = [ -i - 2λ*u0[2],   -2λ*u0[1],   o,   o]
-    J[4,:] = [-2λ*u0[1],  -1-2λ*u0[2],  o,   o]
+    J[4,:] = [-2λ*u0[1],  -1 + 2λ*u0[2],  o,   o]
     @inline @inbounds function jacob_hh!(J, u)
         J[3,1] = -i - 2λ*u[2]; J[3,2] = -2λ*u[1]
-        J[4,1] = -2λ*u[1]; J[4,2] =  -1-2λ*u[2]
+        J[4,1] = -2λ*u[1]; J[4,2] =  -1 + 2λ*u[2]
     end
     name = "Hénon-Heiles system (λ=$(λ))"
     return ContinuousDS(u0, eom_hh!, jacob_hh!, J; name = name)

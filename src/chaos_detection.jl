@@ -1,18 +1,20 @@
-# export gali
+export gali
 #####################################################################################
 #                                        GALI                                       #
 #####################################################################################
 function variational_eom_gali(ds::ContinuousDS, k::Int)
-    jac = ds.jacob
     f! = ds.eom!
+    jac! = ds.jacob!
+    J = ds.J
     # the equations of motion `veom!` evolve the system and the
     # deviation vectors
     # The e.o.m. for the system is f!(t, u , du).
     # The e.o.m. for the deviation vectors are tricky;
     # u[:, i] is the i deviation vector, for i≥2
     veom! = (t, u, du) -> begin
-        J = jac(view(u, :, 1))
         f!(view(du, :, 1), u)
+        jac!(J, u)
+        # @views A_mul_B!(du[:, 2:end], ds.J, u[:, 2:end])
         for i in 1:k
             du[:, i+1] .= J*view(u, :, i+1)
         end
@@ -35,9 +37,9 @@ If not given,
 random orthonormal vectors are chosen using `qr`.
 
 ## Keyword Arguments
-* `threshold` : If `GALI_k` reaches the threshold iteration is terminated.
-  Default values is `1e-12`.
-* `dt=1.0` : Time step of integration for continuous systems.
+* `threshold` : If `GALI_k` falls below the `threshold` iteration is terminated.
+  Default value is `1e-12`.
+* `dt=1.0` : Time step between variational vector normalizations for continuous systems.
 * `diff_eq_kwargs` : See [`trajectory`](@ref).
 
 ## Description
@@ -49,21 +51,23 @@ behavior type in ``D``-dimensional *Hamiltonian* systems
 the type of orbit resulting
 from the initial condition `ds.state`. If it is a chaotic orbit, then
 ```math
-\\text{GALI}_k(t) \\approx
+\\text{GALI}_k(t) \\sim
 \\exp\\left[\\sum_{j=1}^k (\\lambda_1 - \\lambda_j)t \\right]
 ```
 with ``\\lambda_1`` being the maximum [`lyapunov`](@ref) exponent.
 If on the other hand the orbit is regular, corresponding
-to movement in ``d``-dimensional tori with `` 1 \\le d \\le D/2``
+to movement in ``d``-dimensional torus with `` 1 \\le d \\le D/2``
 then it holds
 ```math
-\\text{GALI}_k(t) \\approx
+\\text{GALI}_k(t) \\sim
     \\begin{cases}
-      \\text{const.}, & \\text{if} \\;\\; 1 \\le k \\le d  \\\\
+      \\text{const.}, & \\text{if} \\;\\; 2 \\le k \\le d  \\; \\; \\text{and}
+      \\; \\;d > 1 \\\\
       t^{-(k - d)}, & \\text{if} \\;\\;  d < k \\le D - d \\\\
-      t^{-(2k - D)}, & \\text{if} \\;\\;  D -s < k \\le D
+      t^{-(2k - D)}, & \\text{if} \\;\\;  D - d < k \\le D
     \\end{cases}
 ```
+
 Traditionally, if ``\\text{GALI}_k(t)`` does not become less than
 the `threshold` until `tmax`
 the given orbit is said to be chaotic, otherwise it is regular.
@@ -259,84 +263,10 @@ end
 
 
 
-
-
-
-
-
-
-
 ######################################### TEST
 
-
-
-
-
-
-
-
-
-
-## Continuous test
-#
-# using PyPlot
-# figure()
-# sp = [0, .295456, .407308431, 0] #stable periodic orbit
-# qp = [0, .483000, .278980390, 0] #quasiperiodic orbit
-# up = [0, .469120, .291124890, 0] #periodic near unstable periodic orbit
-# ch = [0, .509000, .254624859, 0] #chaotic orbit
-# dt = 0.5
-#
-# ds = Systems.henonhelies(sp)
-#
-# diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
-# tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
-#
-# subplot(2,2,1)
-# plot(tr[:,1], tr[:,3], alpha = 0.5,
-# label="sp",marker="o",markersize=2, linewidth=0)
-#
-# legend()
-#
-# subplot(2,2,2)
-# for k in [2,3,4]
-#     g, t = gali(ds, k, 1000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
-#     loglog(t, 1./t.^(2k-4), label="t^-$(2k-4)")
-#     loglog(t, g, label="GALI_$(k)")
-# end
-# legend(fontsize=14)
-# tight_layout()
-#
-# ds = Systems.henonhelies(ch)
-#
-# diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Vern9())
-# tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
-#
-# subplot(2,2,3)
-# plot(tr[:,1], tr[:,3], alpha = 0.5,
-# label="ch",marker="o",markersize=2, linewidth=0)
-#
-# legend()
-#
-# subplot(2,2,4)
-# ls = lyapunovs(ds, 10000.0, dt=dt)
-#
-# for k in [2,3,4]
-#     ex = sum(ls[1] - ls[j] for j in 2:k)
-#     g, t = gali(ds, k, 1000; dt = dt)
-#     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
-#     semilogy(t, g, label="GALI_$(k)")
-# end
-# legend(fontsize=14)
-# tight_layout()
-
-# bouhouhou it doesn't give power-law for regular motion... :(
-#
-##
-
-
 # Test discrete
-
+#
 # using PyPlot; figure()
 # M = 2; ks = 0.5ones(M); Γ = 0.05;
 # u0 = [0.55, 0.54, 0.1, 0.01]*2π
