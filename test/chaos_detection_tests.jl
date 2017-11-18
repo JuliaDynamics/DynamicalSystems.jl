@@ -41,3 +41,33 @@ println("\nTesting chaos detection algorithms...")
         end
     end
 end
+
+
+@testset "GALI continuous" begin
+    @testset "Henon-Helies" begin
+        sp = [0, .295456, .407308431, 0] #stable periodic orbit: 1D torus
+        qp = [0, .483000, .278980390, 0] #quasiperiodic orbit: 2D torus
+        ch = [0, -0.25, 0.42081, 0] # chaotic orbit
+        tt = 1000
+        diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
+        @testset "regular" begin
+            ds = Systems.henonhelies(sp)
+            for k in [2,3,4]
+                g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
+                @test t[end] ≥ tt
+            end
+            ds = Systems.henonhelies(qp)
+            for k in [2,3,4]
+                g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
+                @test t[end] ≥ tt
+            end
+        end
+        @testset "chaotic" begin
+            ds = Systems.henonhelies(ch)
+            for k in [2,3,4]
+                g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
+                @test t[end] < tt
+            end
+        end
+    end
+end

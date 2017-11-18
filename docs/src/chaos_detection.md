@@ -55,7 +55,7 @@ legend()
 
 subplot(3,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, k, 50000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
+    g, t = gali(ds, k, 50000.0; dt = dt, diff_eq_kwargs = diffeq)
     if k < 4
         loglog(t, 1./t.^(k-1), label="slope -$(k-1)")
     else
@@ -75,7 +75,7 @@ legend()
 
 subplot(3,2,4)
 for k in [2,3,4]
-    g, t = gali(ds, k, 10000.0; dt = dt, diff_eq_kwargs = diffeq, threshold=1e-12)
+    g, t = gali(ds, k, 10000.0; dt = dt, diff_eq_kwargs = diffeq)
     loglog(t, 1./t.^(2k-4), label="slope -$(2k-4)")
     loglog(t, g, label="GALI_$(k)")
 end
