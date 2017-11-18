@@ -49,7 +49,7 @@ println("\nTesting continuous system lyapunov exponents...")
     # test convergence:
     ls, ts = lyapunov(ds, T, Val{true}; Ttr = 100.0)
     @test size(ls, 1) == size(ls, 1)
-    @test 0.89 < ls[end] < 0.92
+    @test 0.87 < ls[end] < 0.94
     @test ts[end] <= T
 
   end
@@ -59,15 +59,15 @@ end
   ds = Systems.roessler()
   @testset "lyapunovs" begin
     λ = lyapunovs(ds, 5e4)
-    @test 0.06 < λ[1] < 0.08
+    @test 0.05 < λ[1] < 0.09
     @test -0.01 < λ[2] < 0.01
-    @test -5.4 < λ[3] < -5.39
+    @test -5.6 < λ[3] < -5.2
 
     λ = lyapunovs(ds, 5e4; dt = 0.1, Ttr = 10.0,
     diff_eq_kwargs = Dict(:abstol=>1e-9, :solver => DP5()))
     @test 0.06 < λ[1] < 0.08
     @test -0.01 < λ[2] < 0.01
-    @test -5.4 < λ[3] < -5.39
+    @test -5.6 < λ[3] < -5.2
   end
 
   @testset "lyapunov" begin
