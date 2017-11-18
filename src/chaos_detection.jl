@@ -1,6 +1,6 @@
 export gali
 #####################################################################################
-#                                        GALI                                       #
+#                               Continuous GALI                                     #
 #####################################################################################
 function variational_eom_gali(ds::ContinuousDS, k::Int)
     f! = ds.eom!
@@ -34,7 +34,7 @@ Return
 containing the deviation vectors ``w_i`` for ``i \\in [1,k]``, expected either
 as a matrix with each column a deviation vector, or as a vector of vectors.
 If not given,
-random orthonormal vectors are chosen using `qr`.
+random orthonormal vectors are chosen.
 
 ## Keyword Arguments
 * `threshold` : If `GALI_k` falls below the `threshold` iteration is terminated.
@@ -162,7 +162,9 @@ end
 
 end
 
-######### Discrete GALI ##########################
+#####################################################################################
+#                                 Discrete GALI                                     #
+#####################################################################################
 function gali(ds::DiscreteDynamicalSystem, k::Int, tmax;
     threshold = 1e-12)
 
@@ -259,30 +261,3 @@ end
 
     return gali_k[1:ti], rett[1:ti]
 end
-
-
-
-
-######################################### TEST
-
-# Test discrete
-#
-# using PyPlot; figure()
-# M = 2; ks = 0.5ones(M); Γ = 0.05;
-# u0 = [0.55, 0.54, 0.1, 0.01]*2π
-# ds = Systems.coupledstandardmaps(M, u0; ks=ks, Γ = Γ)
-# tr = trajectory(ds, 100000)
-#
-# subplot(2,1,1)
-# plot(tr[:,1], tr[:,1+M], alpha = 0.5,
-# label="orbit",marker="o", ms=1, linewidth=0)
-# legend()
-# #
-# subplot(2,1,2)
-# for k in [2,3,4]
-#     g, t = gali(ds, k, 1000.0; threshold=1e-12)
-#     loglog(t, 1./t.^(2k-4), label="t^-$(2k-4)")
-#     loglog(t, g, label="GALI_$(k)")
-# end
-# legend()
-# tight_layout()

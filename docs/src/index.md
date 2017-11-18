@@ -91,6 +91,12 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 
+### [Chaos Detection](chaos_detection)
+
+1. The Generalized Alignment Index: $\text{GALI}_k$: [`gali`](@ref).
+
+    * Implemented for both discrete and continuous systems.
+
 
 
 ### Wanted Features

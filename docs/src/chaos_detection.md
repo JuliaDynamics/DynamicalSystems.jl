@@ -1,38 +1,81 @@
 # Chaos Detection
-Can detect chaos with maximum lyapunov exponent.
+Being able to detect and distinguish chaotic from regular behavior is crucial in the
+study of dynamical systems. Most of the time a positive maximum [`lyapunov`](@ref) exponent
+and a bounded system indicate chaos.
 
-There are better ways.
+However, the convergence of the Lyapunov exponent is often very slow and
+the computation costly. There are
+many alternatives that are both more efficient and more accurate in characterizing
+chaotic and regular motion, some of which are included in DynamicalSystems.jl.
 
 ## Generalized Alignment Index
-GALI for short is the shit.
+"GALI" for sort is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
+motion. It is one
+of the most recent and cheapest methods for distinguishing chaos, introduced first in
+2007 by Skokos, Bountis & Antonopoulos.
 ```@docs
 gali
 ```
 ### Discrete Example
-Let's see an example for a discrete:
+We will use 3 coupled standard maps as an example for a discrete system:
 ```julia
 using DynamicalSystems
-using PyPlot
+using PyPlot; figure()
+M = 3; ks = 3ones(M); Γ = 0.1;
+stable = [π, π, π, 0.01, 0, 0] .+ 0.1
+chaotic = rand(2M)
 
-ds = Systems.towel()
-ls = lyapunovs(ds, 10000)
+ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
+# ds = BigDiscreteDS(ds.state, ds.eom!)
+tr = trajectory(ds, 100000)
 
-figure(figsize=(10,5))
-for (i, k) in enumerate([2,3])
-    ax = subplot(1,2,i)
-    ex = sum(ls[1] - ls[j] for j in 2:k)
+subplot(2,2,1)
+plot(tr[:,1], tr[:,1+M], alpha = 0.5,
+label="stable",marker="o", ms=1, linewidth=0)
+legend()
+#
+subplot(2,2,2)
+for k in [2,3,4, 5, 6]
+    g, t = gali(ds, k, 1e5; threshold=1e-12)
+    lt = log10.(t); lg = log10.(g)
 
-    g, t = gali(ds, k, 1000; threshold = 1e-12)
-
-    semilogy(t, g, label="GALI\$ _$(k)(t)\$")
-    semilogy(t, exp.(-ex.*t), label="exp. k=$k")
-    xlabel("t")
-    legend()
+    plot(lt, lg, label="GALI_$(k)")
 end
+lt = 2:0.5:5.5
+plot(lt, zeros(lt), label="const")
+plot(lt, -2(lt - 3), label="slope -2")
+plot(lt, -4(lt - 3), label="slope -4")
+plot(lt, -6(lt - 3), label="slope -6")
+
+xlim(2, 5.5)
+ylim(-12, 1)
+legend(fontsize=12)
 tight_layout()
+
+
+ds = Systems.coupledstandardmaps(M, chaotic; ks=ks, Γ = Γ)
+tr = trajectory(ds, 100000)
+subplot(2,2,3)
+plot(tr[:,1], tr[:,1+M], alpha = 0.5,
+label="chaotic",marker="o", ms=1, linewidth=0)
+legend()
+
+
+subplot(2,2,4)
+ls = lyapunovs(ds, 100000)
+for k in [2,3,4,5 ,6]
+    ex = sum(ls[1] - ls[j] for j in 2:k)
+    g, t = gali(ds, k, 1000)
+    semilogy(t, exp.(-ex.*t), label="exp. k=$k")
+    semilogy(t, g, label="GALI_$(k)")
+end
+legend(fontsize=12)
+xlim(0,50)
+ylim(1e-12, 1)
+
 ```
-![GALI Discrete](https://i.imgur.com/Kl8bFIR.png)
-The left figure demonstrates the drawback of $\text{SALI} \equiv \text{GALI}_2$ (which was one of the incentives for the invention of $\text{GALI}_k$) : If $\lambda_1$ and $\lambda_2$ are very close, the convergence is very slow.
+![GALI Discrete](https://i.imgur.com/tzoaOqV.png)
+
 
 ### Continuous Example
 As an example of a continuous system, let's see the [`henonhelies`](@ref):
@@ -102,7 +145,8 @@ legend(fontsize=12)
 tight_layout()
 ```
 ![GALI Continuous](https://i.imgur.com/VJE6MpC.png)
-As you can see, the results match almost perfectly the theory described in
+As you can see, the results of both discrete and continuous match
+very well the theory described in
 [`gali`](@ref0).
 
 ### Using GALI
@@ -118,9 +162,8 @@ For example one could do
 using DynamicalSystems
 using PyPlot
 
-# Default threshold
 t = 500.0
-ischaotic(ds) = gali(ds, 2, t)[2][end] < t ? 1.0 : 0.0
+chaoticness(ds) = gali(ds, 2, t)[2][end]
 
 dens = 201
 chaoticity = zeros(dens,dens)
@@ -129,14 +172,13 @@ chaoticity = zeros(dens,dens)
 for (i, θ) ∈ enumerate(θs[1:dens])
     for (j, p) ∈ enumerate(ps[1:dens])
         ds = Systems.standardmap([θ, p])
-        chaoticity[i, j] = ischaotic(ds)
+        chaoticity[i, j] = chaoticness(ds)
     end
 end
 
 pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
 chaoticity')
+colorbar()
 ```
-and after around `0.0005*201*201 ≈ 20` seconds you will get what looks
-to be identical
-with the phase space of the standard map:
-![Chaos detection](https://i.imgur.com/lc1WfLF.png)
+and after around `0.0005*201*201 ≈ 20` seconds you will get:
+![Chaos detection](https://i.imgur.com/z85KBRh.png)

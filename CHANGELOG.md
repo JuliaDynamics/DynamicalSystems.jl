@@ -2,10 +2,13 @@
 ## Breaking
 * All system types become immutable and a function
   `set_u0(u0, ds) -> ds` is used to set a state.
+
+
+# v0.6.1
 ## New Additions
 * Generalized Alignment Index method: `gali`
 * GALI for continuous systems.
-## Bugfixes and Enhancements
+* Documentation & examples for `gali`.
 
 # v0.6.0:
 ## BREAKING

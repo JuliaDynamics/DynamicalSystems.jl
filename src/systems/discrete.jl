@@ -121,6 +121,7 @@ function BigDiscreteDS(u0, f!,
 
     cfg = ForwardDiff.JacobianConfig(f!, dum, u0)
     FD_jacob!(J, x) = ForwardDiff.jacobian!(J, f!, dum, x, cfg)
+    FD_jacob!(J, u0)
     return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 

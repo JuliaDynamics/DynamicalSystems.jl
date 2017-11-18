@@ -328,6 +328,8 @@ function standardmap(u0=0.001rand(2); k = 0.971635)
     return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
 end
 
+
+
 """
 ```julia
     coupledstandardmaps(M::Int, u0 = 0.001rand(2M); ks = ones(M), Γ = 1.0)

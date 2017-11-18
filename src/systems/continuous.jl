@@ -177,7 +177,7 @@ function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
         text = ds.name
     end
     t[:head] = Juno.render(i, Text(text))
-    pop!(t[:children]) # remove name field
+    t[:children] = t[:children][1:3] 
     t
 end
 end
