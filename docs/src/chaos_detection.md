@@ -162,8 +162,7 @@ For example one could do
 using DynamicalSystems
 using PyPlot
 
-t = 500.0
-chaoticness(ds) = gali(ds, 2, t)[2][end]
+chaoticness(ds) = gali(ds, 2, 500.0)[2][end]
 
 dens = 201
 chaoticity = zeros(dens,dens)
