@@ -147,7 +147,7 @@ tight_layout()
 ![GALI Continuous](https://i.imgur.com/VJE6MpC.png)
 As you can see, the results of both discrete and continuous match
 very well the theory described in
-[`gali`](@ref0).
+[`gali`](@ref).
 
 ### Using GALI
 No-one in their right mind would try to fit power-laws in order to distinguish between
