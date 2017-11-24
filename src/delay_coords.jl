@@ -357,8 +357,7 @@ reconstruction `R`, which are the `m+k` and `n+k` elements of vector `R.s` (dist
 ref. [1]). Notice that
 the distances used are defined in the package
 [Distances.jl](https://github.com/JuliaStats/Distances.jl), but are re-exported
-in DynamicalSystems.jl for ease-of-use (the
-distances are used for dispatch purposes *only*).
+in DynamicalSystems.jl for ease-of-use.
 
 This function assumes that the Theiler window (see [1]) is the same as the delay time:
 ``w  = \\tau``.
