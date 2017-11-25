@@ -164,11 +164,7 @@ function variational_integrator(ds::ContinuousDS, k::Int, t_final::Real,
         us = view(u, :, 1)
         f!(view(du, :, 1), us)
         jac!(J, us)
-        A_mul_B!(view(du, :, 2:k+1), ds.J, view(u, :, 2:k+1))
-        # A_mul_B!(view(du, :, 2:k+1), J, view(u, :, 2:k+1))
-        # for i in 1:k
-        #     du[:, i+1] .= J*view(u, :, i+1)
-        # end
+        A_mul_B!(view(du, :, 2:k+1), J, view(u, :, 2:k+1))
     end
 
     varprob = ODEProblem(veom!, S, (zero(t_final), t_final))

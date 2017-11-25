@@ -193,10 +193,12 @@ Especially in the continuous case, an API is provided for usage directly with [D
 ```@docs
 ODEProblem
 ODEIntegrator
+variational_integrator
 ```
-Notice that if you want to do repeated evolutions of a continuous system,
+Notice that if you want to do repeated evolutions of different states of a
+continuous system,
 you should use the
-`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `reinit!(integrator, newstate)` to avoid the intermediate step of creating a `ContinuousDS` each time.
+`ODEIntegrator(ds::DynamicalSystem)` in conjunction with `DifferentialEquations.reinit!(integrator, newstate)` to avoid the intermediate initializations of the integrator each time.
 ---
 
 

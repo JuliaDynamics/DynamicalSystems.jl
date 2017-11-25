@@ -1,7 +1,11 @@
 # WIP
-## Breaking
-* All system types become immutable and a function
-  `set_u0(u0, ds) -> ds` is used to set a state.
+
+## Bugfixes and Enchancements
+* Created a dedicated method that integrates the variational equations
+  of motion for a system. This allows all functions to simply call
+  this one instead of each defining a new integrator. This will make DynamicalSystems
+  more extendable as now it is much easier to add e.g. new methods for
+  chaos detection.
 
 
 # v0.6.1
