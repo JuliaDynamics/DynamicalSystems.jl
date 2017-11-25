@@ -2,28 +2,6 @@ export gali
 #####################################################################################
 #                               Continuous GALI                                     #
 #####################################################################################
-function variational_eom_gali(ds::ContinuousDS, k::Int)
-    f! = ds.eom!
-    jac! = ds.jacob!
-    J = ds.J
-    # the equations of motion `veom!` evolve the system and the
-    # deviation vectors
-    # The e.o.m. for the system is f!(t, u , du).
-    # The e.o.m. for the deviation vectors are tricky;
-    # u[:, i] is the i deviation vector, for i≥2
-    veom! = (t, u, du) -> begin
-        f!(view(du, :, 1), u)
-        jac!(J, u)
-        # @views A_mul_B!(du[:, 2:end], ds.J, u[:, 2:end])
-        for i in 1:k
-            du[:, i+1] .= J*view(u, :, i+1)
-        end
-    end
-    return veom!
-end
-
-
-
 """
     gali(ds::DynamicalSystem, k::Int, tmax [, ws]; kwargs...) -> GALI_k, t
 Compute ``\\text{GALI}_k`` [1] for a given `k` up to time `tmax`.
@@ -94,37 +72,24 @@ set-up the `integrator` and `W` for the first time.
 (section 5.3.1 and ref. [85] therein), Lecture Notes in Physics **915**,
 Springer (2016)
 """
-function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::Matrix;
+function gali(ds::ContinuousDS, k::Int, tmax::Real,
+    wss = qr(rand((dimension(ds)), dimension(ds)))[1][:, 1:k];
     threshold = 1e-12, dt = 1.0, diff_eq_kwargs = Dict())
-
-    veom! = variational_eom_gali(ds, k)
-    W = cat(2, ds.state, ws)
-    prob = ODEProblem(veom!, W, (zero(dt), oftype(dt, tmax)))
 
     if haskey(diff_eq_kwargs, :saveat)
         pop!(diff_eq_kwargs, :saveat)
     end
-    solver = get_solver!(diff_eq_kwargs)
-    integrator = init(prob, solver; diff_eq_kwargs...,
-    save_everystep=false, dense=false)
+
+    ws = to_matrix(wss)
+    W = cat(2, ds.state, ws)
+
+    integrator = variational_integrator(ds, k, oftype(dt, tmax), W;
+    diff_eq_kwargs = diff_eq_kwargs)
 
     return gali(integrator, k, W, tmax, dt, threshold)
 end
 
-function gali(ds::ContinuousDS, k::Int, tmax::Real;
-    threshold = 1e-12, dt = 1.0, diff_eq_kwargs = Dict())
-    D = dimension(ds)
-    ws = qr(rand(D, D))[1][:, 1:k]
-    gali(ds, k, tmax, ws;
-    threshold = threshold, dt = dt, diff_eq_kwargs = diff_eq_kwargs)
-end
 
-function gali(ds::ContinuousDS, k::Int, tmax::Real, ws::AbstractVector;
-    threshold = 1e-12, dt = 1.0,  diff_eq_kwargs = Dict())
-    WS = cat(2, ws...)
-    gali(ds, k, tmax, WS;
-    threshold = threshold, dt = dt, diff_eq_kwargs = diff_eq_kwargs)
-end
 
 @inbounds function gali(integrator, k, W, tmax, dt, threshold)
 
@@ -165,21 +130,11 @@ end
 #####################################################################################
 #                                 Discrete GALI                                     #
 #####################################################################################
-function gali(ds::DiscreteDynamicalSystem, k::Int, tmax;
-    threshold = 1e-12)
-
-    D = dimension(ds)
-    Ws = qr(rand(D, D))[1][:, 1:k]
-    return gali(ds, k, tmax, Ws; threshold = threshold)
-end
-
-function gali(ds::DiscreteDS{D, S, F, JJ}, k::Int, tmax, Ws::Matrix;
+function gali(ds::DiscreteDS{D, S, F, JJ}, k::Int, tmax,
+    Ws = qr(rand(D, D))[1][:, 1:k];
     threshold = 1e-12) where {D,S,F,JJ}
 
-    ws = Vector{SVector{D, S}}(k)
-    for i in 1:k
-        ws[i] = SVector{D, S}(Ws[:, i])
-    end
+    ws = to_vectorSvector(Ws)
     return gali(ds, k, tmax, ws; threshold = threshold)
 end
 
@@ -216,12 +171,15 @@ end
     return gali_k[1:ti], rett[1:ti]
 end
 
-function gali(ds::BigDiscreteDS, k::Int, tmax, Ws::AbstractVector;
-    threshold = 1e-12)
 
-    ws = cat(2, Ws...)
+
+function gali(ds::BigDiscreteDS, k::Int, tmax,
+    Ws = qr(rand(dimension(ds), dimension(ds)))[1][:, 1:k]; threshold = 1e-12)
+
+    ws = to_matrix(Ws)
     return gali(ds, k, tmax, ws; threshold = threshold)
 end
+
 @inbounds function gali(ds::BigDiscreteDS, k::Int,
     tmax, ws::Matrix; threshold = 1e-12)
 

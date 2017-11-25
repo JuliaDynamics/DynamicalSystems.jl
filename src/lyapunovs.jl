@@ -338,7 +338,7 @@ lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=
 #                          Continuous Lyapunov Helpers                              #
 #####################################################################################
 function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
-  diff_eq_kwargs=Dict())
+    diff_eq_kwargs=Dict())
 
     D = dimension(ds)
     # the equations of motion `tbeom!` evolve the system and the tangent dynamics
@@ -369,21 +369,7 @@ end
 
 
 
-function check_tolerances(d0, dek)
-    defatol = 1e-6; defrtol = 1e-3
-    atol = haskey(dek, :abstol) ? dek[:abstol] : defatol
-    rtol = haskey(dek, :reltol) ? dek[:reltol] : defrtol
-    if atol > 10d0
-        warnstr = "Absolute tolerance (abstol) of integration is much larger than "
-        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
-        warn(warnstr)
-    end
-    if rtol > 10d0
-        warnstr = "Relative tolerance (reltol) of integration is much larger than "
-        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
-        warn(warnstr)
-    end
-end
+
 
 
 
@@ -400,8 +386,9 @@ function lyapunovs(ds::ContinuousDynamicalSystem, N::Real=1000;
     # Transient evolution:
     Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
     # Create integrator for dynamics and tangent space:
-    integ = tangentbundle_setup_integrator(
-    ds, tstops[end]; diff_eq_kwargs = diff_eq_kwargs)
+    S = [ds.state eye(eltype(ds.state), D)]
+    integ = variational_integrator(
+    ds, D, tstops[end], S; diff_eq_kwargs = diff_eq_kwargs)
 
     # Main algorithm
     for τ in tstops

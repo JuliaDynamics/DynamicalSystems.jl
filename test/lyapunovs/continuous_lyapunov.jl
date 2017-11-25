@@ -32,12 +32,6 @@ println("\nTesting continuous system lyapunov exponents...")
       @test -0.1 < λ[2] < 0.1
       @test -14.7 < λ[3] < -14.1
     end
-  # @testset "lyapunovs ForwardDiff" begin
-  #   λ = lyapunovs(ds2, 1e5)
-  #   @test 0.89 < λ[1] < 0.91
-  #   @test -0.001 < λ[2] < 0.01
-  #   @test -14.6 < λ[3] < -14.5
-  # end
 
   @testset "lyapunov" begin
     T = 10000.0

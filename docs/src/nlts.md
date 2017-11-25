@@ -42,7 +42,7 @@ neighborhood
 ---
 
 ## Numerical Lyapunov Exponent
-Given any timeseries, one can first `reconstruct` it, and then calculate a maximum
+Given any timeseries, one can first [`reconstruct`](@ref) it, and then calculate a maximum
 Lyapunov exponent for it, provided that the system the timeseries was recorded
 from actually exhibits exponential separation of nearby trajectories. This is done
 with
@@ -59,7 +59,7 @@ using DynamicalSystems, PyPlot
 
 ds = Systems.henon()
 data = trajectory(ds, 100000)
-x = data[:, 1]
+x = data[:, 1] #fake measurements for the win!
 
 ks = 1:20
 ℜ = 1:10000

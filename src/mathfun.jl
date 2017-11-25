@@ -1,6 +1,6 @@
 # Mathematical functions that do some stuff
 # very fast or very conveniently.
-# Also includes helper functions
+# Also includes helper/conversion functions
 
 #####################################################################################
 #                                Pairwse Distance                                   #
@@ -121,4 +121,20 @@ function qr_sq(m::AbstractMatrix)    # faster version for square matrices
 	end
 
 	return (m*inv(r), r)
+end
+
+#####################################################################################
+#                                Conversions                                        #
+#####################################################################################
+to_matrix(a::AbstractVector{<:AbstractVector}) = cat(2, a...)
+to_matrix(a::AbstractMatrix) = a
+to_vectorSvector(a::AbstractVector{<:AbstractVector}) = a
+function to_vectorSvector(a::AbstractMatrix)
+    S = eltype(a)
+    D, k = size(a)
+    ws = Vector{SVector{D, S}}(k)
+    for i in 1:k
+        ws[i] = SVector{D, S}(a[:, i])
+    end
+    return ws
 end
