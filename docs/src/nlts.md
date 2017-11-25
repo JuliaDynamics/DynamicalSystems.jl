@@ -26,15 +26,23 @@ println("D2 - D1 = $(abs(D2- D1))")
 ```
 The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
 
-## Estimating Reconstruction Parameters
+### Estimating Reconstruction Parameters
 The following functions are provided estimate good values that can be used in
 [`reconstruct`](@ref):
 ```@docs
 estimate_delay
 ```
 
+## Neighborhoods of a point in a Dataset
+Incorporating the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) and the flexibility of `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
+```@docs
+AbstractNeighborhood
+neighborhood
+```
+---
+
 ## Numerical Lyapunov Exponent
-Given any timeseries, one can first `reconstruct` it, and then calculate a maximum
+Given any timeseries, one can first [`reconstruct`](@ref) it, and then calculate a maximum
 Lyapunov exponent for it, provided that the system the timeseries was recorded
 from actually exhibits exponential separation of nearby trajectories. This is done
 with
@@ -42,18 +50,8 @@ with
 numericallyapunov
 ```
 ---
-### Neighborhoods
 The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
-
-The methods for the neighborhoods are subtypes of `AbstractNeighborhood`, and offer
-a convenient way to find neighboring points to a given point in a dataset.
-```@docs
-AbstractNeighborhood
-neighborhood
-```
----
-As you can see, the function `neighborhood` is generally applicable!
 
 ### Example of Numerical Lyapunov computation
 ```julia
@@ -61,7 +59,7 @@ using DynamicalSystems, PyPlot
 
 ds = Systems.henon()
 data = trajectory(ds, 100000)
-x = data[:, 1]
+x = data[:, 1] #fake measurements for the win!
 
 ks = 1:20
 ℜ = 1:10000

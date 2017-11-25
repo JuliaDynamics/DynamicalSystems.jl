@@ -2,7 +2,7 @@ using OrdinaryDiffEq, Requires, ForwardDiff
 import OrdinaryDiffEq.ODEProblem
 import OrdinaryDiffEq.ODEIntegrator
 
-export ContinuousDS, ODEProblem, ODEIntegrator
+export ContinuousDS, ODEProblem, ODEIntegrator, variational_integrator
 
 #######################################################################################
 #                                     Constructors                                    #
@@ -57,8 +57,11 @@ function ContinuousDS(state, eom!; name = "")
     return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
 end
 
+
+
 dimension(ds::ContinuousDS) = length(ds.state)
 Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = T
+
 #######################################################################################
 #                         Interface to DifferentialEquations                          #
 #######################################################################################
@@ -126,6 +129,67 @@ function get_sol(prob::ODEProblem, diff_eq_kwargs::Dict = Dict())
     return sol.u
 end
 
+
+"""
+    variational_integrator(ds::ContinuousDS, k::Int, tfinal, S::Matrix, kwargs...)
+Return an `ODEIntegrator` that represents the variational equations
+of motion for the system. Used in [`lyapunovs`](@ref) and [`gali`](@ref).
+
+It evolves in parallel `ds.state` and `k` deviation
+vectors ``w_i`` such that ``\\dot{w}_i = J\\times w_i`` with ``J`` the Jacobian
+at the current state. `S` is the initial "conditions" which contain both the
+system's state as well as the initial diviation vectors:
+`S = cat(2, ds.state, ws)` if `ws` is a matrix that has as columns the initial
+deviation vectors.
+
+The only keyword argument for this funcion is `diff_eq_kwargs = Dict()` (see
+[`trajectory`](@ref)).
+"""
+function variational_integrator(ds::ContinuousDS, k::Int, t_final::Real,
+    S::AbstractMatrix; diff_eq_kwargs = Dict())
+
+    f! = ds.eom!
+    jac! = ds.jacob!
+    J = ds.J
+    # the equations of motion `veom!` evolve the system and
+    # k deviation vectors. Notice that the k deviation vectors
+    # can also be considered a D×k matrix (which is the case
+    # at `lyapunovs` function).
+    # The e.o.m. for the system is f!(t, u , du).
+    # The e.o.m. for the deviation vectors (tangent dynamics) are simply:
+    # dY/dt = J(u) ⋅ Y
+    # with J the Jacobian of the vector field at the current state
+    # and Y being each of the k deviation vectors
+    veom! = (t, u, du) -> begin
+        us = view(u, :, 1)
+        f!(view(du, :, 1), us)
+        jac!(J, us)
+        A_mul_B!(view(du, :, 2:k+1), J, view(u, :, 2:k+1))
+    end
+
+    varprob = ODEProblem(veom!, S, (zero(t_final), t_final))
+    solver = get_solver!(diff_eq_kwargs)
+    vintegrator = init(varprob, solver; diff_eq_kwargs..., save_everystep=false)
+    return vintegrator
+end
+
+
+
+function check_tolerances(d0, diff_eq_kwargs)
+    defatol = 1e-6; defrtol = 1e-3
+    atol = haskey(diff_eq_kwargs, :abstol) ? diff_eq_kwargs[:abstol] : defatol
+    rtol = haskey(diff_eq_kwargs, :reltol) ? diff_eq_kwargs[:reltol] : defrtol
+    if atol > 10d0
+        warnstr = "Absolute tolerance (abstol) of integration is much larger than "
+        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
+        warn(warnstr)
+    end
+    if rtol > 10d0
+        warnstr = "Relative tolerance (reltol) of integration is much larger than "
+        warnstr*= "`d0`! It is highly suggested to decrease it using `diff_eq_kwargs`."
+        warn(warnstr)
+    end
+end
 #######################################################################################
 #                                Evolution of System                                  #
 #######################################################################################
@@ -138,6 +202,8 @@ function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
     ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
     return ds.state
 end
+
+
 
 # See discrete.jl for the documentation string
 function trajectory(ds::ContinuousDS, T::Real;
@@ -177,7 +243,7 @@ function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
         text = ds.name
     end
     t[:head] = Juno.render(i, Text(text))
-    t[:children] = t[:children][1:3] 
+    t[:children] = t[:children][1:3]
     t
 end
 end

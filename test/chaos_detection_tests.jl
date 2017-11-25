@@ -25,7 +25,7 @@ println("\nTesting chaos detection algorithms...")
         end
     end
 
-    @testset "2D map: Standard Map" begin
+    @testset "Standard Map" begin
         ds = Systems.standardmap()
         k = 2
         @testset "chaotic" begin
@@ -39,6 +39,29 @@ println("\nTesting chaos detection algorithms...")
             @test t[end] == 1000
             @test g[end] > 1/1000^2
         end
+    end
+
+    @testset "Coupled Standard Maps" begin
+        M = 3; ks = 3ones(M); Γ = 0.1;
+        stable = [π, π, π, 0.01, 0, 0] .+ 0.1
+        chaotic = rand(2M)
+
+        ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
+
+        @testset "regular k=$k" for k in [2,3,4, 5, 6]
+            g, t = gali(ds, k, 1000; threshold=1e-12)
+            @test t[end] == 1000
+            @test g[end] > 1e-12
+        end
+
+        ds = Systems.coupledstandardmaps(M, chaotic; ks=ks, Γ = Γ)
+
+        @testset "chaotic k=$k" for k in [2,3,4, 5, 6]
+            g, t = gali(ds, k, 1000; threshold=1e-12)
+            @test t[end] < 1000
+            @test g[end] ≤ 1e-12
+        end
+
     end
 end
 
