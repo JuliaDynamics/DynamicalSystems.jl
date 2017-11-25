@@ -31,7 +31,7 @@ function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
     for point in data
         # index of datapoint in the ranges space:
         # It is necessary to convert floor to Int (dunno why)
-        ind::SVector{D, Int} = floor.(Int, (point .- mini)./ε)
+        ind::SVector{D, Int} = floor.(Int, (point - mini)/ε)
 
         # Add 1 to the bin that contains the datapoint:
         haskey(d, ind) || (d[ind] = 0) #check if you need to create key (= bin)
