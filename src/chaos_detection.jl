@@ -23,8 +23,8 @@ random orthonormal vectors are chosen.
 ## Description
 The Generalized Alignment Index,
 ``\\text{GALI}_k``, is an efficient (and very fast) indicator of chaotic or regular
-behavior type in ``D``-dimensional *Hamiltonian* systems
-(``D`` is number of variables). The behavior of
+behavior type in ``D``-dimensional Hamiltonian systems
+(``D`` is number of variables). The *assymptotic* behavior of
 ``\\text{GALI}_k(t)`` depends critically of
 the type of orbit resulting
 from the initial condition `ds.state`. If it is a chaotic orbit, then
