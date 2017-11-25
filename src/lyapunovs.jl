@@ -7,9 +7,8 @@ export lyapunovs, lyapunov
 lyapunovs(ds::DynamicalSystem, N; kwargs...) -> [λ1, λ2, ..., λD]
 ```
 Calculate the spectrum of Lyapunov exponents [1] of `ds` by applying
-a QR-decomposition on the parallelepiped matrix space `N` times. Return the
-spectrum sorted
-from maximum to minimum.
+a QR-decomposition on the parallelepiped matrix `N` times. Return the
+spectrum sorted from maximum to minimum.
 
 ## Keyword Arguments
 * `Ttr = 0` : Extra "transient" time to evolve the system before application of the
@@ -23,7 +22,7 @@ from maximum to minimum.
 ## Description
 The method we employ is "H2" of [2], originally stated in [3]. The vectors
 defining a `D`-dimensional parallepiped are evolved using the tangent dynamics
-of the system.
+(known also as variational equations) of the system.
 A QR-decomposition at each step yields the local growth rate for each dimension
 of the parallepiped. The growth rates are
 then averaged over `N` successive steps, yielding the lyapunov exponent spectrum.
