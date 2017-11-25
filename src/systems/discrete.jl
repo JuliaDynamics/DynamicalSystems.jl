@@ -317,7 +317,7 @@ end
 
 ### 1-D
 function Base.show(io::IO, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:ANY}
-    if ds.name == ""
+    if s.name == ""
         text = "1-dimensional discrete system"
     else
         text = s.name
@@ -329,7 +329,7 @@ end
     function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where
         {S<:ANY, F<:ANY, J<:ANY}
         t = Juno.render(i, Juno.defaultrepr(s))
-        if ds.name == ""
+        if s.name == ""
             text = "1-dimensional discrete system"
         else
             text = s.name

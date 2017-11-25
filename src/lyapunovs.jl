@@ -310,7 +310,7 @@ end
 inittest_default(D) = (state1, d0) -> state1 .+ d0/sqrt(D)
 
 
-function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 100)
+function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 0)
 
     eom = ds.eom
     der = ds.deriv
