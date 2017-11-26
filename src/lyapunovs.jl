@@ -61,6 +61,8 @@ function lyapunovs(ds::DiscreteDS, N::Real; Ttr::Real = 100)
     λ./N
 end
 
+
+
 function lyapunovs(ds::BigDiscreteDS, N::Real; Ttr::Real = 100)
     # Transient
     u = evolve(ds, Ttr)
@@ -312,61 +314,23 @@ inittest_default(D) = (state1, d0) -> state1 .+ d0/sqrt(D)
 
 function lyapunovs(ds::DiscreteDS1D, N::Real = 10000; Ttr::Int = 0)
 
-    eom = ds.eom
-    der = ds.deriv
-    x = deepcopy(ds.state)
+    x = ds.state
 
     #transient system evolution
     for i in 1:Ttr
-        x = eom(x)
+        x = ds.eom(x)
     end
 
     # The case for 1D systems is trivial: you add log(abs(der(x))) at each step
-    λ = log(abs(der(x)))
+    λ = log(abs(ds.deriv(x)))
     for i in 1:N
-        x = eom(x)
-        λ += log(abs(der(x)))
+        x = ds.eom(x)
+        λ += log(abs(ds.deriv(x)))
     end
     λ/N
 end
+
 lyapunov(ds::DiscreteDS1D, N::Int=10000; Ttr::Int = 100) = lyapunovs(ds, N, Ttr=Ttr)
-
-
-
-#####################################################################################
-#                          Continuous Lyapunov Helpers                              #
-#####################################################################################
-function tangentbundle_setup_integrator(ds::ContinuousDynamicalSystem, t_final;
-    diff_eq_kwargs=Dict())
-
-    D = dimension(ds)
-    # the equations of motion `tbeom!` evolve the system and the tangent dynamics
-    # The e.o.m. for the system is f!(t, u , du).
-    # The e.o.m. for the tangent dynamics is simply:
-    # dY/dt = J(u) ⋅ Y
-    # with J the Jacobian of the vector field at the current state
-    tbeom! = (t, u, du) -> begin
-        us = view(u, :, 1)
-        ds.eom!(view(du, :, 1), us)
-        ds.jacob!(ds.J, us)
-        A_mul_B!(
-            view(du, :, 2:D+1),
-            ds.J,
-            view(u, :, 2:D+1)
-        )
-    end
-
-    # S is the matrix that keeps the system state in the first column
-    # and tangent dynamics (Jacobian of the Flow) in the rest of the columns
-    S = [ds.state eye(eltype(ds.state), D)]
-
-    tbprob = ODEProblem(tbeom!, S, (zero(t_final), t_final))
-    solver = get_solver!(diff_eq_kwargs)
-    tb_integ = init(tbprob, solver; diff_eq_kwargs..., save_everystep=false)
-    return tb_integ
-end
-
-
 
 
 
