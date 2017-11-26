@@ -1,4 +1,8 @@
-# WIP
+# v0.7.0
+## BREAKING
+* All `DynamicalSystem` subtypes are now immutable instead. This will (probably) allow
+  for compiler optimizations and make looping over parameters more efficient.
+  * use `ds = set_state(ds, newstate)` to change the initial condition.
 
 ## Bugfixes and Enchancements
 * Created a dedicated method that integrates the variational equations

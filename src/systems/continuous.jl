@@ -32,10 +32,10 @@ This is an immutable type, use [`set_state`](@ref) to set a new state.
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-struct ContinuousDS{T<:Number, F, J} <: ContinuousDynamicalSystem
+struct ContinuousDS{T<:Number, F, JJ} <: ContinuousDynamicalSystem
     state::Vector{T}
     eom!::F
-    jacob!::J
+    jacob!::JJ
     J::Matrix{T}
     name::String
 end
@@ -57,9 +57,6 @@ function ContinuousDS(state, eom!; name = "")
     ForwardDiff_jacob!(J, state)
     return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
 end
-
-set_state(ds::ContinuousDS, u) =
-ContinuousDS(u, ds.eom!, ds.jacob!, ds.J, ds.name)
 
 dimension(ds::ContinuousDS) = length(ds.state)
 Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = T

@@ -54,7 +54,13 @@ end
 Return a `newds` that has as state the given `state` and everything else
 identical to the given `ds`.
 """
-set_state(ds::DiscreteDS, state) = DiscreteDS(state, ds.eom, ds.jacob, ds.name)
+set_state(ds::DiscreteDS, state::SVector) =
+DiscreteDS(state, ds.eom, ds.jacob, ds.name)
+
+function set_state(ds::DiscreteDS, state::Vector)
+    s = SVector{length(state)}(state)
+    return DiscreteDS(s, ds.eom, ds.jacob, ds.name)
+end
 
 
 
@@ -86,8 +92,8 @@ function DiscreteDS1D(x0, eom;name="")
 end
 DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
 
-set_state(ds::DiscreteDS1D, state) = DiscreteDS(state, ds.eom, ds.deriv, ds.name)
-
+set_state(ds::DiscreteDS1D, state) =
+DiscreteDS1D(state, ds.eom, ds.deriv, ds.name)
 
 
 
@@ -118,10 +124,10 @@ This is an immutable type, use [`set_state`](@ref) to set a new state.
 If the `jacob!` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
+struct BigDiscreteDS{T<:Number, F, JJ} <: DiscreteDynamicalSystem
     state::Vector{T}
     eom!::F
-    jacob!::J
+    jacob!::JJ
     J::Matrix{T}
     dummystate::Vector{T}
     name::String
@@ -142,8 +148,7 @@ function BigDiscreteDS(u0, f!,
     return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 
-set_state(ds::BigDiscreteDS, state) =
-DiscreteDS(state, ds.eom!, ds.jacob!, ds.J, ds.dummystate, ds.name)
+set_state(ds::DynamicalSystem, state) = (ds.state .= state; ds)
 
 
 
