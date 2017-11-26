@@ -332,7 +332,7 @@ end
 
 """
 ```julia
-    coupledstandardmaps(M::Int, u0 = 0.001rand(2M); ks = ones(M), Γ = 1.0)
+coupledstandardmaps(M::Int, u0 = 0.001rand(2M); ks = ones(M), Γ = 1.0)
 ```
 ```math
 \\begin{aligned}

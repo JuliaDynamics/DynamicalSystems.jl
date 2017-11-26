@@ -1,7 +1,7 @@
 # System Definition
-For `DynamicalSystems.jl` a system is simple a structure that contains the system's state, the equations of motion and the Jacobian. The last two are *functions* that take as an input a state.
+For DynamicalSystems.jl a system is simple a structure that contains the system's state, the equations of motion and the Jacobian. The last two are *functions* that take as an input a state.
 
-This of course stands for systems where one already **knows the equations of motion**.
+This of course stands for systems where one already *knows* the equations of motion.
 if instead, your "system" is in the form of [numerical data](#numerical-data), then see the appropriate section.
 
 
@@ -13,8 +13,8 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
     the "time" in your equations of motion.
 
 !!! info "Trajectory and Timeseries"
-    The word "timeseries" can be very confusing, because it can mean a one-dimensional
-    timeseries or a multi-dimensional timeseries. To resolve this confusion, in
+    The word "timeseries" can be very confusing, because it can mean a univariate (also called scalar or one-dimensional)
+    timeseries or a multivariate (also called multi-dimensional) timeseries. To resolve this confusion, in
     DynamicalSystems.jl we have the following convention: **"timeseries"** always
     refers to a one-dimensional vector of numbers, which exists with respect to
     some other one-dimensional vector of numbers that corresponds to a time-vector.
@@ -84,7 +84,7 @@ r = 3.7
 logistic = DiscreteDS1D(rand(), eom_logistic(r), deriv_logistic(r))
 ```
 Once again, if you skip the derivative functions it will be calculated automatically
-using `ForwardDiff.jl`.
+using ForwardDiff.jl.
 
 
 ### Big Discrete Systems
@@ -145,12 +145,13 @@ Continuous systems of the form
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
 ```
-are defined almost identically with the `BigDiscreteDS` systems:
+are defined almost identically with the [`BigDiscreteDS`](@ref) systems:
 ```@docs
 ContinuousDS
 ```
 ---
-Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html).
+Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html) for small
+dimensions.
 
 As an example, here is the source code that defines the continuous Rössler
 system, from the [Predefined Systems](#predefined-systems):
@@ -181,11 +182,14 @@ ros = roessler()
 The dimension of any sub-type of `DynamicalSystem` is obtained by `D = dimension(ds)`.
 
 ## System evolution
-DynamicalSystems.jl provides convenient interfaces for the evolution of systems.  
-These are the functions related to system evolution:
+DynamicalSystems.jl provides convenient interfaces for the evolution of systems. Because
+all system types are immutable, the new states (initial conditions) can be set with
+```@docs
+set_state
+```
+The following functions are related to system evolution:
 ```@docs
 evolve
-evolve!
 trajectory
 ```
 ---
@@ -238,6 +242,8 @@ function (obj::Lorenz96{T})(dx, x) where T
   return obj(zero(T), x, dx)
 end
 ```
+Notice that dispatch will work even without type annotations in this case,
+because one call takes 2 arguments and the other 3.
 This way you can simply pass the object `Lorenz96` to the constructor of `ContinuousDS`:
 ```julia
 using DynamicalSystems
@@ -262,7 +268,7 @@ Numerical data in DynamicalSystems.jl is represented by a structure called
 Dataset
 ```
 ---
-In essence a `Dataset` is simply a container for a `Vector` of `Vector`s, but only for
+In essence a `Dataset` is simply a container for a `Vector` of `SVector`s, but only for
 cases where the all inner vectors are of equal size.
 However, it
 is visually represented as a matrix, similarly to how numerical data would be printed
@@ -279,8 +285,11 @@ for point in data
 end
 ```
 
-All functions of our package that manipulate and use data are expecting a `Dataset` instance. If given
-a matrix, they will first convert to `Dataset`. This means that you should first
+All functions of our package that manipulate and use data are expecting a `Dataset` instance. This allows us to define efficient methods that coordinate
+well with other packages, like e.g. [`neighborhood`](@ref).
+
+If given
+a matrix, we first convert to `Dataset`. This means that you should first
 convert your data to a `Dataset` if you want to call functions more than once, to avoid
 constantly converting.
 

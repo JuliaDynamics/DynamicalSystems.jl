@@ -1,7 +1,7 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, DiscreteDS1D, evolve, evolve!, trajectory, dimension
-export BigDiscreteDS
+export DiscreteDS, DiscreteDS1D, evolve, trajectory, dimension
+export BigDiscreteDS, set_state
 
 #####################################################################################
 #                                   Constructors                                    #
@@ -10,7 +10,8 @@ export BigDiscreteDS
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
     DiscreteDS(state, eom [, jacob]; name="") <: DynamicalSystem
-`D`-dimensional discrete dynamical system (used for `D ≤ 10`).
+`D`-dimensional discrete dynamical system.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
@@ -28,7 +29,7 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
+struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
     state::SVector{D,T}
     eom::F
     jacob::J
@@ -41,7 +42,7 @@ function DiscreteDS(u0::AbstractVector, eom;name="")
     @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x, cfg)
     return DiscreteDS(su0, eom, ForwardDiff_jac, name)
 end
-function DiscreteDS(u0::AbstractVector, eom, jac;name="")
+function DiscreteDS(u0::AbstractVector, eom, jac; name="")
     D = length(u0)
     su0 = SVector{D}(u0)
     T = eltype(su0); F = typeof(eom); J = typeof(jac)
@@ -49,8 +50,24 @@ function DiscreteDS(u0::AbstractVector, eom, jac;name="")
 end
 
 """
+    set_state(ds::DynamicalSystem, state) -> newds
+Return a `newds` that has as state the given `state` and everything else
+identical to the given `ds`.
+"""
+set_state(ds::DiscreteDS, state::SVector) =
+DiscreteDS(state, ds.eom, ds.jacob, ds.name)
+
+function set_state(ds::DiscreteDS, state::Vector)
+    s = SVector{length(state)}(state)
+    return DiscreteDS(s, ds.eom, ds.jacob, ds.name)
+end
+
+
+
+"""
     DiscreteDS1D(state, eom [, deriv]; name="") <: DynamicalSystem
 One-dimensional discrete dynamical system.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Real` : Current state of the system.
 * `eom` (function) : The function that represents the system's equation of motion:
@@ -63,7 +80,7 @@ One-dimensional discrete dynamical system.
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 """
-mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
+struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
     state::S
     eom::F
     deriv::D
@@ -75,11 +92,17 @@ function DiscreteDS1D(x0, eom;name="")
 end
 DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
 
+set_state(ds::DiscreteDS1D, state) =
+DiscreteDS1D(state, ds.eom, ds.deriv, ds.name)
+
+
+
 """
     BigDiscreteDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for big `D`). The equations
 for this system
 perform all operations *in-place*.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system.
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -101,10 +124,10 @@ perform all operations *in-place*.
 If the `jacob!` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-mutable struct BigDiscreteDS{T<:Number, F, J} <: DiscreteDynamicalSystem
+struct BigDiscreteDS{T<:Number, F, JJ} <: DiscreteDynamicalSystem
     state::Vector{T}
     eom!::F
-    jacob!::J
+    jacob!::JJ
     J::Matrix{T}
     dummystate::Vector{T}
     name::String
@@ -125,6 +148,10 @@ function BigDiscreteDS(u0, f!,
     return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
 
+set_state(ds::DynamicalSystem, state) = (ds.state .= state; ds)
+
+
+
 """
     dimension(ds::DynamicalSystem) -> D
 Return the dimension of the system
@@ -140,24 +167,29 @@ Return the Jacobian matrix of the equations of motion at the system's state.
 jacobian(ds::DynamicalSystem) = (ds.jacob!(ds.J, ds.state), ds.J)
 jacobian(ds::DiscreteDS) = ds.jacob(ds.state)
 
+
+
+
+
 #####################################################################################
 #                               System Evolution                                    #
 #####################################################################################
 """
     evolve(ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> final_state
-Evolve a `ds` for total "time" `T` and return the `final_state` (does not change
-`ds.state`).
+Evolve the `state` of `ds` for total "time" `T` and return the
+`final_state`.
 For discrete systems `T` corresponds to steps and
-thus it must be integer. See [`trajectory`](@ref) for using `diff_eq_kwargs`.
+thus it must be integer.
 
 This function *does not store* any information about intermediate steps.
 Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
 If you want to
 perform step-by-step evolution of a continuous system, use
 `ODEIntegrator(ds, args...)` and
-the `step!(integrator)` function provided by `DifferentialEquations`.
+the `step!(integrator)` function provided by
+[`DifferentialEquations`](https://github.com/JuliaDiffEq/DifferentialEquations.jl).
 
-See also [`evolve!`](@ref).
+See also [`set_state`](@ref).
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state
@@ -176,23 +208,6 @@ function evolve(ds::BigDiscreteDS, N::Int = 1)
     return st
 end
 
-"""
-    evolve!(ds::DynamicalSystem, T; diff_eq_kwargs = Dict())
-Same as [`evolve`](@ref), but also updates the system's `state` field with the final
-state after evolution.
-"""
-function evolve!(ds::DiscreteDynamicalSystem, N::Int = 1)
-    ds.state = evolve(ds, N)
-    return ds
-end
-
-function evolve!(ds::BigDiscreteDS, N::Int = 1)
-    for i in 1:N
-        ds.dummystate .= ds.state
-        ds.eom!(ds.state, ds.dummystate)
-    end
-    return ds
-end
 
 
 """
