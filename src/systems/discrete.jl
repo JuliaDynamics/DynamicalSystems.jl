@@ -1,6 +1,6 @@
 using StaticArrays, ForwardDiff, Requires
 
-export DiscreteDS, DiscreteDS1D, evolve, evolve!, trajectory, dimension
+export DiscreteDS, DiscreteDS1D, evolve, trajectory, dimension
 export BigDiscreteDS, set_state
 
 #####################################################################################
@@ -10,7 +10,8 @@ export BigDiscreteDS, set_state
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
     DiscreteDS(state, eom [, jacob]; name="") <: DynamicalSystem
-`D`-dimensional discrete dynamical system (used for `D ≤ 10`).
+`D`-dimensional discrete dynamical system.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`.
@@ -60,6 +61,7 @@ set_state(ds::DiscreteDS, state) = DiscreteDS(state, ds.eom, ds.jacob, ds.name)
 """
     DiscreteDS1D(state, eom [, deriv]; name="") <: DynamicalSystem
 One-dimensional discrete dynamical system.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Real` : Current state of the system.
 * `eom` (function) : The function that represents the system's equation of motion:
@@ -94,6 +96,7 @@ set_state(ds::DiscreteDS1D, state) = DiscreteDS(state, ds.eom, ds.deriv, ds.name
 `D`-dimensional discrete dynamical system (used for big `D`). The equations
 for this system
 perform all operations *in-place*.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system.
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -168,19 +171,20 @@ jacobian(ds::DiscreteDS) = ds.jacob(ds.state)
 #####################################################################################
 """
     evolve(ds::DynamicalSystem, T=1; diff_eq_kwargs = Dict()) -> final_state
-Evolve a `ds` for total "time" `T` and return the `final_state` (does not change
-`ds.state`).
+Evolve the `state` of `ds` for total "time" `T` and return the
+`final_state`.
 For discrete systems `T` corresponds to steps and
-thus it must be integer. See [`trajectory`](@ref) for using `diff_eq_kwargs`.
+thus it must be integer.
 
 This function *does not store* any information about intermediate steps.
 Use [`trajectory`](@ref) if you want to produce a trajectory of the system.
 If you want to
 perform step-by-step evolution of a continuous system, use
 `ODEIntegrator(ds, args...)` and
-the `step!(integrator)` function provided by `DifferentialEquations`.
+the `step!(integrator)` function provided by
+[`DifferentialEquations`](https://github.com/JuliaDiffEq/DifferentialEquations.jl).
 
-See also [`evolve!`](@ref).
+See also [`set_state`](@ref).
 """
 function evolve(ds::DiscreteDynamicalSystem, N::Int = 1)
     st = ds.state

@@ -13,6 +13,7 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 """
     ContinuousDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
+This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system
 * `eom!` (function) : The function that represents the system's equations of motion
@@ -31,7 +32,7 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-mutable struct ContinuousDS{T<:Number, F, J} <: ContinuousDynamicalSystem
+struct ContinuousDS{T<:Number, F, J} <: ContinuousDynamicalSystem
     state::Vector{T}
     eom!::F
     jacob!::J
@@ -57,7 +58,8 @@ function ContinuousDS(state, eom!; name = "")
     return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
 end
 
-
+set_state(ds::ContinuousDS, u) =
+ContinuousDS(u, ds.eom!, ds.jacob!, ds.J, ds.name)
 
 dimension(ds::ContinuousDS) = length(ds.state)
 Base.eltype(ds::ContinuousDS{T,F,J}) where {T, F, J} = T
@@ -197,10 +199,6 @@ end
 function evolve(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
     prob = ODEProblem(ds, t)
     return get_sol(prob, diff_eq_kwargs)[end]
-end
-function evolve!(ds::ContinuousDS, t::Real = 1.0; diff_eq_kwargs = Dict())
-    ds.state = evolve(ds, t, diff_eq_kwargs = diff_eq_kwargs)
-    return ds.state
 end
 
 

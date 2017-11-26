@@ -26,12 +26,7 @@ println("\nTesting continuous system evolution...")
     st3 = evolve(lo33, 1.0;
     diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
     @test st1 ≈ st3
-    # Test evolve!(system, keywords):
-    evolve!(lo11, 1.0;
-    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-    evolve!(lo33, 1.0;
-    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-    @test lo11.state ≈ lo33.state
+
   end
 
   @testset "trajectory" begin
@@ -93,12 +88,6 @@ end
       st3 = evolve(lo33, 1.0;
       diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
       @test st1 ≈ st3
-      # Test evolve!(system, keywords):
-      evolve!(lo11, 1.0;
-      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-      evolve!(lo33, 1.0;
-      diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
-      @test lo11.state ≈ lo33.state
     end
 
     @testset "trajectory" begin

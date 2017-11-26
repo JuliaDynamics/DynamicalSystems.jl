@@ -11,9 +11,9 @@ using Base.Test, StaticArrays
   d3 = DiscreteDS1D(big(0.1), d1.eom, d1.deriv)
 
   @testset "Evolution & trajectory" begin
-    st1 = (evolve!(d1); d1.state)
-    st2 = (evolve!(d2); d2.state)
-    st3 = (evolve!(d3); d3.state)
+    st1 = evolve(d1)
+    st2 = evolve(d2)
+    st3 = evolve(d3)
     @test st1 == st2
     @test st1 ≈ st3
     @test typeof(st3) == BigFloat
@@ -46,10 +46,6 @@ end
     @test isapprox.(st1, st2; rtol = 1e-12) == trues(s1.state)
     @test isapprox.(st1, st4; rtol = 1e-12) == trues(s1.state)
 
-    evolve!(s1); evolve!(s2); evolve!(s4);
-    @test s1.state ≈ s2.state
-    @test s2.state ≈ s4.state
-
     ts = trajectory(s1, 100)
     @test size(ts) == (100, 3)
     ts4 = trajectory(s4, 100)
@@ -80,10 +76,8 @@ end
 
     @test st1 != u0
     @test u0 == ds.state
-    evolve!(ds, 100)
-    @test ds.state == st1
 
     Jbef = copy(ds.J)
-    ds.jacob!(ds.J, ds.state)
+    ds.jacob!(ds.J, evolve(ds))
     @test Jbef != ds.J
 end

@@ -347,7 +347,9 @@ function lyapunovs(ds::ContinuousDynamicalSystem, N::Real=1000;
     λ = zeros(eltype(ds.state), D)
     Q = eye(eltype(ds.state), D)
     # Transient evolution:
-    Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
+    if Ttr != 0
+        ds = set_state(ds, evolve(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs))
+    end
     # Create integrator for dynamics and tangent space:
     S = [ds.state eye(eltype(ds.state), D)]
     integ = variational_integrator(
@@ -390,9 +392,10 @@ function lyapunov(ds::ContinuousDynamicalSystem,
     T = convert(eltype(ds.state), T)
     threshold <= d0 && throw(ArgumentError("Threshold must be bigger than d0!"))
 
-    # Transient system evolution
-    Ttr != 0 && evolve!(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs)
-
+    # Transient evolution:
+    if Ttr != 0
+        ds = set_state(ds, evolve(ds, Ttr; diff_eq_kwargs = diff_eq_kwargs))
+    end
     # Create a copy integrator with different state
     # (workaround for https://github.com/JuliaDiffEq/DiffEqBase.jl/issues/58)
     # initialize:
