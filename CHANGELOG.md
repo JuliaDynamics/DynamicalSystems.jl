@@ -4,6 +4,10 @@
   for compiler optimizations and make looping over parameters more efficient.
   * use `ds = set_state(ds, newstate)` to change the initial condition.
 
+## New Additions
+* New visualization routines that are compiled "on-demand" when users type `using PyPlot`:
+    * `phasespace` that plots phasespaces of discrete maps.
+
 ## Bugfixes and Enchancements
 * Created a dedicated method that integrates the variational equations
   of motion for a system. This allows all functions to simply call
@@ -11,6 +15,7 @@
   more extendable as now it is much easier to add e.g. new methods for
   chaos detection.
 * Tripled the speed of `non0hist`!!! Note to self: DO NOT use broadcasting on basic operations like `+. *, /` etc. when using `SVector`s!
+* Now users can initialize an empty `Dataset` to append datasets later: `Dataset{D,T}()`.
 
 
 # v0.6.1

@@ -38,4 +38,7 @@ include("periodic.jl")
 # Chaos Detection:
 include("chaos_detection.jl")
 
+# Visualization routines:
+using Requires
+@require PyPlot include("visualizations.jl")
 end # module

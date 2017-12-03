@@ -23,7 +23,7 @@ function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
     # Initialize:
     mini = minima(data)
     L = length(data)
-    # Perform Histogram:
+    # Perform "Histogram":
     # `d` is a dictionary that contains all the histogram information
     # the keys are the bin edges indices and the values are the amount of
     # datapoints in each bin

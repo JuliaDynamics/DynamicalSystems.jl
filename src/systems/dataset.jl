@@ -66,6 +66,8 @@ If you have various timeseries vectors `x, y, z, ...` pass them like
 struct Dataset{D, T<:Number} <: AbstractDataset{D}
     data::Vector{SVector{D,T}}
 end
+# Empty dataset:
+Dataset{D, T}() where {D,T} = Dataset(SVector{D,T}[])
 
 function Dataset(v::Vector{Vector{T}}) where {T<:Number}
     D = length(v[1])
@@ -169,7 +171,7 @@ end
 #                                 Minima and Maxima                                 #
 #####################################################################################
 function minima(data::Dataset{D, T}) where {D, T<:Real}
-    m = zeros(T, D) .+ T(Inf)
+    m = fill(T(Inf), D)
     for point in data
         for i in 1:D
             if point[i] < m[i]
@@ -181,7 +183,7 @@ function minima(data::Dataset{D, T}) where {D, T<:Real}
 end
 
 function maxima(data::Dataset{D, T}) where {D, T<:Real}
-    m = zeros(T, D) .+ T(-Inf)
+    m = fill(T(-Inf), D)
     for point in data
         for i in 1:D
             if point[i] > m[i]
