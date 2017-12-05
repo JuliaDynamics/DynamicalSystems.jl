@@ -29,6 +29,47 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
     time-point).
 
 
+
+
+## Continuous Systems
+Continuous systems of the form
+```math
+\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
+```
+are defined almost identically with the [`BigDiscreteDS`](@ref) systems:
+```@docs
+ContinuousDS
+```
+---
+Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html) for small
+dimensions.
+
+As an example, here is the source code that defines the continuous Rössler
+system, from the [Predefined Systems](#predefined-systems):
+```julia
+using DynamicalSystems
+function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
+    @inline @inbounds function eom_roessler!(du, u)
+        du[1] = -u[2]-u[3]
+        du[2] = u[1] + a*u[2]
+        du[3] = b + u[3]*(u[1] - c)
+    end
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [o, -i,      -i]
+    J[2,:] .= [i,  a,       o]
+    J[3,:] .= [u0[3], o, u0[1] - c]
+    @inline @inbounds function jacob_roessler!(J, u)
+        J[3, 1] = u[3]; J[3,3] = u[1] - c
+    end
+    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
+  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
+end
+
+ros = roessler()
+```
+
 ## Discrete Systems
 Discrete systems are of the form:
 ```math
@@ -139,45 +180,6 @@ with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")
 
 
 
-
-## Continuous Systems
-Continuous systems of the form
-```math
-\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
-```
-are defined almost identically with the [`BigDiscreteDS`](@ref) systems:
-```@docs
-ContinuousDS
-```
----
-Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html) for small
-dimensions.
-
-As an example, here is the source code that defines the continuous Rössler
-system, from the [Predefined Systems](#predefined-systems):
-```julia
-using DynamicalSystems
-function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-    @inline @inbounds function eom_roessler!(du, u)
-        du[1] = -u[2]-u[3]
-        du[2] = u[1] + a*u[2]
-        du[3] = b + u[3]*(u[1] - c)
-    end
-    i = one(eltype(u0))
-    o = zero(eltype(u0))
-    J = zeros(eltype(u0), 3, 3)
-    J[1,:] .= [o, -i,      -i]
-    J[2,:] .= [i,  a,       o]
-    J[3,:] .= [u0[3], o, u0[1] - c]
-    @inline @inbounds function jacob_roessler!(J, u)
-        J[3, 1] = u[3]; J[3,3] = u[1] - c
-    end
-    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
-end
-
-ros = roessler()
-```
 ## Dimension of a System
 The dimension of any sub-type of `DynamicalSystem` is obtained by `D = dimension(ds)`.
 

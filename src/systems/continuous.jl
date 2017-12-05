@@ -13,21 +13,24 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 """
     ContinuousDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
-This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system
+* `state::Vector{T}` : Current state-vector of the system. Do `ds.state .= u` to
+  change the state.
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
   `du` is the first).
 * `jacob!` (function) : The function that represents the Jacobian of the system,
   given in the format: `jacob!(J, u)` which means it is in-place, with the mutated
-  argument being the first.
+  argument being the first. This field is not displayed.
 * `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
   displayed.
-* `name::String` : A name for the dynamical system (possibly including parameter
-  values), solely for pretty-printing purposes. Always passed to the constructors
+* `name::String` : A name for the dynamical system,
+  solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
+
+As mentioned in our [official documentation](https://juliadynamics.github.io/DynamicalSystems.jl/latest/system_definition/),
+it is preferred to use Functors for both the equations of motion and the Jacobian.
 
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
@@ -225,7 +228,7 @@ import Base.show
 function Base.show(io::IO, ds::ContinuousDS{S, F, J}) where {S, F, J}
     D = dimension(ds)
     print(io, "$D-dimensional continuous dynamical system:\n",
-    "state: $(ds.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+    "state: $(ds.state)\n", "e.o.m.: $F\n")
 end
 
 @require Juno begin
@@ -238,7 +241,7 @@ function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
         text = ds.name
     end
     t[:head] = Juno.render(i, Text(text))
-    t[:children] = t[:children][1:3]
+    t[:children] = t[:children][1:2]
     t
 end
 end

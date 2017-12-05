@@ -81,3 +81,7 @@ end
     ds.jacob!(ds.J, evolve(ds))
     @test Jbef != ds.J
 end
+
+
+@testset "Old discrete definition" begin
+end
