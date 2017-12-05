@@ -50,9 +50,13 @@ function DiscreteDS(u0::AbstractVector, eom, jac; name="")
 end
 
 """
-    set_state(ds::DynamicalSystem, state) -> newds
-Return a `newds` that has as state the given `state` and everything else
+    set_state(ds::DynamicalSystem, state) -> ds
+Return a `DynamicalSystem` that has as state the given `state` and everything else
 identical to the given `ds`.
+
+Notice that for `DiscreteDS` and `DiscreteDS1D` this function returns a *new*
+system. However for `ContinuousDS` and `BigDiscreteDS` this function simply
+mutates in-place the field `ds.state`.
 """
 set_state(ds::DiscreteDS, state::SVector) =
 DiscreteDS(state, ds.eom, ds.jacob, ds.name)

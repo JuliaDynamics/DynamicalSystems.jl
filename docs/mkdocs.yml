@@ -40,4 +40,5 @@ pages:
 - Nonlinear Timeseries Analysis: nlts.md
 - Periodicity: periodicity.md
 - Chaos Detection: chaos_detection.md
+- Visualization: visualization.md
 - Contributor Guide: contributors_guide.md
