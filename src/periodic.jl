@@ -188,7 +188,7 @@ function _periodicorbits!(
     end
 end
 
-function iterate(state, f::Function, i::Integer=1)
+function iterate(state, f, i::Integer=1)
     for j in 1:i
         state = f(state)
     end

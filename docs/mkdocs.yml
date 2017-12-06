@@ -14,8 +14,9 @@ extra:
       link: 'https://github.com/JuliaDynamics/DynamicalSystems.jl'
 
 markdown_extensions:
-  - pymdownx.arithmatex
   - admonition
+  - pymdownx.arithmatex
+  - pymdownx.details
   - mdx_math
   - codehilite
   - extra

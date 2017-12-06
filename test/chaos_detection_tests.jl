@@ -34,7 +34,7 @@ println("\nTesting chaos detection algorithms...")
             @test t[end] < 1000
         end
         @testset "regular" begin
-            ds = set_state(ds, [π, rand()])
+            ds.state = [π, rand()]
             g, t = DynamicalSystems.gali(ds, k, 1000)
             @test t[end] == 1000
             @test g[end] > 1/1000^2

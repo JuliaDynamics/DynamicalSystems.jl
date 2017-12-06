@@ -13,9 +13,9 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 """
     ContinuousDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
-This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
-* `state::Vector{T}` : Current state-vector of the system
+* `state::Vector{T}` : Current state-vector of the system. Do `ds.state .= u` to
+  change the state.
 * `eom!` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom!(du, u)`
   which means that it is **in-place**, with the Julian syntax (the mutated argument
@@ -23,11 +23,15 @@ This is an immutable type, use [`set_state`](@ref) to set a new state.
 * `jacob!` (function) : The function that represents the Jacobian of the system,
   given in the format: `jacob!(J, u)` which means it is in-place, with the mutated
   argument being the first.
-* `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
-  displayed.
-* `name::String` : A name for the dynamical system (possibly including parameter
-  values), solely for pretty-printing purposes. Always passed to the constructors
+* `J::Matrix{T}` : Initialized Jacobian matrix (optional).
+* `name::String` : A name for the dynamical system,
+  solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
+
+Only the first two fields of this type are displayed during print.
+
+As mentioned in our [official documentation](https://juliadynamics.github.io/DynamicalSystems.jl/latest/system_definition#example-using-functors),
+it is preferred to use Functors for both the equations of motion and the Jacobian.
 
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
@@ -138,7 +142,7 @@ It evolves in parallel `ds.state` and `k` deviation
 vectors ``w_i`` such that ``\\dot{w}_i = J\\times w_i`` with ``J`` the Jacobian
 at the current state. `S` is the initial "conditions" which contain both the
 system's state as well as the initial diviation vectors:
-`S = cat(2, ds.state, ws)` if `ws` is a matrix that has as columns the initial
+`S = cat(2, ds.state, ws)` if `ws` is a matrix that has as *columns* the initial
 deviation vectors.
 
 The only keyword argument for this funcion is `diff_eq_kwargs = Dict()` (see
@@ -225,7 +229,7 @@ import Base.show
 function Base.show(io::IO, ds::ContinuousDS{S, F, J}) where {S, F, J}
     D = dimension(ds)
     print(io, "$D-dimensional continuous dynamical system:\n",
-    "state: $(ds.state)\n", "e.o.m.: $F\n", "jacobian: $J")
+    "state: $(ds.state)\n", "eom: $F\n")
 end
 
 @require Juno begin
@@ -238,7 +242,7 @@ function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
         text = ds.name
     end
     t[:head] = Juno.render(i, Text(text))
-    t[:children] = t[:children][1:3]
+    t[:children] = t[:children][1:2]
     t
 end
 end

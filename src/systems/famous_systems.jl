@@ -4,12 +4,13 @@ famous systems.
 """
 module Systems
 using DynamicalSystems, StaticArrays
+const twopi = 2π
 #######################################################################################
 #                                    Continuous                                       #
 #######################################################################################
 """
 ```julia
-lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
+lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3) -> ds
 ```
 ```math
 \\begin{aligned}
@@ -28,30 +29,37 @@ also associated with the term "butterfly effect" (a term which Lorenz himself di
 even though the effect applies generally to dynamical systems.
 Default values are the ones used in the original paper.
 
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
+
 [1] : E. N. Lorenz, J. atmos. Sci. **20**, pp 130 (1963)
 """
-function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
-    @inline @inbounds function eom_lorenz!(du, u)
-        du[1] = σ*(u[2]-u[1])
-        du[2] = u[1]*(ρ-u[3]) - u[2]
-        du[3] = u[1]*u[2] - β*u[3]
-    end
-    i = one(eltype(u0))
-    o = zero(eltype(u0))
+function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
     J = zeros(eltype(u0), 3, 3)
-    J[1,:] .= [-σ*i,        σ*i,    o]
-    J[2,:] .= [ρ*i - u0[3],   -i,   -u0[1]]
-    J[3,:] .= [u0[2],        u0[1],   (-β*i)]
-
-    @inline @inbounds function jacob_lorenz!(J, u)
-        J[2,1] = ρ - u[3]
-        J[2,3] = -u[1]
-        J[3,1] = u[2]; J[3,2] = u[1]
-    end
-    name = "Lorenz63 system (σ=$(σ), ρ=$(ρ), β=$(β))"
-    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz!, J; name = name)
+    J[1,:] .= (-σ,          σ,    0)
+    J[2,:] .= (ρ - u0[3],  -1,   -u0[1])
+    J[3,:] .= (u0[2],   u0[1],   -β)
+    s = Lorenz63(σ, ρ, β)
+    return ContinuousDS(u0, s, s, J; name = "Lorenz63 system")
 end
-
+mutable struct Lorenz63
+    σ::Float64
+    ρ::Float64
+    β::Float64
+end
+@inline @inbounds function (s::Lorenz63)(du::EomVector, u::EomVector)
+    du[1] = s.σ*(u[2]-u[1])
+    du[2] = u[1]*(s.ρ-u[3]) - u[2]
+    du[3] = u[1]*u[2] - s.β*u[3]
+    return nothing
+end
+@inline @inbounds function (s::Lorenz63)(J::EomMatrix, u::EomVector)
+    J[1,1] = -s.σ; J[1, 2] = s.σ
+    J[2,1] = s.ρ - u[3]; J[2,3] = -u[1]
+    J[3,1] = u[2]; J[3,2] = u[1]; J[3,3] = -s.β
+    return nothing
+end
 
 """
 ```julia
@@ -67,31 +75,43 @@ roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
 This three-dimensional continuous system is due to Rössler [1].
 It is a system that by design behaves similarly
 to the `lorenz` system and displays a (fractal)
-strange attractor.
-
-However, it is easier to analyze qualitatively, as for example
+strange attractor. However, it is easier to analyze qualitatively, as for example
 the attractor is composed of a single manifold.
 Default values are the same as the original paper.
+
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
 
 [1] : O. E. Rössler, Phys. Lett. **57A**, pp 397 (1976)
 """
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-    @inline @inbounds function eom_roessler!(du, u)
-        du[1] = -u[2]-u[3]
-        du[2] = u[1] + a*u[2]
-        du[3] = b + u[3]*(u[1] - c)
-    end
     i = one(eltype(u0))
     o = zero(eltype(u0))
     J = zeros(eltype(u0), 3, 3)
     J[1,:] .= [o, -i,      -i]
     J[2,:] .= [i,  a,       o]
     J[3,:] .= [u0[3], o, u0[1] - c]
-    @inline @inbounds function jacob_roessler!(J, u)
-        J[3, 1] = u[3]; J[3,3] = u[1] - c
-    end
-    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
+
+    s = Rössler(a, b, c)
+    name = "Rössler system"
+    return ContinuousDS(u0, s, s, J; name = name)
+end
+mutable struct Rössler
+    a::Float64
+    b::Float64
+    c::Float64
+end
+@inline @inbounds function (s::Rössler)(du::EomVector, u::EomVector)
+    du[1] = -u[2]-u[3]
+    du[2] = u[1] + s.a*u[2]
+    du[3] = s.b + u[3]*(u[1] - s.c)
+    return nothing
+end
+@inline @inbounds function (s::Rössler)(J::EomMatrix, u::EomVector)
+    J[2,2] = s.a
+    J[3,1] = u[3]; J[3,3] = u[1] - s.c
+    return nothing
 end
 
 """
@@ -104,29 +124,44 @@ The variables order is [θ1, dθ1/dt, θ2, dθ2/dt].
 Jacobian is created automatically (thus methods that use the Jacobian will be slower)!
 
 (please contribute the Jacobian and the e.o.m. in LaTeX :smile:)
+
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
 """
 function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
-    @inline @inbounds function eom_dp!(du, state)
-        du[1] = state[2]
 
-        del_ = state[3] - state[1]
-        den1 = (M1 + M2)*L1 - M2*L1*cos(del_)*cos(del_)
-        du[2] = (M2*L1*state[2]*state[2]*sin(del_)*cos(del_) +
-                   M2*G*sin(state[3])*cos(del_) +
-                   M2*L2*state[4]*state[4]*sin(del_) -
-                   (M1 + M2)*G*sin(state[1]))/den1
-
-        du[3] = state[4]
-
-        den2 = (L2/L1)*den1
-        du[4] = (-M2*L2*state[4]*state[4]*sin(del_)*cos(del_) +
-                   (M1 + M2)*G*sin(state[1])*cos(del_) -
-                   (M1 + M2)*L1*state[2]*state[2]*sin(del_) -
-                   (M1 + M2)*G*sin(state[3]))/den2
-    end
+    s = DoublePendulum(G, L1, L2, M1, M2)
     name = "Double Pendulum system (θ1, dθ1/dt, θ2, dθ2/dt)"
-    return ContinuousDS(u0, eom_dp!; name = name)
+    return ContinuousDS(u0, s; name = name)
 end
+mutable struct DoublePendulum
+    G::Float64
+    L1::Float64
+    L2::Float64
+    M1::Float64
+    M2::Float64
+end
+@inbounds function (s::DoublePendulum)(du::EomVector, state::EomVector)
+    du[1] = state[2]
+
+    del_ = state[3] - state[1]
+    den1 = (s.M1 + s.M2)*s.L1 - s.M2*s.L1*cos(del_)*cos(del_)
+    du[2] = (s.M2*s.L1*state[2]*state[2]*sin(del_)*cos(del_) +
+               s.M2*s.G*sin(state[3])*cos(del_) +
+               s.M2*s.L2*state[4]*state[4]*sin(del_) -
+               (s.M1 + s.M2)*s.G*sin(state[1]))/den1
+
+    du[3] = state[4]
+
+    den2 = (s.L2/s.L1)*den1
+    du[4] = (-s.M2*s.L2*state[4]*state[4]*sin(del_)*cos(del_) +
+               (s.M1 + s.M2)*s.G*sin(state[1])*cos(del_) -
+               (s.M1 + s.M2)*s.L1*state[2]*state[2]*sin(del_) -
+               (s.M1 + s.M2)*s.G*sin(state[3]))/den2
+    return nothing
+end
+
 
 """
     henonhelies(u0=[0, -0.25, 0.42081,0]; λ = 1)
@@ -147,94 +182,68 @@ for only but a few initial conditions.
 
 The default initial condition is a typical chaotic orbit.
 
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
+
 [1] : Hénon, M. & Heiles, C., The Astronomical Journal **69**, pp 73–79 (1964)
 """
 function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
     i = one(eltype(u0))
     o = zero(eltype(u0))
-    @inline @inbounds function eom_hh!(du, u)
-        du[1] = u[3]
-        du[2] = u[4]
-        du[3] = -u[1] - 2λ*u[1]*u[2]
-        du[4] = -u[2] -λ*(u[1]^2 - u[2]^2)
-    end
     J = zeros(eltype(u0), 4, 4)
     J[1,:] = [o,    o,     i,    o]
     J[2,:] = [o,    o,     o,    i]
     J[3,:] = [ -i - 2λ*u0[2],   -2λ*u0[1],   o,   o]
     J[4,:] = [-2λ*u0[1],  -1 + 2λ*u0[2],  o,   o]
-    @inline @inbounds function jacob_hh!(J, u)
-        J[3,1] = -i - 2λ*u[2]; J[3,2] = -2λ*u[1]
-        J[4,1] = -2λ*u[1]; J[4,2] =  -1 + 2λ*u[2]
-    end
-    name = "Hénon-Heiles system (λ=$(λ))"
-    return ContinuousDS(u0, eom_hh!, jacob_hh!, J; name = name)
+
+    s = HénonHeiles(λ)
+    name = "Hénon-Heiles system"
+    return ContinuousDS(u0, s, s, J; name = name)
+end
+mutable struct HénonHeiles
+    λ::Float64
+end
+@inline @inbounds function (s::HénonHeiles)(du::EomVector, u::EomVector)
+    du[1] = u[3]
+    du[2] = u[4]
+    du[3] = -u[1] - 2s.λ*u[1]*u[2]
+    du[4] = -u[2] - s.λ*(u[1]^2 - u[2]^2)
+    return nothing
+end
+@inline @inbounds function (s::HénonHeiles)(J::EomMatrix, u::EomVector)
+    J[3,1] = -1 - 2s.λ*u[2]; J[3,2] = -2s.λ*u[1]
+    J[4,1] = -2s.λ*u[1]; J[4,2] =  -1 + 2s.λ*u[2]
+    return nothing
 end
 
-
-struct Lorenz96{T <: Real} # Structure with the parameters of Lorenz96 system
-  F::T
-  N::Int
-  # Inner constructor
-  function (::Type{Lorenz96})(F::Real, N::Integer = 3)
-    @assert N ≥ 3 "`N` must be at least 3"
-    new{typeof(F)}(F, N)
-  end
-end
-
-# Equations of motion as expected by e.g. LTISystems.jl or others
-@inbounds function (obj::Lorenz96{T})(t, x, dx) where T
-  N, F = obj.N, obj.F
-  # 3 edge cases
-  dx[1] = (x[2] - x[N - 1]) * x[N] - x[1] + F
-  dx[2] = (x[3] - x[N]) * x[1] - x[2] + F
-  dx[N] = (x[1] - x[N - 2]) * x[N - 1] - x[N] + F
-  # then the general case
-  for n in 3:(N - 1)
-    dx[n] = (x[n + 1] - x[n - 2]) * x[n - 1] - x[n] + F
-  end
-  return dx
-end
-# Equations of motion as expected by DynamicalSystems.jl
-function (obj::Lorenz96{T})(dx, x) where T
-  return obj(zero(T), x, dx)
-end
 """
     lorenz96(N::Int, u0 = rand(M); F=0.01)
 `N` is the chain length, `F` the forcing. Jacobian is created automatically.
 """
 function lorenz96(N::Int, u0 = rand(N); F=0.01)
-    name = "Lorenz96 system, chain of $N (F = $(F))"
-    lor96 = Lorenz96(F, N) # create struct
+    @assert N ≥ 3 "`N` must be at least 3"
+    name = "Lorenz96 system"
+    lor96 = Lorenz96{N, typeof(F)}(F) # create struct
     return ContinuousDS(u0, lor96; name = name)
 end
+struct Lorenz96{N, T <: Real} # Structure with the parameters of Lorenz96 system
+  F::T
+end
+# Equations of motion
+function (obj::Lorenz96{N, T})(dx, x) where {N, T}
+    F = obj.F
+    # 3 edge cases
+    dx[1] = (x[2] - x[N - 1]) * x[N] - x[1] + F
+    dx[2] = (x[3] - x[N]) * x[1] - x[2] + F
+    dx[N] = (x[1] - x[N - 2]) * x[N - 1] - x[N] + F
+    # then the general case
+    for n in 3:(N - 1)
+      dx[n] = (x[n + 1] - x[n - 2]) * x[n - 1] - x[n] + F
+    end
+    return nothing
+end
 
-# function fpuβ(N::Int, u0 = rand(2N); β = 1)
-#     i = one(eltype(u0))
-#     o = zero(eltype(u0))
-#     J = zeros(eltype(u0), 2N, 2N)
-#     for i in 1:N
-#         J[i, i+N] = 1
-#     end
-#     @inbounds function eom_fpuβ!(du, u)
-#         for i in 1:N
-#             du[i] = u[i+N]
-#             du[i+N] = 2(u[i+1] - u[i]) + 4(u[i+1] - u[i])^3
-#         end
-#         du[N] = u[1]
-#         du[2N] = 2(u[1] - u[N]) + 4(u[1] - u[N])^3
-#     end
-#     @inbounds function jacob_fpuβ(u)
-#         for i in 1:N-1
-#             J[i+N, i]   =-2 - 12(u[i+1] - u[i])^2
-#             J[i+N, i+1] = 2 + 12(u[i+1] - u[i])^2
-#         end
-#         J[2N, N] = -2 - 12(u[1] - u[N])^2
-#         J[2N, 1] =  2 + 12(u[1] - u[N])^2
-#         return SMatrix{2N,2N}(J)
-#     end
-#     return ContinuousDS(u0, eom_fpuβ!, jacob_fpuβ)
-# end
 
 #######################################################################################
 #                                     Discrete                                        #
@@ -254,7 +263,6 @@ z_{n+1} &= 3.78 z_n (1-z_n) + b y_n
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
 having two positive and one negative Lyapunov exponent.
-
 The name comes from the fact that when plotted looks like a folded towel, in every
 projection.
 
@@ -304,31 +312,37 @@ destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle varia
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
+
 [1] : B. V. Chirikov, Preprint N. **267**, Institute of
 Nuclear Physics, Novosibirsk (1969)
 
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """
 function standardmap(u0=0.001rand(2); k = 0.971635)
-    const twopi = 2π
-    @inline @inbounds function eom_standard(x)
-        theta = x[1]; p = x[2]
-        p+=k*sin(theta)
-        theta += p
-        while theta >= twopi; theta -= twopi; end
-        while theta < 0; theta += twopi; end
-        while p >= twopi; p -= twopi; end
-        while p < 0; p += twopi; end
-        return SVector(theta, p)
-    end
-    @inline @inbounds jacob_standard(x) =
-    @SMatrix [1 + k*cos(x[1])    1;
-              k*cos(x[1])        1]
-    name = "Standard map (k=$(k))"
-    return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
+    sm = StandardMap(k)
+    jacob_sm(x) = sm(x, nothing)
+    name = "Standard map"
+    return DiscreteDS(u0, sm, jacob_sm; name=name)
 end
-
-
+mutable struct StandardMap
+    k::Float64
+end
+@inline @inbounds function (f::StandardMap)(x)
+    theta = x[1]; p = x[2]
+    p+=f.k*sin(theta)
+    theta += p
+    while theta >= twopi; theta -= twopi; end
+    while theta < 0; theta += twopi; end
+    while p >= twopi; p -= twopi; end
+    while p < 0; p += twopi; end
+    return SVector(theta, p)
+end
+@inline @inbounds (f::StandardMap)(x, no::Void) =
+@SMatrix [1 + f.k*cos(x[1])    1;
+          f.k*cos(x[1])        1]
 
 """
 ```julia
@@ -348,8 +362,71 @@ The *total* dimension of the system
 is `2M`. The maps are coupled through `Γ`
 and the `i`-th map has a nonlinear parameter `ks[i]`.
 
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
+
 [1] : H. Kantz & P. Grassberger, J. Phys. A **21**, pp 127–133 (1988)
 """
+function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
+    ks = ones(M), Γ = 1.0)
+
+    idxs = 1:M # indexes of thetas
+    idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
+    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
+
+    csm = CoupledStandardMaps{M, eltype(ks)}(ks, Γ, idxs, idxsm1, idxsp1)
+    J = zeros(eltype(u0), 2M, 2M)
+    # Set ∂/∂p entries (they are eye(M,M))
+    # And they dont change they are constants
+    for i in idxs
+        J[i, i+M] = 1
+        J[i+M, i+M] = 1
+    end
+    name = "$(M) coupled Standard maps"
+
+    return BigDiscreteDS(u0, csm, csm, J; name=name)
+end
+mutable struct CoupledStandardMaps{N, T}
+    ks::Vector{T}
+    Γ::T
+    idxs::UnitRange{Int}
+    idxsm1::Vector{Int}
+    idxsp1::Vector{Int}
+end
+@inbounds function (f::CoupledStandardMaps{N, T})(
+    xnew::EomVector, x::EomVector) where {N, T}
+    for i in f.idxs
+
+        xnew[i+N] = mod2pi(
+            x[i+N] + f.ks[i]*sin(x[i]) -
+            f.Γ*(sin(x[f.idxsp1[i]] - x[i]) + sin(x[f.idxsm1[i]] - x[i]))
+        )
+
+        xnew[i] = mod2pi(x[i] + xnew[i+N])
+    end
+    return nothing
+end
+@inbounds function (f::CoupledStandardMaps{M, T})(
+    J::EomMatrix, x::EomVector) where {M, T}
+    # x[i] ≡ θᵢ
+    # x[[idxsp1[i]]] ≡ θᵢ+₁
+    # x[[idxsm1[i]]] ≡ θᵢ-₁
+    for i in f.idxs
+        cosθ = cos(x[i])
+        cosθp= cos(x[f.idxsp1[i]] - x[i])
+        cosθm= cos(x[f.idxsm1[i]] - x[i])
+        J[i+M, i] = f.ks[i]*cosθ + f.Γ*(cosθp + cosθm)
+        J[i+M, f.idxsm1[i]] = - f.Γ*cosθm
+        J[i+M, f.idxsp1[i]] = - f.Γ*cosθp
+        J[i, i] = 1 + J[i+M, i]
+        J[i, f.idxsm1[i]] = J[i+M, f.idxsm1[i]]
+        J[i, f.idxsp1[i]] = J[i+M, f.idxsp1[i]]
+    end
+    return nothing
+end
+
+#= Old cms
 function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     ks = ones(M), Γ = 1.0)
 
@@ -400,10 +477,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
     return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
 end
-
-
-
-
+=#
 
 
 """
@@ -422,17 +496,36 @@ of chaos, like period doubling or intermittency, for other parameters.
 
 According to the author, it is a system displaying all the properties of the
 Lorentz system (1963) while being as simple as possible.
-
 Default values are the ones used in the original paper.
+
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
 
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
+function henon(u0=zeros(2); a = 1.4, b = 0.3)
+
+    he = HénonMap(a,b)
+    @inline jacob_henon(x) = he(x, nothing)
+    name = "Hénon map"
+    return DiscreteDS(u0, he, jacob_henon; name=name)
+end # should give lyapunov exponents [0.4189, -1.6229]
+mutable struct HénonMap
+    a::Float64
+    b::Float64
+end
+(f::HénonMap)(x::EomVector) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
+(f::HénonMap)(x::EomVector, no::Void) = @SMatrix [-2*f.a*x[1] 1.0; f.b 0.0]
+
+#= old henon
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
     @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
     name = "Hénon map (a=$(a), b=$(b))"
     return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
 end # should give lyapunov exponents [0.4189, -1.6229]
+=#
 
 """
 ```julia
@@ -448,17 +541,25 @@ Originally intentend to be a discretized model of polulation dynamics, it is now
 for its bifurcation diagram, an immensly complex graph that that was shown
 be universal by Feigenbaum [2].
 
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
+
 [1] : R. M. May, Nature **261**, pp 459 (1976)
 
 [2] : M. J. Feigenbaum, J. Stat. Phys. **19**, pp 25 (1978)
 """
 function logistic(x0=rand(); r = 4.0)
-    @inline eom_logistic(x) = r*x*(1-x)
-    @inline deriv_logistic(x) = r*(1-2x)
-    name="Logistic map (r=$r)"
-    return DiscreteDS1D(x0, eom_logistic, deriv_logistic;name=name)
+    lol = Logistic(r)
+    deriv_logistic(x) = lol(x, nothing)
+    name="Logistic map"
+    return DiscreteDS1D(x0, lol, deriv_logistic;name=name)
 end
-
+mutable struct Logistic
+    r::Float64
+end
+@inline (f::Logistic)(x::Number) = f.r*x*(1-x)
+@inline (f::Logistic)(x::Number, no::Void) = f.r*(1-2x)
 
 
 

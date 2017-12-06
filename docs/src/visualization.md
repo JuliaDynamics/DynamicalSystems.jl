@@ -7,7 +7,7 @@ functions described here are brought into scope as soon as the user executes
 `using PyPlot`, which works regardless if `PyPlot` module was loaded before or
 after `DynamicalSystems`. This is possible through the [Requires.jl](https://github.com/MikeInnes/Requires.jl) package.
 
-Use the help mode (press `?` and then the function name) to access the ducumentation
+Use the help mode (press `?` and then the function name) to access the documentation
 strings for e.g. using keyword arguments.
 
 ## Visualization Library

@@ -106,3 +106,48 @@ end
       @test ts1[end, :] ≈ ts3[end,:]
     end
 end
+
+@testset "Old Continuous" begin
+  function lorenzo(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8//3)
+    @inline @inbounds function eom_lorenz!(du, u)
+        du[1] = σ*(u[2]-u[1])
+        du[2] = u[1]*(ρ-u[3]) - u[2]
+        du[3] = u[1]*u[2] - β*u[3]
+    end
+    i = one(eltype(u0))
+    o = zero(eltype(u0))
+    J = zeros(eltype(u0), 3, 3)
+    J[1,:] .= [-σ*i,        σ*i,    o]
+    J[2,:] .= [ρ*i - u0[3],   -i,   -u0[1]]
+    J[3,:] .= [u0[2],        u0[1],   (-β*i)]
+
+    @inline @inbounds function jacob_lorenz!(J, u)
+        J[2,1] = ρ - u[3]
+        J[2,3] = -u[1]
+        J[3,1] = u[2]; J[3,2] = u[1]
+    end
+    name = "Old Lorenz63 system"
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz!, J; name = name)
+  end
+
+  ds = lorenzo()
+  lo33 = lorenzo(big.([0.0, 10.0, 0.0]))
+
+  @testset "Construction" begin
+    @test typeof(ds) <: ContinuousDS
+    @test typeof(lo33) <: ContinuousDS
+  end
+  @testset "Evolve & kwargs" begin
+    # test evolve(system):
+    st1 = evolve(ds, 1.0)
+    st3 = evolve(lo33, 1.0)
+    @test st1 ≈ st3
+    # Test evolve(system,keywords):
+    st1 = evolve(ds, 1.0;
+    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    st3 = evolve(lo33, 1.0;
+    diff_eq_kwargs=Dict(:abstol=>1e-9, :reltol=>1e-9))
+    @test st1 ≈ st3
+
+  end
+end

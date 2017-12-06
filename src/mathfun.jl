@@ -3,6 +3,16 @@
 # Also includes helper/conversion functions
 
 #####################################################################################
+#                                   E.o.m. Types                                    #
+#####################################################################################
+export EomVector, EomMatrix
+SubMatrix{T, N, K, B} = SubArray{T, 2, Array{T, N}, K, B}
+SubVector{T, N, K, B} = SubArray{T, 1, Array{T, N}, K, B}
+
+EomVector = Union{Vector, SubVector, SVector}
+EomMatrix = Union{Matrix, SubMatrix, SMatrix}
+
+#####################################################################################
 #                                Pairwse Distance                                   #
 #####################################################################################
 using NearestNeighbors, StaticArrays

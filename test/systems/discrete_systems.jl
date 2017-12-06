@@ -80,4 +80,6 @@ end
     Jbef = copy(ds.J)
     ds.jacob!(ds.J, evolve(ds))
     @test Jbef != ds.J
+    ds.jacob!(Jbef, evolve(ds))
+    @test Jbef == ds.J
 end

@@ -1,7 +1,7 @@
 ## Detecting Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
 of low dimensional dynamical systems is affected by the position and the stability
-properties of the [unstable periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits)
+properties of the [periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits)
 existing in the chaotic sea.
 
 Finding unstable (or stable) periodic orbits of a discrete mapping analytically
@@ -86,5 +86,5 @@ You can confirm for yourself that this is correct, for many reasons:
 1. It is the same [fig. 12 of this publication](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.92.012914).
 2. Fixed points of order $n$ are also fixed points of order $2n, 3n, 4n, ...$
 3. Besides fixed points of previous orders, *original* fixed points of
-   order $n$ come in $2n$-sized pairs (see e.g. order 5). This is correct because
-   in a conservative map the fixed points must be pairs of elliptic-hyperbolic.
+   order $n$ come in (possible multiples of) $2n$-sized pairs (see e.g. order 5).
+   This is a direct consequence of the Poincaré–Birkhoff theorem.

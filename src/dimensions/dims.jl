@@ -221,7 +221,7 @@ information_dim(args...) = generalized_dim(1, args...)
 
 """
     kaplanyorke_dim(lyapunovs::AbstractVector)
-Calculate the Kaplan-Yorke dimension [1] (a.k.a. Lyapunov dimension).
+Calculate the Kaplan-Yorke dimension, a.k.a. Lyapunov dimension [1].
 
 ## Description
 The Kaplan-Yorke dimension is simply the point where

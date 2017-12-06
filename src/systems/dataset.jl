@@ -49,14 +49,15 @@ a `Dataset`.
 
 For example,
 ```julia
-data = trajectory(ds, 100.0) #this gives a dataset that behaves like a matrix
+ds = Systems.towel()
+data = trajectory(ds, 1000) #this returns a dataset
 data[:, 2] # this is the second variable timeseries
-data[1] == data[1, :] # this is the first datapoint of the dataset (D-dimensional)
-data[5, 3] # this is the value of the third variable, at the 5th timepoint
+data[1] == data[1, :] # this is the first datapoint (D-dimensional)
+data[5, 3] # value of the third variable, at the 5th timepoint
 ```
 
 Use `convert(Matrix, dataset)` to create a `Matrix`, and `convert(Dataset, matrix)`
-to create a `Dataset` from a matrix. **Notice:**  `convert(Dataset, matrix)` assumes
+to create a `Dataset` from a matrix. Notice: `convert(Dataset, matrix)` assumes
 that each column of the matrix represents one dynamic variable. If instead each
 column of the matrix represents a datapoint, use `reinterpret(Dataset, matrix)`.
 
