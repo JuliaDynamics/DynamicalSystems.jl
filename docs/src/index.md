@@ -1,12 +1,12 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
 # Introduction
-`DynamicalSystems.jl` is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
+**DynamicalSystems.jl** is a Julia package for the exploration of continuous and discrete dynamical systems. It aims to be a useful and powerful companion for students and scientists treading
 on the fields of Chaos, nonlinear dynamics and dynamical systems in general.
 
 One of a major goals of this package is to be completely transparent as to what is
 going on "under the hood". In scientific research, you never want to use *black boxes*,
-e.g. functions that give a result without telling you how it was calculated. `DynamicalSystems.jl` battles this in 3 ways: Firstly, it is written entirely in Julia,
+e.g. functions that give a result without telling you how it was calculated. **DynamicalSystems.jl** battles this in 3 ways: Firstly, it is written entirely in Julia,
 making the source code clear and easy to understand for even novice users. Secondly,
 almost every documentation string gives
 **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
@@ -27,10 +27,10 @@ accurate lower bound of users that this package has already helped!
 ## Installation
 This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
 
-Bug-fixes and upgrades are constantly fed to the master branch, which accessed with `Pkg.checkout("DynamicalSystems")` after installing. On the other hand the master
-branch may also have breaking changes and therefore caution is advised!
+Bug-fixes and upgrades are constantly fed to the master branch, which is obtained by `Pkg.checkout("DynamicalSystems")` after installing. Be aware however that the master
+branch may also have breaking or undocumented changes!
 
-*The [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) documentation refers to the version of the package installed with `Pkg.add()`. The [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation refers to the version under development, obtained with `Pkg.checkout("DynamicalSystems")`.*
+The [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) documentation refers to the version of the package installed with `Pkg.add()`. The [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation refers to the version under development, obtained with `Pkg.checkout("DynamicalSystems")`.
 
 To ensure that your installation works perfectly, you can use `Pkg.test("DynamicalSystems")`.
 
