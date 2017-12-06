@@ -22,14 +22,15 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
   `du` is the first).
 * `jacob!` (function) : The function that represents the Jacobian of the system,
   given in the format: `jacob!(J, u)` which means it is in-place, with the mutated
-  argument being the first. This field is not displayed.
-* `J::Matrix{T}` : Initialized Jacobian matrix (optional). This field is not
-  displayed.
+  argument being the first.
+* `J::Matrix{T}` : Initialized Jacobian matrix (optional).
 * `name::String` : A name for the dynamical system,
   solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
-As mentioned in our [official documentation](https://juliadynamics.github.io/DynamicalSystems.jl/latest/system_definition/),
+Only the first two fields of this type are displayed during print.
+
+As mentioned in our [official documentation](https://juliadynamics.github.io/DynamicalSystems.jl/latest/system_definition#example-using-functors),
 it is preferred to use Functors for both the equations of motion and the Jacobian.
 
 If the `jacob` is not provided by the user, it is created automatically
@@ -141,7 +142,7 @@ It evolves in parallel `ds.state` and `k` deviation
 vectors ``w_i`` such that ``\\dot{w}_i = J\\times w_i`` with ``J`` the Jacobian
 at the current state. `S` is the initial "conditions" which contain both the
 system's state as well as the initial diviation vectors:
-`S = cat(2, ds.state, ws)` if `ws` is a matrix that has as columns the initial
+`S = cat(2, ds.state, ws)` if `ws` is a matrix that has as *columns* the initial
 deviation vectors.
 
 The only keyword argument for this funcion is `diff_eq_kwargs = Dict()` (see

@@ -1,15 +1,14 @@
 # v0.7.0
 ## BREAKING
-* All `DynamicalSystem` subtypes are now immutable instead. This will (probably) allow
-  for compiler optimizations and make looping over parameters more efficient.
-  * use `ds = set_state(ds, newstate)` to change the initial condition.
+* Changed best way to define system.
+
 
 ## New Additions
 * New visualization routines that are compiled "on-demand" when users type `using PyPlot`:
     * `phasespace` that plots phasespaces of discrete maps.
     * New documentation page about visualizations.
 * Now users can initialize an empty `Dataset` to append datasets later: `Dataset{D,T}()`.
-    
+
 
 ## Bugfixes and Enchancements
 * Created a dedicated method that integrates the variational equations

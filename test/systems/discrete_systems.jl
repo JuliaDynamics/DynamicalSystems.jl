@@ -80,8 +80,6 @@ end
     Jbef = copy(ds.J)
     ds.jacob!(ds.J, evolve(ds))
     @test Jbef != ds.J
-end
-
-
-@testset "Old discrete definition" begin
+    ds.jacob!(Jbef, evolve(ds))
+    @test Jbef == ds.J
 end

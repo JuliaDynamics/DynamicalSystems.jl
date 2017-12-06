@@ -141,7 +141,6 @@ mutable struct DoublePendulum
     M1::Float64
     M2::Float64
 end
-
 @inbounds function (s::DoublePendulum)(du::EomVector, state::EomVector)
     du[1] = state[2]
 
@@ -212,7 +211,7 @@ end
     return nothing
 end
 @inline @inbounds function (s::HénonHeiles)(J::EomMatrix, u::EomVector)
-    J[3,1] = -i - 2s.λ*u[2]; J[3,2] = -2s.λ*u[1]
+    J[3,1] = -1 - 2s.λ*u[2]; J[3,2] = -2s.λ*u[1]
     J[4,1] = -2s.λ*u[1]; J[4,2] =  -1 + 2s.λ*u[2]
     return nothing
 end
@@ -365,6 +364,65 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     idxs = 1:M # indexes of thetas
     idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
     idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
+
+    csm = CoupledStandardMaps{M, eltype(ks)}(ks, Γ, idxs, idxsm1, idxsp1)
+    J = zeros(eltype(u0), 2M, 2M)
+    # Set ∂/∂p entries (they are eye(M,M))
+    # And they dont change they are constants
+    for i in idxs
+        J[i, i+M] = 1
+        J[i+M, i+M] = 1
+    end
+    name = "$(M) coupled Standard maps"
+
+    return BigDiscreteDS(u0, csm, csm, J; name=name)
+end
+mutable struct CoupledStandardMaps{N, T}
+    ks::Vector{T}
+    Γ::T
+    idxs::UnitRange{Int}
+    idxsm1::Vector{Int}
+    idxsp1::Vector{Int}
+end
+@inbounds function (f::CoupledStandardMaps{N, T})(
+    xnew::EomVector, x::EomVector) where {N, T}
+    for i in f.idxs
+
+        xnew[i+N] = mod2pi(
+            x[i+N] + f.ks[i]*sin(x[i]) -
+            f.Γ*(sin(x[f.idxsp1[i]] - x[i]) + sin(x[f.idxsm1[i]] - x[i]))
+        )
+
+        xnew[i] = mod2pi(x[i] + xnew[i+N])
+    end
+    return nothing
+end
+@inbounds function (f::CoupledStandardMaps{M, T})(
+    J::EomMatrix, x::EomVector) where {M, T}
+    # x[i] ≡ θᵢ
+    # x[[idxsp1[i]]] ≡ θᵢ+₁
+    # x[[idxsm1[i]]] ≡ θᵢ-₁
+    for i in f.idxs
+        cosθ = cos(x[i])
+        cosθp= cos(x[f.idxsp1[i]] - x[i])
+        cosθm= cos(x[f.idxsm1[i]] - x[i])
+        J[i+M, i] = f.ks[i]*cosθ + f.Γ*(cosθp + cosθm)
+        J[i+M, f.idxsm1[i]] = - f.Γ*cosθm
+        J[i+M, f.idxsp1[i]] = - f.Γ*cosθp
+        J[i, i] = 1 + J[i+M, i]
+        J[i, f.idxsm1[i]] = J[i+M, f.idxsm1[i]]
+        J[i, f.idxsp1[i]] = J[i+M, f.idxsp1[i]]
+    end
+    return nothing
+end
+
+#= Old cms
+function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
+    ks = ones(M), Γ = 1.0)
+
+    idxs = 1:M # indexes of thetas
+    idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
+    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
     pidx = M+1:2M
     J = zeros(eltype(u0), 2M, 2M)
     # Set ∂/∂p entries (they are eye(M,M))
@@ -409,10 +467,7 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
     name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
     return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
 end
-
-
-
-
+=#
 
 
 """
@@ -442,6 +497,11 @@ function henon(u0=zeros(2); a = 1.4, b = 0.3)
     name = "Hénon map (a=$(a), b=$(b))"
     return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
 end # should give lyapunov exponents [0.4189, -1.6229]
+mutable struct HénonMap
+    a::Float64
+    b::Float64
+end
+(f::HénonMap)(x::EomVector) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
 
 """
 ```julia

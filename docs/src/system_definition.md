@@ -1,7 +1,8 @@
 # System Definition
-For DynamicalSystems.jl a system is simple a structure that contains the system's state, the equations of motion and the Jacobian. The last two are *functions* that take as an input a state.
+For DynamicalSystems.jl a system is simple a structure that contains the system's state, the equations of motion and the Jacobian. The last two are *functions* that take as an input a state. It is highly advised to create a `DynamicalSystem`
+using Functors (see below).
 
-This of course stands for systems where one already *knows* the equations of motion.
+The above of course stand for systems where one already *knows* the equations of motion.
 if instead, your "system" is in the form of [numerical data](#numerical-data), then see the appropriate section.
 
 
@@ -41,40 +42,160 @@ are defined almost identically with the [`BigDiscreteDS`](@ref) systems:
 ContinuousDS
 ```
 ---
-Once again the fields `eom!` and `jacob!` end with a `!`. There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html) for small
-dimensions.
+Notice that the fields `eom!` and `jacob!` end with a `!`, to remind users
+that these functions should operate in-place. Also notice that the type `ContinuousDS`
+is actually immutable.
 
-As an example, here is the source code that defines the continuous Rössler
+You can give any function that complies with the requirements stated by the documentation string.
+However, it is highly advised to use [Functors](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1) for dynamical systems where the equations
+of motion contain parameters.
+
+### Defining a `DynamicalSystem` using Functors
+A Functor is a shorthand for saying [Function-like objects](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1),
+i.e. `struct`s that are also callable (see the linked documentation page). Using
+such objects one can create both the equations of motion and a parameter container
+under a single `struct` definition.
+
+For example, let's take a look at the source code that generates continuous Rössler
 system, from the [Predefined Systems](#predefined-systems):
-```julia
+```@example 1
 using DynamicalSystems
+mutable struct Rössler
+    a::Float64
+    b::Float64
+    c::Float64
+end
+function (s::Rössler)(du::EomVector, u::EomVector)
+    du[1] = -u[2]-u[3]
+    du[2] = u[1] + s.a*u[2]
+    du[3] = s.b + u[3]*(u[1] - s.c)
+    return nothing
+end
+function (s::Rössler)(J::EomMatrix, u::EomVector)
+    J[2,2] = s.a
+    J[3,1] = u[3]; J[3,3] = u[1] - s.c
+    return nothing
+end
+nothing #hide
+```
+The first code-block defines a `struct` that is simply a container for the
+parameters of the Rössler system. The second code-block defines the equations
+of motion of the system, by taking advantage of the fact that you can *call*
+this `struct` as if it was a function:
+```@example 1
+s = Rössler(1,2,3)
+u = rand(3); du = copy(du)
+s(du, u)
+du == u
+```
+The third code-block then defines the Jacobian function using multiple dispatch.
+This allows us to use the *same* instance of `Rössler` for *both* the equations
+of motion *and* the Jacobian function.
+
+!!! important "Use `EomVector` and `EomMatrix`"
+    The Types `EomVector` and `EomMatrix` are simple aliases exported by our package. They represent
+    a `Union{}` over all possible vectors or matrices that are involved in the
+    equations of motion as used in DynamicalSystems.jl (namely `Vector`, `SubArray`
+    and `SVector`).
+
+    **You must define your equations of motion / Jacobian functions using these
+    Types instead of a simple `Vector` or `Matrix`, otherwise functions like
+    `lyapunovs` won't work properly.**
+
+Also notice that the Jacobian function only accesses
+fields that depend on the parameters and/or the state variables, because the other
+fields are constants and will be initialized properly later.
+
+Next, we define a "set-up" function, that returns a `ContinuousDS`
+```@example 1
+# this is in fact the function accessed by Systems.roessler()
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
-    @inline @inbounds function eom_roessler!(du, u)
-        du[1] = -u[2]-u[3]
-        du[2] = u[1] + a*u[2]
-        du[3] = b + u[3]*(u[1] - c)
-    end
+    # Initialize Jacobian matrix:
     i = one(eltype(u0))
     o = zero(eltype(u0))
     J = zeros(eltype(u0), 3, 3)
     J[1,:] .= [o, -i,      -i]
     J[2,:] .= [i,  a,       o]
     J[3,:] .= [u0[3], o, u0[1] - c]
-    @inline @inbounds function jacob_roessler!(J, u)
-        J[3, 1] = u[3]; J[3,3] = u[1] - c
-    end
-    name = "Roessler76 system (a=$(a), b=$(b), c=$(c))"
-  return ContinuousDS(u0, eom_roessler!, jacob_roessler!, J; name = name)
+    s = Rössler(a, b, c)
+    name = "Rössler system"
+    # Pass the same system to both fields!
+    return ContinuousDS(u0, s, s, J; name = name)
 end
 
-ros = roessler()
+ds = roessler()
 ```
+Then, it is trivial to change a parameter of the system by e.g. doing `ds.eom!.c = 2.2`.
+
+!!! info "`Vectors` vs. `SVectors` for equations of motion."
+    There is no distinction based on the size of the system for the continuous case because using `SVectors` or in-place operations with normal `Vectors` yield almost no speed differences in conjunction with [DifferentialEquations.jl](http://docs.juliadiffeq.org/stable/index.html) for small
+    dimensions.
+
+An example of a system definition without Functors is [also shown here](#asd).
 
 ## Discrete Systems
 Discrete systems are of the form:
 ```math
 \vec{x}_{n+1} = \vec{f}(\vec{x}_n).
 ```
+DynamicalSystems.jl categorizes discrete systems in three cases, due to the
+extremely performant handling that [`StaticArrays`](https://github.com/JuliaArrays/StaticArrays.jl) offers for small dimensionalities.
+
+
+### High-Dimensional Discrete system.
+At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
+base Arrays, provided that the latter use in-place operations. For cases of
+discrete systems with much high dimensionality, we offer a
+type called `BigDiscreteDS`:
+```@docs
+BigDiscreteDS
+```
+---
+This system is identical to [`ContinuousDS`](@ref) as far as definition is concerned.
+All operations are done in place, and the type is immutable. The same suggestion
+about using Functors also applies here.
+
+For example, this is the source code that defines a `BigDiscreteDS` representing
+coupled standard maps:
+
+In addition, the possibility of providing an initialized
+Jacobian allows one to "cheat". For example, let's look at the definition of the
+function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
+```julia
+### The following are inside a local scope!
+J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
+# Set ∂/∂p entries (they are eye(M,M))
+# And they don't change, they are constants
+for i in idxs
+    J[i, i+M] = 1
+    J[i+M, i+M] = 1
+end
+
+@inbounds function jacob_coupledsm!(J, x)
+    # x[i] ≡ θᵢ
+    # x[[idxsp1[i]]] ≡ θᵢ+₁
+    # x[[idxsm1[i]]] ≡ θᵢ-₁
+    for i in idxs
+        cosθ = cos(x[i])
+        cosθp= cos(x[idxsp1[i]] - x[i])
+        cosθm= cos(x[idxsm1[i]] - x[i])
+        J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
+        J[i+M, idxsm1[i]] = - Γ*cosθm
+        J[i+M, idxsp1[i]] = - Γ*cosθp
+        J[i, i] = 1 + J[i+M, i]
+        J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
+        J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
+    end
+end
+```
+The function that evaluates the Jacobian (in-place) only accesses half
+of the matrix elements, since the other half is constant and correctly initialized.
+Afterwards this function as well as `J` are passed into the constructor
+with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")`.
+
+
+
+### Low-dimensional Discrete System
 The Type representing such systems is called `DiscreteDS`:
 ```@docs
 DiscreteDS
@@ -128,56 +249,6 @@ Once again, if you skip the derivative functions it will be calculated automatic
 using ForwardDiff.jl.
 
 
-### Big Discrete Systems
-At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
-base Arrays, provided that the latter use in-place operations. For cases of
-discrete systems with much higher dimensions
-there is a different type, which we call `BigDiscreteDS`:
-```@docs
-BigDiscreteDS
-```
----
-In this case, *all* operations are done in place both for the equations of motion
-as well as the Jacobian. Notice that the fields `eom!` and `jacob!` end in a `!` to
-remind users about this fact.
-
-In addition, the possibility of providing an initialized
-Jacobian allows one to "cheat". For example, let's look at the definition of the
-function for the Jacobian for the [coupled standard maps](system_definition/#DynamicalSystems.Systems.henonhelies):
-```julia
-### The following are inside a local scope!
-J = zeros(eltype(u0), 2M, 2M) #u0 is the state of the system
-# Set ∂/∂p entries (they are eye(M,M))
-# And they don't change, they are constants
-for i in idxs
-    J[i, i+M] = 1
-    J[i+M, i+M] = 1
-end
-
-@inbounds function jacob_coupledsm!(J, x)
-    # x[i] ≡ θᵢ
-    # x[[idxsp1[i]]] ≡ θᵢ+₁
-    # x[[idxsm1[i]]] ≡ θᵢ-₁
-    for i in idxs
-        cosθ = cos(x[i])
-        cosθp= cos(x[idxsp1[i]] - x[i])
-        cosθm= cos(x[idxsm1[i]] - x[i])
-        J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
-        J[i+M, idxsm1[i]] = - Γ*cosθm
-        J[i+M, idxsp1[i]] = - Γ*cosθp
-        J[i, i] = 1 + J[i+M, i]
-        J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
-        J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
-    end
-end
-```
-The function that evaluates the Jacobian (in-place) only accesses half
-of the matrix elements, since the other half is constant and correctly initialized.
-Afterwards this function as well as `J` are passed into the constructor
-with `BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")`.
-
-
-
 
 
 ## Dimension of a System
@@ -209,40 +280,12 @@ you should use the
 
 
 ## Coordination with other packages
-You can take advantage of the ["Function-like objects"](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1)
-(known as functors) capabilities of Julia, to have a universal definition of your
-equations of motion that fits both the expected structure of DynamicalSystems.jl as well
-as other packages.
+One more advantage of using [Functors](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1), is that it offers a universal definition of your
+equations of motion that fits both the expected structure of DynamicalSystems.jl as well as other packages.
 
 For example, take a look at the following code:
 ```julia
-struct Lorenz96{T <: Real} # Structure with the parameters of Lorenz96 system
-  F::T
-  N::Int
-  # Inner constructor
-  function (::Type{Lorenz96})(F::Real, N::Integer = 3)
-    @assert N ≥ 3 "`N` must be at least 3"
-    new{typeof(F)}(F, N)
-  end
-end
-
-# Equations of motion as expected by e.g. LTISystems.jl or others
-@inbounds function (obj::Lorenz96{T})(t, x, dx) where T
-  N, F = obj.N, obj.F
-  # 3 edge cases
-  dx[1] = (x[2] - x[N - 1]) * x[N] - x[1] + F
-  dx[2] = (x[3] - x[N]) * x[1] - x[2] + F
-  dx[N] = (x[1] - x[N - 2]) * x[N - 1] - x[N] + F
-  # then the general case
-  for n in 3:(N - 1)
-    dx[n] = (x[n + 1] - x[n - 2]) * x[n - 1] - x[n] + F
-  end
-  return dx
-end
-# Equations of motion as expected by DynamicalSystems.jl
-function (obj::Lorenz96{T})(dx, x) where T
-  return obj(zero(T), x, dx)
-end
+struct Lorenz
 ```
 Notice that dispatch will work even without type annotations in this case,
 because one call takes 2 arguments and the other 3.
