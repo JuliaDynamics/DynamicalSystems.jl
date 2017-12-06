@@ -1,15 +1,20 @@
 # v0.7.0
 ## BREAKING
-* Changed best way to define system.
-* The only mutable system types are `DiscreteDS` and `DiscereteDS1D`. the others
-  mutable.
+* Changed the definition of all pre-defined systems. Now the documentation
+  also suggests users to use Fnctors for system definition.
+* The only mutable system types are `DiscreteDS` and `DiscereteDS1D`. The others
+  are immutable.
+* Completely removed the possibility to return the convergence timeseries for
+  functions like `lyapunov`. This tripled the necessary amount of code and
+  makes maintaining and expanding much harder. Since our source code is very
+  clear and consise, if users really want those convergence timeseries they can
+  create their own modified version of the functions.
 
 ## New Additions
 * New visualization routines that are compiled "on-demand" when users type `using PyPlot`:
     * `phasespace` that plots phasespaces of discrete maps.
     * New documentation page about visualizations.
 * Now users can initialize an empty `Dataset` to append datasets later: `Dataset{D,T}()`.
-
 
 ## Bugfixes and Enchancements
 * Created a dedicated method that integrates the variational equations

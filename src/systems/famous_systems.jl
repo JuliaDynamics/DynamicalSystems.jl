@@ -496,8 +496,11 @@ of chaos, like period doubling or intermittency, for other parameters.
 
 According to the author, it is a system displaying all the properties of the
 Lorentz system (1963) while being as simple as possible.
-
 Default values are the ones used in the original paper.
+
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
 
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
@@ -537,6 +540,10 @@ many as the archetypal example of how chaos can arise from very simple equations
 Originally intentend to be a discretized model of polulation dynamics, it is now famous
 for its bifurcation diagram, an immensly complex graph that that was shown
 be universal by Feigenbaum [2].
+
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
 
 [1] : R. M. May, Nature **261**, pp 459 (1976)
 

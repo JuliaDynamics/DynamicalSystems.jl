@@ -1,7 +1,7 @@
 using StaticArrays, ForwardDiff, Requires
 
 export DiscreteDS, DiscreteDS1D, evolve, trajectory, dimension
-export BigDiscreteDS, set_state
+export BigDiscreteDS
 
 #####################################################################################
 #                                   Constructors                                    #
@@ -11,7 +11,6 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
     DiscreteDS(state, eom [, jacob]; name="") <: DynamicalSystem
 `D`-dimensional discrete dynamical system.
-This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
   of `StaticArray`'s `SVector`. Use `ds.state = newstate` to set a new state.
@@ -26,10 +25,12 @@ This is an immutable type, use [`set_state`](@ref) to set a new state.
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
 
+Only the first two fields of this type are displayed during print.
+
 If the `jacob` is not provided by the user, it is created automatically
 using the module [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
 """
-struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
     state::SVector{D,T}
     eom::F
     jacob::J
@@ -49,33 +50,15 @@ function DiscreteDS(u0::AbstractVector, eom, jac; name="")
     return DiscreteDS{D, T, F, J}(su0, eom, jac,name)
 end
 
-"""
-    set_state(ds::DynamicalSystem, state) -> ds
-Return a `DynamicalSystem` that has as state the given `state` and everything else
-identical to the given `ds`.
-
-Notice that for `DiscreteDS` and `DiscreteDS1D` this function returns a *new*
-system. However for `ContinuousDS` and `BigDiscreteDS` this function simply
-mutates in-place the field `ds.state`.
-"""
-set_state(ds::DiscreteDS, state::SVector) =
-DiscreteDS(state, ds.eom, ds.jacob, ds.name)
-
-function set_state(ds::DiscreteDS, state::Vector)
-    s = SVector{length(state)}(state)
-    return DiscreteDS(s, ds.eom, ds.jacob, ds.name)
-end
-
 
 
 """
     DiscreteDS1D(state, eom [, deriv]; name="") <: DynamicalSystem
 One-dimensional discrete dynamical system.
-This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::Real` : Current state of the system.
 * `eom` (function) : The function that represents the system's equation of motion:
-  `eom(x) -> Real`.
+  `eom(x) -> Real`. Use `ds.state = x` to set a new state.
 * `deriv` (function) : A function that calculates the system's derivative given
   a state: `deriv(x) -> Real`. If it is not provided by the user
   it is created automatically using the module
@@ -83,8 +66,10 @@ This is an immutable type, use [`set_state`](@ref) to set a new state.
 * `name::String` : A name for the dynamical system (possibly including parameter
   values), solely for pretty-printing purposes. Always passed to the constructors
   as a keyword.
+
+Only the first two fields of this type are displayed during print.
 """
-struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
+mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
     state::S
     eom::F
     deriv::D
@@ -95,9 +80,6 @@ function DiscreteDS1D(x0, eom;name="")
     DiscreteDS1D(x0, eom, ForwardDiff_der,name)
 end
 DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
-
-set_state(ds::DiscreteDS1D, state) =
-DiscreteDS1D(state, ds.eom, ds.deriv, ds.name)
 
 
 
@@ -153,8 +135,6 @@ function BigDiscreteDS(u0, f!,
     FD_jacob!(J, u0)
     return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
 end
-
-set_state(ds::DynamicalSystem, state) = (ds.state .= state; ds)
 
 
 

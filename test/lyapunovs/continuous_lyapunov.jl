@@ -37,15 +37,6 @@ println("\nTesting continuous system lyapunov exponents...")
     T = 10000.0
     λ1 = lyapunov(ds, T)
     @test 0.89 < λ1 < 0.92
-
-
-
-    # test convergence:
-    ls, ts = lyapunov(ds, T, Val{true}; Ttr = 100.0)
-    @test size(ls, 1) == size(ls, 1)
-    @test 0.87 < ls[end] < 0.94
-    @test ts[end] <= T
-
   end
 end
 
@@ -65,7 +56,7 @@ end
   end
 
   @testset "lyapunov" begin
-    λ1, ts = lyapunov(ds, 10000.0, Val{true}, dt =  1.0, Ttr = 10.0)
-    @test 0.06 < λ1[end] < 0.08
+    λ1 = lyapunov(ds, 10000.0, dt =  1.0, Ttr = 10.0)
+    @test 0.06 < λ1 < 0.08
   end
 end
