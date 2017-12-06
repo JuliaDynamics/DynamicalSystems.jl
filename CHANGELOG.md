@@ -1,7 +1,8 @@
 # v0.7.0
 ## BREAKING
 * Changed best way to define system.
-
+* The only mutable system types are `DiscreteDS` and `DiscereteDS1D`. the others
+  mutable.
 
 ## New Additions
 * New visualization routines that are compiled "on-demand" when users type `using PyPlot`:

@@ -4,6 +4,7 @@ famous systems.
 """
 module Systems
 using DynamicalSystems, StaticArrays
+const twopi = 2π
 #######################################################################################
 #                                    Continuous                                       #
 #######################################################################################
@@ -207,7 +208,7 @@ end
     du[1] = u[3]
     du[2] = u[4]
     du[3] = -u[1] - 2s.λ*u[1]*u[2]
-    du[4] = -u[2] -s.λ*(u[1]^2 - u[2]^2)
+    du[4] = -u[2] - s.λ*(u[1]^2 - u[2]^2)
     return nothing
 end
 @inline @inbounds function (s::HénonHeiles)(J::EomMatrix, u::EomVector)
@@ -262,7 +263,6 @@ z_{n+1} &= 3.78 z_n (1-z_n) + b y_n
 The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous
 for being a mapping that has the smallest possible dimensions necessary for hyperchaos,
 having two positive and one negative Lyapunov exponent.
-
 The name comes from the fact that when plotted looks like a folded towel, in every
 projection.
 
@@ -312,31 +312,37 @@ destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle varia
 both variables
 are always taken modulo 2π (the mapping is on the [0,2π)² torus).
 
+The `eom` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom.parameter = value`.
+
 [1] : B. V. Chirikov, Preprint N. **267**, Institute of
 Nuclear Physics, Novosibirsk (1969)
 
 [2] : J. M. Greene, J. Math. Phys. **20**, pp 1183 (1979)
 """
 function standardmap(u0=0.001rand(2); k = 0.971635)
-    const twopi = 2π
-    @inline @inbounds function eom_standard(x)
-        theta = x[1]; p = x[2]
-        p+=k*sin(theta)
-        theta += p
-        while theta >= twopi; theta -= twopi; end
-        while theta < 0; theta += twopi; end
-        while p >= twopi; p -= twopi; end
-        while p < 0; p += twopi; end
-        return SVector(theta, p)
-    end
-    @inline @inbounds jacob_standard(x) =
-    @SMatrix [1 + k*cos(x[1])    1;
-              k*cos(x[1])        1]
-    name = "Standard map (k=$(k))"
-    return DiscreteDS(u0, eom_standard, jacob_standard; name=name)
+    sm = StandardMap(k)
+    jacob_sm(x) = sm(x, nothing)
+    name = "Standard map"
+    return DiscreteDS(u0, sm, jacob_sm; name=name)
 end
-
-
+mutable struct StandardMap
+    k::Float64
+end
+@inline @inbounds function (f::StandardMap)(x)
+    theta = x[1]; p = x[2]
+    p+=f.k*sin(theta)
+    theta += p
+    while theta >= twopi; theta -= twopi; end
+    while theta < 0; theta += twopi; end
+    while p >= twopi; p -= twopi; end
+    while p < 0; p += twopi; end
+    return SVector(theta, p)
+end
+@inline @inbounds (f::StandardMap)(x, no::Void) =
+@SMatrix [1 + f.k*cos(x[1])    1;
+          f.k*cos(x[1])        1]
 
 """
 ```julia
@@ -355,6 +361,10 @@ introduced in [1] to study diffusion and chaos thresholds.
 The *total* dimension of the system
 is `2M`. The maps are coupled through `Γ`
 and the `i`-th map has a nonlinear parameter `ks[i]`.
+
+The `eom!` field of the returned system has as fields the keyword arguments of
+this function. You can access them and change their value at any point
+using `ds.eom!.parameter = value`.
 
 [1] : H. Kantz & P. Grassberger, J. Phys. A **21**, pp 127–133 (1988)
 """
@@ -492,16 +502,27 @@ Default values are the ones used in the original paper.
 [1] : M. Hénon, Commun.Math. Phys. **50**, pp 69 (1976)
 """
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
-    @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
-    @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-    name = "Hénon map (a=$(a), b=$(b))"
-    return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
+
+    he = HénonMap(a,b)
+    @inline jacob_henon(x) = he(x, nothing)
+    name = "Hénon map"
+    return DiscreteDS(u0, he, jacob_henon; name=name)
 end # should give lyapunov exponents [0.4189, -1.6229]
 mutable struct HénonMap
     a::Float64
     b::Float64
 end
 (f::HénonMap)(x::EomVector) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
+(f::HénonMap)(x::EomVector, no::Void) = @SMatrix [-2*f.a*x[1] 1.0; f.b 0.0]
+
+#= old henon
+function henon(u0=zeros(2); a = 1.4, b = 0.3)
+    @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
+    @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
+    name = "Hénon map (a=$(a), b=$(b))"
+    return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
+end # should give lyapunov exponents [0.4189, -1.6229]
+=#
 
 """
 ```julia
@@ -522,12 +543,16 @@ be universal by Feigenbaum [2].
 [2] : M. J. Feigenbaum, J. Stat. Phys. **19**, pp 25 (1978)
 """
 function logistic(x0=rand(); r = 4.0)
-    @inline eom_logistic(x) = r*x*(1-x)
-    @inline deriv_logistic(x) = r*(1-2x)
-    name="Logistic map (r=$r)"
-    return DiscreteDS1D(x0, eom_logistic, deriv_logistic;name=name)
+    lol = Logistic(r)
+    deriv_logistic(x) = lol(x, nothing)
+    name="Logistic map"
+    return DiscreteDS1D(x0, lol, deriv_logistic;name=name)
 end
-
+mutable struct Logistic
+    r::Float64
+end
+@inline (f::Logistic)(x::Number) = f.r*x*(1-x)
+@inline (f::Logistic)(x::Number, no::Void) = f.r*(1-2x)
 
 
 

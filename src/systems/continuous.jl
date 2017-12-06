@@ -229,7 +229,7 @@ import Base.show
 function Base.show(io::IO, ds::ContinuousDS{S, F, J}) where {S, F, J}
     D = dimension(ds)
     print(io, "$D-dimensional continuous dynamical system:\n",
-    "state: $(ds.state)\n", "e.o.m.: $F\n")
+    "state: $(ds.state)\n", "eom: $F\n")
 end
 
 @require Juno begin

@@ -38,3 +38,15 @@ println("\nTesting custom QR-decomposition...")
         end
     end
 end
+
+@testset "EomVector, EomMatrix" begin
+    a = rand(3,3)
+    v = SVector{2}(2, 2.1)
+    m = @SMatrix zeros(3, 3)
+
+    @test issubtype(typeof(a), EomMatrix)
+    @test !issubtype(typeof(view(a, :, 2)), EomMatrix)
+    @test issubtype(typeof(v), EomVector)
+    @test issubtype(typeof(view(a, :, 1)), EomVector)
+    @test issubtype(typeof(m), EomMatrix)
+end

@@ -14,7 +14,7 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 This is an immutable type, use [`set_state`](@ref) to set a new state.
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
-  of `StaticArray`'s `SVector`.
+  of `StaticArray`'s `SVector`. Use `ds.state = newstate` to set a new state.
 * `eom` (function) : The function that represents the system's equations of motion
   (also called vector field). The function is of the format: `eom(u) -> SVector`
   which means that given a state-vector `u` it returns an `SVector` containing the
@@ -288,7 +288,7 @@ function Base.show(io::IO, ds::DiscreteDS{N, S, F, J}) where
         text = ds.name
     end
     print(io, text*"\n",
-    " state: $(ds.state)\n", " e.o.m.: $F\n")
+    " state: $(ds.state)\n", " eom: $F\n")
 end
 
 @require Juno begin
@@ -316,7 +316,7 @@ function Base.show(io::IO, ds::BigDiscreteDS{T, F, J}) where
         text = ds.name
     end
     print(io, text*"\n",
-    " state: $(ds.state)\n", " e.o.m.: $F\n")
+    " state: $(ds.state)\n", " eom!: $F\n")
 end
 
 @require Juno begin
@@ -342,7 +342,7 @@ function Base.show(io::IO, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:A
         text = s.name
     end
     print(io, "1-dimensional discrete dynamical system:\n",
-    "state: $(s.state)\n", "e.o.m.: $F\n")
+    "state: $(s.state)\n", "eom: $F\n")
 end
 @require Juno begin
     function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where
