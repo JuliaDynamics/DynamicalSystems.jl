@@ -35,11 +35,11 @@ non0hist
 ---
 For example, the Shannon entropy of a coin-flip process should be one bit,
 [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
-```julia
+```@example lyap
 using DynamicalSystems
 y = Float64.(rand(Bool, 1000000)) # just some coin tosses
 sh = shannon(0.1, y)  # ≡ genentropy(1, 0.0, y)
-isapprox(sh, log(2),  rtol = 1e-6) # true!
+isapprox(sh, log(2),  rtol = 1e-6)
 ```
 Because all entropies are calculated on base-$e$, the unit of measurement is "nat"
 and one bit is $\log(2)\times$nat.
@@ -94,7 +94,8 @@ kaplanyorke_dim
 ---
 Notice that calling this function requires you to pass the Lyapunov exponents in an
 ordered vector form (largest to smallest). Example:
-```julia
+```@example lyap
+using DynamicalSystems
 hen = Systems.henon()
-D_kp = kaplanyorke_dim(lyapunovs(hen, 1000000))
+D_kp = kaplanyorke_dim(lyapunovs(hen, 100000))
 ```

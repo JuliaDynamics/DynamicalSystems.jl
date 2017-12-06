@@ -23,6 +23,7 @@
   more extendable as now it is much easier to add e.g. new methods for
   chaos detection.
 * Tripled the speed of `non0hist`!!! Note to self: DO NOT use broadcasting on basic operations like `+. *, /` etc. when using `SVector`s!
+* Much better documentation for system definition.
 
 # v0.6.1
 ## New Additions

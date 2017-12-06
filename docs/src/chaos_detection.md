@@ -78,7 +78,7 @@ ylim(1e-12, 1)
 
 
 ### Continuous Example
-As an example of a continuous system, let's see the [`henonhelies`](@ref):
+As an example of a continuous system, let's see the [`henonhelies`](system_definition/#DynamicalSystems.Systems.henonhelies):
 ```julia
 using DynamicalSystems
 using PyPlot
