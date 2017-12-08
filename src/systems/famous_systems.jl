@@ -41,7 +41,7 @@ function lorenz(u0=[0.0, 10.0, 0.0]; σ = 10.0, ρ = 28.0, β = 8/3)
     J[2,:] .= (ρ - u0[3],  -1,   -u0[1])
     J[3,:] .= (u0[2],   u0[1],   -β)
     s = Lorenz63(σ, ρ, β)
-    return ContinuousDS(u0, s, s, J; name = "Lorenz63 system")
+    return ContinuousDS(u0, s, s, J)
 end
 mutable struct Lorenz63
     σ::Float64
@@ -94,8 +94,7 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
     J[3,:] .= [u0[3], o, u0[1] - c]
 
     s = Rössler(a, b, c)
-    name = "Rössler system"
-    return ContinuousDS(u0, s, s, J; name = name)
+    return ContinuousDS(u0, s, s, J)
 end
 mutable struct Rössler
     a::Float64
@@ -132,8 +131,7 @@ using `ds.eom!.parameter = value`.
 function double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
 
     s = DoublePendulum(G, L1, L2, M1, M2)
-    name = "Double Pendulum system (θ1, dθ1/dt, θ2, dθ2/dt)"
-    return ContinuousDS(u0, s; name = name)
+    return ContinuousDS(u0, s)
 end
 mutable struct DoublePendulum
     G::Float64
@@ -198,8 +196,7 @@ function henonhelies(u0=[0, -0.25, 0.42081, 0]; λ = 1)
     J[4,:] = [-2λ*u0[1],  -1 + 2λ*u0[2],  o,   o]
 
     s = HénonHeiles(λ)
-    name = "Hénon-Heiles system"
-    return ContinuousDS(u0, s, s, J; name = name)
+    return ContinuousDS(u0, s, s, J)
 end
 mutable struct HénonHeiles
     λ::Float64
@@ -223,9 +220,8 @@ end
 """
 function lorenz96(N::Int, u0 = rand(N); F=0.01)
     @assert N ≥ 3 "`N` must be at least 3"
-    name = "Lorenz96 system"
     lor96 = Lorenz96{N, typeof(F)}(F) # create struct
-    return ContinuousDS(u0, lor96; name = name)
+    return ContinuousDS(u0, lor96)
 end
 struct Lorenz96{N, T <: Real} # Structure with the parameters of Lorenz96 system
   F::T
@@ -283,8 +279,7 @@ function towel(u0=[0.085, -0.121, 0.075])
         -0.19((x[2] + 0.35)*(1-2x[3]) - 1)  0.1*(1-2x[3])*(1-1.9x[1])  -0.2*(x[2] + 0.35)*(1-1.9x[1]);
         0.0  0.2  3.78(1-2x[3]) ]
     end
-    name = "Folded towel map"
-    return DiscreteDS(u0, eom_towel, jacob_towel; name = name)
+    return DiscreteDS(u0, eom_towel, jacob_towel)
 end# should result in lyapunovs: [0.432207,0.378834,-3.74638]
 
 """
@@ -324,8 +319,7 @@ Nuclear Physics, Novosibirsk (1969)
 function standardmap(u0=0.001rand(2); k = 0.971635)
     sm = StandardMap(k)
     jacob_sm(x) = sm(x, nothing)
-    name = "Standard map"
-    return DiscreteDS(u0, sm, jacob_sm; name=name)
+    return DiscreteDS(u0, sm, jacob_sm)
 end
 mutable struct StandardMap
     k::Float64
@@ -383,9 +377,8 @@ function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
         J[i, i+M] = 1
         J[i+M, i+M] = 1
     end
-    name = "$(M) coupled Standard maps"
 
-    return BigDiscreteDS(u0, csm, csm, J; name=name)
+    return BigDiscreteDS(u0, csm, csm, J)
 end
 mutable struct CoupledStandardMaps{N, T}
     ks::Vector{T}
@@ -426,59 +419,6 @@ end
     return nothing
 end
 
-#= Old cms
-function coupledstandardmaps(M::Int, u0 = 0.001rand(2M);
-    ks = ones(M), Γ = 1.0)
-
-    idxs = 1:M # indexes of thetas
-    idxsm1 = circshift(idxs, +1)  #indexes of thetas - 1
-    idxsp1 = circshift(idxs, -1)  #indexes of thetas + 1
-    pidx = M+1:2M
-    J = zeros(eltype(u0), 2M, 2M)
-    # Set ∂/∂p entries (they are eye(M,M))
-    # And they dont change they are constants
-    for i in idxs
-        J[i, i+M] = 1
-        J[i+M, i+M] = 1
-    end
-
-    @inbounds function eom_coupledsm!(xnew, x)
-        for i in idxs
-
-            xnew[i+M] = mod2pi(
-                x[i+M] + ks[i]*sin(x[i]) -
-                Γ*(sin(x[idxsp1[i]] - x[i]) + sin(x[idxsm1[i]] - x[i]))
-            )
-
-            xnew[i] = mod2pi(x[i] + xnew[i+M])
-        end
-        return nothing
-    end
-
-
-    @inbounds function jacob_coupledsm!(J, x)
-        # x[i] ≡ θᵢ
-        # x[[idxsp1[i]]] ≡ θᵢ+₁
-        # x[[idxsm1[i]]] ≡ θᵢ-₁
-        for i in idxs
-            cosθ = cos(x[i])
-            cosθp= cos(x[idxsp1[i]] - x[i])
-            cosθm= cos(x[idxsm1[i]] - x[i])
-            J[i+M, i] = ks[i]*cosθ + Γ*(cosθp + cosθm)
-            J[i+M, idxsm1[i]] = - Γ*cosθm
-            J[i+M, idxsp1[i]] = - Γ*cosθp
-            J[i, i] = 1 + J[i+M, i]
-            J[i, idxsm1[i]] = J[i+M, idxsm1[i]]
-            J[i, idxsp1[i]] = J[i+M, idxsp1[i]]
-        end
-        return nothing
-    end
-    jacob_coupledsm!(J, u0)
-    name = "$(M) coupled Standard maps (Γ=$(Γ), ks = $(ks))"
-    return BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J;name=name)
-end
-=#
-
 
 """
 ```julia
@@ -508,8 +448,7 @@ function henon(u0=zeros(2); a = 1.4, b = 0.3)
 
     he = HénonMap(a,b)
     @inline jacob_henon(x) = he(x, nothing)
-    name = "Hénon map"
-    return DiscreteDS(u0, he, jacob_henon; name=name)
+    return DiscreteDS(u0, he, jacob_henon)
 end # should give lyapunov exponents [0.4189, -1.6229]
 mutable struct HénonMap
     a::Float64
@@ -518,14 +457,6 @@ end
 (f::HénonMap)(x::EomVector) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
 (f::HénonMap)(x::EomVector, no::Void) = @SMatrix [-2*f.a*x[1] 1.0; f.b 0.0]
 
-#= old henon
-function henon(u0=zeros(2); a = 1.4, b = 0.3)
-    @inline @inbounds eom_henon(x) = SVector{2}(1.0 - a*x[1]^2 + x[2], b*x[1])
-    @inline @inbounds jacob_henon(x) = @SMatrix [-2*a*x[1] 1.0; b 0.0]
-    name = "Hénon map (a=$(a), b=$(b))"
-    return DiscreteDS(u0, eom_henon, jacob_henon;name=name)
-end # should give lyapunov exponents [0.4189, -1.6229]
-=#
 
 """
 ```julia
@@ -552,8 +483,7 @@ using `ds.eom.parameter = value`.
 function logistic(x0=rand(); r = 4.0)
     lol = Logistic(r)
     deriv_logistic(x) = lol(x, nothing)
-    name="Logistic map"
-    return DiscreteDS1D(x0, lol, deriv_logistic;name=name)
+    return DiscreteDS1D(x0, lol, deriv_logistic)
 end
 mutable struct Logistic
     r::Float64

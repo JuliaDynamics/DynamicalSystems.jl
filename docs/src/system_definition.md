@@ -31,7 +31,7 @@ if instead, your "system" is in the form of [numerical data](#numerical-data), t
 
 
 
-
+---
 ## Continuous Systems
 Continuous systems of the form
 ```math
@@ -41,7 +41,7 @@ are defined almost identically with the [`BigDiscreteDS`](@ref) systems:
 ```@docs
 ContinuousDS
 ```
----
+
 Notice that the fields `eom!` and `jacob!` end with a `!`, to remind users
 that these functions should operate in-place. Also notice that the type `ContinuousDS`
 is actually immutable.
@@ -120,9 +120,8 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
     J[2,:] .= [i,  a,       o]
     J[3,:] .= [u0[3], o, u0[1] - c]
     s = Rössler(a, b, c)
-    name = "Rössler system"
     # Pass the same system to both fields!
-    return ContinuousDS(u0, s, s, J; name = name)
+    return ContinuousDS(u0, s, s, J)
 end
 
 ds = roessler()
@@ -137,6 +136,8 @@ as the Jacobian function, making everything concise and easy-to-use!
     dimensions.
 
 An example of a system definition without Functors is [also shown here](#defining-a-dynamicalsystem-without-functors).
+
+---
 
 ## Discrete Systems
 Discrete systems are of the form:
@@ -155,19 +156,23 @@ type called `BigDiscreteDS`:
 ```@docs
 BigDiscreteDS
 ```
----
+
 This system is identical to [`ContinuousDS`](@ref) as far as definition is concerned.
 All operations are done in place, and the type is immutable. The same suggestions
-about using Functors and initialized Jacobians also applies here.
+about using Functors and initialized Jacobians also apply here.
 
 See the source code of the pre-defined [coupled standard maps](https://juliadynamics.github.io/DynamicalSystems.jl/latest/system_definition/#DynamicalSystems.Systems.coupledstandardmaps) for an example of a `BigDiscreteDS` definition.
 
+---
+
 ### Low-dimensional Discrete Systems
-The Type representing such systems is called `DiscreteDS`:
+The definition of low-dimensional discrete systems differs fundamentally from
+high dimensional ones, because everything is *much* more efficiently done with
+statically sized vectors. The Type representing such systems is called `DiscreteDS`:
 ```@docs
 DiscreteDS
 ```
----
+
 The documentation string of the constructor is perfectly self-contained, but for the sake of clarity we will go through all the steps in the following.
 
 `state` is simply the state the system starts (a.k.a. initial conditions) and
@@ -188,17 +193,18 @@ the function calls take only one argument (always a state), it is impossible to
 use multiple dispatch to differentiate between a call to the e.o.m. or the Jacobian
 functions.
 
-However, it is very easy to still define calls both using a single `struct`, by using
+However, it is very easy to still define both function calls
+using a single `struct`, by using
 a 2 argument function given to the constructor. For example:
 ```@example henon
 using DynamicalSystems
-using StaticArrays
+using StaticArrays # only necessary when defining a system
 
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     he = HénonMap(a,b)
     # The jacobian function: (still uses the HénonMap)
     @inline jacob_henon(x) = he(x, nothing)
-    return DiscreteDS(u0, he, jacob_henon; name="Hénon map")
+    return DiscreteDS(u0, he, jacob_henon)
 end
 mutable struct HénonMap
     a::Float64
@@ -211,6 +217,7 @@ ds = henon()
 ```
 In this case, doing `ds.eom.a = 2.5` would still affect *both* the equations
 of motion as well as the Jacobian, making everything work perfectly!
+
 
 #### Defining a `DynamicalSystem` without Functors
 As an example of defining a system without
@@ -236,7 +243,7 @@ end
 end
 
 u0=[0.085, -0.121, 0.075]
-towel =  DiscreteDS(u0, eom_towel, jacob_towel; name = "Folded Towel")
+towel =  DiscreteDS(u0, eom_towel, jacob_towel)
 ```
 If we did not want to write a Jacobian for it, we could do
 ```julia
@@ -261,8 +268,7 @@ Once again, if you skip the derivative functions it will be calculated automatic
 using ForwardDiff.jl.
 
 
-## Dimension of a System
-The dimension of any sub-type of `DynamicalSystem` is obtained by `D = dimension(ds)`.
+---
 
 ## System evolution
 DynamicalSystems.jl provides convenient interfaces for the evolution of systems.
@@ -270,7 +276,7 @@ DynamicalSystems.jl provides convenient interfaces for the evolution of systems.
 evolve
 trajectory
 ```
----
+
 Especially in the continuous case, an API is provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
 ```@docs
 ODEProblem
@@ -308,6 +314,8 @@ You could then give `s = Rössler(1, 2)` to `ContinuousDS` *as well as* the inte
 of e.g. [LTISystems.jl](https://github.com/JuliaSystems/LTISystems.jl)
 and everything will "just work"!
 
+---
+
 ## Numerical Data
 Numerical data in DynamicalSystems.jl is represented by a structure called
 `Dataset`:
@@ -337,6 +345,8 @@ well with other packages, like e.g. [`neighborhood`](@ref).
 If given a matrix, we first convert to `Dataset`. This means that you should first
 convert your data to a `Dataset` if you want to call functions more than once, to avoid
 constantly converting.
+
+---
 
 ## Predefined Systems
 Predefined systems exist in the `Systems` submodule exported by `DynamicalSystems`, in the form of functions that return a `DynamicalSystem`. They are accessed

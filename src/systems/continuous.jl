@@ -11,7 +11,7 @@ export ContinuousDS, ODEProblem, ODEIntegrator, variational_integrator
 abstract type ContinuousDynamicalSystem <: DynamicalSystem end
 
 """
-    ContinuousDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
+    ContinuousDS(state, eom! [, jacob! [, J]]) <: DynamicalSystem
 `D`-dimensional continuous dynamical system.
 ## Fields:
 * `state::Vector{T}` : Current state-vector of the system. Do `ds.state .= u` to
@@ -24,9 +24,6 @@ abstract type ContinuousDynamicalSystem <: DynamicalSystem end
   given in the format: `jacob!(J, u)` which means it is in-place, with the mutated
   argument being the first.
 * `J::Matrix{T}` : Initialized Jacobian matrix (optional).
-* `name::String` : A name for the dynamical system,
-  solely for pretty-printing purposes. Always passed to the constructors
-  as a keyword.
 
 Only the first two fields of this type are displayed during print.
 
@@ -41,17 +38,16 @@ struct ContinuousDS{T<:Number, F, JJ} <: ContinuousDynamicalSystem
     eom!::F
     jacob!::JJ
     J::Matrix{T}
-    name::String
 end
 
 # Constructors
 function ContinuousDS(state, eom!, j!,
-    J = zeros(eltype(state), length(state), length(state)); name="")
+    J = zeros(eltype(state), length(state), length(state)))
     j!(J, state)
-    return ContinuousDS(state, eom!, j!, J, name)
+    return ContinuousDS(state, eom!, j!, J)
 end
 
-function ContinuousDS(state, eom!; name = "")
+function ContinuousDS(state, eom!)
     D = length(state); T = eltype(state)
     du = copy(state)
     J = zeros(T, D, D)
@@ -59,7 +55,7 @@ function ContinuousDS(state, eom!; name = "")
     ForwardDiff_jacob!(J, u) = ForwardDiff.jacobian!(
     J, eom!, du, u, jcf)
     ForwardDiff_jacob!(J, state)
-    return ContinuousDS(state, eom!, ForwardDiff_jacob!, J, name)
+    return ContinuousDS(state, eom!, ForwardDiff_jacob!, J)
 end
 
 dimension(ds::ContinuousDS) = length(ds.state)
@@ -228,7 +224,8 @@ end
 import Base.show
 function Base.show(io::IO, ds::ContinuousDS{S, F, J}) where {S, F, J}
     D = dimension(ds)
-    print(io, "$D-dimensional continuous dynamical system:\n",
+    text = "$(dimension(ds))-dimensional continuous dynamical system"
+    print(io, text*":\n",
     "state: $(ds.state)\n", "eom: $F\n")
 end
 
@@ -236,11 +233,7 @@ end
 function Juno.render(i::Juno.Inline, s::ContinuousDS{S, F, J}) where
     {S, F, J}
     t = Juno.render(i, Juno.defaultrepr(s))
-    if ds.name == ""
-        text = "$(dimension(s))-dimensional continuous dynamical system"
-    else
-        text = ds.name
-    end
+    text = "$(dimension(s))-dimensional continuous dynamical system"
     t[:head] = Juno.render(i, Text(text))
     t[:children] = t[:children][1:2]
     t

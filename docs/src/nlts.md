@@ -8,7 +8,7 @@ In `DynamicalSystems.jl` this is done through the `reconstruct` interface:
 Reconstruction
 reconstruct
 ```
----
+
 As an example, let's pass a `Reconstruction` into e.g. a method that calculates the
 attractor dimension:
 ```julia
@@ -32,7 +32,7 @@ The following functions are provided estimate good values that can be used in
 ```@docs
 estimate_delay
 ```
-
+---
 ## Neighborhoods of a point in a Dataset
 Incorporating the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) and the flexibility of `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
 ```@docs
@@ -52,7 +52,7 @@ numericallyapunov
 ---
 The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
-
+---
 ### Example of Numerical Lyapunov computation
 ```julia
 using DynamicalSystems, PyPlot

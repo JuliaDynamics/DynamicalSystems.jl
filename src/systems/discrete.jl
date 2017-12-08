@@ -9,7 +9,7 @@ export BigDiscreteDS
 "Abstract type representing discrete systems."
 abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 """
-    DiscreteDS(state, eom [, jacob]; name="") <: DynamicalSystem
+    DiscreteDS(state, eom [, jacob]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system.
 ## Fields:
 * `state::SVector{D}` : Current state-vector of the system, stored in the data format
@@ -21,9 +21,6 @@ abstract type DiscreteDynamicalSystem <: DynamicalSystem end
 * `jacob` (function) : A function that calculates the system's jacobian matrix,
   based on the format: `jacob(u) -> SMatrix` which means that given a state-vector
   `u` it returns an `SMatrix` containing the Jacobian at that state.
-* `name::String` : A name for the dynamical system (possibly including parameter
-  values), solely for pretty-printing purposes. Always passed to the constructors
-  as a keyword.
 
 Only the first two fields of this type are displayed during print.
 
@@ -34,26 +31,25 @@ mutable struct DiscreteDS{D, T<:Number, F, J} <: DiscreteDynamicalSystem
     state::SVector{D,T}
     eom::F
     jacob::J
-    name::String
 end
 # constructor without jacobian (uses ForwardDiff)
-function DiscreteDS(u0::AbstractVector, eom;name="")
+function DiscreteDS(u0::AbstractVector, eom)
     su0 = SVector{length(u0)}(u0)
     cfg = ForwardDiff.JacobianConfig(eom, u0)
     @inline ForwardDiff_jac(x) = ForwardDiff.jacobian(eom, x, cfg)
-    return DiscreteDS(su0, eom, ForwardDiff_jac, name)
+    return DiscreteDS(su0, eom, ForwardDiff_jac)
 end
-function DiscreteDS(u0::AbstractVector, eom, jac; name="")
+function DiscreteDS(u0::AbstractVector, eom, jac)
     D = length(u0)
     su0 = SVector{D}(u0)
     T = eltype(su0); F = typeof(eom); J = typeof(jac)
-    return DiscreteDS{D, T, F, J}(su0, eom, jac,name)
+    return DiscreteDS{D, T, F, J}(su0, eom, jac)
 end
 
 
 
 """
-    DiscreteDS1D(state, eom [, deriv]; name="") <: DynamicalSystem
+    DiscreteDS1D(state, eom [, deriv]) <: DynamicalSystem
 One-dimensional discrete dynamical system.
 ## Fields:
 * `state::Real` : Current state of the system.
@@ -63,9 +59,6 @@ One-dimensional discrete dynamical system.
   a state: `deriv(x) -> Real`. If it is not provided by the user
   it is created automatically using the module
   [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/).
-* `name::String` : A name for the dynamical system (possibly including parameter
-  values), solely for pretty-printing purposes. Always passed to the constructors
-  as a keyword.
 
 Only the first two fields of this type are displayed during print.
 """
@@ -73,18 +66,17 @@ mutable struct DiscreteDS1D{S<:Real, F, D} <: DiscreteDynamicalSystem
     state::S
     eom::F
     deriv::D
-    name::String
 end
-function DiscreteDS1D(x0, eom;name="")
+function DiscreteDS1D(x0, eom)
     ForwardDiff_der(x) = ForwardDiff.derivative(eom, x)
-    DiscreteDS1D(x0, eom, ForwardDiff_der,name)
+    DiscreteDS1D(x0, eom, ForwardDiff_der)
 end
-DiscreteDS1D(a,b,c;name="")=DiscreteDS1D(a,b,c,name)
+DiscreteDS1D(a,b,c;)=DiscreteDS1D(a,b,c)
 
 
 
 """
-    BigDiscreteDS(state, eom! [, jacob! [, J]]; name="") <: DynamicalSystem
+    BigDiscreteDS(state, eom! [, jacob! [, J]]) <: DynamicalSystem
 `D`-dimensional discrete dynamical system (used for big `D`). The equations
 for this system perform all operations *in-place*.
 ## Fields:
@@ -100,9 +92,6 @@ for this system perform all operations *in-place*.
 * `J::Matrix{T}` : Initialized Jacobian matrix (optional).
 * `dummystate::Vector{T}` : Dummy vector, which most of the time fills the
   role of the previous state in e.g. [`evolve`](@ref).
-* `name::String` : A name for the dynamical system (possibly including parameter
-  values), solely for pretty-printing purposes. Always passed to the constructors
-  as a keyword.
 
 Only the first two fields of this type are displayed during print.
 
@@ -118,22 +107,21 @@ struct BigDiscreteDS{T<:Number, F, JJ} <: DiscreteDynamicalSystem
     jacob!::JJ
     J::Matrix{T}
     dummystate::Vector{T}
-    name::String
 end
 function BigDiscreteDS(u0, f!, j!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)))
 
     dum = copy(u0)
-    BigDiscreteDS(u0, f!, j!, J, dum, name)
+    BigDiscreteDS(u0, f!, j!, J, dum)
 end
 function BigDiscreteDS(u0, f!,
-    J::Matrix = zeros(eltype(u0), length(u0), length(u0)); name="")
+    J::Matrix = zeros(eltype(u0), length(u0), length(u0)))
     dum = copy(u0)
 
     cfg = ForwardDiff.JacobianConfig(f!, dum, u0)
     FD_jacob!(J, x) = ForwardDiff.jacobian!(J, f!, dum, x, cfg)
     FD_jacob!(J, u0)
-    return BigDiscreteDS(u0, f!, FD_jacob!, J, dum, name)
+    return BigDiscreteDS(u0, f!, FD_jacob!, J, dum)
 end
 
 
@@ -262,11 +250,7 @@ end
 import Base.show
 function Base.show(io::IO, ds::DiscreteDS{N, S, F, J}) where
     {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
-    if ds.name == ""
-        text = "$(dimension(ds))-dimensional discrete system"
-    else
-        text = ds.name
-    end
+    text = "$(dimension(ds))-dimensional discrete system"
     print(io, text*"\n",
     " state: $(ds.state)\n", " eom: $F\n")
 end
@@ -275,11 +259,7 @@ end
     function Juno.render(i::Juno.Inline, ds::DiscreteDS{N, S, F, J}) where
         {N<:ANY, S<:ANY, F<:ANY, J<:ANY}
         t = Juno.render(i, Juno.defaultrepr(ds))
-        if ds.name == ""
-            text = "$(dimension(ds))-dimensional discrete system"
-        else
-            text = ds.name
-        end
+        text = "$(dimension(ds))-dimensional discrete system"
         t[:head] = Juno.render(i, Text(text))
         t[:children] = t[:children][1:2] # remove showing field dummystate
         t
@@ -290,11 +270,7 @@ end
 ### Big Discrete
 function Base.show(io::IO, ds::BigDiscreteDS{T, F, J}) where
     {T, F<:ANY, J<:ANY}
-    if ds.name == ""
-        text = "$(dimension(ds))-dimensional Big discrete system"
-    else
-        text = ds.name
-    end
+    text = "$(dimension(ds))-dimensional Big discrete system"
     print(io, text*"\n",
     " state: $(ds.state)\n", " eom!: $F\n")
 end
@@ -302,11 +278,7 @@ end
 @require Juno begin
     function Juno.render(i::Juno.Inline, ds::BigDiscreteDS{T, F, J}) where
         {T<:ANY, F<:ANY, J<:ANY}
-        if ds.name == ""
-            text = "$(dimension(ds))-dimensional Big discrete system"
-        else
-            text = ds.name
-        end
+        text = "$(dimension(ds))-dimensional Big discrete system"
         t = Juno.render(i, Juno.defaultrepr(ds))
         t[:head] = Juno.render(i, Text(text))
         t[:children] = t[:children][1:2] # remove showing field dummystate
@@ -316,11 +288,6 @@ end
 
 ### 1-D
 function Base.show(io::IO, s::DiscreteDS1D{S, F, J}) where {S<:ANY, F<:ANY, J<:ANY}
-    if s.name == ""
-        text = "1-dimensional discrete system"
-    else
-        text = s.name
-    end
     print(io, "1-dimensional discrete dynamical system:\n",
     "state: $(s.state)\n", "eom: $F\n")
 end
@@ -328,12 +295,7 @@ end
     function Juno.render(i::Juno.Inline, s::DiscreteDS1D{S, F, J}) where
         {S<:ANY, F<:ANY, J<:ANY}
         t = Juno.render(i, Juno.defaultrepr(s))
-        if s.name == ""
-            text = "1-dimensional discrete system"
-        else
-            text = s.name
-        end
-        t[:head] = Juno.render(i, Text(text))
+        t[:head] = Juno.render(i, Text("1-dimensional discrete system"))
         t[:children] = t[:children][1:2] # remove showing field dummystate
         t
     end

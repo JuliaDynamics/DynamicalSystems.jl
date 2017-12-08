@@ -9,6 +9,9 @@
   makes maintaining and expanding much harder. Since our source code is very
   clear and consise, if users really want those convergence timeseries they can
   create their own modified version of the functions.
+* Removed the "name" field (and keyword) from all types. It was an unneccessary
+  complication since the eom function/type name is displayed anyway.
+
 
 ## New Additions
 * New visualization routines that are compiled "on-demand" when users type `using PyPlot`:
