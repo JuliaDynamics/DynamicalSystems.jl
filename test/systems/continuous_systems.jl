@@ -126,8 +126,7 @@ end
         J[2,3] = -u[1]
         J[3,1] = u[2]; J[3,2] = u[1]
     end
-    name = "Old Lorenz63 system"
-    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz!, J; name = name)
+    return ContinuousDS(u0, eom_lorenz!, jacob_lorenz!, J)
   end
 
   ds = lorenzo()
