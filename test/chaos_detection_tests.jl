@@ -72,24 +72,26 @@ end
         qp = [0, .483000, .278980390, 0] #quasiperiodic orbit: 2D torus
         ch = [0, -0.25, 0.42081, 0] # chaotic orbit
         tt = 1000
+        ds = Systems.henonhelies()
         diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
         @testset "regular" begin
-            ds = Systems.henonhelies(sp)
+            ds.state .= sp
             for k in [2,3,4]
                 g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
                 @test t[end] ≥ tt
             end
-            ds = Systems.henonhelies(qp)
+            ds.state .= qp
             for k in [2,3,4]
                 g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
                 @test t[end] ≥ tt
             end
         end
         @testset "chaotic" begin
-            ds = Systems.henonhelies(ch)
+            ds.state .= ch
             for k in [2,3,4]
                 g, t = gali(ds, k, tt; diff_eq_kwargs = diffeq)
                 @test t[end] < tt
+                @test g[end] ≤ 1e-12
             end
         end
     end
