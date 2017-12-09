@@ -164,20 +164,27 @@ using PyPlot
 
 chaoticness(ds) = gali(ds, 2, 500.0)[2][end]
 
-dens = 201
-chaoticity = zeros(dens,dens)
-θs = ps = linspace(0, 2π, dens+1)
+function main(k)
 
-for (i, θ) ∈ enumerate(θs[1:dens])
-    for (j, p) ∈ enumerate(ps[1:dens])
-        ds = Systems.standardmap([θ, p])
-        chaoticity[i, j] = chaoticness(ds)
+    dens = 201
+    chaoticity = zeros(dens,dens)
+    θs = ps = linspace(0, 2π, dens+1)
+    ds = Systems.standardmap(k = k)
+
+    for (i, θ) ∈ enumerate(θs[1:dens])
+        for (j, p) ∈ enumerate(ps[1:dens])
+            ds.state = SVector{2}(θ, p)
+            chaoticity[i, j] = chaoticness(ds)
+        end
     end
+
+    pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
+    chaoticity')
+    colorbar()
+
 end
 
-pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
-chaoticity')
-colorbar()
+main(0.9)
 ```
-and after around `0.0005*201*201 ≈ 20` seconds you will get:
+and after about two minutes you will get:
 ![Chaos detection](https://i.imgur.com/z85KBRh.png)
