@@ -34,7 +34,7 @@ println("D2 - D1 = $(abs(D2- D1))")
 The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
 
 ### Estimating Reconstruction Parameters
-The following functions are provided estimate good values that can be used in
+The following functions estimate good values that can be used in
 [`Reconstruction`](@ref):
 ```@docs
 estimate_delay
