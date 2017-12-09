@@ -2,15 +2,15 @@ using StaticArrays, Requires
 using IterTools: chain
 export Dataset
 
-abstract type AbstractDataset{D} end
+abstract type AbstractDataset{D, T} end
 
 # Size:
 @inline Base.length(d::AbstractDataset) = length(d.data)
-@inline Base.size(d::AbstractDataset{D}) where {D} = (length(d.data), D)
+@inline Base.size(d::AbstractDataset{D,T}) where {D,T} = (length(d.data), D)
 @inline Base.size(d::AbstractDataset, i::Int) = size(d)[i]
 @inline Base.iteratorsize(d::AbstractDataset) = Base.HasLength()
 # 1D indexing  over the container elements:
-@inline Base.getindex(d::AbstractDataset, i::Int) = d.data[i]
+@inline Base.getindex(d::AbstractDataset, i) = d.data[i]
 @inline Base.endof(d::AbstractDataset) = endof(d.data)
 # 2D indexing exactly like if the dataset was a matrix
 # with each column a dynamic variable
@@ -29,16 +29,14 @@ Base.append!(d1::AbstractDataset, d2::AbstractDataset) = append!(d1.data, d2.dat
 
 # Other commonly used functions:
 @inline Base.push!(d::AbstractDataset, new_item) = push!(d.data, new_item)
-@inline dimension(::AbstractDataset{D}) where {D} = D
+@inline dimension(::AbstractDataset{D,T}) where {D,T} = D
+@inline Base.eltype(d::AbstractDataset{D,T}) where {D,T} = T
 
 """
-    Dataset{D, T} <: AbstractDataset{D}
+    Dataset{D, T} <: AbstractDataset{D,T}
 A dedicated interface for datasets, i.e. vectors of vectors.
 It contains **equally-sized datapoints** of length `D`,
 represented by `SVector{D, T}`, containing numbers of type `T`.
-
-`Dataset` has methods for iterating, `convert`, `push!`, `append!` and other
-basic functions.
 
 The internal data representation is more efficient than having a `Matrix` and
 also leads
@@ -64,7 +62,7 @@ column of the matrix represents a datapoint, use `reinterpret(Dataset, matrix)`.
 If you have various timeseries vectors `x, y, z, ...` pass them like
 `Dataset(x, y, z, ...)`.
 """
-struct Dataset{D, T<:Number} <: AbstractDataset{D}
+struct Dataset{D, T<:Number} <: AbstractDataset{D,T}
     data::Vector{SVector{D,T}}
 end
 # Empty dataset:
@@ -99,10 +97,8 @@ function Dataset(vecs::Vararg{Vector{T}}) where {T<:Real}
     return Dataset(data)
 end
 
-@inline Base.eltype(d::Dataset{D, T}) where {D,T} = T
-
 # Conversions:
-function Base.convert(::Type{Matrix}, d::Dataset{D,T}) where {D, T}
+function Base.convert(::Type{Matrix}, d::AbstractDataset{D,T}) where {D, T}
   mat = Matrix{T}(length(d), D)
   for i in 1:length(d)
     mat[i,:] .= d.data[i]
@@ -134,7 +130,12 @@ end
 
 
 ### Pretty printing
-function matstring(d::Dataset)
+function matname(d::Dataset{D, T}) where {D, T}
+    N = length(d)
+    return "$D-dimensional Dataset with $N points:"
+end
+
+function matstring(d::AbstractDataset)
     N = length(d); D = dimension(d)
     if N > 50
         mat = zeros(eltype(d), 50, D)
@@ -146,32 +147,24 @@ function matstring(d::Dataset)
     end
     s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
     s = join(split(s, '\n')[2:end], '\n')
-    tos = "$D-dimensional Dataset with $N points:"*"\n"*s
+    tos = matname(d)*"\n"*s
     return tos
 end
 
 @require Juno begin
-    function Juno.render(i::Juno.Inline, d::Dataset{D, T}) where {D, T}
-    N = length(d)
+    function Juno.render(i::Juno.Inline, d::AbstractDataset)
     tos = matstring(d)
     Juno.render(i, Juno.Tree(Text(tos), []))
     end
 end
 
-function Base.show(io::IO, d::Dataset{D, T}) where {D, T}
-    mat = convert(Matrix, d)
-    n = length(d)
-    s = sprint(io -> show(IOContext(io, limit=true), MIME"text/plain"(), mat))
-    s = join(split(s, '\n')[2:end], '\n')
-    println(io, "$D-dimensional Dataset with $n points:")
-    print(io, Text(s))
-end
+Base.show(io::IO, d::AbstractDataset) = println(io, matstring(d))
 
 
 #####################################################################################
 #                                 Minima and Maxima                                 #
 #####################################################################################
-function minima(data::Dataset{D, T}) where {D, T<:Real}
+function minima(data::AbstractDataset{D, T}) where {D, T<:Real}
     m = fill(T(Inf), D)
     for point in data
         for i in 1:D
@@ -183,7 +176,7 @@ function minima(data::Dataset{D, T}) where {D, T<:Real}
     return SVector{D,T}(m)
 end
 
-function maxima(data::Dataset{D, T}) where {D, T<:Real}
+function maxima(data::AbstractDataset{D, T}) where {D, T<:Real}
     m = fill(T(-Inf), D)
     for point in data
         for i in 1:D

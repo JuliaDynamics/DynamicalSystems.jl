@@ -207,11 +207,12 @@ continuous case, a `W×D` dataset is returned, with `W = length(0:dt:T)` with
 """
 function trajectory(ds::DiscreteDS, N::Real)
     st = ds.state
-    ts = [st]
+    ts = Vector{typeof(st)}(N)
+    ts[1] = st
     f = ds.eom
     for i in 2:N
         st = f(st)
-        push!(ts, st)
+        ts[i] = st
     end
     return Dataset(ts)
 end
@@ -230,12 +231,14 @@ end
 
 function trajectory(ds::BigDiscreteDS, N::Int)
     x = copy(ds.state)
+    SV = SVector{dimension(ds), eltype(x)}
     f! = ds.eom!
-    ts = [zeros(eltype(x), dimension(ds)) for i in 1:N]
-    ts[1] = x
+    ts = Vector{SV}(N)
+    ts[1] = SV(x)
     for i in 2:N
-        ds.dummystate .= ts[i-1]
-        f!(ts[i], ds.dummystate)
+        ds.dummystate .= x
+        f!(x, ds.dummystate)
+        ts[i] = SV(x)
     end
     return Dataset(ts)
 end

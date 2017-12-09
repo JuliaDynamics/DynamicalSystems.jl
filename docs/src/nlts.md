@@ -1,38 +1,5 @@
 # Nonlinear Timeseries Analysis
-## Delay Coordinates Reconstruction
-A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is
-what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem).
 
-In `DynamicalSystems.jl` this is done through the `reconstruct` interface:
-```@docs
-Reconstruction
-reconstruct
-```
-
-As an example, let's pass a `Reconstruction` into e.g. a method that calculates the
-attractor dimension:
-```julia
-using DynamicalSystems
-he = Systems.henon()
-ts = trajectory(he, 100000)
-D1 = information_dim(ts) # around 1.20
-x = ts[:, 1] # some "recorded" timeseries
-R = reconstruct(x, 2, 1) # delay coords. reconstruction
-R[1] # first point of reconstruction, ≡ (x[1], x[2])
-R[:, 2] # Second COLUMN of the reconstruction, ≡ x[2:end] since τ=1
-D2 = information_dim(R) #around 1.20
-println("D2 - D1 = $(abs(D2- D1))")
-# Prints something like 0.0032000971757613073
-```
-The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
-
-### Estimating Reconstruction Parameters
-The following functions are provided estimate good values that can be used in
-[`reconstruct`](@ref):
-```@docs
-estimate_delay
-```
----
 ## Neighborhoods of a point in a Dataset
 Incorporating the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) and the flexibility of `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
 ```@docs
@@ -41,15 +8,49 @@ neighborhood
 ```
 ---
 
+## Delay Coordinates Reconstruction
+A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is
+what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem).
+
+In `DynamicalSystems.jl` this is done through the `Reconstruction` interface:
+```@docs
+Reconstruction
+```
+
+As an example, let's pass a `Reconstruction` into e.g. a method that calculates the
+attractor dimension:
+```@example recon
+using DynamicalSystems
+he = Systems.henon()
+ts = trajectory(he, 100000)
+D1 = information_dim(ts) # around 1.20
+x = ts[:, 1] # some "recorded" timeseries
+R = Reconstruction(x, 2, 1) # delay coords. reconstruction
+R[1] # first point of reconstruction, ≡ (x[1], x[2])
+R[:, 2] # Second COLUMN of the reconstruction, ≡ x[2:end] since τ=1
+D2 = information_dim(R) #around 1.20
+println("D2 - D1 = $(abs(D2- D1))")
+```
+The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
+
+### Estimating Reconstruction Parameters
+The following functions are provided estimate good values that can be used in
+[`Reconstruction`](@ref):
+```@docs
+estimate_delay
+```
+---
+
+
 ## Numerical Lyapunov Exponent
-Given any timeseries, one can first [`reconstruct`](@ref) it, and then calculate a maximum
-Lyapunov exponent for it, provided that the system the timeseries was recorded
-from actually exhibits exponential separation of nearby trajectories. This is done
+Given any timeseries, one can first obtain a [`Reconstruction`](@ref) from it using
+delay coordinates, and then calculate a maximum
+Lyapunov exponent for it. This is done
 with
 ```@docs
 numericallyapunov
 ```
----
+
 The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
 ---
@@ -73,7 +74,7 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
 
   title("Distance: $(di)", size = 18)
   for D in [2, 4, 7]
-    R = reconstruct(x, D, 1)
+    R = Reconstruction(x, D, 1)
     E = numericallyapunov(R, ks;
     refstates = ℜ, distance = di, method = method)
     # The following operation:
@@ -107,7 +108,7 @@ The timeseries of length 100000 could be considered big. A time length of 100 se
 very small. Yet it turns out it is way too big! The following
 ```julia
 ks = 1:100
-R = reconstruct(x, 2, 1)
+R = Reconstruction(x, 2, 1)
 E = numericallyapunov(R, ks, method = FixedMassNeighborhood(2))
 figure()
 plot(ks-1, E-E[1])
@@ -141,7 +142,7 @@ x = trajectory(ds, 1000.0; dt = dt)[:, 1]
 # Reconstruct it
 figure()
 for D in [4, 8], τ in [τ1, 15]
-    R = reconstruct(x, D, τ)
+    R = Reconstruction(x, D, τ)
 
     # I now know that I have to use much bigger ks than 1:20, because this is a
     # continuous case! (See reference given in `numericallyapunovs`)

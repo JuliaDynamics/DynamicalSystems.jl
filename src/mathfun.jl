@@ -43,7 +43,7 @@ function min_pairwise_distance(cts::AbstractMatrix)
     return min_pair, min_d
 end
 
-min_pairwise_distance(d::Dataset) = min_pairwise_distance(d.data)
+min_pairwise_distance(d::AbstractDataset) = min_pairwise_distance(d.data)
 
 function min_pairwise_distance(
     pts::Vector{SVector{D,T}}) where {D,T<:Real}

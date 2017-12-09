@@ -19,7 +19,7 @@ Use e.g. `fit(Histogram, ...)` from
 wish to keep information about the edges of the binning as well
 as the zero elements.
 """
-function non0hist(ε::Real, data::Dataset{D, T}) where {D, T<:Real}
+function non0hist(ε::Real, data::AbstractDataset{D, T}) where {D, T<:Real}
     # Initialize:
     mini = minima(data)
     L = length(data)
@@ -80,7 +80,7 @@ Statistics and Probability*, pp 547 (1960)
 
 [2] : C. E. Shannon, Bell Systems Technical Journal **27**, pp 379 (1948)
 """
-function genentropy(α::Real, ε::Real, data::Dataset)
+function genentropy(α::Real, ε::Real, data::AbstractDataset)
     ε < 0 && throw(ArgumentError("Box-size for entropy calculation must be ≥ 0."))
     p = non0hist(ε, data)
     return genentropy(α, p)

@@ -147,7 +147,7 @@ Return a `k`-element `logspace` from the magnitude + `z` of the biggest absolute
 value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
-function estimate_boxsizes(data::Dataset{D, T};
+function estimate_boxsizes(data::AbstractDataset{D, T};
     k::Int = 12, z = 0, w = 2) where {D, T<:Number}
 
     mindist = min_pairwise_distance(data)[2]
@@ -195,7 +195,7 @@ The following aliases are provided:
   * α = 1 : `information_dim`
   * α = 2 : `correlation_dim`
 """
-function generalized_dim(α, data::Dataset)
+function generalized_dim(α, data::AbstractDataset)
     es = estimate_boxsizes(data)
     dd = zeros(es)
     for i in 1:length(es)
@@ -204,7 +204,7 @@ function generalized_dim(α, data::Dataset)
     return linear_region(-log.(es), dd)[2]
 end
 generalized_dim(α, matrix::AbstractMatrix) =
-generalized_dim(α, convert(Dataset, matrix))
+generalized_dim(α, convert(AbstractDataset, matrix))
 
 # Aliases
 "correlation_dim(args...) = generalized_dim(2, args...)"

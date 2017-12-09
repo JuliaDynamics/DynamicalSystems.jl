@@ -1,17 +1,26 @@
 # v0.7.0
 ## BREAKING
 * Changed the definition of all pre-defined systems. Now the documentation
-  also suggests users to use Fnctors for system definition.
+  also suggests users to use Functors for system definition.
 * The only mutable system types are `DiscreteDS` and `DiscereteDS1D`. The others
   are immutable.
 * Completely removed the possibility to return the convergence timeseries for
   functions like `lyapunov`. This tripled the necessary amount of code and
   makes maintaining and expanding much harder. Since our source code is very
-  clear and consise, if users really want those convergence timeseries they can
+  clear and concise, if users really want those convergence timeseries they can
   create their own modified version of the functions.
 * Removed the "name" field (and keyword) from all types. It was an unneccessary
   complication since the eom function/type name is displayed anyway.
-
+* `Reconstruction` and `reconstruct` immediately create the data upon call.
+  Now `Reconstruction` is almost identical to a dataset but it has one more
+  type-parameter `τ`.
+  * This made the source code much cleaner and more concise!
+  * The constructor `Reconstruction` is the function to be used. The function
+  `reconstruct` is only used internally.
+  * Using generated functions creating a `Reconstruction` is crazy fast!
+* `AbstractDataset` now has 2 parameters, `{D, T}` (for dimension and type).
+  * All-round improvement of method definitions. Everything is now done through
+  the `Abstract` type, allowing more flexibility.
 
 ## New Additions
 * New visualization routines that are compiled "on-demand" when users type `using PyPlot`:

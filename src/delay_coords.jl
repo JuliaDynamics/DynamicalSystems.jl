@@ -6,113 +6,38 @@ import NearestNeighbors: KDTree
 
 export reconstruct, Cityblock, Euclidean, AbstractNeighborhood
 export FixedMassNeighborhood, FixedSizeNeighborhood, numericallyapunov
-export estimate_delay, neighborhood, Reconstruction, KDTree, Reconstruction
+export estimate_delay, neighborhood, Reconstruction, KDTree
 #####################################################################################
 #                            Reconstruction Object                                  #
 #####################################################################################
 """
-    Reconstruction{V, T, D, τ} <: AbstractDataset{D}
-`D`-dimensional reconstruction object with delay `τ`, created from a vector `s::V`.
-`s` is the only field of `Reconstruction`.
+    Reconstruction{D, T, τ} <: AbstractDataset{D, T}
+`D`-dimensional delay-coordinates reconstruction object with delay `τ`,
+created from a timeseries `s` with `T` type numbers.
+
+Use `Reconstruction(s::AbstractVector{T}, D, τ)` to create an instance.
 
 ## Description
-The ``n``th row of a `Reconstruction` is formally the `D`-dimensional vector
+The ``n``th row of a `Reconstruction` is the `D`-dimensional vector
 ```math
 (s(n), s(n+\\tau), s(n+2\\tau), \\dots, s(n+(D-1)\\tau))
 ```
-which is created only on demand.
 
-See [`reconstruct`](@ref) for usage.
-"""
-type Reconstruction{V<:AbstractVector, T<:Real, D, τ} <: AbstractDataset{D}
-    s::V
-end
-
-# Type information:
-@inline Base.eltype(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ} = T
-@inline Base.length(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ} =
-length(R.s) - (D-1)*τ
-@inline dimension(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ} = D
-@inline delay(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ} = τ
-@inline Base.size(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ} = (length(R), D)
-# Indexing:
-@inline function Base.getindex(
-    R::Reconstruction{V, T, D, τ}, n::Int) where {V, T, D, τ}
-    gen = (R.s[n+k*τ] for k in 0:(D-1))
-    SVector{D,T}(gen...)
-end
-@inline function Base.getindex(
-    R::Reconstruction{V, T, D, τ}, n::Int, j::Int) where {V, T, D, τ}
-    return R.s[n + (j-1)*τ]
-end
-@inline function Base.getindex(
-    R::Reconstruction{V, T, D, τ}, n::Int, j::Colon) where {V, T, D, τ}
-    return R[n]
-end
-@inline function Base.getindex(
-    R::Reconstruction{V, T, D, τ}, n::Colon, j::Int) where {V, T, D, τ}
-    return R.s[1+(j-1)*τ:length(R)+(j-1)*τ]
-end
-# Conversions:
-@inbounds function Dataset(R::Reconstruction{V, T, D, τ}) where {V, T, D, τ}
-    L = length(R)
-    data = Vector{SVector{D, T}}(L)
-    for i in 1:L
-        data[i] = R[i]
-    end
-    return Dataset(data)
-end
-# Extend methods:
-non0hist(ε, R::Reconstruction) = non0hist(ε, Dataset(R))
-genentropy(α, ε, R::Reconstruction) = genentropy(α, ε, Dataset(R))
-generalized_dim(α, R::Reconstruction) = generalized_dim(α, Dataset(R))
-
-# Pretty-print
-import Base.show
-function Base.show(io::IO, R::Reconstruction{V, T, D, τ}) where {V, T, D, τ}
-    print(io, "$(D)-dimensional Reconstruction with delay τ=$(τ)")
-end
-
-@require Juno begin
-  function Juno.render(
-    i::Juno.Inline,  R::Reconstruction{V, T, D, τ}) where {V, T, D, τ}
-    t = Juno.render(i, Juno.defaultrepr(R))
-    t[:head] = Juno.render(i,
-    Text("$(D)-dimensional Reconstruction with delay τ=$(τ) from vector s"))
-    return t
-  end
-end
-
-"""
-    reconstruct(s::AbstractVector, D::Int, τ::Int) -> R::Reconstruction
-Create and return an efficient [`Reconstruction`](@ref) data structure that serves as
-the
-delay coordinates embedding reconstruction of the signal `s`.
-The reconstuction has
-dimension `D` and delay `τ` (measured in indices).
-
-## Description
 The reconstruction object `R` can have same
 invariant quantities (like e.g. lyapunov exponents) with the original system
 that the timeseries were recorded from, for proper `D` and `τ` [1, 2].
 
 `R` can be accessed similarly to a [`Dataset`](@ref):
 ```julia
-R = reconstruct(s, 4, 1) # dimension 4 and delay 1
+s = rand(1e6)
+R = Reconstruction(s, 4, 1) # dimension 4 and delay 1
 R[3] # third point of reconstruction, ≡ (s[3], s[4], s[5], s[6])
 R[1, 2] # Second element of first point of reconstruction, ≡ s[2]
 ```
-*(this is only smart indexing, no Vectors or SVectors are created during the
-construction of `R`)*
+and can also be given to all functions that accept a `Dataset`,
+like [`generalized_dim`](@ref).
 
-`R` can also be given to all functions that accept a `Dataset`, but
-it is first converted to a `Dataset` at each call.
-This means that you should first convert it yourself, using `Dataset(R)` if you
-call functions like [`generalized_dim`](@ref) multiple times.
-
-The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively. Notice
-that `length(R) = length(s) - (D-1)*τ` (i.e. the amount of D-dimensional points
-"contained" in `R`) but `size(R) = (length(R), D)`.
+The functions `dimension(R)` and `delay(R)` return `D` and `τ` respectively.
 
 ## References
 
@@ -121,11 +46,41 @@ Systems and Turbulence*, Lecture Notes in Mathematics **366**, Springer (1981)
 
 [2] : T. Sauer *et al.*, J. Stat. Phys. **65**, pp 579 (1991)
 """
-function reconstruct(s::AbstractVector, D::Int,  τ::Int)
-    V = typeof(s)
-    T = eltype(s)
-    return Reconstruction{V, T, D, τ}(s)
+type Reconstruction{D, T<:Number, τ} <: AbstractDataset{D, T}
+    data::Vector{SVector{D,T}}
 end
+
+Reconstruction(s::AbstractVector{T}, D, τ) where {T} =
+Reconstruction{D, T, τ}(reconstruct(s, Val{D}(), τ))
+
+@inline Base.eltype(::Reconstruction{D, T, t}) where {T,D,t} = T
+@inline delay(::Reconstruction{D, T, t}) where {T,D,t} = t
+
+function reconstruct_impl(::Type{Val{D}}) where D
+    gens = [:(s[i + $k*τ]) for k=0:D-1]
+
+    quote
+        L = length(s) - ($(D-1))*τ;
+        T = eltype(s)
+        data = Vector{SVector{$D, T}}(L)
+        for i in 1:L
+            data[i] = SVector{$D,T}($(gens...))
+        end
+        V = typeof(s)
+        T = eltype(s)
+        data
+    end
+end
+
+@generated function reconstruct(s::AbstractVector{T}, ::Val{D}, τ) where {D, T}
+    reconstruct_impl(Val{D})
+end
+
+
+# Pretty print:
+matname(d::Reconstruction{D, T, τ}) where {D, T, τ} =
+"$(D)-dimensional delay coordinates reconstruction with delay τ=$(τ)"
+
 
 #####################################################################################
 #                      Estimate Reconstruction Parameters                           #
@@ -214,10 +169,7 @@ end
 #                    Numerical Lyapunov (from Reconstruction)                       #
 #####################################################################################
 # Everything in this section is based on Ulrich Parlitz [1]
-# along with some clever indexing and dispatching that allows for minimal
-# computations of distances.
-# [1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
-# (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)
+
 
 
 
@@ -229,8 +181,8 @@ Supertype of methods for deciding the neighborhood of points for a given point.
 Concrete subtypes:
 * `FixedMassNeighborhood(K::Int)`  : The neighborhood of a point consists of the `K`
   nearest neighbors of the point.
-* `FixedSizeNeighborhood(ϵ::Real)` : The neighborhood of a point consists of all
-  neighbors that have distance < `ϵ` from the point.
+* `FixedSizeNeighborhood(ε::Real)` : The neighborhood of a point consists of all
+  neighbors that have distance < `ε` from the point.
 
 Notice that these distances are always computed using the `Euclidean()` distance
 in `D`-dimensional space.
@@ -243,7 +195,7 @@ struct FixedMassNeighborhood <: AbstractNeighborhood
 end
 FixedMassNeighborhood() = FixedMassNeighborhood(1)
 struct FixedSizeNeighborhood <: AbstractNeighborhood
-    ϵ::Float64
+    ε::Float64
 end
 FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 
@@ -252,27 +204,20 @@ FixedSizeNeighborhood() = FixedSizeNeighborhood(0.001)
 Return a vector of indices which are the neighborhood of `point`, whose index
 in the original data is `n`.
 
+If the original data is `data <: AbstractDataset`, then
+use `tree = KDTree(data)` to obtain the `tree` instance (which also
+contains a copy of the data).
 Both `point` and `n` must be provided because the
 `tree` has indices in different sorting.
 
-The `method` can be a subtype of [`AbstractNeighborhood`](@ref):
+The `method` can be a subtype of [`AbstractNeighborhood`](@ref).
 
-* `FixedMassNeighborhood(K::Int)`  : The neighborhood of a point consists of the `K`
-  nearest neighbors of the point.
-* `FixedSizeNeighborhood(ϵ::Real)` : The neighborhood of a point consists of all
-  neighbors that have distance < `ϵ` from the point.
-
-`neighborhood` works for *any* kind of `AbstractDataset`, for example
+`neighborhood` works for *any* subtype of `AbstractDataset`, for example
 ```julia
 R = some_dataset
 tree = KDTree(R)
 neigh = neighborhood(n, R[n], tree, method)
 ```
-where `R` can be *either* a [`Dataset`](@ref) or a [`Reconstruction`](@ref).
-
-Notice that the distances in the trees are always computed using the `Euclidean()`
-distance in `D`-dimensional space, irrespectively of the `distance` used in the
-[`numericallyapunov`](@ref) function.
 
 ## References
 
@@ -288,15 +233,14 @@ function neighborhood(
 end
 function neighborhood(
     n, point, tree::KDTree, method::FixedSizeNeighborhood)
-    idxs = inrange(tree, point, method.ϵ)
+    idxs = inrange(tree, point, method.ε)
     deleteat!(idxs, findin(idxs, n)) # unfortunately this has to be done...
     return idxs
 end
 neighborhood(n, point, tree::KDTree) =
 neighborhood(n, point, tree, FixedMassNeighborhood(1))
 
-KDTree(D::Dataset) = KDTree(D.data, Euclidean())
-KDTree(R::Reconstruction) = KDTree(Dataset(R).data, Euclidean())
+KDTree(D::AbstractDataset) = KDTree(D.data, Euclidean())
 
 
 
@@ -352,12 +296,12 @@ full `D`-dimensional points (distance ``d_E`` in ref. [1]).
 If however the `Metric` is `Cityblock()`, calculate
 the absolute distance of *only the first elements* of the `m+k` and `n+k` points
 of the
-reconstruction `R`, which are the `m+k` and `n+k` elements of vector `R.s` (distance
+reconstruction `R`(distance
 ``d_F`` in
 ref. [1]). Notice that
 the distances used are defined in the package
-[Distances.jl](https://github.com/JuliaStats/Distances.jl), but are re-exported
-in DynamicalSystems.jl for ease-of-use.
+[Distances.jl](https://github.com/JuliaStats/Distances.jl), but are re-exported here
+for ease-of-use.
 
 This function assumes that the Theiler window (see [1]) is the same as the delay time:
 ``w  = \\tau``.
@@ -376,11 +320,11 @@ function numericallyapunov(R::Reconstruction, ks;
     Ek = numericallyapunov(R, ks, refstates, distance, method)
 end
 
-function numericallyapunov(R::Reconstruction{V, T, D, τ},
+function numericallyapunov(R::Reconstruction{D, T, τ},
                            ks::AbstractVector{Int},
                            ℜ::AbstractVector{Int},
                            distance::Metric,
-                           method::AbstractNeighborhood) where {V, T, D, τ}
+                           method::AbstractNeighborhood) where {D, T, τ}
 
     # ℜ = \Re<tab> = set of indices that have the points that one finds neighbors.
     # n belongs in ℜ and R[n] is the "reference state".
@@ -401,8 +345,8 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
     end
     E = zeros(T, length(ks))
     E_n = copy(E); E_m = copy(E)
-    td = Dataset(R).data #tree data
-    tree = KDTree(td, Euclidean()) # this creates a copy of `td`
+    data = R.data #tree data
+    tree = KDTree(data, Euclidean()) # this creates a copy of `data`
     skippedm = 0; skippedn = 0
 
     for n in ℜ
@@ -410,7 +354,7 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
         # for all reference states. (it would take too much memory)
         # Since U[n] doesn't depend on `k` one can then interchange the loops:
         # Instead of k being the outermost loop, it becomes the innermost loop!
-        point = td[n]
+        point = data[n]
         ⋓ = neighborhood(n, point, tree, method)
         for m in ⋓
             # If `m` is nearer to the end of the timeseries than k allows
@@ -446,14 +390,10 @@ function numericallyapunov(R::Reconstruction{V, T, D, τ},
 end
 
 @inline @inbounds function delay_distance(di::Cityblock, R, m, n, k)
-    abs(R.s[m+k] - R.s[n+k])
+    abs(R[m+k][1] - R[n+k][1])
 end
 
 @inline @inbounds function delay_distance(di::Euclidean,
-    R::Reconstruction{V, T, D, τ}, m, n, k) where {V, T, D, τ}
-    suma = zero(T)
-    for j in 0:D-1
-        suma += (R.s[m+k+j*τ] - R.s[n+k+j*τ])^2
-    end
-    sqrt(suma)
+    R::Reconstruction{D, T, τ}, m, n, k) where {D, T, τ}
+    return norm(R[m+k] - R[n+k])
 end
