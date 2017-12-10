@@ -120,35 +120,19 @@ function slope(xfit, yfit)
     curve_fit(model, xfit, yfit, p0).param[1]
 end
 
-# This function exists ONLY FOR TESTING! Do not use it elsewhere!
-function _plot_lrs(x, y, lrs, tangents)
-  for i ∈ 1:length(lrs)-1
-    plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
-  end
-end
-
-function _plot_lrs(x, y, tol)
-  lrs, tang = linear_regions(x, y; tol = tol)
-  _plot_lrs(x, y, lrs, tang)
-end
-
-function _plot_lrs(x, y)
-  _plot_lrs(x, y, linear_regions(x, y)...)
-end
-
 #######################################################################################
 # Dimensions
 #######################################################################################
 magnitude(x::Real) = round(log10(x))
 
 """
-    estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 2)
+    estimate_boxsizes(dataset; k::Int = 12, z = 0, w = 1)
 Return a `k`-element `logspace` from the magnitude + `z` of the biggest absolute
 value of the dataset, to the magnitude + `w` of the
 minimum pair-wise distance between datapoints.
 """
 function estimate_boxsizes(data::AbstractDataset{D, T};
-    k::Int = 12, z = 0, w = 2) where {D, T<:Number}
+    k::Int = 12, z = 0, w = 1) where {D, T<:Number}
 
     mindist = min_pairwise_distance(data)[2]
     maxv = -Inf
@@ -167,19 +151,22 @@ estimate_boxsizes(ts::AbstractMatrix; kwargs...) =
 estimate_boxsizes(convert(Dataset, ts); kwargs...)
 
 """
-    generalized_dim(α, dataset) -> D_α
-Return the `α` order generalized dimension of the `dataset`.
+    generalized_dim(α, dataset [, sizes]) -> D_α
+Return the `α` order generalized dimension of the `dataset`, by calculating
+the [`genentropy`](@ref) for each `ε ∈ sizes`.
 
 ## Description
 The returned dimension is approximated by the
 (inverse) power law exponent of the scaling of the [`genentropy`](@ref)
-versus the box size `ε`.
+versus the box size `ε`, where `ε ∈ sizes`.
 
 Calling this function performs a lot of automated steps:
 
-  1. A vector of box sizes is decided by calling `es = estimate_boxsizes(dataset)`.
-  2. For each element of `es` the appropriate entropy is
-     calculated, through `d[i] = genentropy(α, es[i], dataset)`. Let `x = -log.(es)`.
+  1. A vector of box sizes is decided by calling `sizes = estimate_boxsizes(dataset)`,
+     if `sizes` is not given.
+  2. For each element of `sizes` the appropriate entropy is
+     calculated, through `d[i] = genentropy(α, sizes[i], dataset)`.
+     Let `x = -log.(sizes)`.
   3. The curve `d(x)` is decomposed into linear regions,
      using [`linear_regions`](@ref)`(x, d)`.
   4. The biggest linear region is chosen, and a fit for the slope of that
@@ -195,16 +182,15 @@ The following aliases are provided:
   * α = 1 : `information_dim`
   * α = 2 : `correlation_dim`
 """
-function generalized_dim(α, data::AbstractDataset)
-    es = estimate_boxsizes(data)
-    dd = zeros(es)
-    for i in 1:length(es)
-        dd[i] = genentropy(α, es[i], data)
+function generalized_dim(α, data::AbstractDataset, sizes = estimate_boxsizes(data))
+    dd = zeros(sizes)
+    for i in 1:length(sizes)
+        dd[i] = genentropy(α, sizes[i], data)
     end
-    return linear_region(-log.(es), dd)[2]
+    return linear_region(-log.(sizes), dd)[2]
 end
-generalized_dim(α, matrix::AbstractMatrix) =
-generalized_dim(α, convert(AbstractDataset, matrix))
+generalized_dim(α, matrix::AbstractMatrix, args...) =
+generalized_dim(α, convert(AbstractDataset, matrix), args...)
 
 # Aliases
 "correlation_dim(args...) = generalized_dim(2, args...)"

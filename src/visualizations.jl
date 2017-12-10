@@ -1,4 +1,4 @@
-export phasespace
+export phasespace, plot_linear_regions
 
 """
     phasespace(ds, limits, density::Int, t::Int; kwargs...)
@@ -40,4 +40,23 @@ function phasespace(ds::DiscreteDS{2, T, F, J}, ics::Vector{<:SVector}, t;
     ax[:plot](data[:,1], data[:,2];
     marker = "s", ms = 0.5, color="black", kwargs..., lw=0)
     return nothing
+end
+
+
+
+# This function exists ONLY FOR TESTING! Do not use it elsewhere!
+function _plot_lrs(x, y, lrs, tangents)
+  for i ∈ 1:length(lrs)-1
+    plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
+  end
+end
+
+"""
+    plot_linear_regions(x, y; dxi = 1, tol = 0.2)
+Visualize the outcome of calling `linear_regions` by plotting each
+linear segment with a different color (on the current axes).
+"""
+function plot_linear_regions(x, y; dxi = 1, tol = 0.2)
+    plot(x,y, lw=0, ms= 5, marker="o", color = "black")
+  _plot_lrs(x, y, linear_regions(x, y;  dxi = dxi, tol = tol)...)
 end

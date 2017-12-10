@@ -1,3 +1,8 @@
+# WIP
+## Bugfixes and Enchancements
+* `geneneralized_dim` allows one to pass the box sizes to be used.
+  *  Also improved the default values for `estimate_boxsizes`.
+  
 # v0.7.0
 ## BREAKING
 * Changed the definition of all pre-defined systems. Now the documentation
