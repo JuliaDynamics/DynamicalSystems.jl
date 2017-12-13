@@ -1,4 +1,5 @@
 export phasespace, plot_linear_regions
+using PyPlot
 
 """
     phasespace(ds, limits, density::Int, t::Int; kwargs...)
@@ -47,7 +48,7 @@ end
 # This function exists ONLY FOR TESTING! Do not use it elsewhere!
 function _plot_lrs(x, y, lrs, tangents)
   for i ∈ 1:length(lrs)-1
-    plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
+    PyPlot.plot(x[lrs[i]:lrs[i+1]], y[lrs[i]:lrs[i+1]])
   end
 end
 
@@ -57,6 +58,6 @@ Visualize the outcome of calling `linear_regions` by plotting each
 linear segment with a different color (on the current axes).
 """
 function plot_linear_regions(x, y; dxi = 1, tol = 0.2)
-    plot(x,y, lw=0, ms= 5, marker="o", color = "black")
+    PyPlot.plot(x,y, lw=0, ms= 5, marker="o", color = "black")
   _plot_lrs(x, y, linear_regions(x, y;  dxi = dxi, tol = tol)...)
 end

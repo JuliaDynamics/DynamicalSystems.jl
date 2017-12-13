@@ -30,7 +30,7 @@ function non0hist(ε::Real, data::AbstractDataset{D, T}) where {D, T<:Real}
     d = Dict{SVector{D, Int}, Int}()
     for point in data
         # index of datapoint in the ranges space:
-        # It is necessary to convert floor to Int (dunno why)
+        # It is necessary to convert Floor to Int (representation issues)
         ind::SVector{D, Int} = floor.(Int, (point - mini)/ε)
 
         # Add 1 to the bin that contains the datapoint:
