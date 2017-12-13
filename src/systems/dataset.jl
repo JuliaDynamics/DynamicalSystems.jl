@@ -81,24 +81,27 @@ function Dataset(v::Vector{Vector{T}}) where {T<:Number}
     return Dataset{D, T}(data)
 end
 
-function Dataset(vecs::Vararg{Vector{T}}) where {T<:Real}
-    length(vecs) == 1 && throw(ArgumentError("Give more than 1 vectors to Dataset."))
-    L = length(vecs[1])
-    D = length(vecs)
-    for i in 2:length(vecs)
-        length(vecs[i]) != L && throw(argumentError(
-        "All vectors that make the dataset must have equal length"))
+@generated function _dataset(::Val{D}, vecs::Vararg{AbstractVector{T}}) where {D, T}
+    gens = [:(vecs[$k][i]) for k=1:D]
+
+    quote
+        L = length(vecs[1])
+        data = Vector{SVector{$D, T}}(L)
+        for i in 1:L
+            data[i] = SVector{$D, T}($(gens...))
+        end
+        data
     end
-    data = SVector{D, T}[]
-    for i in 1:L
-        t = (vecs[j][i] for j in 1:D) #datapoint generator
-        push!(data, SVector{D, T}(t...))
-    end
-    return Dataset(data)
 end
 
+function Dataset(vecs::Vararg{AbstractVector{T}}) where {T}
+    D = length(vecs)
+    return Dataset(_dataset(Val{D}(), vecs...))
+end
+
+
 # Conversions:
-function Base.convert(::Type{Matrix}, d::AbstractDataset{D,T}) where {D, T}
+@inbounds function Base.convert(::Type{Matrix}, d::AbstractDataset{D,T}) where {D, T}
   mat = Matrix{T}(length(d), D)
   for i in 1:length(d)
     mat[i,:] .= d.data[i]
@@ -135,8 +138,8 @@ function matname(d::Dataset{D, T}) where {D, T}
     return "$D-dimensional Dataset with $N points:"
 end
 
-function matstring(d::AbstractDataset)
-    N = length(d); D = dimension(d)
+function matstring(d::AbstractDataset{D, T}) where {D, T}
+    N = length(d)
     if N > 50
         mat = zeros(eltype(d), 50, D)
         for (i, a) in enumerate(chain(1:25, N-24:N))
