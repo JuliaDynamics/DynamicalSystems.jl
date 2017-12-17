@@ -9,13 +9,14 @@ many alternatives that are both more efficient and more accurate in characterizi
 chaotic and regular motion, some of which are included in DynamicalSystems.jl.
 
 ## Generalized Alignment Index
-"GALI" for sort is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
+"GALI" for sort, is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
 motion. It is one
 of the most recent and cheapest methods for distinguishing chaos, introduced first in
 2007 by Skokos, Bountis & Antonopoulos.
 ```@docs
 gali
 ```
+---
 ### Discrete Example
 We will use 3 coupled standard maps as an example for a discrete system:
 ```julia
@@ -26,7 +27,6 @@ stable = [π, π, π, 0.01, 0, 0] .+ 0.1
 chaotic = rand(2M)
 
 ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
-# ds = BigDiscreteDS(ds.state, ds.eom!)
 tr = trajectory(ds, 100000)
 
 subplot(2,2,1)

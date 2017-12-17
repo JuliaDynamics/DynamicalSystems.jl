@@ -1,44 +1,13 @@
 __precompile__()
 
 """
-A Julia package for the exploration of continuous
-and discrete dynamical systems.
+A Julia suite for chaos and nonlinear dynamics
 """
 module DynamicalSystems
 
-"""
-Abstract type representing a dynamical system.
-"""
-abstract type DynamicalSystem end
+using Reexport
 
-export DynamicalSystem, Systems
+@reexport using DynamicalSystemsDef
+@reexport using ChaosTools
 
-# Mathematics:
-include("systems/dataset.jl")
-include("mathfun.jl")
-
-# System definition and evolution:
-include("systems/discrete.jl")
-include("systems/continuous.jl")
-include("systems/famous_systems.jl")
-
-# Lyapunovs:
-include("lyapunovs.jl")
-
-# Entropies and Dimension Estimation:
-include("dimensions/entropies.jl")
-include("dimensions/dims.jl")
-
-# Nonlinear Timeseries Analysis:
-include("delay_coords.jl")
-
-# Periodicity:
-include("periodic.jl")
-
-# Chaos Detection:
-include("chaos_detection.jl")
-
-# Visualization routines:
-using Requires
-@require PyPlot include("visualizations.jl")
 end # module

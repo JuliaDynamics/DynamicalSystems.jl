@@ -1,8 +1,23 @@
-# WIP
+# v0.8.0
+
+DynamicalSystems.jl was separated into 3 packages, to prepare for the arrival
+of more packages into the ecosystem.
+
+The packages now are:
+1. This one.
+2. DynamicalSystemsDef.jl
+3. ChaosTools.jl
+
+Now DynamicalSystems.jl is simply a package coordinator that loads and exports
+all packages of the ecosystem, as well as documentation host.
+
+From now on, the changes will be logged at each individual package's CHANGELOG.md
+file for clarity.
+
 ## Bugfixes and Enchancements
 * `geneneralized_dim` allows one to pass the box sizes to be used.
   *  Also improved the default values for `estimate_boxsizes`.
-  
+
 # v0.7.0
 ## BREAKING
 * Changed the definition of all pre-defined systems. Now the documentation

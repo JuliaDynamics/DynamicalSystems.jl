@@ -5,7 +5,7 @@ properties of the [periodic orbits](http://www.scholarpedia.org/article/Unstable
 existing in the chaotic sea.
 
 Finding unstable (or stable) periodic orbits of a discrete mapping analytically
-rapidly becomes *impossible* for higher orders of fixed points.
+rapidly becomes impossible for higher orders of fixed points.
 Fortunately there is a numeric algorithm due to
 Schmelcher & Diakonos which allows such a computation. Notice that even though
 the algorithm can find stable fixed points, it is mainly aimed at *unstable* ones.

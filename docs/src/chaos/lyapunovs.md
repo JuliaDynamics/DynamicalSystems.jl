@@ -6,14 +6,14 @@ The naming comes after Aleksandr M. Lyapunov, a Russian mathematician/physicist 
 
 This page treats systems where the equations of motion are known. If instead
 you have numerical data, see the [nonlinear timeseries analysis page](nlts).
----
+
 ## Lyapunov Spectrum
 The function `lyapunovs` calculates the entire spectrum of the Lyapunov
 exponents of a system:
 ```@docs
 lyapunovs
 ```
-
+---
 As you can see, the documentation string is detailed and self-contained. For example,
 the lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
 is calculated as:
@@ -29,14 +29,14 @@ lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
 λλ = lyapunovs(lor, 10000,
 dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
 ```
----
+
 ## Maximum Lyapunov Exponent
 The function `lyapunov` calculates the maximum lyapunov exponent of a system, much
 more efficiently than getting the first result of `lyapunovs`:
 ```@docs
 lyapunov
 ```
-
+---
 For example:
 ```@example lyap
 using DynamicalSystems

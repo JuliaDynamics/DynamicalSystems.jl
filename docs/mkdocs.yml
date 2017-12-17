@@ -35,11 +35,19 @@ docs_dir: 'build'
 
 pages:
 - Introduction: index.md
-- System Definition: system_definition.md
-- Lyapunov Exponents: lyapunovs.md
-- Entropies and Dimensions: entropies.md
-- Nonlinear Timeseries Analysis: nlts.md
-- Periodicity: periodicity.md
-- Chaos Detection: chaos_detection.md
-- Visualization: visualization.md
+- System Definition:
+  - General Remarks: definition/general.md
+  - Continuous Systems: definition/continuous.md
+  - Discrete Systems: definition/discrete.md
+  - Time Evolution: definition/evolve.md
+  - Numerical Data: definition/dataset.md
+  - Predefined Systems: definition/predefined.md
+- ChaosTools:
+  - Features Overview: chaos/overview.md
+  - Lyapunov Exponents: chaos/lyapunovs.md
+  - Entropies and Dimensions: chaos/entropies.md
+  - Nonlinear Timeseries Analysis: chaos/nlts.md
+  - Periodicity: chaos/periodicity.md
+  - Chaos Detection: chaos/chaos_detection.md
+  - Visualization: chaos/visualization.md
 - Contributor Guide: contributors_guide.md

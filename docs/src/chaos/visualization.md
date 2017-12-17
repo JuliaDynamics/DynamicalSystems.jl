@@ -1,4 +1,4 @@
-DynamicalSystems.jl offers some basic methods for visualizing chaotic systems in
+**DynamicalSystems.jl** offers some basic methods for visualizing chaotic systems in
 the form of the functions described in this documentation page.
 
 All plotting is done through the [PyPlot.jl](https://github.com/JuliaPy/PyPlot.jl)
@@ -12,3 +12,4 @@ strings for e.g. using keyword arguments.
 
 ## Visualization Library
 * `phasespace` : Plots the phasespace of a 2D `DiscreteDS`.
+* `plot_linear_regions` : Plots the results of `lnear_regions`.
