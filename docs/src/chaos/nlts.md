@@ -12,7 +12,7 @@ AbstractNeighborhood
 A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is
 what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem).
 
-In `DynamicalSystems.jl` this is done through the `Reconstruction` interface:
+This is done through the `Reconstruction` interface:
 ```@docs
 Reconstruction
 ```
@@ -53,7 +53,7 @@ numericallyapunov
 ---
 The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
----
+
 ### Example of Numerical Lyapunov computation
 ```julia
 using DynamicalSystems, PyPlot

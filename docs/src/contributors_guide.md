@@ -62,6 +62,8 @@ this package please do not hesitate to [join our chatroom](https://gitter.im/Jul
 Notice that the above are not conclusive, but only examples!
 
 ## How you should contribute **code**
+Code should be contributed to the appropriate repository, e.g. [DynamicalSystemsBase.jl](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl),
+[ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl) etc.. Recall that the repository of DynamicalSystems.jl is mainly a documentation host.
 
 * For new methods and systems please follow the convention
   of the documentation strings (do e.g. `?lyapunov` to see how they are
@@ -73,8 +75,6 @@ Notice that the above are not conclusive, but only examples!
   to the main function's documentation string.
   See the existing documentation strings and do
   it in an identical manner.
-* If you are adding a new system type accompanied by new methods and quantities, please
-  introduce a new file in the `/src` folder, or even better create your own subfolder, instead of adding code to the existing files.
 
 When enhancing already existing code, make sure to:
 

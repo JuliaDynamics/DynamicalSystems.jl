@@ -7,10 +7,7 @@ Notice that these quantities are not the more commonly known
 information contained within a dataset, or information about the dimensional
 scaling of a dataset.
 
-`DynamicalSystems.jl` defines a lot entropies, summarized in the following sections.
-
-### Generalized Entropy & Co.
-The generalized entropy is a concept mainly attributed to Rényi (see below).
+### Generalized Entropy
 ```@docs
 genentropy
 ```
@@ -20,13 +17,15 @@ partition it into boxes to calculate an entropy.
 
 !!! tip "Worried about memory overflow? Don't be!"
     Partitioning the dataset (i.e. doing a *histogram*) is in general a costly
-    operation that depends exponentially on the number of dimensions of the system.
+    operation that depends exponentially on the number of dimensions of the data
+    and algebraically to the box size `ε`.
     However, in this specific case the partition process has some special aspects
     that can be taken advantage
     of, reducing tremendously the memory allocation and spent time!
-    You can compare
-    [`non0hist`](@ref) with `fit(Histogram, ...)` of [`StatsBase`](http://juliastats.github.io/StatsBase.jl/stable/)
-    for specific numbers on your machine.
+
+    In fact, there is an upper bound to the memory allocated by `non0hist`: A constant
+    multiplied by the length of the array, `N = length(p)`. No matter how small `ε` or how many dimensions the data has, the method can at most assign `N` dictionary entries.
+
 
 The function used internally by `genentropy` is `non0hist`:
 ```@docs

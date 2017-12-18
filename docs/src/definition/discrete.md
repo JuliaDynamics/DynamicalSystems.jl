@@ -6,6 +6,9 @@ Discrete systems are of the form:
 **DynamicalSystems.jl** categorizes discrete systems in three cases, due to the
 extremely performant handling that [`StaticArrays`](https://github.com/JuliaArrays/StaticArrays.jl) offers for small dimensionalities.
 
+When defining a system using Functors, be sure to use `EomVector` and `EomMatrix`
+(see the [continuous system](continuous/#defining-a-dynamicalsystem-using-functors)
+page for more info).
 
 ## High-Dimensional
 At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
@@ -20,9 +23,8 @@ This system is identical to [`ContinuousDS`](@ref) as far as definition is conce
 All operations are done in place, and the type is immutable. The same suggestions
 about using Functors and initialized Jacobians also apply here.
 
-See the source code of the pre-defined [coupled standard maps](definition/systems#DynamicalSystemsDef.Systems.coupledstandardmaps) for an example of a `BigDiscreteDS` definition.
+See the source code of the pre-defined [coupled standard maps](definition/systems#DynamicalSystemsBase.Systems.coupledstandardmaps) for an example of a `BigDiscreteDS` definition.
 
----
 
 ## Low-dimensional
 The definition of low-dimensional discrete systems differs fundamentally from

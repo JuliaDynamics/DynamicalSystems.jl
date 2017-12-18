@@ -1,21 +1,7 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
 # Introduction
-**DynamicalSystems.jl** is a Julia suite for the exploration of chaos and nonlinear dynamics. Our aim is to be a useful and powerful companion for students and scientists treading those fields.
-
-One of a major goals of this package is to be completely transparent as to what is
-going on "under the hood". In scientific research, you never want to use *black boxes*,
-e.g. functions that give a result without telling you how it was calculated. **DynamicalSystems.jl** battles this in 3 ways:
-
-1. It is written entirely in Julia,
-   making the source code clear and easy to understand for even novice users.
-2. Secondly,
-   almost every documentation string gives
-   **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
-   the documentation string of [`lyapunovs`](@ref) will cite relevant publications for the definition and computation of the lyapunov spectrum.
-3. Thirdly, documentation strings
-   for all exported names have summarized descriptions of the algorithms (whenever
-   it is possible).
+**DynamicalSystems.jl** is a Julia suite for the exploration of chaos and nonlinear dynamics.
 
 *You
 can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
@@ -27,30 +13,57 @@ help make this package better without having to write a single line of code!
 Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
 accurate lower bound of users that this package has already helped!
 
+## Our Goals
+Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics.
+
+One of a major goals of this ecosystem is to be completely transparent as to what is
+going on "under the hood". In scientific research, you never want to use *black boxes*,
+e.g. functions that give a result without telling you how it was calculated. **DynamicalSystems.jl** battles this in 3 ways:
+
+1. It is written entirely in Julia,
+   making the source code clear and easy to understand for even novice users.
+2. Almost every documentation string gives
+   **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
+   the documentation string of [`lyapunovs`](@ref) will cite relevant publications for the definition and computation of the lyapunov spectrum.
+3. Documentation strings
+   for exported names have summarized descriptions of the algorithms (whenever
+   it is possible).
+
+Another major goal is to offer code that is concise, intuitive, performant and **general**.
+All functions work just as well with *any* `DynamicalSystem`, whether it is a simple
+continuous chaotic system, like the Lorenz attractor, or a high dimensional discrete
+map like 20 coupled standard maps!
+
+For example, provided you have first defined a [`DynamicalSystem`](definition/general)
+(which simply reduces to writing a function for the equations of motion),
+you should be able to e.g. calculate the Lyapunov spectrum for it
+in a single line:
+```julia
+lyapunovs(system, times_to_do_QR; keywords...)
+```
+The same function call works with any system, no discriminations here!
+
 ## Installation
-This package is registered. Simply use `Pkg.add("DynamicalSystems")` to install it.
+Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
 We highly suggest our users to read the The  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
 and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
 The reasoning is simple: the repository of `DynamicalSystems` is a package coordinator
 and documentation host for the **DynamicalSystems.jl** ecosystem. It will often be
-that a new tag will exist for one of the packages of the ecosystem but not for the repo of `DynamicalSystems` itself. Thus you can only read the documentation of the latest features by visiting the latest documentation version.
+that a new tag will exist for one of the packages of the ecosystem but not for the repository of `DynamicalSystems` itself. Thus you can only read the documentation of the latest features by visiting the latest documentation version.
 
 ### Low Dependency usage
-All packages of the **DynamicalSystems.jl** ecosystem have a dependency on DynamicalSystemsDef.jl. But other than that, the rest of the packages do not have any other co-dependency.
-
-By installing **DynamicalSystems.jl** you install all the packages of the ecosystem.
+All packages of the **DynamicalSystems.jl** ecosystem have a dependency on DynamicalSystemsBase.jl. By running `Pkg.add("DynamicalSystems")` you install all the packages of the ecosystem.
 That is not necessary however, since **DynamicalSystems.jl** is a bridging package
 that exports everything and hosts the documentation.
 
-For example, if you only need the features of [ChaosTools.jl](chaos/overview.md) then
+For example, if you only need the features of [ChaosTools.jl](chaos/overview) then
 you can get away by doing only `Pkg.add("ChaosTools")` and all other dependencies
-will be resolved.
-
+will be resolved accordingly.
 
 ## Contents
 
-### DynamicalSystemsDef.jl
+### DynamicalSystemsBase.jl
 
 1. Intuitive, consistent APIs for the definition of general dynamical systems. The currently supported system types are:
     * [Discrete Maps](definition/discrete)

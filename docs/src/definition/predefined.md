@@ -1,5 +1,5 @@
 # Predefined Systems
-Predefined systems exist in the `Systems` submodule exported by DynamicalSystemsDef.jl, in the form of functions that return a `DynamicalSystem`. They are accessed
+Predefined systems exist in the `Systems` submodule exported by DynamicalSystemsBase.jl, in the form of functions that return a `DynamicalSystem`. They are accessed
 like:
 ```julia
 using DynamicalSystems

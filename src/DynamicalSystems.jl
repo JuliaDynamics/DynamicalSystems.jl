@@ -7,7 +7,7 @@ module DynamicalSystems
 
 using Reexport
 
-@reexport using DynamicalSystemsDef
+@reexport using DynamicalSystemsBase
 @reexport using ChaosTools
 
 end # module

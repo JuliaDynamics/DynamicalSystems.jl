@@ -1,4 +1,5 @@
 # Features Overview
+The features offered in this documentation section come from the package [ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl). If you are encountering an issue with some of the methods, you can report/open a new issue at the GitHub Issues page.
 
 ### [Lyapunov Exponents](lyapunovs)
 

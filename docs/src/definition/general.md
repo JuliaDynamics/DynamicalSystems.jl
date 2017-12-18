@@ -4,7 +4,7 @@ using Functors (see below).
 The above of course stand for systems where one already *knows* the equations of motion.
 if instead, your "system" is in the form of [numerical data](definition/dataset), then see the appropriate section.
 
-All core definitions in **DynamicalSystems.jl** are offered by the [DynamicalSystemsDef.jl](https://github.com/JuliaDynamics/DynamicalSystemsDef.jl) Julia package and are necessarily required in every other package of this ecosystem.
+All core definitions in **DynamicalSystems.jl** are contained in the [DynamicalSystemsBase.jl](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl) Julia package and are necessarily required in every other package of this ecosystem.
 All system `sturct`s are also a subtype of the abstract type `DynamicalSystem`.
 
 

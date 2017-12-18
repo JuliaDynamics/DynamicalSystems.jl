@@ -5,7 +5,7 @@ of more packages into the ecosystem.
 
 The packages now are:
 1. This one.
-2. DynamicalSystemsDef.jl
+2. DynamicalSystemsBase.jl
 3. ChaosTools.jl
 
 Now DynamicalSystems.jl is simply a package coordinator that loads and exports

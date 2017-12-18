@@ -23,7 +23,7 @@ such objects one can create both the equations of motion and a parameter contain
 under a single `struct` definition.
 
 For example, let's take a look at the source code that generates continuous Rössler
-system, from the [Predefined Systems](definition/predefined):
+system, from the [Predefined Systems](predefined):
 ```@example 1
 using DynamicalSystems
 mutable struct Rössler
