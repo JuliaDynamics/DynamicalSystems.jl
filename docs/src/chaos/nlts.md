@@ -1,6 +1,6 @@
 # Nonlinear Timeseries Analysis
 
-## Neighborhoods of a point in a Dataset
+## Neighborhoods in a Dataset
 Incorporating the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) and the flexibility of `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
 ```@docs
 neighborhood
@@ -116,7 +116,10 @@ println("Lyappunov: ", linear_region(ks, E)[2])
 ```
 gives this plot:
 ![Bad time-vector example](https://i.imgur.com/wbpuBis.png)
-and prints "Lyapunov: 0.4161...".
+and prints
+```
+Lyapunov: 0.4161...
+```
 
 Notice that even though this value
 for the Lyapunov exponent is correct, it happened to be correct simply due to the
