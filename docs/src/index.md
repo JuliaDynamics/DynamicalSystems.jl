@@ -68,12 +68,11 @@ will be resolved accordingly.
 
 ### DynamicalSystemsBase.jl
 
-1. Intuitive, consistent APIs for the definition of general dynamical systems. The currently supported system types are:
-      * [Discrete Maps](definition/discrete)
-      * [Continuous Flows](definition/continuous)
-      * [Numerical Data](definition/dataset)
-      
-2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
+1. Intuitive, consistent APIs for the definition of general dynamical systems.
+2. [Discrete Maps](definition/discrete)
+3. [Continuous Flows](definition/continuous)
+4. Dedicated interface for [Numerical Data](definition/dataset)
+5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Well-defined functions for (numerically) evolving dynamical systems.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
