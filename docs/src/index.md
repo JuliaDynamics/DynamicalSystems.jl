@@ -66,7 +66,7 @@ will be resolved accordingly.
 
 ## Contents
 
-### DynamicalSystemsBase.jl
+### [DynamicalSystemsBase.jl](definition/general)
 
 1. Intuitive, consistent APIs for the definition of general dynamical systems.
 2. [Discrete Maps](definition/discrete)
@@ -76,7 +76,7 @@ will be resolved accordingly.
 4. Well-defined functions for (numerically) evolving dynamical systems.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
-### ChaosTools.jl
+### [ChaosTools.jl](chaos/overview)
 Please see the [overview section](chaos/overview) for a full list of features.
 
 Quick summary:

@@ -35,7 +35,7 @@ docs_dir: 'build'
 
 pages:
 - Introduction: index.md
-- System Definition:
+- DynamicalSystemsBase:
   - General Remarks: definition/general.md
   - Continuous Systems: definition/continuous.md
   - Discrete Systems: definition/discrete.md
