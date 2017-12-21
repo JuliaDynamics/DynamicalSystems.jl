@@ -72,7 +72,6 @@ will be resolved accordingly.
     * [Discrete Maps](definition/discrete)
     * [Continuous Flows](definition/continuous)
     * [Numerical Data](definition/dataset)
-
 2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Well-defined functions for (numerically) evolving dynamical systems.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
