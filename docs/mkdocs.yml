@@ -35,14 +35,14 @@ docs_dir: 'build'
 
 pages:
 - Introduction: index.md
-- DynamicalSystemsBase:
+- DynamicalSystemsBase.jl:
   - General Remarks: definition/general.md
   - Continuous Systems: definition/continuous.md
   - Discrete Systems: definition/discrete.md
   - Time Evolution: definition/evolve.md
   - Numerical Data: definition/dataset.md
   - Predefined Systems: definition/predefined.md
-- ChaosTools:
+- ChaosTools.jl:
   - Features Overview: chaos/overview.md
   - Lyapunov Exponents: chaos/lyapunovs.md
   - Entropies and Dimensions: chaos/entropies.md
