@@ -16,7 +16,7 @@ script:
 after_success:
   - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'Pkg.checkout("ChaosTools")'
   - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'Pkg.checkout("DynamicalSystemsBase")'
-  - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'EVN["PYTHON"] = ""; Pkg.add("PyPlot"); Pkg.build("PyPlot")'
+  - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'ENV["PYTHON"] = ""; Pkg.add("PyPlot"); Pkg.build("PyPlot")'
   - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'Pkg.add("Documenter")'
   - test $TRAVIS_OS_NAME = "linux" && julia -e 'cd(Pkg.dir("DynamicalSystems")); include(joinpath("docs", "make.jl"))'
 #  - julia -e 'cd(Pkg.dir("DynamicalSystems")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
