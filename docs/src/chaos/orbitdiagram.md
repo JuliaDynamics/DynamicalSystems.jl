@@ -61,19 +61,21 @@ poincaresos
 ```
 ---
 
-An example of the [Henon-Helies](efinition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a periodic solution
+An example of the [Henon-Helies](efinition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a quasi-periodic solution
 ```julia
-ds = Systems.henonhelies([0, .295456, .407308431, 0])
-output = poincaresos(ds, 3, 1000.0)
+ds = Systems.henonhelies([0., 0.1, 0.5, 0.])
+output = poincaresos(ds, 3, 1000.0, diff_eq_kwargs=Dict(:solver=>Vern9()))
 
 figure()
-plot(output[:, 1], output[:, 2], lw = 0.0, marker = "o")
-xlabel("\$q_1\$"); ylabel("\$q_2\$")
+plot(output[:, 2], output[:, 4], lw = 0.0, marker=".")
+xlabel("\$q_2\$"); ylabel("\$p_2\$");
 ```
 
-![Poincare SOS](https://i.imgur.com/Sz9SXPB.png)
+![Poincare SOS](https://i.imgur.com/AkAKOh4.png)
 
-Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected the section is 1-dimensional.
+Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected the section is 1-dimensional, because the torus the solution lives in is 2-dimensional. if
+we produced the PSOS for much longer times, the result would be a filled line instead
+of individual points.
 
 ## Producing Orbit Diagrams for Continuous Flows
 The [`orbitdiagram`](@ref) does not make much sense for continuous systems, besides the
