@@ -71,7 +71,7 @@ plot(output[:, 1], output[:, 2], lw = 0.0, marker = "o")
 xlabel("\$q_1\$"); ylabel("\$q_2\$")
 ```
 
-![Poincare SOS](https://imgur.com/Sz9SXPB)
+![Poincare SOS](https://i.imgur.com/Sz9SXPB.png)
 
 Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected the section is 1-dimensional.
 
@@ -111,4 +111,4 @@ end
 xlabel("\$R_1\$"); ylabel("\$V_1\$")
 ```
 
-![shinriki period doubling](https://imgur.com/Yd1D3Ou)
+![shinriki period doubling](https://i.imgur.com/Yd1D3Ou.png)
