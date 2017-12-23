@@ -44,6 +44,7 @@ pages:
   - Predefined Systems: definition/predefined.md
 - ChaosTools.jl:
   - Features Overview: chaos/overview.md
+  - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
   - Lyapunov Exponents: chaos/lyapunovs.md
   - Entropies and Dimensions: chaos/entropies.md
   - Nonlinear Timeseries Analysis: chaos/nlts.md

@@ -56,7 +56,7 @@ Notice however, that this does not have anything to do with the official release
 of packages that do contain the actual code. Because our documentation is based on utilizing [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl) and the documentation strings of exported function names, you can be assured that the documentation you read on the [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) page reflects accurately the latest release versions.
 
 ### Low Dependency usage
-All packages of the **DynamicalSystems.jl** ecosystem have a dependency on DynamicalSystemsBase.jl. By running `Pkg.add("DynamicalSystems")` you install all the packages of the ecosystem.
+By running `Pkg.add("DynamicalSystems")` you install all packages of the ecosystem.
 That is not necessary however, since **DynamicalSystems.jl** is a bridging package
 that exports everything and hosts the documentation.
 

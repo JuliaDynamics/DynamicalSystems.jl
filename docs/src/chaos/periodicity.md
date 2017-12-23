@@ -79,7 +79,7 @@ ylabel("\$p\$")
 ```
 
 After 3 to 5 minutes, you will get this plot:
-![Imgur](https://i.imgur.com/Pj5sxKA.png)
+![Standard map fixed points](https://i.imgur.com/Pj5sxKA.png)
 
 You can confirm for yourself that this is correct, for many reasons:
 
