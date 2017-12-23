@@ -55,6 +55,12 @@ that a new tag will exist for one of the packages of the ecosystem but not for t
 Notice however, that this does not have anything to do with the official release versions
 of packages that do contain the actual code. Because our documentation is based on utilizing [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl) and the documentation strings of exported function names, you can be assured that the documentation you read on the [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) page reflects accurately the latest release versions.
 
+The current documentation was built with the following versions
+```@example docs
+Pkg.status("DynamicalSystemsBase") # hide
+Pkg.status("ChaosTools") # hide
+```
+
 ### Low Dependency usage
 By running `Pkg.add("DynamicalSystems")` you install all packages of the ecosystem.
 That is not necessary however, since **DynamicalSystems.jl** is a bridging package

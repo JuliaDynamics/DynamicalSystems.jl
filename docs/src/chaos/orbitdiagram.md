@@ -1,6 +1,6 @@
 ## Orbit Diagrams of Maps
 An orbit diagram (also called bifurcation diagram) is a way to visualize the asymptotic
-behavior of the trajectory, when a parameter of the system is changed
+behavior of a map, when a parameter of the system is changed
 ```@docs
 orbitdiagram
 ```
