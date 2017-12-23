@@ -87,6 +87,7 @@ Please see the [overview section](chaos/overview) for a full list of features.
 
 Quick summary:
 
+* Poincare S.O.S. and orbit diagrams
 * Lyapunov Exponents
 * Entropies and Dimensions
 * Delay Coordinates Embedding

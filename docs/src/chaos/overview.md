@@ -1,6 +1,12 @@
 # Features Overview
 The features offered in this documentation section come from the package [ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl). If you are encountering an issue with some of the methods, you can report/open a new issue at the GitHub Issues page.
 
+### [Orbit Diagrams](orbitdiagram)
+
+1. Orbit diagrams (aka bifurcation diagrams) of maps.
+2. Poincaré surfaces of section for continuous systems.
+3. Automated production of orbit diagrams for continuous systems.
+
 ### [Lyapunov Exponents](lyapunovs)
 
 The following treat systems where the equations of motion are known:
