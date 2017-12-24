@@ -50,7 +50,7 @@ end
 xlabel("\$k\$"); ylabel("\$p\$")
 ```
 
-![Standard map diagram](https://imgur.com/f97oYCx)
+![Standard map diagram](https://i.imgur.com/f97oYCx.png)
 
 ## Poincaré Surface of Section
 Also called [Poincaré map](https://en.wikipedia.org/wiki/Poincar%C3%A9_map) is a
