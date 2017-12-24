@@ -3,7 +3,7 @@ The features offered in this documentation section come from the package [ChaosT
 
 ### [Orbit Diagrams](orbitdiagram)
 
-1. Orbit diagrams (aka bifurcation diagrams) of maps: [`orbitdiagra`](@ref).
+1. Orbit diagrams (aka bifurcation diagrams) of maps: [`orbitdiagram`](@ref).
 2. Poincaré surfaces of section for continuous systems: [`poincaresos`](@ref).
 3. Automated production of orbit diagrams for continuous systems: [`produce_orbitdiagram`](@ref).
 
