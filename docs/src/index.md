@@ -96,5 +96,8 @@ Quick summary:
 * Finding Fixed Points of any Map of any order
 * Detecting Chaos
 
-### Wanted Features
-The [wanted features GitHub page](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3Awanted_feature) lists features that are wanted by the **DynamicalSystems.jl** ecosystem and are open to contributors.
+## Wanted Features
+The following lists state features that are wanted by the **DynamicalSystems.jl** ecosystem and are open to contributors. These are structured in the form of GitHub Issues, with the label `wanted_feature`:
+
+* [DynamicalSystemsBase.jl wanted features](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/issues?q=is%3Aissue+is%3Aopen+label%3Awanted_feature)
+* [ChaosTools.jl wanted features](https://github.com/JuliaDynamics/ChaosTools.jl/issues?q=is%3Aissue+is%3Aopen+label%3Awanted_feature)
