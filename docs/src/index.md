@@ -13,6 +13,17 @@ help make this package better without having to write a single line of code!
 Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
 accurate lower bound of users that this package has already helped!
 
+!!! tip "Use latest documentation"
+      We highly suggest our users to read the  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
+      and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
+
+The current documentation was built with the following versions
+```@example docs
+Pkg.status("DynamicalSystemsBase") # hide
+Pkg.status("ChaosTools") # hide
+```
+
+
 ## Our Goals
 Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics.
 
@@ -45,21 +56,6 @@ The same function call works with any system, no discriminations here!
 
 ## Installation
 Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
-
-We highly suggest our users to read the The  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
-and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
-The reasoning is simple: the repository of `DynamicalSystems` is a package coordinator
-and documentation host for the **DynamicalSystems.jl** ecosystem. It will often be
-that a new tag will exist for one of the packages of the ecosystem but not for the repository of `DynamicalSystems` itself. Thus you can only read the documentation of the latest features by visiting the latest documentation version.
-
-Notice however, that this does not have anything to do with the official release versions
-of packages that do contain the actual code. Because our documentation is based on utilizing [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl) and the documentation strings of exported function names, you can be assured that the documentation you read on the [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) page reflects accurately the latest release versions.
-
-The current documentation was built with the following versions
-```@example docs
-Pkg.status("DynamicalSystemsBase") # hide
-Pkg.status("ChaosTools") # hide
-```
 
 ### Low Dependency usage
 By running `Pkg.add("DynamicalSystems")` you install all packages of the ecosystem.
