@@ -27,23 +27,11 @@ Pkg.status("ChaosTools") # hide
 ## Our Goals
 Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics.
 
-One of a major goals of this ecosystem is to be completely transparent as to what is
-going on "under the hood". In scientific research, you never want to use *black boxes*,
-e.g. functions that give a result without telling you how it was calculated. **DynamicalSystems.jl** battles this in 3 ways:
+Our goals with this package can be summarized in the following three:
 
-1. It is written entirely in Julia,
-   making the source code clear and easy to understand for even novice users.
-2. Almost every documentation string gives
-   **direct references to the original papers** where the algorithm is taken from, in case some users don't understand (or simply don't want to read) the source code. For example,
-   the documentation string of [`lyapunovs`](@ref) will cite relevant publications for the definition and computation of the lyapunov spectrum.
-3. Documentation strings
-   for exported names have summarized descriptions of the algorithms (whenever
-   it is possible).
-
-Another major goal is to offer code that is concise, intuitive, performant and **general**.
-All functions work just as well with *any* `DynamicalSystem`, whether it is a simple
-continuous chaotic system, like the Lorenz attractor, or a high dimensional discrete
-map like 20 coupled standard maps!
+1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz attractor [@Lorenz1963], or a high dimensional discrete map like coupled standard maps [@Kantz1988].
+2. Be accurate, reliable and performant.
+3. Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.
 
 For example, provided you have first defined a [`DynamicalSystem`](definition/general)
 (which simply reduces to writing a function for the equations of motion),
