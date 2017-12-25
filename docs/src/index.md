@@ -27,7 +27,7 @@ Pkg.status("ChaosTools") # hide
 ## Our Goals
 Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics.
 
-Our goals with this package can be summarized in the following three:
+Our goals with this ecosystem can be summarized in the following three:
 
 1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz attractor [@Lorenz1963], or a high dimensional discrete map like coupled standard maps [@Kantz1988].
 2. Be accurate, reliable and performant.
