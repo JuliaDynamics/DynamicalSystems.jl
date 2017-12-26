@@ -40,7 +40,7 @@ pvalues = 0:0.005:2
 ics = [0.001rand(2) for m in 1:10]
 n = 50
 Ttr = 5000
-output = orbitdiagram(ds, i, :k, pvalues; n = n, Ttr = Ttr)
+output = orbitdiagram(ds, i, :k, pvalues; n = n, Ttr = Ttr, ics = ics)
 
 figure()
 for (j, p) in enumerate(pvalues)
