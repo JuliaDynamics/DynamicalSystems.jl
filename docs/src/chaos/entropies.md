@@ -50,14 +50,18 @@ There are numerous methods that one can use to calculate a so-called "dimension"
 dataset, like for example the [Fractal dimension](https://en.wikipedia.org/wiki/Fractal_dimension). This real number can offer
 a lot of information about the object that the dataset represents.
 
-### Generalized Dimensions & Co.
-Based on the definition of the [generalized entropy](entropies/#DynamicalSystems.genentropy), one can calculate an appropriate
+### Generalized Dimensions
+Based on the definition of the [generalized entropy](#ChaosTools.genentropy), one can calculate an appropriate
 dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
 ```
 ---
-As stated clearly, this call performs a lot of automated steps by calling the following functions with default arguments:
+!!! warn "Be wary when using `generalized_dim`"
+    As stated clearly by the documentation string, calling `generalized_dim` performs a lot of automated steps by calling other functions (see below)
+    with default arguments. It is actually more like a convenient bundle than
+    an actual function and therefore you should be very careful when using it.
+
 ```@docs
 estimate_boxsizes
 linear_regions
@@ -66,20 +70,17 @@ linear_region
 ---
 
 #### Example
-For example, we will calculate the dimensions of the strange attractors of the
-[Hénon map](system_definition/#DynamicalSystems.Systems.henon) and the [Lorenz system](system_definition/#DynamicalSystems.Systems.lorenz):
+For example, the dimension of the strange attractor of the
+[Hénon map](system_definition/#DynamicalSystems.Systems.henon) is:
 ```julia
 using DynamicalSystems
 hen = Systems.henon(-rand(2))
 ts = trajectory(hen, 1000000)
 D_hen = information_dim(ts)
-
-lor = Systems.lorenz(rand(3))
-ts = trajectory(lor, 5000, dt = 0.05)
-D_lor = capacity_dim(ts)
 ```
-You will find that `D_hen` is around `1.2` and `D_lor` is around `1.9`. As
-a side note, be sure that you have enough data points, otherwise the values you will
+You will find that `D_hen ≈ 1.20...`
+
+As a side note, be sure that you have enough data points, otherwise the values you will
 get will never be correct, as is demonstrated by
 J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
