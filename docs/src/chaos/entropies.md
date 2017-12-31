@@ -57,10 +57,11 @@ dimension, called *generalized dimension*:
 generalized_dim
 ```
 ---
-!!! warn "Be wary when using `generalized_dim`"
+!!! danger "Be wary when using `generalized_dim`"
     As stated clearly by the documentation string, calling `generalized_dim` performs a lot of automated steps by calling other functions (see below)
     with default arguments. It is actually more like a convenient bundle than
-    an actual function and therefore you should be very careful when using it.
+    an actual function and therefore you should be careful
+    when considering the validity of the returned number.
 
 ```@docs
 estimate_boxsizes
@@ -78,7 +79,7 @@ hen = Systems.henon(-rand(2))
 ts = trajectory(hen, 1000000)
 D_hen = information_dim(ts)
 ```
-You will find that `D_hen ≈ 1.20...`
+You will find that `D_hen ≈ 1.2...`
 
 As a side note, be sure that you have enough data points, otherwise the values you will
 get will never be correct, as is demonstrated by

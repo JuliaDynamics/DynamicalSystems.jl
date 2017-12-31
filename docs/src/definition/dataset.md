@@ -15,7 +15,7 @@ you can also do:
 ```julia
 using DynamicalSystems
 hen == Systems.henon()
-data = trajectory(hen, 10000)
+data = trajectory(hen, 10000) # this returns a dataset
 for point in data
 # do stuff with each datapoint (vector with as many elements as system dimension)
 end
