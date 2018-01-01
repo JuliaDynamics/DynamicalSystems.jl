@@ -88,7 +88,6 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 ---
 
 ### Kaplan-Yorke Dimension
-Also known as Lyapunov Dimension:
 ```@docs
 kaplanyorke_dim
 ```
