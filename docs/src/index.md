@@ -29,7 +29,7 @@ Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful
 
 Our goals with this ecosystem can be summarized in the following three:
 
-1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz attractor [@Lorenz1963], or a high dimensional discrete map like coupled standard maps [@Kantz1988].
+1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the [Lorenz attractor](definition/predefined/#DynamicalSystemsBase.Systems.lorenz), or a high dimensional discrete map like [coupled standard maps](definition/predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps).
 2. Be accurate, reliable and performant.
 3. Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.
 
