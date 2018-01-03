@@ -2,14 +2,18 @@
 
 A Julia package for the exploration of continuous and discrete dynamical systems.
 
-| **Documentation**   |  **Travis**     | **AppVeyor** | Gitter |
-|:--------:|:-------------------:|:-----:|:-----:|
-|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl) | [![Build status](https://ci.appveyor.com/api/projects/status/iqss550vb2dik7b2?svg=true)](https://ci.appveyor.com/project/JuliaDynamics/dynamicalsystems-jl) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
+| **Documentation**   |  | Gitter |
+|:--------:|:-----:|
+|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
 
 **DynamicalSystems.jl** is a Julia suite for the exploration of chaos and nonlinear dynamics. The current repository holds the documentation and exports *all* packages
 of the ecosystem.
 
-For installation instructions, full content overview and detailed documentation, [click here](https://juliadynamics.github.io/DynamicalSystems.jl/latest/).
+---
+
+####**For installation instructions, full content overview and detailed documentation, [click here](https://juliadynamics.github.io/DynamicalSystems.jl/latest/).**
+
+---
 
 ## Brief Content Overview
 ### [DynamicalSystemsBase.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/definition/general/)   
@@ -22,6 +26,7 @@ For installation instructions, full content overview and detailed documentation,
 ### [ChaosTools.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/chaos/overview/)
 
 * Lyapunov Exponents
+* Poincare SOS, Orbit Diagrams
 * Entropies and Dimensions
 * Delay Coordinates Embedding
 * Neighborhood estimation
