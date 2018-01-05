@@ -2,7 +2,7 @@
 
 A Julia package for the exploration of continuous and discrete dynamical systems.
 
-| **Documentation**   |  | Gitter |
+| **Documentation** | Gitter |
 |:--------:|:-----:|
 |[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
 
@@ -11,7 +11,7 @@ of the ecosystem.
 
 ---
 
-####**For installation instructions, full content overview and detailed documentation, [click here](https://juliadynamics.github.io/DynamicalSystems.jl/latest/).**
+### **For installation instructions, full content overview and detailed documentation, [click here](https://juliadynamics.github.io/DynamicalSystems.jl/latest/).**
 
 ---
 
