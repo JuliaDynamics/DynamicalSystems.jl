@@ -1,3 +1,4 @@
 julia 0.6
 DynamicalSystemsBase 0.3.1
 ChaosTools 0.4.0
+Reexport
