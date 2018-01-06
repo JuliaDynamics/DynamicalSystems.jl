@@ -77,6 +77,15 @@ Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected t
 we produced the PSOS for much longer times, the result would be a filled line instead
 of individual points.
 
+### Stroboscopic Map
+```julia
+ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
+a = trajectory(ds, 100000.0, dt = 2π) # every period T = 2π/ω
+plot(a[:, 1], a[:, 2], lw = 0, marker ="o", ms = 1)
+D = information_dim(a)
+```
+What a cool looking attractor with dimension of ...
+
 ## Producing Orbit Diagrams for Continuous Flows
 The [`orbitdiagram`](@ref) does not make much sense for continuous systems, besides the
 trivial case where the system is at a fixed point. In order for [`orbitdiagram`](@ref) to have meaning one must have a map.

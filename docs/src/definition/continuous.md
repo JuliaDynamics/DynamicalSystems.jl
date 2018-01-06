@@ -24,7 +24,7 @@ under a single `struct` definition.
 
 For example, let's take a look at the source code that generates continuous Rössler
 system, from the [Predefined Systems](predefined):
-```@example 1
+```
 using DynamicalSystems
 mutable struct Rössler
     a::Float64
@@ -48,7 +48,7 @@ The first code-block defines a `struct` that is simply a container for the
 parameters of the Rössler system. The second code-block defines the equations
 of motion of the system, by taking advantage of the fact that you can *call*
 this `struct` as if it was a function:
-```@example 1
+```
 s = Rössler(1,2,3)
 u = rand(3); du = copy(u)
 s(du, u)
@@ -75,7 +75,7 @@ fields that depend on the parameters and/or the state variables, because the oth
 fields are constants and will be initialized properly later.
 
 Next, we define a "set-up" function, that returns a `ContinuousDS`:
-```@example 1
+```
 # this is in fact the function Systems.roessler()
 function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
     # Initialize Jacobian matrix:

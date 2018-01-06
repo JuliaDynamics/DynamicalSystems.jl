@@ -6,9 +6,21 @@ Discrete systems are of the form:
 **DynamicalSystems.jl** categorizes discrete systems in three cases, due to the
 extremely performant handling that [`StaticArrays`](https://github.com/JuliaArrays/StaticArrays.jl) offers for small dimensionalities.
 
-When defining a system using Functors, be sure to use `EomVector` and `EomMatrix`
-(see the [continuous system](continuous/#defining-a-dynamicalsystem-using-functors)
-page for more info).
+Handling of discrete systems is done exclusively from **DynamicalSystems.jl** and so
+there is no interaction with DifferentialEquations.jl. This also means that the
+definition of a discrete system may differ slightly from a continuous one.
+
+When defining a system using Functors, be sure to use `AbstractVector` and `AbstractMatrix`
+(see [here](continuous/#defining-a-dynamicalsystem-using-functors)
+).
+
+!!! info "Non-autonomous systems"
+    To define a discrete system that depends on "time" $n$, extend the
+    equations of motion by introducing a new variable $\tau$ such that
+    $\tau_{n+1} =  \tau_n + 1$ and use this in the equations for the other
+    variables.
+
+
 
 ## High-Dimensional
 At around `D=10` dimensions, Static Arrays start to become less efficient than Julia's
@@ -19,11 +31,12 @@ type called `BigDiscreteDS`:
 BigDiscreteDS
 ```
 ---
-This system is identical to [`ContinuousDS`](@ref) as far as definition is concerned.
-All operations are done in place, and the type is immutable. The same suggestions
-about using Functors and initialized Jacobians also apply here.
+The source code of the pre-defined [coupled standard maps](definition/systems#DynamicalSystemsBase.Systems.coupledstandardmaps) can
+serve as an example of a `BigDiscreteDS` definition *(we do not show it here because it is very large*).
 
-See the source code of the pre-defined [coupled standard maps](definition/systems#DynamicalSystemsBase.Systems.coupledstandardmaps) for an example of a `BigDiscreteDS` definition.
+Just keep in mind that the equations of motion for `BigDiscreteDS` are of the
+form `eom!(xnew, xold)`; in-place with the mutated argument *first*, in contrast
+to the continuous case. The same story goes for the Jacobian function!
 
 
 ## Low-dimensional
@@ -34,20 +47,9 @@ statically sized vectors. The `struct` representing such systems is called `Disc
 DiscreteDS
 ```
 ---
-The documentation string of the constructor is perfectly self-contained, but for the sake of clarity we will go through all the steps in the following.
-
-`state` is simply the state the system starts (a.k.a. initial conditions) and
-is always of type `SVector` from [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl).
-`eom` is a *function* that takes a `state` as an input and returns the next state
-as an output.
-The `jacob` is also a *function* that takes a `state` as an input and returns the
-Jacobian matrix of the system (at this state). So far this is actually
-different than [`BigDiscreteDS`](@ref) where the functions where in-place.
-
 !!! note "Return form of the `eom` function"
     It is **heavily** advised that the equations of motion `eom` function returns an `SVector` from
-    the julia package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and similarly the `jacob` function returns an `SMatrix`. [Numerous benchmarks](https://github.com/Datseris/DynamicalSystems.jl/tree/master/test/benchmarks) have been made in order to deduce the most efficient way to define
-    a system, and this way was proved to be the best when the system's dimension is small.
+    the julia package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and similarly the `jacob` function returns an `SMatrix` in the case of `DiscreteDS`.
 
 Something important to note when defining a `DiscreteDS` using Functors: since
 the function calls take only one argument (always a state), it is impossible to
@@ -65,8 +67,8 @@ mutable struct HénonMap
     a::Float64
     b::Float64
 end
-(f::HénonMap)(x::EomVector) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
-(f::HénonMap)(x::EomVector, no::Void) = @SMatrix [-2*f.a*x[1] 1.0; f.b 0.0]
+(f::HénonMap)(x) = SVector{2}(1.0 - f.a*x[1]^2 + x[2], f.b*x[1])
+(f::HénonMap)(x, no::Void) = @SMatrix [-2*f.a*x[1] 1.0; f.b 0.0]
 
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     he = HénonMap(a,b)
@@ -78,7 +80,7 @@ end
 ds = henon()
 ```
 Here the example uses the type `Void` for dispatch, but you could use any other bittype
-like e.g. `::Float64` and pass in `zero(T)`.
+like e.g. `::Int64` and pass in `0`.
 
 In this example case, doing `ds.eom.a = 2.5` would still affect *both* the equations
 of motion as well as the Jacobian, making everything work perfectly!
@@ -124,10 +126,16 @@ because everything is in plain numbers. For example:
 ```@example 3
 using DynamicalSystems
 
-@inline eom_logistic(r) = (x) -> r*x*(1-x)  # this is a closure
-@inline deriv_logistic(r) = (x) -> r*(1-2x) # this is a closure
+mutable struct Logistic
+    r::Float64
+end
+@inline (f::Logistic)(x::Number) = f.r*x*(1-x)
+@inline (f::Logistic)(x::Number, no::Void) = f.r*(1-2x)
+
 r = 3.7
-logistic = DiscreteDS1D(rand(), eom_logistic(r), deriv_logistic(r))
+lol = Logistic(r)
+deriv_logistic(x) = lol(x, nothing)
+return DiscreteDS1D(rand(), lol, deriv_logistic)
 ```
 Once again, if you skip the derivative functions it will be calculated automatically
 using ForwardDiff.jl.

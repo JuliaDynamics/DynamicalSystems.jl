@@ -34,11 +34,14 @@ non0hist
 ---
 For example, the Shannon entropy of a coin-flip process should be one bit,
 [by definition](https://en.wikipedia.org/wiki/Shannon_(unit)). Let's see...
-```@example lyap
+```julia
 using DynamicalSystems
 y = Float64.(rand(Bool, 1000000)) # just some coin tosses
 sh = shannon(0.1, y)  # ≡ genentropy(1, 0.0, y)
 isapprox(sh, log(2),  rtol = 1e-6)
+```
+```julia
+true
 ```
 Because all entropies are calculated on base-$e$, the unit of measurement is "nat"
 and one bit is $\log(2)\times$nat.
@@ -79,7 +82,9 @@ hen = Systems.henon(-rand(2))
 ts = trajectory(hen, 1000000)
 D_hen = information_dim(ts)
 ```
-You will find that `D_hen ≈ 1.2...`
+```
+1.19735650096483
+```
 
 As a side note, be sure that you have enough data points, otherwise the values you will
 get will never be correct, as is demonstrated by

@@ -15,17 +15,23 @@ lyapunovs
 As you can see, the documentation string is detailed and self-contained. For example,
 the lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
 is calculated as:
-```@example lyap
+```julia
 using DynamicalSystems
 
 ds = Systems.towel()
 λλ = lyapunovs(ds, 10000)
 ```
+```julia
+[0.432253, 0.371617, -3.29632]
+```
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
-```@example lyap
+```julia
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
 λλ = lyapunovs(lor, 10000,
 dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
+```
+```julia
+[0.985688, 0.00271333, -14.6551]
 ```
 
 ## Maximum Lyapunov Exponent
@@ -36,18 +42,25 @@ lyapunov
 ```
 ---
 For example:
-```@example lyap
+```julia
 using DynamicalSystems
 
 henon = Systems.henon()
 λ = lyapunov(henon, 10000, d0 = 1e-7, threshold = 1e-4, Ttr = 100)
 ```
+```
+0.42007471604734054
+```
+
 The same is done for continuous systems:
-```@example lyap
+```julia
 using DynamicalSystems, OrdinaryDiffEq
 
 ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
 λ = lyapunov(ross, 100000, dt = 10.0,
 diff_eq_kwargs = Dict(:solver => Vern8(), :abstol=>1e-9, :reltol=>1e-9),
 Ttr = 100.0)
+```
+```
+0.07127399326422117
 ```

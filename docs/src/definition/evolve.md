@@ -7,7 +7,6 @@ trajectory
 ---
 Especially in the continuous case, an API is provided for usage directly with [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl), by giving additional constructors:
 ```@docs
-ODEProblem
 ODEIntegrator
 variational_integrator
 ```
