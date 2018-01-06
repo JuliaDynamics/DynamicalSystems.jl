@@ -61,7 +61,7 @@ poincaresos
 ```
 ---
 
-An example of the [Henon-Helies](efinition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a quasi-periodic solution
+An example of the [Henon-Helies](/definition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a quasi-periodic solution
 ```julia
 ds = Systems.henonhelies([0., 0.1, 0.5, 0.])
 output = poincaresos(ds, 3, 1000.0, diff_eq_kwargs=Dict(:solver=>Vern9()))
@@ -78,13 +78,20 @@ we produced the PSOS for much longer times, the result would be a filled line in
 of individual points.
 
 ### Stroboscopic Map
+A special case of a PSOS is a stroboscopic map, which is defined for non-autonomous
+systems with periodic time dependence, like e.g. the [Duffing oscillator](/definition/predefined/#DynamicalSystemsBase.Systems.duffing).
+
+A PSOS at this case can be produced at every period $T = 2\pi/\omega$. There is no
+reason to use `poincaresos` for this case though, because you can simply use
+[`trajectory`](@ref) and get the solution with a certain time distance:
 ```julia
 ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
 a = trajectory(ds, 100000.0, dt = 2π) # every period T = 2π/ω
 plot(a[:, 1], a[:, 2], lw = 0, marker ="o", ms = 1)
-D = information_dim(a)
+xlabel("\$x\$"); ylabel("\$\\dot{x}\$")
 ```
-What a cool looking attractor with dimension of ...
+![Duffing attractor](https://i.imgur.com/Bfqoska.png)
+What a cool looking attractor is that!
 
 ## Producing Orbit Diagrams for Continuous Flows
 The [`orbitdiagram`](@ref) does not make much sense for continuous systems, besides the
