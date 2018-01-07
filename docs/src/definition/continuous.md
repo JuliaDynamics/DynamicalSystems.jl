@@ -105,7 +105,7 @@ a system.
 !!! danger "Callbacks do not propagate in variation vector methods!"
     Methods that evolve variation vectors in time (currenlty [`gali`](@ref) and
     [`lyapunovs`](@ref)) do not inherit callbacks present in the definition
-    of a `ContinuousDS`.
+    of a `ContinuousDS`. The issue that keeps track of this is [here](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/issues/8).
 
 We will make a Hénon–Heiles that also satisfies energy conservation.
 We first write the equations of motion and the Jacobian functions in the instructed form:
