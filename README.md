@@ -2,9 +2,9 @@
 
 A Julia package for the exploration of continuous and discrete dynamical systems.
 
-| **Documentation** | Gitter |
-|:--------:|:-----:|
-|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby)
+| **Documentation** | Gitter | Travis | 
+|:--------:|:-----:|:-----:|
+|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl)
 
 **DynamicalSystems.jl** is a Julia suite for the exploration of chaos and nonlinear dynamics. The current repository holds the documentation and exports *all* packages
 of the ecosystem.
