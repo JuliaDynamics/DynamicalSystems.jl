@@ -81,9 +81,9 @@ of individual points.
 A special case of a PSOS is a stroboscopic map, which is defined for non-autonomous
 systems with periodic time dependence, like e.g. the [Duffing oscillator](/definition/predefined/#DynamicalSystemsBase.Systems.duffing).
 
-A PSOS at this case can be produced at every period $T = 2\pi/\omega$. There is no
-reason to use `poincaresos` for this case though, because you can simply use
-[`trajectory`](@ref) and get the solution with a certain time distance:
+A "cut" through the phase-space can be produced at every period $T = 2\pi/\omega$. There is no
+reason to use `poincaresos` for this though, because you can simply use
+[`trajectory`](@ref) and get the solution with a certain time sampling rate:
 ```julia
 ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
 a = trajectory(ds, 100000.0, dt = 2π) # every period T = 2π/ω
@@ -115,8 +115,6 @@ pvalues = linspace(19,22,201)
 i = 1
 j = 2
 tf = 200.0
-
-de = Dict(:abstol=>1e-9, :reltol => 1e-9) #necessary due to exponential function
 
 output = produce_orbitdiagram(ds, j, i, :R1, pvalues; tfinal = tf,
 Ttr = 200.0, diff_eq_kwargs = de, direction = -1, printparams = true)
