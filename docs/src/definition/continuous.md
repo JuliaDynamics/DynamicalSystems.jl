@@ -107,7 +107,8 @@ a system.
     [`lyapunovs`](@ref)) do not inherit callbacks present in the definition
     of a `ContinuousDS`. The issue that keeps track of this is [here](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/issues/8).
 
-We will make a Hénon–Heiles that also satisfies energy conservation.
+We will make a Hénon–Heiles that also satisfies energy conservation. This is also available in the [predefined systems](predefined), but we will use it here as an example.
+
 We first write the equations of motion and the Jacobian functions in the instructed form:
 ```julia
 function hheom!(t, u::AbstractVector, du::AbstractVector)
@@ -173,18 +174,12 @@ points).
 Let's see now if our system does indeed conserve energy!
 ```julia
 a1 = trajectory(ds, 1000.0)
-a2 = trajectory(ds, 1000.0, diff_eq_kwargs = Dict(:solver => Vern9(),
-:abstol => 1e-9, :reltol => 1e-9))
-
 energies1 = [H(p) for p in a1]
-energies2 = [H(p) for p in a2]
-
-println("Default solver: ΔE = ", std(energies1))
-println("High-Accuracy solver: ΔΕ = ", std(energies2))
+maxer = maximum(@. energies1 - E)
+println("Default accuracy: max(ΔE) = $maxer")
 ```
 ```
-Default solver: ΔE = 2.7868013699842223e-5
-High-Accuracy solver: ΔΕ = 1.2345950190344736e-12
+Default accuracy: max(ΔE) = 9.926393040871062e-12
 ```
-By combining a high-accuracy solver with a callback one can get an incredibly low
-energy error.
+Reminder: by default **DynamicalSystems.jl** uses the solver `Vern9()` and
+error tolerances of `1e-9`.
