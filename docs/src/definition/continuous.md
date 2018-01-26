@@ -8,17 +8,10 @@ are defined using the `ContinuousDS` structure:
 ContinuousDS
 ```
 ---
-You can use any function that complies with the requirements stated by the documentation string. However, it is highly advised to use [Functors](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1) for dynamical systems where the equations
-of motion contain parameters.
 
 In the following examples we will demonstrate how one can use both constructors.
 
-## Defining a `DynamicalSystem` using Functors
-A Functor is a shorthand for saying [Function-like objects](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1),
-i.e. `struct`s that are also callable (see the linked documentation page). Using
-such objects one can create both the equations of motion and a parameter container
-under a single `struct` definition.
-
+## Defining a `ContinuousDS` using `eom!`
 Here we will use the constructor
 ```julia
 ContinuousDS(state, eom! [, jacob! [, J]]; tspan = (0.0, 100.0))
@@ -27,41 +20,24 @@ and create the continuous Rössler
 system, from our [Predefined Systems](predefined):
 ```julia
 using DynamicalSystems
-mutable struct Rössler
-    a::Float64
-    b::Float64
-    c::Float64
-end
-@inline @inbounds function (s::Rössler)(t, u::AbstractVector, du::AbstractVector)
+
+@inline @inbounds function roessler_eom(du, u, p, t)
+    a, b, c = p
     du[1] = -u[2]-u[3]
-    du[2] = u[1] + s.a*u[2]
-    du[3] = s.b + u[3]*(u[1] - s.c)
+    du[2] = u[1] + a*u[2]
+    du[3] = b + u[3]*(u[1] - c)
     return nothing
 end
-@inline @inbounds function (s::Rössler)(t, u::AbstractVector, J::AbstractMatrix)
-    J[2,2] = s.a
-    J[3,1] = u[3]; J[3,3] = u[1] - s.c
+
+@inline @inbounds function roessler_jacob(J, u, p, t)
+    J[2,2] = p[1]
+    J[3,1] = u[3]; J[3,3] = u[1] - p[3]
     return nothing
 end
 ```
-The first code-block defines a `struct` that is simply a container for the
-parameters of the Rössler system. The second code-block defines the equations
-of motion of the system, by taking advantage of the fact that you can *call*
-this `struct` as if it was a function:
-```julia
-s = Rössler(1,2,3)
-u = rand(3); du = copy(u)
-s(0, u, du)
-```
-
-The third code-block then defines the Jacobian function using multiple dispatch.
-This allows us to use the *same* instance of `Rössler` for *both* the equations
-of motion *and* the Jacobian function!
-
-!!! important "Use `AbstractVector` and `AbstractMatrix`"
-    You must define your equations of motion / Jacobian functions using `Abstract`
-    Types, and **not** types like `Vector` or `Matrix`, otherwise functions like
-    `lyapunovs` won't work properly.
+The first code-block defines defines the equations
+of motion of the system. The second code-block then defines
+the Jacobian function of the system.
 
 The possibility of providing an initialized
 Jacobian to the `ContinuousDS` constructor allows us to "cheat".
@@ -79,8 +55,7 @@ function roessler(u0=rand(3); a = 0.2, b = 0.2, c = 5.7)
     J[2,:] .= [i,  a,       o]
     J[3,:] .= [u0[3], o, u0[1] - c]
 
-    s = Rössler(a, b, c)
-    return ContinuousDS(u0, s, s, J)
+    return ContinuousDS(u0, roessler_eom, roessler_jacob, J; parameters = [a, b, c])
 end
 
 ds = roessler()
@@ -90,15 +65,16 @@ ds = Systems.roessler()
 ```
 3-dimensional continuous dynamical system:
 state: [0.021655, 0.530449, 0.0227049]
-e.o.m.: DynamicalSystemsBase.Systems.Rössler(0.2, 0.2, 5.7)
+e.o.m.: DynamicalSystemsBase.Systems.roessler_eom
 ```
 Then, it is trivial to change a parameter of the system by e.g. doing
-`ds.prob.f.c = 2.2`. The equations of motion for a continuous system are stored in the `ODEProblem` struct, the field `f`.
-
+`ds.prob.p[3] = 2.2`.
 Notice that this parameter change will affect both the equations of motion as well
 as the Jacobian function, making everything concise and easy-to-use!
 
-## Using `ODEProblem` to define a `ContinuousDS`
+
+
+## Defining a `ContinuousDS` using `ODEProblem`
 Here we will show how one can take advantage of the callback capabilities of [DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/) to define
 a system.
 
@@ -111,14 +87,14 @@ We will make a Hénon–Heiles that also satisfies energy conservation. This is 
 
 We first write the equations of motion and the Jacobian functions in the instructed form:
 ```julia
-function hheom!(t, u::AbstractVector, du::AbstractVector)
+function hheom!(du, u, p, t)
     du[1] = u[3]
     du[2] = u[4]
     du[3] = -u[1] - 2u[1]*u[2]
     du[4] = -u[2] - (u[1]^2 - u[2]^2)
     return nothing
 end
-function hhjacob!(t, u::AbstractVector, J::AbstractMatrix)
+function hhjacob!(J, u, p, t)
     J[3,1] = -1 - 2u[2]; J[3,2] = -2u[1]
     J[4,1] = -2u[1]; J[4,2] =  -1 + 2u[2]
     return nothing
@@ -139,7 +115,7 @@ Then, create a "residual" function, used in the [`ManifoldProjection`](http://do
 u0 = [0.1, 0, 0, 0.5]
 const E = H(u0[1],u0[2],u0[3],u0[4])
 
-function g(u, resid)
+function g!(resid, u)
     resid[1] = H(u[1],u[2],u[3],u[4]) - E
     resid[2:4] .= 0
 end
@@ -153,7 +129,7 @@ dynamical system structure, `ContinuousDS`:
 # Pkg.add("DiffEqCallbacks")
 using DiffEqCallbacks, OrdinaryDiffEq
 
-cb = ManifoldProjection(g, nlopts=Dict(:ftol=>1e-13), save = false)
+cb = ManifoldProjection(g!, nlopts=Dict(:ftol=>1e-13), save = false)
 prob = ODEProblem(hheom!, u0, (0., 100.0),  callback=cb)
 
 # Initialize Jacobian
@@ -168,8 +144,8 @@ ds = ContinuousDS(prob, hhjacob!, J)
 
 Notice that using the argument `save = false` in the `ManifoldProjection` is crucial, because otherwise any data taken from the system,
 using e.g. [`trajectory`](@ref) will necessarily have saved points at every
-callback realization (which you *do not* want if you want timeseries of equi-sampled
-points).
+callback realization (which you *do not* want if you want timeseries sampled at
+regular intervals, which is also the whole purpose of [`trajectory`](@ref)).
 
 Let's see now if our system does indeed conserve energy!
 ```julia

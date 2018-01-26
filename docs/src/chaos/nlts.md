@@ -1,7 +1,7 @@
 # Nonlinear Timeseries Analysis
 
 ## Neighborhoods in a Dataset
-Incorporating the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) and the flexibility of `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
+Combining the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with the `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
 ```@docs
 neighborhood
 AbstractNeighborhood
@@ -17,30 +17,40 @@ This is done through the `Reconstruction` interface:
 Reconstruction
 ```
 ---
-As an example, let's pass a `Reconstruction` into e.g. a method that calculates the
-attractor dimension:
-```@example recon
-using DynamicalSystems
-he = Systems.henon()
-ts = trajectory(he, 100000)
-D1 = information_dim(ts) # around 1.20
-x = ts[:, 1] # some "recorded" timeseries
-R = Reconstruction(x, 2, 1) # delay coords. reconstruction
-R[1] # first point of reconstruction, ≡ (x[1], x[2])
-R[:, 2] # Second COLUMN of the reconstruction, ≡ x[2:end] since τ=1
-D2 = information_dim(R) #around 1.20
-println("D2 - D1 = $(abs(D2- D1))")
+Here are some examples of `Reconstruction`s of a 3D continuous chaotic system:
+```julia
+using DynamicalSystems, PyPlot
+
+ds = Systems.gissinger()
+data = trajectory(ds, 1000.0)
+
+xyz = columns(data)
+
+figure(figsize = (12,10))
+k = 1
+for i in 1:3
+    for τ in [5, 30, 100]
+        R = Reconstruction(xyz[i], 2, τ)
+        ax = subplot(3,3,k)
+        plot(R[:, 1], R[:, 2], color = "C$(k-1)", lw = 0.8)
+        title("var = $i, τ = $τ")
+        k+=1
+    end
+end
+
+tight_layout()
+suptitle("2D Reconstructions")
+subplots_adjust(top=0.9)
 ```
-The 2 numbers `D1` and `D2` are *very close*, but of course I knew before-hand good parameter values for `D` and `τ` (I cheated, huhu!).
+![Example reconstructions](https://i.imgur.com/OZDBvu5.png)
 
 ### Estimating Reconstruction Parameters
-The following functions estimate good values that can be used in
-[`Reconstruction`](@ref):
+The following functions can (sometimes) estimate good values that can be used in
+[`Reconstruction`](@ref). There are no guarantees though!
 ```@docs
 estimate_delay
 ```
 ---
-
 
 ## Numerical Lyapunov Exponent
 Given any timeseries, one can first obtain a [`Reconstruction`](@ref) from it using
@@ -177,3 +187,46 @@ which produces:
 ![Continuous Reconstruction exaple](https://i.imgur.com/lgyGLDv.png)
 As you can see, using `τ = 15` makes almost no sense! The estimates with
 `τ = 7` though are very good (the actual value is around `λ ≈ 0.89...`).
+
+## Broomhead-King Coordinates
+```@docs
+broomhead_king
+```
+---
+This alternative/improvement of the traditional delay coordinates can be a very
+powerful tool. An example where it shines is noisy data where there is the effect
+of superficial dimensions due to noise.
+
+Take the following example where we produce noisy data from a system and then use
+Broomhead-King coordinates as an alternative to "vanilla" delay coordinates:
+
+```julia
+using DynamicalSystems, PyPlot
+using Distributions # for random numbers
+
+ds = Systems.gissinger()
+data = trajectory(ds, 1000.0)
+x = data[:, 1] # "exactly" 20000 points
+
+L = length(x)
+distrib = Normal(0, 0.1)
+s = x .+ rand(distrib, L)
+
+U, S = broomhead_king(s, 40)
+
+figure(figsize= (10,6))
+subplot(1,2,1)
+plot(U[:, 1], U[:, 2])
+title("Broomhead-King of s")
+
+subplot(1,2,2)
+R = Reconstruction(s, 2, 30)
+plot(columns(R)...; color = "C3")
+title("2D Reconstruction of s")
+
+tight_layout()
+```
+![Broomhead-King example](https://i.imgur.com/xVWDjuh.png)
+we have used the same system as in the [delay coordinates reconstruction](#Delay-Coordinates-Reconstruction) example, and picked the optimal
+delay time of `τ = 30`. Regardless, the vanilla delay coordinates fail spectacularly
+when compared with the Broomhead-King coordinates.

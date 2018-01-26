@@ -17,7 +17,7 @@ The following treat systems where the equations of motion are known:
 
 ### [Entropies and Dimensions](entropies)
 
-1. Generalized (Renyi) entropy and all related entropies: [`genentropy`](@ref).
+1. Generalized (Renyi) entropy: [`genentropy`](@ref).
 2. Very fast and very cheap (memory-wise) method for computing entropies of large datasets.
 3. Generalized dimensions (e.g. capacity dimension, information dimension, etc.): [`generalized_dim`](@ref).
 3. Kaplan-Yorke dimension: [`kaplanyorke_dim`](@ref).
@@ -32,6 +32,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 1. Flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
 2. Methods for estimating good [`Reconstruction`](@ref) parameters.
+3. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Four different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
     * Fast computation of the above algorithms made possible by combining the
     performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with

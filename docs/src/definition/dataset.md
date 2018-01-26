@@ -28,12 +28,13 @@ If given a matrix, we first convert to `Dataset`. This means that you should *fi
 convert* your data to a `Dataset` if you want to call functions more than once, to avoid
 constantly converting.
 
-## Extrema
-Functions that find extrema of a dataset for each timeseries:
+## Dataset Functions
+Functions that operate on datasets.
 ```@docs
 minima
 maxima
 minmaxima
+columns
 ```
 
 ## Dataset IO
