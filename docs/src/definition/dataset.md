@@ -14,14 +14,14 @@ Besides the examples in the documentation string,
 you can also do:
 ```julia
 using DynamicalSystems
-hen == Systems.henon()
+hen = Systems.henon()
 data = trajectory(hen, 10000) # this returns a dataset
 for point in data
 # do stuff with each datapoint (vector with as many elements as system dimension)
 end
 ```
 
-All functions of our ecosystem that manipulate and use data are expecting an `AbstractDataset` subtype. This allows us to define efficient methods that coordinate
+All functions from **DynamicalSystems.jl** that manipulate and use data are expecting an `AbstractDataset` subtype. This allows us to define efficient methods that coordinate
 well with other packages, like e.g. [`neighborhood`](@ref).
 
 If given a matrix, we first convert to `Dataset`. This means that you should *first
@@ -36,7 +36,7 @@ maxima
 minmaxima
 columns
 ```
-
+---
 ## Dataset IO
 In addition to the above, we also offer (very basic) functions that read/write a
 `Dataset` from/to a delimited text file:
