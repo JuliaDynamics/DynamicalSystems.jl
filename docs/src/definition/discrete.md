@@ -27,7 +27,7 @@ type called `BigDiscreteDS`:
 BigDiscreteDS
 ```
 ---
-The source code of the pre-defined [coupled standard maps](definition/systems#DynamicalSystemsBase.Systems.coupledstandardmaps) can
+The source code of the pre-defined [coupled standard maps](predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps) can
 serve as an example of a `BigDiscreteDS` definition *(we do not show it here because it is very large and very complicated*).
 
 Just keep in mind that the equations of motion for `BigDiscreteDS` are of the
@@ -45,13 +45,13 @@ DiscreteDS
     It is **heavily** advised that the equations of motion `eom` function returns an `SVector` from
     the julia package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and similarly the `jacob` function returns an `SMatrix` in the case of `DiscreteDS`.
 
-For example, here is the case if the pre-defined [henon map](definition/systems#DynamicalSystemsBase.Systems.henon):
+For example, here is the case of the pre-defined [henon map](predefined/#DynamicalSystemsBase.Systems.henon):
 ```julia
 function henon(u0=zeros(2); a = 1.4, b = 0.3)
     henon_eom(x, p) = SVector{2}(1.0 - p[1]*x[1]^2 + x[2], p[2]*x[1])
     henon_jacob(x, p) = @SMatrix [-2*p[1]*x[1] 1.0; p[2] 0.0]
     return DiscreteDS(u0, henon_eom, henon_jacob; parameters = [a, b])
-end # should give lyapunov exponents [0.4189, -1.6229]
+end
 ```
 
 To change the parameter `a` you would use `ds.p[1] = 123` and the change

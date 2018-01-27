@@ -18,7 +18,8 @@ The following treat systems where the equations of motion are known:
 ### [Entropies and Dimensions](entropies)
 
 1. Generalized (Renyi) entropy: [`genentropy`](@ref).
-2. Very fast and very cheap (memory-wise) method for computing entropies of large datasets.
+2. Permutation entropy: [`permentropy`](@ref).
+2. Fast and cheap (memory-wise) method for computing entropies of large datasets.
 3. Generalized dimensions (e.g. capacity dimension, information dimension, etc.): [`generalized_dim`](@ref).
 3. Kaplan-Yorke dimension: [`kaplanyorke_dim`](@ref).
 4. Automated detection of best algorithmic parameters for calculating attractor dimensions.

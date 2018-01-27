@@ -206,7 +206,7 @@ using Distributions # for random numbers
 
 ds = Systems.gissinger()
 data = trajectory(ds, 1000.0)
-x = data[:, 1] # "exactly" 20000 points
+x = data[:, 1] 
 
 L = length(x)
 distrib = Normal(0, 0.1)

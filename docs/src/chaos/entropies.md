@@ -43,10 +43,41 @@ isapprox(sh, log(2),  rtol = 1e-6)
 ```julia
 true
 ```
-Because all entropies are calculated on base-$e$, the unit of measurement is "nat"
-and one bit is $\log(2)\times$nat.
+Because all entropies are by default calculated on base-$e$, the unit of measurement is "nat" and one bit is $\log(2)\times$nat.
 
+### Permutation Entropy
+The permutation entropy is introduced by C. Bandt and B. Pompe as a
+"A Natural Complexity Measure for Timeseries", which directly applies to arbitrary real-world data and is particularly useful in the presence of dynamical or observational noise.
 
+```@docs
+permentropy
+```
+
+For example, we will compute and compare the [`lyapunov`](@ref) exponent of the logistic
+map with the order-6 permutation entropy, like in the original paper.
+```julia
+ds = Systems.logistic()
+rs = 3.5:0.001:4
+ls = Float64[]; hs = Float64[]
+for r in rs
+    ds.p[1] = r
+    push!(ls, lyapunov(ds, 100000))
+    # For 1D systems `trajectory` returns a vector
+    push!(hs, permentropy(trajectory(ds, 10000), 6))
+end
+
+f = figure(figsize = (10,6))
+a1 = subplot(211)
+plot(rs, ls); ylim(-2, log(2)); ylabel("\$\\lambda\$")
+a1[:axes][:get_xaxis]()[:set_ticklabels]([])
+xlim(rs[1], rs[end]);
+
+a2 = subplot(212)
+plot(rs, hs; color = "C1"); ylabel("\$h_6\$")
+xlim(rs[1], rs[end]); xlabel("\$r\$")
+tight_layout()
+```
+![Permutation Entropy](https://i.imgur.com/tsqSA7a.png)
 
 ## Attractor Dimension Estimation
 There are numerous methods that one can use to calculate a so-called "dimension" of a

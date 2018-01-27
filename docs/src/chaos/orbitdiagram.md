@@ -17,7 +17,8 @@ pvalues = 2:0.001:4
 ics = [rand() for m in 1:10]
 n = 50
 Ttr = 5000
-output = orbitdiagram(ds, i, :r, pvalues; n = n, Ttr = Ttr)
+p_index = 1
+output = orbitdiagram(ds, i, p_index, pvalues; n = n, Ttr = Ttr)
 
 figure()
 for (j, p) in enumerate(pvalues)
@@ -64,7 +65,7 @@ poincaresos
 An example of the [Henon-Helies](/definition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a quasi-periodic solution
 ```julia
 ds = Systems.henonhelies([0., 0.1, 0.5, 0.])
-output = poincaresos(ds, 3, 1000.0, diff_eq_kwargs=Dict(:solver=>Vern9()))
+output = poincaresos(ds, 3, 1000.0)
 
 figure()
 plot(output[:, 2], output[:, 4], lw = 0.0, marker=".")
@@ -115,8 +116,9 @@ pvalues = linspace(19,22,201)
 i = 1
 j = 2
 tf = 200.0
+p_index = 1
 
-output = produce_orbitdiagram(ds, j, i, :R1, pvalues; tfinal = tf,
+output = produce_orbitdiagram(ds, j, i, p_index, pvalues; tfinal = tf,
 Ttr = 200.0, diff_eq_kwargs = de, direction = -1, printparams = true)
 
 figure()

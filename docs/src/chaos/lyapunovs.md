@@ -27,8 +27,7 @@ ds = Systems.towel()
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
 ```julia
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
-λλ = lyapunovs(lor, 10000,
-dt = 0.1, diff_eq_kwargs = Dict(:abstol => 1e-9, :reltol => 1e-9))
+λλ = lyapunovs(lor, 10000, dt = 0.1)
 ```
 ```julia
 [0.985688, 0.00271333, -14.6551]
@@ -57,9 +56,7 @@ The same is done for continuous systems:
 using DynamicalSystems, OrdinaryDiffEq
 
 ross = Systems.roessler(a = 0.1, b = 0.1, c = 14.0) #not original parameters
-λ = lyapunov(ross, 100000, dt = 10.0,
-diff_eq_kwargs = Dict(:solver => Vern8(), :abstol=>1e-9, :reltol=>1e-9),
-Ttr = 100.0)
+λ = lyapunov(ross, 100000, dt = 10.0, Ttr = 100.0)
 ```
 ```
 0.07127399326422117

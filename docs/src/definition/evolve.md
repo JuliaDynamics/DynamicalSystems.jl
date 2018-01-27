@@ -5,10 +5,6 @@ evolve
 evolve!
 trajectory
 get_sol
-```
----
-as well as some basic interfacing for [DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/index.html):
-```@docs
 ODEProblem
 ```
 ---
