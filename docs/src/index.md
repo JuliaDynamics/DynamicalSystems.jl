@@ -25,9 +25,7 @@ Pkg.status("ChaosTools") # hide
 
 
 ## Our Goals
-Our aim is for the **DynamicalSystems.jl** ecosystem to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics.
-
-Our goals with this ecosystem can be summarized in the following three:
+Our aim is for the **DynamicalSystems.jl** to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics, by accomplishing the following three points:
 
 1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the [Lorenz attractor](definition/predefined/#DynamicalSystemsBase.Systems.lorenz), or a high dimensional discrete map like [coupled standard maps](definition/predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps).
 2. Be accurate, reliable and performant.
@@ -77,7 +75,7 @@ Quick summary:
 * Delay Coordinates Embedding
 * Neighborhood estimation
 * Lyapunov exponent of a timeseries
-* Finding Fixed Points of any Map of any order
+* Finding Fixed Points of Maps
 * Detecting Chaos
 
 ## Wanted Features

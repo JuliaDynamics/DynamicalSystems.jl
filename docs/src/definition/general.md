@@ -1,15 +1,15 @@
-All core definitions for **DynamicalSystems.jl** are contained in the [DynamicalSystemsBase.jl](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl) Julia.
+All core definitions for **DynamicalSystems.jl** are contained in [DynamicalSystemsBase.jl](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl).
 
 For **DynamicalSystems.jl** a "dynamical system" is a simple structure with
 three fundamental parts:
 
 1. The state,
-2. The equations of motion and
+2. The equations of motion function and
 3. The Jacobian function.
 
 The last two are *functions* that take as an input a state as well as the parameters
 of the model. Depending on the type, some
-dynamical system types may also have other fields that are necessary for smooth integration in the ecosystem.
+dynamical system types may also have some other fields that are of minor importance.
 
 The above "definition" of course stands for systems where one already *knows* the equations of motion. if instead, your "system" is in the form of [numerical data](definition/dataset), then see the appropriate section.
 
