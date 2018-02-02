@@ -79,6 +79,11 @@ tight_layout()
 ```
 ![Permutation Entropy](https://i.imgur.com/tsqSA7a.png)
 
+!!! info "Permutation Entropy performance"
+    Even though the current implementation is fine and runs reasonably fast for
+    moderate orders, it can get slow for high orders. Issue [ChaosTools.jl#22](https://github.com/JuliaDynamics/ChaosTools.jl/issues/22)
+    keeps track of this, and contains information on how to improve performance.
+
 ## Attractor Dimension Estimation
 There are numerous methods that one can use to calculate a so-called "dimension" of a
 dataset, like for example the [Fractal dimension](https://en.wikipedia.org/wiki/Fractal_dimension). This real number can offer
