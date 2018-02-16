@@ -1,5 +1,5 @@
 ```@docs
-DynamicalSystemsBase.integrator
-DynamicalSystemsBase.parallel_integrator
-DynamicalSystemsBase.tangent_integrator
+integrator
+parallel_integrator
+tangent_integrator
 ```
