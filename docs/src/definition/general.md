@@ -1,3 +1,4 @@
+## Creating a Dynamical System
 ```@docs
 DynamicalSystem
 ```
@@ -28,6 +29,7 @@ Here is a handy table that summarizes in what form should be the functions requi
 ## General Functions
 The following functions are defined for convenience for any dynamical system:
 ```@docs
+dimension
 jacobian
 set_parameter!
 ```
