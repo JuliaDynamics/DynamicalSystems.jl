@@ -81,7 +81,7 @@ ylim(1e-12, 1)
 As an example of a continuous system, let's see the [`henonhelies`](system_definition/#DynamicalSystems.Systems.henonhelies):
 ```julia
 using DynamicalSystems
-using PyPlot
+using PyPlot, OrdinaryDiffEq
 figure(figsize=(10, 12))
 sp = [0, .295456, .407308431, 0] #stable periodic orbit: 1D torus
 qp = [0, .483000, .278980390, 0] #quasiperiodic orbit: 2D torus
@@ -151,30 +151,40 @@ very well the theory described in
 
 ### Using GALI
 No-one in their right mind would try to fit power-laws in order to distinguish between
-chaotic and regular behavior, like the above examples. These were just demonstrations.
+chaotic and regular behavior, like the above examples. These were just demonstrations and proofs that the method works as expected in all cases.
 
 The most common usage of $\text{GALI}_k$ is to define a (sufficiently) small
 amount of time and a (sufficiently) small threshold and see whether $\text{GALI}_k$
 stays below it, for a (sufficiently) big $k$.
 
-For example one could do
+The following is an example of [advanced usage](advanced):
 ```julia
 using DynamicalSystems
-using PyPlot
-
-chaoticness(ds) = gali(ds, 2, 500.0)[2][end]
+using PyPlot, StaticArrays
 
 function main(k)
 
+    # Measure of chaoticity: final time of gali_2
     dens = 201
-    chaoticity = zeros(dens,dens)
+    chaoticity = zeros(Int, dens, dens)
+
     θs = ps = linspace(0, 2π, dens+1)
     ds = Systems.standardmap(k = k)
 
+    tinteg = tangent_integrator(ds, 2)
+
     for (i, θ) ∈ enumerate(θs[1:dens])
+        println("i = $(i)")
         for (j, p) ∈ enumerate(ps[1:dens])
-            ds.state = SVector{2}(θ, p)
-            chaoticity[i, j] = chaoticness(ds)
+
+            # new initial state is the system initial state
+            # and 2 random orthonormal deviation vectors:
+            u0 = hcat(SVector{2}(θ, p), orthonormal(2,2))
+            reinit!(tinteg, u0)
+
+            # Low-level call signature of gali:
+            #  _gali(tinteg, tmax, dt, threshold)
+            chaoticity[i, j] = ChaosTools._gali(tinteg, 500, 1, 1e-12)[2][end]
         end
     end
 
@@ -186,5 +196,5 @@ end
 
 main(0.9)
 ```
-and after about two minutes you will get:
+and after about a minute you will get:
 ![Chaos detection](https://i.imgur.com/z85KBRh.png)

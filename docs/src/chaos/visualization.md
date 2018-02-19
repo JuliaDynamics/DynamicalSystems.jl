@@ -11,5 +11,7 @@ Use the help mode (press `?` and then the function name) to access the documenta
 strings for e.g. using keyword arguments.
 
 ## Visualization Library
-* `phasespace` : Plots the phasespace of a 2D `DiscreteDS`.
+* `phasespace` : Plots the phasespace of a 2D `DiscreteDynamicalSystem`.
 * `plot_linear_regions` : Plots the results of `lnear_regions`.
+* `plot_dataset` : Plots each column of a dataset.
+* `plot_trajectory` : Produces a trajectory and plots each column.

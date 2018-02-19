@@ -22,10 +22,14 @@ The current documentation was built with the following versions
 Pkg.status("DynamicalSystemsBase") # hide
 Pkg.status("ChaosTools") # hide
 ```
-
+See the [News](news) page for recent updates!
 
 ## Our Goals
-Our aim is for the **DynamicalSystems.jl** to be a useful and powerful companion for students and scientists working on chaos and nonlinear dynamics, by accomplishing the following three points:
+The ultimate goal for **DynamicalSystems.jl** is
+to be a useful *library* for scientists working on chaos, nonlinear dynamics and
+in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
+
+With **DynamicalSystems.jl** we try to
 
 1. Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the [Lorenz attractor](definition/predefined/#DynamicalSystemsBase.Systems.lorenz), or a high dimensional discrete map like [coupled standard maps](definition/predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps).
 2. Be accurate, reliable and performant.
@@ -43,25 +47,19 @@ The same function call works with any system, no discriminations here!
 ## Installation
 Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
-### Low Dependency usage
-By running `Pkg.add("DynamicalSystems")` you install all packages of the ecosystem.
-That is not necessary however, since **DynamicalSystems.jl** is a bridging package
-that exports everything and hosts the documentation.
-
-For example, if you only need the features of [ChaosTools.jl](chaos/overview) then
-you can get away by doing only `Pkg.add("ChaosTools")` and all other dependencies
-will be resolved accordingly.
-
 ## Contents
 
 ### [DynamicalSystemsBase.jl](definition/general)
 
-1. Intuitive, consistent APIs for the definition of general dynamical systems.
-2. [Discrete Maps](definition/discrete)
-3. [Continuous Flows](definition/continuous)
-4. Dedicated interface for [Numerical Data](definition/dataset)
+1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. In fact we have implementations for eight (8) possible dynamical systems:
+    * Continuous or Discrete.
+    * In-place or out-of-place (large versus small systems).
+    * Auto-differentiated or not (for the Jacobian function).
+    
+4. Dedicated interface for [numerical data](definition/dataset).
 5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-4. Well-defined functions for (numerically) evolving dynamical systems.
+4. Robust implementations of all kinds of integrators, that evolve the system,
+   many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
 ### [ChaosTools.jl](chaos/overview)
