@@ -36,9 +36,7 @@ docs_dir: 'build'
 pages:
 - Introduction: index.md
 - DynamicalSystemsBase.jl:
-  - General Remarks: definition/general.md
-  - Continuous Systems: definition/continuous.md
-  - Discrete Systems: definition/discrete.md
+  - Dynamical Systems: definition/general.md
   - Time Evolution: definition/evolve.md
   - Numerical Data: definition/dataset.md
   - Predefined Systems: definition/predefined.md
@@ -51,4 +49,6 @@ pages:
   - Periodicity: chaos/periodicity.md
   - Chaos Detection: chaos/chaos_detection.md
   - Visualization: chaos/visualization.md
+- Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
+- News: news.md

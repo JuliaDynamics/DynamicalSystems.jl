@@ -41,7 +41,7 @@ pvalues = 0:0.005:2
 ics = [0.001rand(2) for m in 1:10]
 n = 50
 Ttr = 5000
-output = orbitdiagram(ds, i, :k, pvalues; n = n, Ttr = Ttr, ics = ics)
+output = orbitdiagram(ds, i, 1, pvalues; n = n, Ttr = Ttr, ics = ics)
 
 figure()
 for (j, p) in enumerate(pvalues)
@@ -119,7 +119,7 @@ tf = 200.0
 p_index = 1
 
 output = produce_orbitdiagram(ds, j, i, p_index, pvalues; tfinal = tf,
-Ttr = 200.0, diff_eq_kwargs = de, direction = -1, printparams = true)
+Ttr = 200.0, direction = -1, printparams = true)
 
 figure()
 for (j, p) in enumerate(pvalues)
