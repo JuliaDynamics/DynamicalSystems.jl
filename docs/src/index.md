@@ -56,6 +56,7 @@ Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
 
+
 4. Dedicated interface for [numerical data](definition/dataset).
 5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Robust implementations of all kinds of integrators, that evolve the system,
