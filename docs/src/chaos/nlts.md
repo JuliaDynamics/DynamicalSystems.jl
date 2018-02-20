@@ -227,6 +227,6 @@ title("2D Reconstruction of s")
 tight_layout()
 ```
 ![Broomhead-King example](https://i.imgur.com/xVWDjuh.png)
-we have used the same system as in the [delay coordinates reconstruction](#Delay-Coordinates-Reconstruction) example, and picked the optimal
+we have used the same system as in the [delay coordinates reconstruction](#delay-coordinates-reconstruction) example, and picked the optimal
 delay time of `τ = 30`. Regardless, the vanilla delay coordinates fail spectacularly
 when compared with the Broomhead-King coordinates.
