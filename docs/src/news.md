@@ -53,7 +53,7 @@ Here are the highlights:
   when given a `DynamicalSystem` the create an appropriate *integrator* from it.
   Then we use `step!(integrator, dt)` and use the integrator state to perform
   calculations.
-* Eight (8) possible system types are now available:
+* Eight possible system types are now available:
     * Continuous or Discrete.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).

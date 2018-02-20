@@ -51,11 +51,11 @@ Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
 ### [DynamicalSystemsBase.jl](definition/general)
 
-1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. In fact we have implementations for eight (8) possible dynamical systems:
+1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. In fact we have implementations for 8 possible dynamical systems:
     * Continuous or Discrete.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
-    
+
 4. Dedicated interface for [numerical data](definition/dataset).
 5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Robust implementations of all kinds of integrators, that evolve the system,
