@@ -60,6 +60,7 @@ Here are the highlights:
     * This is only possible due to the strictness of defining the `eom` function.
     * Robust multiple dispatch on all 8 types (again, only possible due to the strictness of the `eom` function).
 
+
 * Three low-lever integrator constructing functions are available, that only need
   a `DynamicalSystem` and (optionally) an initial state:
     1. [`integrator`](@ref) for "normal" integration of a system.
