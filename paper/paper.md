@@ -27,9 +27,9 @@ On the other hand, chaotic systems are not analytically solvable, therefore stud
 Many such methods have been devised to study the many facets of nonlinear systems, but unfortunately no up-to-date and comprehensive library collecting these methods exists.
 
 # Enter **DynamicalSystems.jl**
-**DynamicalSystems.jl** was created to fill this role. It is a Julia [@Bezanson2017] library that offers functions useful in the study of chaos, nonlinear dynamics
-and timeseries analysis.
-It is part of [**DynamicalSystems.jl**](https://juliadynamics.github.io/DynamicalSystems.jl/latest/) software ecosystem, a bundle of packages aimed at the study of chaotic systems. **DynamicalSystems.jl** itself is also a part of the [JuliaDynamics](https://github.com/JuliaDynamics) organization, similarly with the package DynamicalBilliards.jl [@Datseris2017].
+**DynamicalSystems.jl** was created to fill this role. It is a Julia [@Bezanson2017] library that offers functionality useful in the study of chaos, nonlinear dynamics
+and time-series analysis.
+**DynamicalSystems.jl** itself is also a part of the [JuliaDynamics](https://github.com/JuliaDynamics) organization, similarly with the package DynamicalBilliards.jl [@Datseris2017].
 
 The official documentation is hosted [here](https://juliadynamics.github.io/DynamicalSystems.jl/latest/).
 
@@ -65,7 +65,7 @@ because new methods are constantly enriching **DynamicalSystems.jl**.
 We would now like to mention three other software packages that offer similar functionality to ours. We are only considering open-sourced packages in this section.
 
 The first, [TSTOOL](http://www.physik3.gwdg.de/tstool/index.html), is aimed at
-nonlinear time series analysis and is implemented in MATLAB (which is Proprietary software) with a partial backend of C++. Features of TSTOOLS that are not currently offered by **DynamicalSystems.jl** are surrogate timeseries and estimating dimensions for delay coordinates embedding. TSTOOL operates on datasets, and thus any dataset can easily be loaded through the provided interface, but there is no definition of equations of motion. This has the result that all methods contained cannot take advantage of known equations of motion.
+nonlinear time series analysis and is implemented in MATLAB (which is Proprietary software) with a partial backend of C++. Features of TSTOOLS that are not currently offered by **DynamicalSystems.jl** are surrogate time-series and estimating suitable dimensions for delay coordinates embedding. TSTOOL operates on datasets, and thus any dataset can easily be loaded through the provided interface, but there is no definition of equations of motion. This has the result that all methods contained cannot take advantage of known equations of motion.
 
 The second, E&F chaos [@Diks2008], is implemented in LUA with a partial C/Pascal backend
 and is aimed at nonlinear dynamics in economics and finance. Features of E&F chaos that we do not offer are basin boundary plots, cobwebs and parameter basins.
