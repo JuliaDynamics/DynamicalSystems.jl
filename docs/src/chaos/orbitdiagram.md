@@ -62,9 +62,9 @@ poincaresos
 ```
 ---
 
-An example of the [Henon-Helies](/definition/predefined/#DynamicalSystemsBase.Systems.henonhelies) system using a quasi-periodic solution
+An example of the [Henon-Heiles](/definition/predefined/#DynamicalSystemsBase.Systems.henonheiles) system using a quasi-periodic solution
 ```julia
-ds = Systems.henonhelies([0., 0.1, 0.5, 0.])
+ds = Systems.henonheiles([0., 0.1, 0.5, 0.])
 output = poincaresos(ds, 3, 1000.0)
 
 figure()

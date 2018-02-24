@@ -79,7 +79,7 @@ file for clarity.
 * Automatic Jacobian for continuous systems!
 * `BigDiscreteDS` type: a new system type for discrete systems with very high dimensionality.
 * Added automated Jacobian computation for `BigDiscreteDS`.
-* Henon Helies system in famous_systems.
+* Henon Heiles system in famous_systems.
 * Nonlinearly coupled standard maps in famous systems.
 * Lorenz96 in famous_systems.
 

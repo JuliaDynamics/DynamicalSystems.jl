@@ -78,7 +78,7 @@ ylim(1e-12, 1)
 
 
 ### Continuous Example
-As an example of a continuous system, let's see the [`henonhelies`](system_definition/#DynamicalSystems.Systems.henonhelies):
+As an example of a continuous system, let's see the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles):
 ```julia
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
@@ -89,7 +89,7 @@ ch = [0, -0.25, 0.42081, 0] # chaotic orbit
 dt = 1.0
 
 subplot(3,2,1)
-ds = Systems.henonhelies(sp)
+ds = Systems.henonheiles(sp)
 diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
 tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
@@ -109,7 +109,7 @@ end
 legend(fontsize=12)
 
 subplot(3,2,3)
-ds = Systems.henonhelies(qp)
+ds = Systems.henonheiles(qp)
 diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
 tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
@@ -125,7 +125,7 @@ end
 legend(fontsize=12)
 tight_layout()
 
-ds = Systems.henonhelies(ch)
+ds = Systems.henonheiles(ch)
 diffeq = Dict(:abstol=>1e-6, :reltol=>1e-6, :solver => Tsit5())
 tr = trajectory(ds, 50000.0, dt=dt, diff_eq_kwargs = diffeq)
 subplot(3,2,5)
