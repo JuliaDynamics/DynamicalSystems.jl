@@ -49,7 +49,7 @@ Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
 ## Contents
 
-### [DynamicalSystemsBase.jl](definition/general)
+### [Fundamentals](definition/general)
 
 1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. In fact we have implementations for 8 possible dynamical systems:
     * Continuous or Discrete.
@@ -63,15 +63,13 @@ Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
    many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
-### [ChaosTools.jl](chaos/overview)
-Please see the [overview section](chaos/overview) for a full list of features.
-
-Quick summary:
+### [ChaosTools](chaos/overview)
+Please see the [overview section](chaos/overview) for a full list of features. Here
+is a quick summary:
 
 * Poincare S.O.S. and orbit diagrams
 * Lyapunov Exponents
 * Entropies and Dimensions
-* Delay Coordinates Embedding
 * Neighborhood estimation
 * Lyapunov exponent of a timeseries
 * Finding Fixed Points of Maps

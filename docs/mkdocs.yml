@@ -35,12 +35,13 @@ docs_dir: 'build'
 
 pages:
 - Introduction: index.md
-- DynamicalSystemsBase.jl:
+- Fundamentals:
   - Dynamical Systems: definition/general.md
   - Time Evolution: definition/evolve.md
   - Numerical Data: definition/dataset.md
+  - Delay Coordinates: definition/reconstruction.md
   - Predefined Systems: definition/predefined.md
-- ChaosTools.jl:
+- ChaosTools:
   - Features Overview: chaos/overview.md
   - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
   - Lyapunov Exponents: chaos/lyapunovs.md

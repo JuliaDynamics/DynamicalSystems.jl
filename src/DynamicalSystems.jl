@@ -7,7 +7,7 @@ module DynamicalSystems
 
 using StaticArrays
 
-export SVector, SMatrix, @SVector, @SMatrix
+export SVector, SMatrix, @SVector, @SMatrix, Size
 
 using Reexport
 
