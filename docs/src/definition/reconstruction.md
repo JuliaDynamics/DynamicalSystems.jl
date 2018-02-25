@@ -32,7 +32,7 @@ subplots_adjust(top=0.9)
 ```
 ![Example reconstructions](https://i.imgur.com/OZDBvu5.png)
 
-A `Reconstruction` can also be made from a trajectory (i.e. multidimensional timeseries). For this to be possible, the number of trajectories must be known by Type:
+A `Reconstruction` can also be made from a trajectory (i.e. multidimensional timeseries). For this to be possible, the number of timeseries must be known by Type:
 ```julia
 a = rand(1000, 3) # my trajectory
 R = Reconstruction(a, 2, 2) # errorino
