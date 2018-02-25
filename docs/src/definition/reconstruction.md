@@ -39,6 +39,15 @@ R = Reconstruction(a, 2, 2) # errorino
 
 A = Size(1000, 3)(a) # create array with the size as Type information
 R = Reconstruction(A, 2, 2) #aaaall good
+
+ds = Systems.towel(); tr = trajectory(ds, 10000)
+R = Reconstruction(tr, 2, 2) # Dataset size is also known by Type!
+```
+```
+(D=6, τ=2) - delay coordinates Reconstruction
+ 0.085     -0.121       0.075     0.76827   -0.038933    0.672094
+ 0.285813  -0.0675286   0.238038  0.681871   0.0508933   0.825263
+ ⋮                                                       ⋮       
 ```
 
 ## Estimating Reconstruction Parameters
