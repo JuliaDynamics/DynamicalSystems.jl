@@ -10,7 +10,7 @@ Here are some examples of `Reconstruction`s of a 3D continuous chaotic system:
 using DynamicalSystems, PyPlot
 
 ds = Systems.gissinger()
-data = trajectory(ds, 1000.0)
+data = trajectory(ds, 1000.0, dt = 0.05)
 
 xyz = columns(data)
 
@@ -32,6 +32,11 @@ subplots_adjust(top=0.9)
 ```
 ![Example reconstructions](https://i.imgur.com/OZDBvu5.png)
 
+!!! note "`τ` and `dt`"
+    Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `dt`. In the above example the value `τ=30` is good, *only* for the case
+    of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
+
+## Μulti-dimensional Reconstruction
 A `Reconstruction` can also be made from a trajectory (i.e. multidimensional timeseries). For this to be possible, the number of timeseries must be known by Type:
 ```julia
 a = rand(1000, 3) # my trajectory
@@ -44,11 +49,12 @@ ds = Systems.towel(); tr = trajectory(ds, 10000)
 R = Reconstruction(tr, 2, 2) # Dataset size is also known by Type!
 ```
 ```
-(D=6, τ=2) - delay coordinates Reconstruction
+(B=3, D=2, τ=2) - delay coordinates multi-dimensional Reconstruction
  0.085     -0.121       0.075     0.76827   -0.038933    0.672094
  0.285813  -0.0675286   0.238038  0.681871   0.0508933   0.825263
  ⋮                                                       ⋮       
 ```
+Here the parameter `B` shows the number of base timeseries that were used for the multi-dimensional reconstruction.
 
 ## Estimating Reconstruction Parameters
 The following functions can (sometimes) estimate good values that can be used in

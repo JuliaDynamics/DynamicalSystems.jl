@@ -161,7 +161,7 @@ using DynamicalSystems, PyPlot
 using Distributions # for random numbers
 
 ds = Systems.gissinger()
-data = trajectory(ds, 1000.0)
+data = trajectory(ds, 1000.0, dt = 0.05)
 x = data[:, 1]
 
 L = length(x)
@@ -185,5 +185,5 @@ tight_layout()
 ![Broomhead-King example](https://i.imgur.com/xVWDjuh.png)
 
 we have used the same system as in the [delay coordinates reconstruction](/definition/reconstruction) example, and picked the optimal
-delay time of `τ = 30`. Regardless, the vanilla delay coordinates fail spectacularly
+delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates fail spectacularly
 when compared with the Broomhead-King coordinates.
