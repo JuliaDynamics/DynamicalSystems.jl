@@ -7,7 +7,7 @@ in general dynamical systems. We don't want to have "just code", but also detail
 For this to be achieved, many of us should try to
 work together to improve the library!
 
-If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** suite:
+If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
 
 1. Just *use it*. If you encountered unexpected behavior simply report it either on
    our [gitter chatroom](https://gitter.im/JuliaDynamics/Lobby) or using the
