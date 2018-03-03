@@ -106,8 +106,6 @@ ds = Systems.lorenz() # Max lyapunov is around 0.90
 dt = 0.05
 x = trajectory(ds, 1000.0; dt = dt)[:, 1]
 
-τ1 = estimate_delay(x) #gives 7
-
 # Reconstruct it
 figure()
 for D in [4, 8], τ in [τ1, 15]

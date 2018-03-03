@@ -1,4 +1,9 @@
 # News
+## Multi-time, Multi-Diensional Reconstructions
+With the latest version of `DynamicalSystemsBase v0.8.0` we now have the possibility
+for both multi-time and multi-dimensional delay reconstructions! The new documentation
+string for [`Reconstruction`](@ref) has all the relevant information.
+
 ## Release v0.11.0
 With new version v0.11.0 for **DynamicalSytems.jl** (`DynamicalSystemsBase` and `ChaosTools` at version 0.6) we have some major improvements of the library all around. Here I list the syntactic changes, the internal changes, the prospect for other developers and the gains we have from making all these changes!
 

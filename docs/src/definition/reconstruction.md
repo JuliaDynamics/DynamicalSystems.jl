@@ -36,7 +36,6 @@ subplots_adjust(top=0.9)
     Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `dt`. In the above example the value `τ=30` is good, *only* for the case
     of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
 
-## Μulti-dimensional Reconstruction
 A `Reconstruction` can also be made from a trajectory (i.e. multidimensional timeseries). For this to be possible, the number of timeseries must be known by Type:
 ```julia
 a = rand(1000, 3) # my trajectory

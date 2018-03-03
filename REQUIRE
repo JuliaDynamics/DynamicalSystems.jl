@@ -1,5 +1,5 @@
 julia 0.6
-DynamicalSystemsBase 0.6.0
-ChaosTools 0.6.0
+DynamicalSystemsBase 0.8
+ChaosTools 0.7
 Reexport
 StaticArrays
