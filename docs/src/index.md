@@ -24,6 +24,7 @@ See the [News](news) page for recent updates!
 5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Robust implementations of all kinds of integrators, that evolve the system,
    many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
+5. Delay Coordinates Embedding.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
 ### [ChaosTools](chaos/overview)
