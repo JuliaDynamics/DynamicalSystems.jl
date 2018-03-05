@@ -1,21 +1,7 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
 # Introduction
-**DynamicalSystems.jl** is a Julia suite for the exploration of chaos and nonlinear dynamics.
-
-*You
-can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
-to dynamical systems and Julia as well as for asking questions about the packages of the
-JuliaDynamics organization!*
-
-Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
-help make this package better without having to write a single line of code!
-Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
-accurate lower bound of users that this package has already helped!
-
-!!! tip "Use latest documentation"
-      We highly suggest our users to read the  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
-      and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
+**DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
 
 The current documentation was built with the following versions
 ```@example docs
@@ -23,6 +9,35 @@ Pkg.status("DynamicalSystemsBase") # hide
 Pkg.status("ChaosTools") # hide
 ```
 See the [News](news) page for recent updates!
+
+## Contents
+
+### [Fundamentals](definition/general)
+
+1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. The following combinations are possible:
+    * Continuous or Discrete systems.
+    * In-place or out-of-place (large versus small systems).
+    * Auto-differentiated or not (for the Jacobian function).
+
+
+4. Dedicated interface for [numerical data](definition/dataset).
+5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
+4. Robust implementations of all kinds of integrators, that evolve the system,
+   many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
+6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
+
+### [ChaosTools](chaos/overview)
+Please see the [overview section](chaos/overview) for a full list of features. Here
+is a quick summary:
+
+* Poincare S.O.S. and orbit diagrams
+* Lyapunov Exponents
+* Entropies and Dimensions
+* Neighborhood estimation
+* Lyapunov exponent of a timeseries
+* Finding Fixed Points of Maps
+* Detecting Chaos
+
 
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is
@@ -47,33 +62,23 @@ The same function call works with any system, no discriminations here!
 ## Installation
 Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
-## Contents
 
-### [Fundamentals](definition/general)
+## Contacting
 
-1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. In fact we have implementations for 8 possible dynamical systems:
-    * Continuous or Discrete.
-    * In-place or out-of-place (large versus small systems).
-    * Auto-differentiated or not (for the Jacobian function).
+You
+can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
+to dynamical systems and Julia as well as for asking questions about the packages of the
+JuliaDynamics organization!
 
+Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
+help make this package better without having to write a single line of code!
+Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
+accurate lower bound of users that this package has already helped!
 
-4. Dedicated interface for [numerical data](definition/dataset).
-5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-4. Robust implementations of all kinds of integrators, that evolve the system,
-   many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
-6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
+!!! tip "Use latest documentation"
+      We highly suggest our users to read the  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
+      and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
 
-### [ChaosTools](chaos/overview)
-Please see the [overview section](chaos/overview) for a full list of features. Here
-is a quick summary:
-
-* Poincare S.O.S. and orbit diagrams
-* Lyapunov Exponents
-* Entropies and Dimensions
-* Neighborhood estimation
-* Lyapunov exponent of a timeseries
-* Finding Fixed Points of Maps
-* Detecting Chaos
 
 ## Wanted Features
 The following lists state features that are wanted by the **DynamicalSystems.jl** ecosystem and are open to contributors. These are structured in the form of GitHub Issues, with the label `wanted_feature`:
