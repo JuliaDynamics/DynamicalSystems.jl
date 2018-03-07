@@ -1,3 +1,15 @@
+# Dynamical Systems
+Currently a system in **DynamicalSystems.jl** can be either continuous
+$$
+\dot{\vec{u}} = \vec{f}(\vec{u}, t),
+$$
+or discrete
+$$
+\vec{u}_{n+1} = \vec{f}(\vec{u}_n, t).
+$$
+
+Keep in mind that almost all functions of **DynamicalSystems.jl** assume that $f$ is differentiable!
+
 ## Creating a Dynamical System
 ```@docs
 DynamicalSystem
