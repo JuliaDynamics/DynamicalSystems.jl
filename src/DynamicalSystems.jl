@@ -13,5 +13,6 @@ using Reexport
 
 @reexport using DynamicalSystemsBase
 @reexport using ChaosTools
+@reexport using TimeseriesPrediction
 
 end # module
