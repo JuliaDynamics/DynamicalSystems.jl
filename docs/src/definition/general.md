@@ -110,7 +110,8 @@ ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3], hiip_jac)
  jacobian:  hiip_jac
 ```
 Or, if you don't want to write a Jacobian and want to use the
-auto-differentiation capabilities of **DynamicalSystems.jl**:
+auto-differentiation capabilities of **DynamicalSystems.jl**, which use the module
+[`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/index.html):
 ```julia
 ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
 ```
