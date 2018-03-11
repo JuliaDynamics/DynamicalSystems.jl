@@ -51,7 +51,7 @@ pages:
   - Chaos Detection: chaos/chaos_detection.md
   - Visualization: chaos/visualization.md
 - Timeseries Prediction:
-  - Local Prediction: tsprediction/localmodels.md
+  - Local Modelling: tsprediction/localmodels.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md
