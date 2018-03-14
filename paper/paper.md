@@ -21,7 +21,7 @@ bibliography: paper.bib
 # Introduction
 
 Chaotic systems are everywhere [@Strogatz], from celestial mechanics to biology to electron transport. Not only do they cover many scales, but the phenomena that fall under the scope of "nonlinear dynamics" are multi-faceted [@Faust2015].
-This vast extend of chaotic systems requires the use of methods from nonlinear dynamics and chaos theory in many diverse areas of science.
+This vast extent of chaotic systems requires the use of methods from nonlinear dynamics and chaos theory in many diverse areas of science.
 
 On the other hand, chaotic systems are not analytically solvable, therefore studying them often relies on numerical methods.
 Many such methods have been devised to study the many facets of nonlinear systems, but unfortunately no up-to-date and comprehensive library collecting these methods exists.
