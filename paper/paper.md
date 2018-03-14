@@ -12,7 +12,7 @@ authors:
    orcid: 0000-0002-6427-2385
    affiliation: 1
 affiliations:
- - name: Max Planck Institute for Dynamics and Self-Organization
+ - name: Max Planck Institute for Dynamics and Self-Organization, Göttingen, Germany
    index: 1
 date: 24 February 2018
 bibliography: paper.bib
@@ -20,7 +20,7 @@ bibliography: paper.bib
 
 # Introduction
 
-Chaotic systems are everywhere [@Strogatz]; from celestial mechanics to biology to electron transport. Not only do they cover many scales, but the phenomena that fall under the scope of "nonlinear dynamics" are multi-faceted [@Faust2015].
+Chaotic systems are everywhere [@Strogatz], from celestial mechanics to biology to electron transport. Not only do they cover many scales, but the phenomena that fall under the scope of "nonlinear dynamics" are multi-faceted [@Faust2015].
 This vast extend of chaotic systems requires the use of methods from nonlinear dynamics and chaos theory in many diverse areas of science.
 
 On the other hand, chaotic systems are not analytically solvable, therefore studying them often relies on numerical methods.
@@ -90,7 +90,9 @@ Finally, LP-VIcode [@Carpintero2014] is a suite devoted solely for computing var
 In the following examples we want to demonstrate some of the capabilities of **DynamicalSystems.jl**.
 In the first example will show how one can find the Lyapunov spectrum of a continuous system, while the second will show how to use delay coordinates embedding to calculate the attractor dimension from a time series.
 Both examples are benchmarked on a laptop with Intel(R) Core(TM) i5-6200U CPU @ 2.30 Ghz, 8GB RAM, 64-bit Windows 10 operating system and Julia version v0.6.2.
+
 ## Lyapunov spectrum of a continuous system
+
 The first step is to create a `DynamicalSystem` structure:
 ```julia
 # Pkg.add("DynamicalSystems")
