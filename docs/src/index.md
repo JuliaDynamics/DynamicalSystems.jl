@@ -10,12 +10,20 @@ Pkg.status("ChaosTools") # hide
 ```
 See the [News](news) page for recent updates!
 
+!!! info "Introductory textbooks"
+    Our library assumes basic some basic knowledge of nonlinear dynamics and complex systems.
+
+    If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
+    * Nonlinear Dynamics And Chaos - S. Strogatz
+    * An Exploration of Dynamical Systems and Chaos - J. Argyris *et al.*
+    * Chaos in Dynamical Systems - E. Ott
+
 ## Contents
 
 ### [Fundamentals](definition/general)
 
 1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. The following combinations are possible:
-    * Continuous or Discrete systems.
+    * Continuous or Discrete systems. Continuous systems use [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/) for solving the ODE problem.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
 
@@ -39,10 +47,9 @@ is a quick summary:
 * Finding Fixed Points of Maps
 * Detecting Chaos
 
-
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is
-to be a useful *library* for scientists working on chaos, nonlinear dynamics and
+to be a useful *library* for students and scientists working on chaos, nonlinear dynamics and
 in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
 
 With **DynamicalSystems.jl** we try to
@@ -51,25 +58,32 @@ With **DynamicalSystems.jl** we try to
 2. Be accurate, reliable and performant.
 3. Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.
 
-For example, provided you have first defined a [`DynamicalSystem`](definition/general)
-(which simply reduces to writing a function for the equations of motion),
-you should be able to e.g. calculate the Lyapunov spectrum for it
-in a single line:
-```julia
-lyapunovs(system, times_to_do_QR; keywords...)
-```
-The same function call works with any system, no discriminations here!
-
 ## Installation
 Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
 
+## Citing
+There is a (very small) paper associated with **DynamicalSystems.jl**. If we have helped
+you in research that led to a publication, please be kind enough to cite it, using
+the DOI `10.21105/joss.00598` or the following BiBTeX entry:
+```
+@article{Datseris2018,
+  doi = {10.21105/joss.00598},
+  url = {https://doi.org/10.21105/joss.00598},
+  year  = {2018},
+  month = {mar},
+  volume = {3},
+  number = {23},
+  pages = {598},
+  author = {George Datseris},
+  title = {{DynamicalSystems}.jl: A Julia software library for chaos and nonlinear dynamics},
+  journal = {Journal of Open Source Software}
+}
+```
 
 ## Contacting
 
 You
-can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions related
-to dynamical systems and Julia as well as for asking questions about the packages of the
-JuliaDynamics organization!
+can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions and/or questions about the packages of the JuliaDynamics organization!
 
 Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
 help make this package better without having to write a single line of code!
@@ -79,10 +93,3 @@ accurate lower bound of users that this package has already helped!
 !!! tip "Use latest documentation"
       We highly suggest our users to read the  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
       and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
-
-
-## Wanted Features
-The following lists state features that are wanted by the **DynamicalSystems.jl** ecosystem and are open to contributors. These are structured in the form of GitHub Issues, with the label `wanted_feature`:
-
-* [DynamicalSystemsBase.jl wanted features](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/issues?q=is%3Aissue+is%3Aopen+label%3Awanted_feature)
-* [ChaosTools.jl wanted features](https://github.com/JuliaDynamics/ChaosTools.jl/issues?q=is%3Aissue+is%3Aopen+label%3Awanted_feature)

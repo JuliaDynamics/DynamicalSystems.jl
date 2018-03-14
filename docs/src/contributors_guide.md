@@ -18,7 +18,7 @@ If you want to help the cause, there are many ways to contribute to the **Dynami
 3. Contribute code by solving issues. Visit the GitHub pages of the individual packages
    to see a list of open issues, like for example for [ChaosTools](https://github.com/JuliaDynamics/ChaosTools.jl).
 4. Contribute code by implementing new methods! That is the most **awesome** way to
-   contribute!
+   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag "wanted feature", which can get you started on a big contribution!
 5. Contribute code by defining a new pre-defined dynamical system that you found useful.
 
 ## Contributing Code
@@ -38,4 +38,4 @@ When contributing code, you should keep these things in mind:
   or the system that you are using. You should put this reference
   to the main function's documentation string.
   See the existing documentation strings and do
-  it in an identical manner.
+  it in a similar manner.
