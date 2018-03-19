@@ -57,7 +57,6 @@ tight_layout()
 ## 2D Example
 Predicting multivariate timeseries works the same as with scalar timeseries.
 ```julia
-using DynamicalSystemsBase
 using TimeseriesPrediction
 using StaticArrays: SVector
 
@@ -89,7 +88,7 @@ lw=0.5, marker="s", ms = 4.0, label="pred. x")
 # Plot real y-coordinate
 plot((tf - idx_prev*dt):dt:tf, s_train[N_train-idx_prev:end,2],
     label = "real y", color = "C2")
-plot(tf:dt:(tf+p*dt*stepsize), s_test[1:p*stepsize+1,2], color = "C1")
+plot(tf:dt:(tf+p*dt*stepsize), s_test[1:p*stepsize+1,2], color = "C2")
 # Plot predicted y-coordinate
 plot(tf:dt*stepsize:(tf+p*dt*stepsize), s_pred_10[:,2], color = "C4",
 lw=0.5, marker="s", ms = 4.0, label="pred. y")
@@ -98,11 +97,11 @@ lw=0.5, marker="s", ms = 4.0, label="pred. y")
 plot([tf,tf],[-12,12], "--", color="black", alpha = 0.5)
 
 title("AverageLocalModel, Training points: $(N_train), attempted prediction: $(p), step=$(stepsize)", size = 14)
-xlabel("\$t\$"); ylabel("\$x\$")
+xlabel("\$t\$"); ylabel("\$x, y\$")
 legend(loc="upper left")
 tight_layout()
 ```
-![2D Average local model prediction](https://i.imgur.com/yjPSvx9.png)
+![2D Average local model prediction](https://i.imgur.com/pewxuFl.png)
 
 ## Error Measures
 Being able to evaluate model performance without looking at plots can be very helpful
