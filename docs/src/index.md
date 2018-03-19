@@ -27,6 +27,8 @@ See the [News](news) page for recent updates!
 5. Efficient [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
 5. Delay Coordinates Embedding: flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
     * Supports multiple dimensions and multiple timescales.
+
+    
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
 ### [ChaosTools](chaos/overview)
