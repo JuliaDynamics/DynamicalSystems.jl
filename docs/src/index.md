@@ -41,6 +41,9 @@ is a quick summary:
 * Finding Fixed Points of Maps
 * Detecting Chaos
 
+### [TimeseriesPrediction](tsprediction/localmodels)
+
+* Predicting the future of one or multiple timeseries using average local models.
 
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is

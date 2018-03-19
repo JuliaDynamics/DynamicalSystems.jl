@@ -50,7 +50,7 @@ pages:
   - Periodicity: chaos/periodicity.md
   - Chaos Detection: chaos/chaos_detection.md
   - Visualization: chaos/visualization.md
-- Timeseries Prediction:
+- TimeseriesPrediction:
   - Local Modeling: tsprediction/localmodels.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md

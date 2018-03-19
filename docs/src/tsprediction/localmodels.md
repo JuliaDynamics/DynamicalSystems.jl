@@ -1,15 +1,17 @@
 # Local Modeling
 
 Local Modeling predicts timeseries using a delay embedded state space reconstruction.
-It finds the nearest neighbors of a query within this reconstructed space and applies
-a local model to make a prediction.
+It finds the nearest neighbors of a query point within this reconstructed space and applies
+a local model to make a prediction. "Local" model refers to the fact that the images (future points) of the [`neighborhood`](@ref) of a point are the only component used
+to make a prediction.
 
-Local Modeling is an effective tool for timeseries of low-dimensional chaotic attractors.
+This Local Modeling is proven to be a very effective tool for timeseries of low-dimensional chaotic attractors.
 
 
 !!! tip "Reconstruction parameters"
-    We also offer functions that estimate good parameters for
-    a [`Reconstruction`](@ref). These can be found [here](definition/reconstruction/#estimating-reconstruction-parameters).
+    Don't forget that **DynamicalSystems.jl** also has functions for estimating
+    good parameters for
+    a [`Reconstruction`](@ref): [`estimate_delay`](@ref) and [`estimate_dimension`](@ref).
 
 ## Local Model Prediction
 ```@docs
@@ -53,7 +55,7 @@ tight_layout()
 ![Average local model prediction](https://i.imgur.com/VJSjHMI.png)
 
 ## 2D Example
-Predicting multivariate timeseries works the same as with skalar timeseries.
+Predicting multivariate timeseries works the same as with scalar timeseries.
 ```julia
 using DynamicalSystemsBase
 using TimeseriesPrediction
@@ -62,35 +64,45 @@ using StaticArrays: SVector
 ds = Systems.roessler(ones(3))
 dt = 0.1
 data = trajectory(ds, 1000; dt=dt)
-N_train = 1001
-s_train = data[1:N_train, SVector(1,2)]  
+N_train = 1501
+s_train = data[1:N_train, SVector(1,2)]
 #Identical to data[1:N_train, 1:2] but much faster
-s_test  = data[N_train:end,SVector(1,2)]
+s_test  = data[N_train:end, SVector(1,2)]
 
-p = 200
-s_pred_10 = localmodel_tsp(s_train, 3, 15, p÷10;  stepsize = 10)
+p = 100
+stepsize = 5
+s_pred_10 = localmodel_tsp(s_train, 3, 15, p;  stepsize = stepsize)
 
-using PyPlot
-begin
-    figure(figsize=(8,4))
-    plot(90:dt:100, s_train[901:end,1], label = "x (trunc.)", color = "C1")
-    plot(100:dt:(100+p*dt), s_test[1:p+1,1], color = "C1")
-    plot(100:dt*10:(100+p*dt), s_pred_10[:,1], color = "blue",
-    lw=0, marker="s", label="pred. x step=10")
-    plot(100:dt:(100+p*dt), s_test[1:p+1,2], color = "green")
-    plot(90:dt:100, s_train[901:end,2], label = "y (trunc.)", color = "green")
-    plot(100:dt*10:(100+p*dt), s_pred_10[:,2], color = "red",
-        lw=0, marker="s", label="pred. y step=10")
-    plot([100,100],[-12,12], "--", color="black")
-    title("AverageLocalModel, Training points: $(N_train),
-     attempted prediction: $(p)", size = 14)
-    xlabel("\$t\$"); ylabel("\$x\$")
-    legend(loc="upper left")
-    tight_layout()
-end
+using PyPlot; figure(figsize=(12,6))
 
+idx_prev = 200 # how many previous points to show
+tf = Int((N_train - 1)*dt) # final time of test set
+
+# Plot real x-coordinate
+plot((tf - idx_prev*dt):dt:tf, s_train[N_train-idx_prev:end,1],
+    label = "real x", color = "C1")
+plot(tf:dt:(tf+p*dt*stepsize), s_test[1:p*stepsize+1,1], color = "C1")
+# Plot predicted x-coordinate
+plot(tf:dt*stepsize:(tf+p*dt*stepsize), s_pred_10[:,1], color = "C0",
+lw=0.5, marker="s", ms = 4.0, label="pred. x")
+
+# Plot real y-coordinate
+plot((tf - idx_prev*dt):dt:tf, s_train[N_train-idx_prev:end,2],
+    label = "real y", color = "C2")
+plot(tf:dt:(tf+p*dt*stepsize), s_test[1:p*stepsize+1,2], color = "C1")
+# Plot predicted y-coordinate
+plot(tf:dt*stepsize:(tf+p*dt*stepsize), s_pred_10[:,2], color = "C4",
+lw=0.5, marker="s", ms = 4.0, label="pred. y")
+
+# Plot separatrix
+plot([tf,tf],[-12,12], "--", color="black", alpha = 0.5)
+
+title("AverageLocalModel, Training points: $(N_train), attempted prediction: $(p), step=$(stepsize)", size = 14)
+xlabel("\$t\$"); ylabel("\$x\$")
+legend(loc="upper left")
+tight_layout()
 ```
-![2D Average local model prediction](https://i.imgur.com/Dm10TGO.png)
+![2D Average local model prediction](https://i.imgur.com/yjPSvx9.png)
 
 ## Error Measures
 Being able to evaluate model performance without looking at plots can be very helpful
