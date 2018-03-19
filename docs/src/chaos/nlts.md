@@ -1,10 +1,12 @@
 # Nonlinear Timeseries Analysis
 
-## Neighborhoods in a Dataset
-Combining the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with the `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
+## Estimating Reconstruction Parameters
+The following functions can estimate good values that can be used in
+[`Reconstruction`](@ref) for either the delay time or the
+dimension.
 ```@docs
-neighborhood
-AbstractNeighborhood
+estimate_delay
+estimate_dimension
 ```
 ---
 

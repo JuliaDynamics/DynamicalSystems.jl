@@ -31,8 +31,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 ### [Nonlinear Timeseries Analysis](nlts)
 
-1. Flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
-2. Methods for estimating good [`Reconstruction`](@ref) parameters.
+1. Methods for estimating good [`Reconstruction`](@ref) parameters.
 3. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Four different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
     * Fast computation of the above algorithms made possible by combining the

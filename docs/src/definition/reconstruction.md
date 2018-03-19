@@ -54,11 +54,3 @@ R = Reconstruction(tr, 2, 2) # Dataset size is also known by Type!
  ⋮                                                       ⋮       
 ```
 Here the parameter `B` shows the number of base timeseries that were used for the multi-dimensional reconstruction.
-
-## Estimating Reconstruction Parameters
-The following functions can (sometimes) estimate good values that can be used in
-[`Reconstruction`](@ref). There are no guarantees though!
-```@docs
-estimate_delay
-```
----

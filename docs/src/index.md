@@ -20,11 +20,13 @@ See the [News](news) page for recent updates!
     * Auto-differentiated or not (for the Jacobian function).
 
 
-4. Dedicated interface for [numerical data](definition/dataset).
-5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
+2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Robust implementations of all kinds of integrators, that evolve the system,
    many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
-5. Delay Coordinates Embedding.
+4. Dedicated interface for [numerical data](definition/dataset).
+5. Efficient [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
+5. Delay Coordinates Embedding: flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
+    * Supports multiple dimensions and multiple timescales.
 6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
 
 ### [ChaosTools](chaos/overview)
@@ -34,7 +36,7 @@ is a quick summary:
 * Poincare S.O.S. and orbit diagrams
 * Lyapunov Exponents
 * Entropies and Dimensions
-* Neighborhood estimation
+* Estimation of Reconstruction parameters
 * Lyapunov exponent of a timeseries
 * Finding Fixed Points of Maps
 * Detecting Chaos

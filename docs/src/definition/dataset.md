@@ -57,3 +57,11 @@ write_dataset("test.csv", data, ',')
 # Read comma-delimited file:
 read_dataset("test.csv", Dataset{2, Float64}, ',')
 ```
+
+## Neighborhoods in a Dataset
+Combining the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with the `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
+```@docs
+neighborhood
+AbstractNeighborhood
+```
+---
