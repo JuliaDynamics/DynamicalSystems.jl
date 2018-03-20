@@ -1,4 +1,15 @@
 # News
+## Timeseries Prediction
+A new module has been added to **DynamicalSystems.jl**: `TimeseriesPrediction` (version `v0.2.0`), which
+tries to predict timeseries using methods from nonlinear dynamics and chaos!
+
+The first available method is `localmodel_tsp` that uses local averages! See
+the new documentation page for more!
+
+## Cao's Method
+With `ChaosTools v0.8.0`, the well-known method for estimating dimension for a
+[`Reconstruction`](@ref) is now implemented and exported!
+
 ## Multi-time, Multi-Diensional Reconstructions
 With the latest version of `DynamicalSystemsBase v0.8.0` we now have the possibility
 for both multi-time and multi-dimensional delay reconstructions! The new documentation
@@ -100,6 +111,7 @@ instead of an `ODEProblem`, since the field `.prob` of the system is exactly thi
   set-up part and an implementation part, both of which are clear to read and understand.
       * Also clarity on discrete systems, since they are all fused into one structure.
       * Low-level functions can be used easily by users that want performance for loops.
+
 * Lyapunov exponent calculating functions now have full flexibility in all aspects
   (initial deviation vectors/transient times/pretty much anything).
 * Big performance gains all around, and especially in methods that propagate tangent space.

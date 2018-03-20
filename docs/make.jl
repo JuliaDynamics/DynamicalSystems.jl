@@ -1,6 +1,6 @@
 using Documenter, DynamicalSystems
 
-makedocs(modules=[DynamicalSystems], doctest=false)
+makedocs(modules=[DynamicalSystems,TimeseriesPrediction], doctest=false)
 
 deploydocs(
     deps   = Deps.pip("Tornado>=4.0.0,<5.0.0", "mkdocs",

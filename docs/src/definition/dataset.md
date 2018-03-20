@@ -37,23 +37,28 @@ minmaxima
 columns
 ```
 ---
-## Dataset IO
-In addition to the above, we also offer (very basic) functions that read/write a
-`Dataset` from/to a delimited text file:
-```@docs
-read_dataset
-write_dataset
+## Dataset I/O
+Input/output functionality for an `AbstractDataset` is already achieved using base Julia, specifically `writedlm` and `readdlm`.
+
+The thing to note is that all data of an `AbstractDataset` is contained within its field `data`.
+
+To write and read a dataset, simply do:
+
+```julia
+data = Dataset(rand(1000, 2))
+
+# I will write and read using delimiter ','
+writedlm("data.txt", data.data, ',')
+
+# Don't forget to convert the matrix to a Dataset when reading
+data = Dataset(readdlm("data.txt", ',', Float64))
 ```
 ---
-For example
-```julia
-using DynamicalSystems
 
-ds = Systems.towel()
-data = trajectory(ds, 1000)
-
-# Write comma-delimited file:
-write_dataset("test.csv", data, ',')
-# Read comma-delimited file:
-read_dataset("test.csv", Dataset{2, Float64}, ',')
+## Neighborhoods in a Dataset
+Combining the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with the `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
+```@docs
+neighborhood
+AbstractNeighborhood
 ```
+---
