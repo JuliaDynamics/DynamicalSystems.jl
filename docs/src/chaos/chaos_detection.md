@@ -6,7 +6,7 @@ and a bounded system indicate chaos.
 However, the convergence of the Lyapunov exponent is often very slow and
 the computation costly. There are
 many alternatives that are both more efficient and more accurate in characterizing
-chaotic and regular motion, some of which are included in DynamicalSystems.jl.
+chaotic and regular motion, some of which are included in **DynamicalSystems.jl**.
 
 ## Generalized Alignment Index
 "GALI" for sort, is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
