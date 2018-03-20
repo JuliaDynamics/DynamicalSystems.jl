@@ -1,10 +1,10 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
-| **Documentation** | Gitter | Travis |
-|:--------:|:-----:|:-----:|
-|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl)
+| **Documentation** | Gitter | Travis | Citing |
+|:--------:|:-----:|:-----:|:----:|
+|[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) | [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/JuliaDynamics/Lobby) | [![Build Status](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl.svg?branch=master)](https://travis-ci.org/JuliaDynamics/DynamicalSystems.jl) | [![DOI](http://joss.theoj.org/papers/10.21105/joss.00598/status.svg)](https://doi.org/10.21105/joss.00598)
 
-**DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics. The current repository holds the documentation and exports *all* packages relevant packages.
+**DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics. The current repository holds the documentation and exports *all* relevant packages.
 
 ---
 
@@ -18,7 +18,7 @@
     * Continuous or Discrete.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
-    
+
 4. Dedicated interface for numerical data
 5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 4. Robust implementations of all kinds of integrators, that evolve the system,

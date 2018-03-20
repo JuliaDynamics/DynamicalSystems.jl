@@ -34,9 +34,6 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 1. Methods for estimating good [`Reconstruction`](@ref) parameters.
 3. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Four different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
-    * Fast computation of the above algorithms made possible by combining the
-    performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with
-    the abstraction of ChaosTools.jl.
 
 ### [Periodicity](periodicity)
 
