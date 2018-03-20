@@ -8,7 +8,7 @@ the new documentation page for more!
 
 ## Cao's Method
 With `ChaosTools v0.8.0`, the well-known method for estimating dimension for a
-[`Reconstruction`](@ref) is now implemented and exported!
+[`Reconstruction`](@ref) is now implemented and exported! See [`estimate_dimension`](@ref).
 
 ## Multi-time, Multi-Diensional Reconstructions
 With the latest version of `DynamicalSystemsBase v0.8.0` we now have the possibility
