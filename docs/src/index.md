@@ -19,6 +19,10 @@ See the [News](news) page for recent updates!
     * An Exploration of Dynamical Systems and Chaos - J. Argyris *et al.*
     * Chaos in Dynamical Systems - E. Ott
 
+!!! example "Jupyter Notebooks / Tutorials"
+    The repository [JuliaDynamics/tutorials](https://github.com/JuliaDynamics/tutorials) contains various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
+
+    
 ## Contents
 
 ### [Fundamentals](definition/general)
