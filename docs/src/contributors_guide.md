@@ -13,12 +13,11 @@ If you want to help the cause, there are many ways to contribute to the **Dynami
    our [gitter chatroom](https://gitter.im/JuliaDynamics/Lobby) or using the
    [DynamicalSystems.jl Issues](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues) page.
 2. Suggest methods that you think should be included in our library. This should be
-   done by opening a new issue that describes the method, gives referencens to papers
+   done by opening a new issue that describes the method, gives references to papers
    using the method and also justifies why the method should be included.
-3. Contribute code by solving issues. Visit the GitHub pages of the individual packages
-   to see a list of open issues, like for example for [ChaosTools](https://github.com/JuliaDynamics/ChaosTools.jl).
+3. Contribute code by solving issues. The easiest issues to tackle are the ones with label ["good first issue"](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22good+first+issue%22+).
 4. Contribute code by implementing new methods! That is the most **awesome** way to
-   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag "wanted feature", which can get you started on a big contribution!
+   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag ["wanted feature"](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22wanted+feature%22+), which can get you started on a big contribution!
 5. Contribute code by defining a new pre-defined dynamical system that you found useful.
 
 ## Contributing Code
