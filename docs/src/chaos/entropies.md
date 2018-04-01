@@ -37,7 +37,7 @@ For example, the Shannon entropy of a coin-flip process should be one bit,
 ```julia
 using DynamicalSystems
 y = Float64.(rand(Bool, 1000000)) # just some coin tosses
-sh = shannon(0.1, y)  # ≡ genentropy(1, 0.0, y)
+sh = genentropy(1, 0.1, y)  # this is the shannon entropy
 isapprox(sh, log(2),  rtol = 1e-6)
 ```
 ```julia

@@ -33,7 +33,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 1. Methods for estimating good [`Reconstruction`](@ref) parameters.
 3. Broomhead-King coordinates: [`broomhead_king`](@ref).
-3. Four different algorithms for numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
+3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
 
 ### [Periodicity](periodicity)
 
