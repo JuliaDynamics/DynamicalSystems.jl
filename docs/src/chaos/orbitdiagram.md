@@ -65,7 +65,7 @@ poincaresos
 An example of the [Henon-Heiles](/definition/predefined/#DynamicalSystemsBase.Systems.henonheiles) system using a quasi-periodic solution
 ```julia
 ds = Systems.henonheiles([0., 0.1, 0.5, 0.])
-output = poincaresos(ds, 3, 1000.0)
+output = poincaresos(ds, (3, 0.0), 1000.0)
 
 figure()
 plot(output[:, 2], output[:, 4], lw = 0.0, marker=".")
@@ -77,6 +77,31 @@ xlabel("\$q_2\$"); ylabel("\$p_2\$");
 Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected the section is 1-dimensional, because the torus the solution lives in is 2-dimensional. if
 we produced the PSOS for much longer times, the result would be a filled line instead
 of individual points.
+
+---
+One more example with a more complex hyperplane:
+```julia
+gis = Systems.gissinger([2.32865, 2.02514, 1.98312])
+
+# Define appropriate hyperplane for gissinger system
+const ν = 0.1
+const Γ = 0.9 # default parameters of the system
+
+# I want hyperperplane defined by these two points:
+Np(μ) = SVector{3}(sqrt(ν + Γ*sqrt(ν/μ)), -sqrt(μ + Γ*sqrt(μ/ν)), -sqrt(μ*ν))
+Nm(μ) = SVector{3}(-sqrt(ν + Γ*sqrt(ν/μ)), sqrt(μ + Γ*sqrt(μ/ν)), -sqrt(μ*ν))
+
+# Create hyperplane using normal vector to vector connecting points:
+gis_plane(μ) = (d = (Np(μ) - Nm(μ)); [d[2], -d[1], 0, 0])
+
+μ = 0.12
+set_parameter!(gis, 1, μ)
+figure(figsize = (8,6))
+psos = poincaresos(gis, gis_plane(μ), 5000.0, Ttr = 200.0)
+plot3D(columns(psos)..., marker = "o", ls = "None", ms = 2.0);
+```
+![Gissinger PSOS](https://i.imgur.com/3Zh5qSY.png)
+
 
 ### Stroboscopic Map
 A special case of a PSOS is a stroboscopic map, which is defined for non-autonomous
@@ -94,7 +119,7 @@ xlabel("\$x\$"); ylabel("\$\\dot{x}\$")
 ![Duffing attractor](https://i.imgur.com/Bfqoska.png)
 What a cool looking attractor is that!
 
-## Producing Orbit Diagrams for Continuous Flows
+## Producing Orbit Diagrams for Flows
 The [`orbitdiagram`](@ref) does not make much sense for continuous systems, besides the
 trivial case where the system is at a fixed point. In order for [`orbitdiagram`](@ref) to have meaning one must have a map.
 
@@ -114,11 +139,11 @@ ds = Systems.shinriki([-2, 0, 0.2])
 
 pvalues = linspace(19,22,201)
 i = 1
-j = 2
+j = 2 # psos at variable j with offset = 0
 tf = 200.0
 p_index = 1
 
-output = produce_orbitdiagram(ds, j, i, p_index, pvalues; tfinal = tf,
+output = produce_orbitdiagram(ds, (j, 0.0), i, p_index, pvalues; tfinal = tf,
 Ttr = 200.0, direction = -1, printparams = true)
 
 figure()
