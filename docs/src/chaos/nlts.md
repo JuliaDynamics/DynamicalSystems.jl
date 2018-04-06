@@ -7,6 +7,7 @@ dimension.
 ```@docs
 estimate_delay
 estimate_dimension
+stochastic_indicator
 ```
 ---
 
