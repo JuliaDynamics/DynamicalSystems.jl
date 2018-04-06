@@ -37,6 +37,13 @@
 * Finding Fixed Points of Maps
 * Detecting Chaos
 
+### [TimeseriesPrediction.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/tsprediction/localmodels/)
+
+* Local Model Prediction
+* Multiple Local Modeling Types
+* Error Measures
+* Internal Delay Embedding using **ChaosTools.jl**
+
 ## Double pendulum video:
 Checkout this *amazing* video by Cormullion, featuring the double pendulum (logo of our library)
 
