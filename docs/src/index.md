@@ -24,7 +24,7 @@ See the [News](news) page for recent updates!
 
 ## Upcoming Tutorial
 
-![DynamicalSystems Ad](https://i.imgur.com/AnbjO0b.gifv)
+![DynamicalSystems Ad](https://i.imgur.com/AnbjO0b.gif)
 
 Ad made by [`@cormullion`](https://github.com/cormullion) using [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl)!
 
