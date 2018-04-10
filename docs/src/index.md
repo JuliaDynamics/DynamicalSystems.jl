@@ -22,7 +22,12 @@ See the [News](news) page for recent updates!
 !!! example "Jupyter Notebooks / Tutorials"
     The repository [JuliaDynamics/tutorials](https://github.com/JuliaDynamics/tutorials) contains various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
-    
+## Upcoming Tutorial
+
+![DynamicalSystems Ad](https://i.imgur.com/AnbjO0b.gifv)
+
+Ad made by [`@cormullion`](https://github.com/cormullion) using [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl)!
+
 ## Contents
 
 ### [Fundamentals](definition/general)
