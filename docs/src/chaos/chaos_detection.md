@@ -178,9 +178,8 @@ function main(k)
         for (j, p) ∈ enumerate(ps[1:dens])
 
             # new initial state is the system initial state
-            # and 2 random orthonormal deviation vectors:
-            u0 = hcat(SVector{2}(θ, p), orthonormal(2,2))
-            reinit!(tinteg, u0)
+            u0 = SVector{2}(θ, p)
+            reinit!(tinteg, u0; Q0 = orthonormal(2,2))
 
             # Low-level call signature of gali:
             #  _gali(tinteg, tmax, dt, threshold)

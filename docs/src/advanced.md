@@ -22,7 +22,8 @@ These functions work with *any* possible integrator and it is best to use the
 to change states robustly
 
 ## Re-initializing an integrator
-It is more efficient to re-initialize an integrator than to create a new one.
+It is more efficient to re-initialize an integrator using `reinit!`
+than to create a new one.
 This can be very helpful when looping over initial conditions and/or parameter values.
 
 All high-level functions from `ChaosTools` have a set-up part that creates
@@ -31,17 +32,12 @@ an integrator, and a low-level part that does the computation.
 The low level part is your friend! Use it! See the [Using `gali`](chaos/chaos_detection/#using-gali) page for an example.
 
 ### Discrete
-For discrete systems, there is no "re-initialization". Just change the
-state or deviation vectors on the spot using `set_state!` or `set_deviations!`.
-E.g.
+For discrete systems, the function signature is simply
 ```julia
-ds = Systems.towel()
-integ = integrator(ds)
-set_state!(integ, rand(3))
-tinteg = tangent_integrator(ds, 3)
-set_state!(tinteg, rand(3))
+reinit!(integ, u; t0 = integ.t0, Q0 = nothing)
 ```
-etc, etc.
+which gives you the possibility to optionally re-initialize deviation vectors
+with `Q0` (you *should* do that!).
 
 To change parameters simply change the field `p` of an integrator.
 ```julia
@@ -49,23 +45,26 @@ ds = Systems.henon()
 pinteg = parallel_integrator(ds, [rand(2), rand(2)])
 pinteg.p[2] = 0.45
 ```
+For discrete systems there is no general reason to `reinit!` after a parameter change.
 
 ### Continuous
 For continuous systems one needs to properly re-initialize the integrator instance
-so that derivatives are re-computed. We still advise to use `set_state!` and
-`set_deviations!` though, so you do not have to deal with the fact that
+so that derivatives are re-computed. Because it is not possible to bundle re-initialization of deviation vectors to `reinit!` of continuous integrators,
+we advise to use `set_state!` and
+`set_deviations!`. This way you also do not have to deal with the fact that
 different integrators have different types of `u`.
 
 You should do something like
 ```julia
 ds = Systems.lorenz()
-integ = integrator(ds)
+integ = tangent_integrator(ds, 2)
 set_state!(integ, rand(3))
+set_deviations!(integ, orthonormal(3,2))
 reinit!(integ, integ.u)
 ```
 *(it is important to use `integ.u` as the second argument to `reinit!`)*
 
-The above code would work if the integrator was `parallel_integrator` or `tangent_integrator`!
+The above code would work if the integrator was `integrator`, `parallel_integrator` or `tangent_integrator`! (`set_deviations!` only works for tangent integrators!)
 
 The full documentation for `reinit!(::ODEIntegrator)` is [here](http://docs.juliadiffeq.org/latest/basics/integrator.html#Reinit-1). Although,
 for usage within **DynamicalSystems.jl** the other arguments do not matter, because
