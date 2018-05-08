@@ -36,7 +36,7 @@ legend()
 #
 subplot(2,2,2)
 for k in [2,3,4, 5, 6]
-    g, t = gali(ds, k, 1e5; threshold=1e-12)
+    g, t = gali(ds, 1e5, k; threshold=1e-12)
     lt = log10.(t); lg = log10.(g)
 
     plot(lt, lg, label="GALI_$(k)")
@@ -65,7 +65,7 @@ subplot(2,2,4)
 ls = lyapunovs(ds, 100000)
 for k in [2,3,4,5 ,6]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, k, 1000)
+    g, t = gali(ds, 1000, k)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
@@ -90,7 +90,7 @@ dt = 1.0
 
 subplot(3,2,1)
 ds = Systems.henonheiles(sp)
-diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
+diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5(), :maxiters => typemax(Int))
 tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="sp",marker="o",markersize=2, linewidth=0)
@@ -98,7 +98,7 @@ legend()
 
 subplot(3,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, k, 50000.0; dt = dt, diff_eq_kwargs = diffeq)
+    g, t = gali(ds, 50000.0, k; dt = dt, diff_eq_kwargs = diffeq)
     if k < 4
         loglog(t, 1./t.^(k-1), label="slope -$(k-1)")
     else
@@ -110,7 +110,6 @@ legend(fontsize=12)
 
 subplot(3,2,3)
 ds = Systems.henonheiles(qp)
-diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5())
 tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="qp",marker="o",markersize=2, linewidth=0)
@@ -118,7 +117,7 @@ legend()
 
 subplot(3,2,4)
 for k in [2,3,4]
-    g, t = gali(ds, k, 10000.0; dt = dt, diff_eq_kwargs = diffeq)
+    g, t = gali(ds, 10000.0, k; dt = dt, diff_eq_kwargs = diffeq)
     loglog(t, 1./t.^(2k-4), label="slope -$(2k-4)")
     loglog(t, g, label="GALI_$(k)")
 end
@@ -126,8 +125,8 @@ legend(fontsize=12)
 tight_layout()
 
 ds = Systems.henonheiles(ch)
-diffeq = Dict(:abstol=>1e-6, :reltol=>1e-6, :solver => Tsit5())
-tr = trajectory(ds, 50000.0, dt=dt, diff_eq_kwargs = diffeq)
+diffeq = Dict(:abstol=>1e-6, :reltol=>1e-6, :solver => Tsit5(), :maxiters => typemax(Int))
+tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
 subplot(3,2,5)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="ch",marker="o",markersize=2, linewidth=0)
@@ -137,7 +136,7 @@ subplot(3,2,6)
 ls = lyapunovs(ds, 5000.0, dt=dt)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, k, 1000; dt = dt)
+    g, t = gali(ds, 1000, k; dt = dt)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
