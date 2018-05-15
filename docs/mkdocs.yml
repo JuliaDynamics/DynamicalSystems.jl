@@ -52,6 +52,7 @@ pages:
   - Visualization: chaos/visualization.md
 - TimeseriesPrediction:
   - Local Modeling: tsprediction/localmodels.md
+  - Spatiotemporal Timeseries: tsprediction/st_prediction.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md

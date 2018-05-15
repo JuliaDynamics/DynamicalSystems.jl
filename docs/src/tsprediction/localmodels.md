@@ -2,10 +2,12 @@
 
 Local Modeling predicts timeseries using a delay embedded state space reconstruction.
 It finds the nearest neighbors of a query point within this reconstructed space and applies
-a local model to make a prediction. "Local" model refers to the fact that the images (future points) of the [`neighborhood`](@ref) of a point are the only component used
+a local model to make a prediction. "Local" model refers to the fact that the images
+(future points) of the [`neighborhood`](@ref) of a point are the only component used
 to make a prediction.
 
-This Local Modeling is proven to be a very effective tool for timeseries of low-dimensional chaotic attractors.
+This Local Modeling is proven to be a very effective tool for timeseries of low-dimensional
+ chaotic attractors.
 
 
 !!! tip "Reconstruction parameters"
