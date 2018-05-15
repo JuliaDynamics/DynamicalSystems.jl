@@ -30,14 +30,13 @@ N_train = 6001
 s_train = data[1:N_train, 1]
 s_test  = data[N_train:end,1]
 
-method = AverageLocalModel(2)
 ntype = FixedMassNeighborhood(2)
 
 p = 500
-s_pred = localmodel_tsp(s_train, 3, 15, p; method=method, ntype=ntype)
+s_pred = localmodel_tsp(s_train, 3, 15, p; ntype=ntype)
 
 s_pred_10 = localmodel_tsp(s_train, 3, 15, p÷10;
-    method=method, ntype=ntype, stepsize = 10)
+    ntype=ntype, stepsize = 10)
 
 using PyPlot
 figure()
@@ -112,31 +111,28 @@ MSEp
 ```
 
 Here is an example function that employs `MSEp` to find good parameters. It takes in
-a timeseries `s` and ranges for the dimensions, delays, number of nearest neighbors,
-and weighting degrees to try. Keyword arguments are `valid_len`, which is the number of
+a timeseries `s` and ranges for the dimensions, delays and number of nearest neighbors to
+ try. Keyword arguments are `valid_len`, which is the number of
 prediction steps, and `num_tries` the number of different starting points to choose.
 
 It then calculates `MSEp` for all parameter combinations and returns the best parameter
 set.
 ```julia
 function estimate_param(s::AbstractVector,
-    dims, delay, K, N; valid_len=100, num_tries=50)
+    dims, delay, K; valid_len=100, num_tries=50)
     Result = Dict{SVector{4,Int},Float64}()
     step = 1
-    for n ∈ N
-        method = LocalAverageModel(n)
-        for D ∈ dims, τ ∈ delay
-            s_train = @view s[1:end-D*τ-valid_len-num_tries-50]
-            s_test = @view s[end-(D-1)*τ-valid_len-num_tries:end]
-            R = Reconstruction(s_train,D,τ)
-            R_test = Reconstruction(s_test,D,τ)
-            tree = KDTree(R[1:end-1])
-            for k ∈ K
-                ntype = FixedMassNeighborhood(k)
-                Result[@SVector([D,τ,k,n])] =
-                MSEp(R, tree, R_test, valid_len; method=method, ntype=ntype,
-                    stepsize=stepsize)
-            end
+    for D ∈ dims, τ ∈ delay
+        s_train = @view s[1:end-D*τ-valid_len-num_tries-50]
+        s_test = @view s[end-(D-1)*τ-valid_len-num_tries:end]
+        R = Reconstruction(s_train,D,τ)
+        R_test = Reconstruction(s_test,D,τ)
+        tree = KDTree(R[1:end-1])
+        for k ∈ K
+            ntype = FixedMassNeighborhood(k)
+            Result[@SVector([D,τ,k])] =
+            MSEp(R, tree, R_test, valid_len; ntype=ntype,
+                stepsize=stepsize)
         end
     end
     best_param = collect(keys(Result))[findmin(values(Result))[2]]
