@@ -3,4 +3,4 @@ DynamicalSystemsBase 0.10.2
 ChaosTools 0.11
 Reexport
 StaticArrays
-TimeseriesPrediction 0.2.1
+TimeseriesPrediction 0.4.0
