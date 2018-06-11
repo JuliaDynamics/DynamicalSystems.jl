@@ -196,3 +196,15 @@ main(0.9)
 ```
 and after about a minute you will get:
 ![Chaos detection](https://i.imgur.com/z85KBRh.png)
+
+### Regular orbits in the Henon-Heiles system
+In this example we use the [`poincaresos`](@ref) function to produce
+surfaces of section of the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles) system
+at different energies. At each energy [`gali`](@ref) is used to color-code
+each initial condition according to how chaotic/regular it is, i.e. how much time
+does it need to exceed the `threshold` of [`gali`](@ref).
+
+![crazy_gali](https://i.imgur.com/JgFOsoS.gif)
+
+You can find the script that produced this animation in
+`DynamicalSystems/coolanimations/gali_psos_henonhelies.jl`.

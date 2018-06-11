@@ -152,4 +152,6 @@ predicted version. As training set it used part of the attractor shown in gray o
 <video controls="controls">
 <source src="https://i.imgur.com/QwYdeBy.mp4" type="video/mp4">
 </video>
-This animation was generated with [Plots.jl](https://github.com/JuliaPlots/Plots.jl).
+
+You can find the script that produced this animation in
+`DynamicalSystems/coolanimations/roessler_Z_tspred.jl`.

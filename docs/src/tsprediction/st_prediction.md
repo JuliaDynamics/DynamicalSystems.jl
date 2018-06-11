@@ -16,11 +16,17 @@ system into one vector, we limit ourselves to reconstructing small neighborhoods
 points that carry enough information to predict one point one timestep into the future.
 
 !!! tip "Examples"
-    Several example scripts can be found in _.julia/v0.6/TimeseriesPrediction/examples_.
+    Several example scripts can be found in `TimeseriesPrediction/examples`.
+
+```@docs
+localmodel_stts
+crosspred_stts
+STReconstruction
+```
 
 ## Showcasing Results
-### Chaotic Barkley Model
-Crosspredicting the $V$ variable from $U$ in the chaotic Barkley model.
+### Chaotic Barkley Model cross-prediction
+Here we cross-predicting the $V$ field from $U$ in the chaotic Barkley model.
 It is defined by:
 
 ```math
@@ -32,10 +38,14 @@ It is defined by:
 ```
 
 Embedding parameters are `D=30`, `τ=1`, `B=0` and training length `2000`
-![Crossprediction U->V in Barkley](https://i.imgur.com/Q2yKRvB.png)
+![Crossprediction U->V in Barkley](https://i.imgur.com/Q2yKRvB.png).
 
-### Periodic Barkley Model
-Using different parameters in the barkley model can produce periodic behavior.
+You can find the script that produced this figure in
+`DynamicalSystems/coolanimations/barkley_crosspred.jl`.
+
+
+### Periodic Barkley Model timeseries prediction
+Using different parameters in the Barkley model can produce periodic behavior.
 Here is an example of timeseries prediction with embedding parameters
 `D=2`, `τ=1`, `B=2`, `k=1` and `c=200`.
 
@@ -44,15 +54,5 @@ with `Ttrain = 1000, p = 200` produces:
 
 ![Barkley prediction](https://i.imgur.com/ldChwOD.gif)
 
-### Bueno-Orovio-Cherry-Fenton (BOCF) Model
-Crosspredicting the $U$ field from $S$.
-See [this article](https://aip.scitation.org/doi/10.1063/1.5022276) for details on the system.
-
-Embedding parameters are `D=20`, `τ=5`, `B=1`, `k=1` and training length `500`.
-![Crossprediction s->U in BOCF](https://i.imgur.com/ixpYAn9.png)
-
-```@docs
-localmodel_stts
-crosspred_stts
-STReconstruction
-```
+You can find the script that produced this animation in
+`DynamicalSystems/coolanimations/barkley_stts.jl`.
