@@ -141,3 +141,17 @@ function estimate_param(s::AbstractVector,
     return best_param
 end
 ```
+
+## Z Prediction in the Roessler System
+This is an animation of timeseries prediction of the `z` variable of the Roessler system.
+On the left you can see the time evolution of the whole system with the
+chaotic attractor indicated in gray. The right side is a plot of the `z` component of the
+system. The actual values are displayed in green. In red you can see the iteratively
+predicted version. As training set it used part of the attractor shown in gray on the left.
+
+<video controls="controls">
+<source src="https://i.imgur.com/QwYdeBy.mp4" type="video/mp4">
+</video>
+
+You can find the script that produced this animation in
+`DynamicalSystems/coolanimations/roessler_Z_tspred.jl`.

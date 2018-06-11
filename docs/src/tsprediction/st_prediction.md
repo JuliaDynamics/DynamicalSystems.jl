@@ -16,10 +16,46 @@ system into one vector, we limit ourselves to reconstructing small neighborhoods
 points that carry enough information to predict one point one timestep into the future.
 
 !!! tip "Examples"
-    Several example scripts can be found in _.julia/v0.6/TimeseriesPrediction/examples_.
+    Several example scripts can be found in `TimeseriesPrediction/examples`.
 
 ```@docs
 localmodel_stts
 crosspred_stts
 STReconstruction
 ```
+
+## Showcasing Results
+### Chaotic Barkley Model cross-prediction
+Here we cross-predicting the $V$ field from $U$ in the chaotic Barkley model.
+It is defined by:
+
+```math
+\begin{align}
+\frac{\partial u }{\partial t} =& \frac{1}{\epsilon} u (1-u)\left(u-\frac{v+b}{a}\right) +
+ \nabla^2 u \\
+\frac{\partial v }{\partial t} =& u - v
+\end{align}
+```
+
+Embedding parameters are `D=30`, `τ=1`, `B=0` and training length `2000`. The
+following figure shows the cross-prediction 11 frames into the "future"
+(i.e. after the training set)
+
+![Crossprediction U->V in Barkley](https://i.imgur.com/Q2yKRvB.png).
+
+You can find the script that produced this figure in
+`DynamicalSystems/coolanimations/barkley_crosspred.jl`.
+
+
+### Periodic Barkley Model timeseries prediction
+Using different parameters in the Barkley model can produce periodic behavior.
+Here is an example of timeseries prediction with embedding parameters
+`D=2`, `τ=1`, `B=2`, `k=1` and `c=200`.
+
+Plotting the real evolution, prediction, and error side by side
+with `Ttrain = 1000, p = 200` produces:
+
+![Barkley prediction](https://i.imgur.com/ldChwOD.gif)
+
+You can find the script that produced this animation in
+`DynamicalSystems/coolanimations/barkley_stts.jl`.
