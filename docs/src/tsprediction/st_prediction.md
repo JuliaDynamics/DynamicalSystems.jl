@@ -37,7 +37,10 @@ It is defined by:
 \end{align}
 ```
 
-Embedding parameters are `D=30`, `τ=1`, `B=0` and training length `2000`
+Embedding parameters are `D=30`, `τ=1`, `B=0` and training length `2000`. The
+following figure shows the cross-prediction 11 frames into the "future"
+(i.e. after the training set)
+
 ![Crossprediction U->V in Barkley](https://i.imgur.com/Q2yKRvB.png).
 
 You can find the script that produced this figure in
