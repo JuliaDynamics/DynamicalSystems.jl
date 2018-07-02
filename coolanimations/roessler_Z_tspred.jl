@@ -57,4 +57,4 @@ spred = localmodel_tsp(strain, 50, 15, 7000)
 end
 #gif(anim,randstring() * ".gif")
 
-mp4(anim, "roessler_anim_for_chris.mp4")
+mp4(anim, "roessler_Z_tspred.mp4")
