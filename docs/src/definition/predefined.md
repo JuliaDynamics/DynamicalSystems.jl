@@ -4,7 +4,6 @@ like:
 ```julia
 using DynamicalSystems
 ds = Systems.lorenz(ρ = 32.0)
-typeof(ds) # ContinuousDS
 ts = trajectory(ds, 10.0)
 ```
 

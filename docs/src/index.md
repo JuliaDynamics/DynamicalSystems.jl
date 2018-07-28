@@ -4,10 +4,17 @@
 **DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
 
 The current documentation was built with the following versions
-```@example docs
-Pkg.status("DynamicalSystemsBase") # hide
-Pkg.status("ChaosTools") # hide
-Pkg.status("TimeseriesPrediction") # hide
+```@setup versions
+using Pkg.API: installed
+ins = installed()
+function f()
+for pkg in ["DynamicalSystemsBase", "ChaosTools", "TimeseriesPrediction"]
+  println(rpad(" * $(pkg) ", 30, "⋅"), " $(ins[pkg])")
+end
+end
+```
+```@example versions
+f() # hide
 ```
 See the [News](news) page for recent updates!
 
@@ -20,13 +27,13 @@ See the [News](news) page for recent updates!
     * Chaos in Dynamical Systems - E. Ott
 
 !!! example "Jupyter Notebooks / Tutorials"
-    The repository [JuliaDynamics/tutorials](https://github.com/JuliaDynamics/tutorials) contains various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
+    [In this repository](https://github.com/JuliaDynamics/Tutorials-and-Resources/tree/master/Youtube_JuliaLang_tutorial) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
-## Upcoming Tutorial
+## Video tutorial
 
-![DynamicalSystems Ad](https://i.imgur.com/AnbjO0b.gif)
+[![Youtube tutorial](http://img.youtube.com/vi/13hqE_1a158/0.jpg)](http://www.youtube.com/watch?v=13hqE_1a158)
 
-Ad made by [`@cormullion`](https://github.com/cormullion) using [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl)!
+The above tutorial is hosted on the Julia channel. *Be careful though!* It is using an older version of both **DynamicalSystems.jl** as well as Julia!
 
 ## Contents
 
@@ -65,6 +72,7 @@ is a quick summary:
 ### [TimeseriesPrediction](tsprediction/localmodels)
 
 * Predicting the future of one or multiple timeseries using average local models.
+* Spatio-temporal timeseries prediction and cross-prediction.
 
 
 ## Our Goals

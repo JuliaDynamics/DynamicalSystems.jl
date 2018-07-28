@@ -7,7 +7,7 @@ or discrete
 ```math
 \vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)
 ```
-where $p$ contains the parameters of the system. In addition to the above equation
+where $p$ contains the parameters of the system. In addition to the above equations
 of motion, information about the Jacobian of the system is also part of a "dynamical system".
 
 Keep in mind that almost all functions of **DynamicalSystems.jl** assume that $\vec{f}$ is differentiable!
@@ -53,7 +53,7 @@ set_parameter!
 Let's see an example for a small system, which is a case where out-of-place
 equations of motion are preferred.
 ```julia
-using DynamicalSystems, StaticArrays
+using DynamicalSystems # also exports relevant StaticArrays names
 # Lorenz system
 # Equations of motion:
 @inline @inbounds function loop(u, p, t)
@@ -236,8 +236,7 @@ ds = DiscreteDynamicalSystem(csm, u0, p, csm, J)
 ```
 10-dimensional discrete dynamical system
  state:     [5.88772e-6, 0.000539993, 0.000178981, 0.000607429, 0.000927426, 0.000246537, 0.00094118, 0.000703942, 0.000130421, 0.000332372]
- e.o.m.:    CoupledStandardMaps{5}([1, 2, 3, 4, 5], [5, 1, 2, 3, 4], [2, 3, 4, 5, 1])
+ e.o.m.:    CoupledStandardMaps
  in-place?  true
- jacobian:  CoupledStandardMaps{5}([1, 2, 3, 4, 5], [5, 1, 2, 3, 4], [2, 3, 4, 5, 1])
+ jacobian:  CoupledStandardMaps
 ```
-which unfortunately is kind of a mess to read, but what can you do!

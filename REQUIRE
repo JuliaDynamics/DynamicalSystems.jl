@@ -1,6 +1,6 @@
 julia 0.6
-DynamicalSystemsBase 0.10.2
-ChaosTools 0.11
+DynamicalSystemsBase 0.11
+ChaosTools 0.12
 Reexport
 StaticArrays
 TimeseriesPrediction 0.4.0

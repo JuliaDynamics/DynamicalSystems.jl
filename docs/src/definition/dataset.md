@@ -45,6 +45,8 @@ The thing to note is that all data of an `AbstractDataset` is contained within i
 To write and read a dataset, simply do:
 
 ```julia
+using DelimitedFiles
+
 data = Dataset(rand(1000, 2))
 
 # I will write and read using delimiter ','
