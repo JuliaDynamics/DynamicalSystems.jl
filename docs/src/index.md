@@ -16,7 +16,7 @@ end
 ```@example versions
 f() # hide
 ```
-See the [News](news) page for recent updates!
+See the [News](news) page for recent updates. The latest one is the Julia 0.7 version support!
 
 !!! info "Introductory textbooks"
     Our library assumes basic some basic knowledge of nonlinear dynamics and complex systems.
@@ -30,10 +30,10 @@ See the [News](news) page for recent updates!
     [In this repository](https://github.com/JuliaDynamics/Tutorials-and-Resources/tree/master/Youtube_JuliaLang_tutorial) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
 ## Video tutorial
+The below tutorial is hosted on the Julia channel. *Be careful though!* It is using an older version of both **DynamicalSystems.jl** as well as Julia! Fortunately, from the side of **DynamicalSystems.jl** there have been very few breaking changes. See the [News](news) for more.
 
 [![Youtube tutorial](http://img.youtube.com/vi/13hqE_1a158/0.jpg)](http://www.youtube.com/watch?v=13hqE_1a158)
 
-The above tutorial is hosted on the Julia channel. *Be careful though!* It is using an older version of both **DynamicalSystems.jl** as well as Julia!
 
 ## Contents
 

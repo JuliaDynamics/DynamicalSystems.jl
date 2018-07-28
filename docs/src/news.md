@@ -8,6 +8,11 @@ Please be sure to check out the `CHANGELOG.md` files of the individual repositor
 * `DynamicalSystem` has been totally reworked for better clarity: it does not store a "problem" anymore, only the absolutely necessary ingredients to create one. The API did not change though!
 * `Reconstruction` has been renamed to `reconstruct`, and now always returns a `Dataset`. In addition, now the parameter `D` stands for the number of temporal neighbors. **This is a breaking change!**. The change allows more intuition across the different versions of `reconstruct`.
 * The various offered integrators became more robust, and now allow passing callbacks etc. for the DifferentialEquations.jl event handling.
+* Brand new algorithm for computing Poincare surfaces of section. It is not also more clear and understandable from the old one, but also much faster as well!!!
+* Mutual information computation method. Also new method for optimal delay time using the Mutual information!
+
+As always: be sure to read the documentation string before using a function: the docstrings are always updated and will show latest changes even if we (mistakenly) missed them when writing the documentation pages!
+
 
 ## Timeseries Prediction
 A new module has been added to **DynamicalSystems.jl**: `TimeseriesPrediction` (version `v0.2.0`), which
