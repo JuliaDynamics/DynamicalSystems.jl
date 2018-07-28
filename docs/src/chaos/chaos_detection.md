@@ -19,26 +19,30 @@ gali
 ---
 ### Discrete Example
 We will use 3 coupled standard maps as an example for a discrete system:
-```julia
+```@example gali
 using DynamicalSystems
-using PyPlot; figure()
+using PyPlot
 M = 3; ks = 3ones(M); Γ = 0.1;
 stable = [π, π, π, 0.01, 0, 0] .+ 0.1
 chaotic = rand(2M)
 
 ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
+```
+
+First, let's see the behavior of GALI for a stable orbit
+```@example
+figure()
 tr = trajectory(ds, 100000)
 
-subplot(2,2,1)
+subplot(1,2,1)
 plot(tr[:,1], tr[:,1+M], alpha = 0.5,
 label="stable",marker="o", ms=1, linewidth=0)
 legend()
 #
-subplot(2,2,2)
+subplot(1,2,2)
 for k in [2,3,4, 5, 6]
     g, t = gali(ds, 1e5, k; threshold=1e-12)
     lt = log10.(t); lg = log10.(g)
-
     plot(lt, lg, label="GALI_$(k)")
 end
 lt = 2:0.5:5.5
@@ -51,63 +55,75 @@ xlim(2, 5.5)
 ylim(-12, 1)
 legend(fontsize=12)
 tight_layout()
+savefig("gali_discrete_stable.png"); nothing # hide
+```
+![gali_discrete_stable](gali_discrete_stable.png)
 
+Now do the same for a chaotic orbit
 
-ds = Systems.coupledstandardmaps(M, chaotic; ks=ks, Γ = Γ)
-tr = trajectory(ds, 100000)
-subplot(2,2,3)
+```@docs gali
+figure()
+tr = trajectory(ds, 100000, chaotic)
+subplot(1,2,1)
 plot(tr[:,1], tr[:,1+M], alpha = 0.5,
 label="chaotic",marker="o", ms=1, linewidth=0)
 legend()
 
-
-subplot(2,2,4)
+subplot(1,2,1)
 ls = lyapunovs(ds, 100000)
 for k in [2,3,4,5 ,6]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k)
+    g, t = gali(ds, 1000, k, u0 = chaotic)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
 legend(fontsize=12)
 xlim(0,50)
 ylim(1e-12, 1)
-
+savefig("gali_discrete_chaos.png"); nothing # hide
 ```
-![GALI Discrete](https://i.imgur.com/tzoaOqV.png)
+![gali_discrete_chaos](gali_discrete_chaos.png)
 
 
 ### Continuous Example
 As an example of a continuous system, let's see the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles):
-```julia
+```@example gali
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
-figure(figsize=(10, 12))
-sp = [0, .295456, .407308431, 0] #stable periodic orbit: 1D torus
-qp = [0, .483000, .278980390, 0] #quasiperiodic orbit: 2D torus
-ch = [0, -0.25, 0.42081, 0] # chaotic orbit
+sp = [0, .295456, .407308431, 0] # stable periodic orbit: 1D torus
+qp = [0, .483000, .278980390, 0] # quasiperiodic orbit: 2D torus
+ch = [0, -0.25, 0.42081, 0]      # chaotic orbit
+ds = Systems.henonheiles(sp)
+```
+First, we see the behavior with a stable periodic orbit
+```@example gali
+figure()
+subplot(1,2,1)
 dt = 1.0
 
-subplot(3,2,1)
-ds = Systems.henonheiles(sp)
-diffeq = Dict(:abstol=>1e-9, :reltol=>1e-9, :solver => Tsit5(), :maxiters => typemax(Int))
-tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
+diffeq = (abstol=1e-9, reltol=1e-9, alg = Tsit5(), maxiters = typemax(Int))
+tr = trajectory(ds, 10000.0; dt=dt, diffeq...)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="sp",marker="o",markersize=2, linewidth=0)
 legend()
 
-subplot(3,2,2)
+subplot(1,2,1)
 for k in [2,3,4]
-    g, t = gali(ds, 50000.0, k; dt = dt, diff_eq_kwargs = diffeq)
+    g, t = gali(ds, 10000.0, k; dt = dt, diff_eq_kwargs = diffeq)
     if k < 4
-        loglog(t, 1./t.^(k-1), label="slope -$(k-1)")
+        loglog(t, 1 ./ t.^(k-1), label="slope -$(k-1)")
     else
-        loglog(t, 1./t.^(2k-4), label="slope -$(2k-4)")
+        loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
     end
     loglog(t, g, label="GALI_$(k)")
 end
-legend(fontsize=12)
+ylim(1e-12, 1)
+legend(fontsize=12);
+```
+Nice! Asymptotically GALI matches perfectly the theoretical prediction.
 
+Next, let's see what happens with a quasi-periodic orbit
+```@example gali
 subplot(3,2,3)
 ds = Systems.henonheiles(qp)
 tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)

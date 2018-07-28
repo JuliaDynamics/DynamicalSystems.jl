@@ -20,12 +20,14 @@ lambdaperms
 ### Standard Map example
 For example, let's find the fixed points of the [Standard Map](system_definition/#DynamicalSystems.Systems.standardmap) of order 2, 3, 4, 5, 6
 and 8. We will use all permutations for the `signs` but only one for the `inds`.
-We will also only use one `λ` value, and a 21×21 density of initial conditions:
-```julia
+We will also only use one `λ` value, and a 21×21 density of initial conditions.
+
+First, initialize everything
+```@example sm
 using DynamicalSystems, PyPlot, StaticArrays
 
 ds = Systems.standardmap()
-xs = linspace(0, 2π, 21); ys = copy(xs)
+xs = range(0, stop = 2π, length = 21); ys = copy(xs)
 ics = [SVector{2}(x,y) for x in xs for y in ys]
 
 # All permutations of [±1, ±1]:
@@ -37,49 +39,52 @@ indss = [[1,2]] # <- must be container of vectors!!!
 λs = 0.005 # <- only this allowed to not be vector (could also be vector)
 
 orders = [2, 3, 4, 5, 6, 8]
-ALLFP = Vector{SVector{2, Float64}}[]
+ALLFP = Dataset{2, Float64}[];
+```
+Then, do the necessary computations for all orders
 
+```@example sm
 ttt = time()
 for o in orders
     FP = periodicorbits(ds, o, ics, λs, indss, singss)
     push!(ALLFP, FP)
 end
 println("Total time: $((time() - ttt)/60) mins.")
-# It takes a good 3-5 minutes to do all computations!
+```
 
-
-# Create phase-space plot:
+Plot the phase space of the standard map
+```@example sm
 iters = 1000
 dataset = trajectory(ds, iters)
 for x in xs
     for y in ys
-        ds.state = SVector{2}(x, y)
-        append!(dataset, trajectory(ds, iters))
+        append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
 m = Matrix(dataset)
 PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
 PyPlot.xlim(xs[1], xs[end])
-PyPlot.ylim(ys[1], ys[end])
+PyPlot.ylim(ys[1], ys[end]);
+```
 
-# Plot fixed points:
+and finally, plot the fixed points
+```@example sm
 markers = ["D", "^", "s", "p", "h", "8"]
 colors = ["b", "g", "r", "c", "m", "grey"]
 
 for i in 1:6
     FP = ALLFP[i]
     o = orders[i]
-    PyPlot.plot([s[1] for s in FP], [s[2] for s in FP],
+    PyPlot.plot(columns(FP)...,
     marker=markers[i], color = colors[i], markersize=10.0 + (8-o), linewidth=0.0,
     label = "order $o", markeredgecolor = "yellow", markeredgewidth = 0.5)
 end
 legend(loc="upper right", framealpha=0.9)
 xlabel("\$\\theta\$")
 ylabel("\$p\$")
+savefig("fixedpoints.png"); nothing # hide
 ```
-
-After 3 to 5 minutes, you will get this plot:
-![Standard map fixed points](https://i.imgur.com/Pj5sxKA.png)
+![Fixed points of the standard map](fixedpoints.png)
 
 You can confirm for yourself that this is correct, for many reasons:
 
