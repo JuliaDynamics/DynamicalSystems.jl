@@ -194,7 +194,7 @@ function main(k)
     dens = 201
     chaoticity = zeros(Int, dens, dens)
 
-    θs = ps = linspace(0, 2π, dens+1)
+    θs = ps = range(0, stop = 2π, length = dens+1)
     ds = Systems.standardmap(k = k)
 
     tinteg = tangent_integrator(ds, 2)
@@ -212,17 +212,18 @@ function main(k)
             chaoticity[i, j] = ChaosTools._gali(tinteg, 500, 1, 1e-12)[2][end]
         end
     end
-
+    figure()
     pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
     chaoticity')
     colorbar()
-
+    xlabel("\$\\theta\$")
+    ylabel("\$p\$")
+    return
 end
 
-main(0.9)
+main(0.9);
 ```
-and after about a minute you will get:
-![Chaos detection](https://i.imgur.com/z85KBRh.png)
+![](insert standard map here)
 
 ### Regular orbits in the Henon-Heiles system
 In this example we use the [`poincaresos`](@ref) function to produce
@@ -234,4 +235,4 @@ does it need to exceed the `threshold` of [`gali`](@ref).
 ![crazy_gali](https://i.imgur.com/JgFOsoS.gif)
 
 You can find the script that produced this animation in
-`DynamicalSystems/coolanimations/gali_psos_henonhelies.jl`.
+`DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.

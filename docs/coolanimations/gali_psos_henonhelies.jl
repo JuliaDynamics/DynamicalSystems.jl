@@ -10,8 +10,8 @@ ds = Systems.henonheiles()
 energy(x,y,px,py) = 0.5(px^2 + py^2) + potential(x,y)
 potential(x, y) = 0.5(x^2 + y^2) + (x^2*y - (y^3)/3)
 function generate_ics(E, n)
-    ys = linspace(-0.4, 1.0, n)
-    pys = linspace(-0.5, 0.5, n)
+    ys = range(-0.4, stop = 1.0, length = n)
+    pys = range(-0.5, stop = 0.5, length = n)
     ics = Vector{Vector{Float64}}()
     for y in ys
         V = potential(0.0, y)
@@ -29,7 +29,7 @@ end
 
 Emin = 0.1
 Emax = 1/6
-Es = linspace(Emin, Emax, 100)
+Es = range(Emin, stop = Emax, length = 100)
 
 density = 20
 tfinal = 2000.0
@@ -56,13 +56,12 @@ for j in 1:length(Es)
     ics = generate_ics(E, density)
 
     for u in ics
+
         # compute section:
         psos = poincaresos(ds, (1, 0.0), tfinal; u0 = u)
 
         # compute gali (using advanced usage)
-        set_state!(tinteg, u)
-        set_deviations!(tinteg, orthonormal(4,4))
-        reinit!(tinteg, tinteg.u)
+        reinit!(tinteg, u, orthonormal(4,4))
         regularity = ChaosTools._gali(tinteg, tgali, 1, 1e-12)[2][end]/tgali
 
         # Plot PSOS with color corresponding to regularity
@@ -89,7 +88,8 @@ end
 close("all")
 ion()
 
-# %%
+# %% produce animation
+
 framerate = 10
 savename = "hhanim/galipsos"
 anim = `ffmpeg -y -framerate $(framerate) -start_number 1 -i $(savename)_%d.png
@@ -97,7 +97,7 @@ anim = `ffmpeg -y -framerate $(framerate) -start_number 1 -i $(savename)_%d.png
 -filter:v scale=1200:-1 -b:v 2048k -level 3.0 $(savename).mp4`
 run(anim)
 
-if false
+if true
     for i in 1:length(Es)
         rm(savename*"_$(i).png")
     end
