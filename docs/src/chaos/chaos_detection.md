@@ -40,20 +40,19 @@ label="stable",marker="o", ms=1, linewidth=0)
 legend()
 #
 subplot(1,2,2)
-for k in [2,3,4, 5, 6]
+for k in [4, 5, 6]
     g, t = gali(ds, 1e5, k; threshold=1e-12)
     lt = log10.(t); lg = log10.(g)
     plot(lt, lg, label="GALI_$(k)")
 end
 lt = 2:0.5:5.5
-plot(lt, zeros(lt), label="const")
-plot(lt, -2(lt - 3), label="slope -2")
-plot(lt, -4(lt - 3), label="slope -4")
-plot(lt, -6(lt - 3), label="slope -6")
+plot(lt, -2(lt .- 3), label="slope -2")
+plot(lt, -4(lt .- 3), label="slope -4")
+plot(lt, -6(lt .- 3), label="slope -6")
 
 xlim(2, 5.5)
 ylim(-12, 1)
-legend(fontsize=12)
+legend()
 tight_layout()
 savefig("gali_discrete_stable.png"); nothing # hide
 ```
@@ -69,16 +68,16 @@ plot(tr[:,1], tr[:,1+M], alpha = 0.5,
 label="chaotic",marker="o", ms=1, linewidth=0)
 legend()
 
-subplot(1,2,1)
-ls = lyapunovs(ds, 100000)
-for k in [2,3,4,5 ,6]
+subplot(1,2,2)
+ls = lyapunovs(ds, 100000; u0 = chaotic)
+for k in [2,3,6]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k, u0 = chaotic)
+    g, t = gali(ds, 1000, k; u0 = chaotic)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
-legend(fontsize=12)
-xlim(0,50)
+legend()
+xlim(0,100)
 ylim(1e-12, 1)
 savefig("gali_discrete_chaos.png"); nothing # hide
 ```
@@ -107,66 +106,78 @@ plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="sp",marker="o",markersize=2, linewidth=0)
 legend()
 
-subplot(1,2,1)
+subplot(1,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; dt = dt, diff_eq_kwargs = diffeq)
-    if k < 4
-        loglog(t, 1 ./ t.^(k-1), label="slope -$(k-1)")
-    else
-        loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
-    end
+    g, t = gali(ds, 10000.0, k; dt = dt, diffeq...)
     loglog(t, g, label="GALI_$(k)")
+    if k < 4
+        loglog(t, 100 ./ t.^(k-1), label="slope -$(k-1)")
+    else
+        loglog(t, 10000 ./ t.^(2k-4), label="slope -$(2k-4)")
+    end
 end
 ylim(1e-12, 1)
-legend(fontsize=12);
+legend();
+savefig("gali_cont_stable.png"); nothing # hide
 ```
-Nice! Asymptotically GALI matches perfectly the theoretical prediction.
+![gali_cont_stable](gali_cont_stable.png)
 
-Next, let's see what happens with a quasi-periodic orbit
+Next, let's see what happens with a quasi-periodic orbit.
+Don't remember to change the `u0` arguments!
 ```@example gali
-subplot(3,2,3)
-ds = Systems.henonheiles(qp)
-tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
+figure()
+subplot(1,2,1)
+tr = trajectory(ds, 10000.0, qp; dt=dt, diffeq...)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="qp",marker="o",markersize=2, linewidth=0)
 legend()
 
-subplot(3,2,4)
+subplot(1,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; dt = dt, diff_eq_kwargs = diffeq)
-    loglog(t, 1./t.^(2k-4), label="slope -$(2k-4)")
+    g, t = gali(ds, 10000.0, k; u0 = qp, dt = dt, diffeq...)
     loglog(t, g, label="GALI_$(k)")
+    if k == 2
+        loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
+    else
+        loglog(t, 100 ./ t.^(2k-4), label="slope -$(2k-4)")
+    end
 end
-legend(fontsize=12)
+ylim(1e-12, 2)
+legend()
 tight_layout()
+savefig("gali_cont_quasi.png"); nothing # hide
+```
+![gali_cont_quasi](gali_cont_quasi.png)
 
-ds = Systems.henonheiles(ch)
-diffeq = Dict(:abstol=>1e-6, :reltol=>1e-6, :solver => Tsit5(), :maxiters => typemax(Int))
-tr = trajectory(ds, 10000.0, dt=dt, diff_eq_kwargs = diffeq)
-subplot(3,2,5)
+Finally, here is GALI of a continuous system with a chaotic orbit
+```@example gali
+figure()
+tr = trajectory(ds, 10000.0, ch; dt=dt, diffeq...)
+subplot(1,2,1)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="ch",marker="o",markersize=2, linewidth=0)
 legend()
 
-subplot(3,2,6)
-ls = lyapunovs(ds, 5000.0, dt=dt)
+subplot(1,2,2)
+ls = lyapunovs(ds, 5000.0; dt=dt, u0 = ch, diffeq...)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k; dt = dt)
+    g, t = gali(ds, 1000, k; u0 = ch, dt = dt, diffeq...)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
-legend(fontsize=12)
+legend()
+ylim(1e-16, 1)
 tight_layout()
+savefig("gali_cont_chaos.png"); nothing # hide
 ```
-![GALI Continuous](https://i.imgur.com/VJE6MpC.png)
-As you can see, the results of both discrete and continuous match
-very well the theory described in
-[`gali`](@ref).
+![gali_cont_chaos](gali_cont_chaos.png)
 
-### Using GALI
-No-one in their right mind would try to fit power-laws in order to distinguish between
-chaotic and regular behavior, like the above examples. These were just demonstrations and proofs that the method works as expected in all cases.
+As you can see, the results of both discrete and continuous systems match
+very well the theory described in [`gali`](@ref).
+
+## Using GALI
+No-one in their right mind would try to fit power-laws in order to distinguish between chaotic and regular behavior, like the above examples. These were just demonstrations and proofs that the method works as expected in all cases.
 
 The most common usage of $\text{GALI}_k$ is to define a (sufficiently) small
 amount of time and a (sufficiently) small threshold and see whether $\text{GALI}_k$
@@ -194,7 +205,7 @@ function main(k)
 
             # new initial state is the system initial state
             u0 = SVector{2}(θ, p)
-            reinit!(tinteg, u0; Q0 = orthonormal(2,2))
+            reinit!(tinteg, u0, orthonormal(2,2))
 
             # Low-level call signature of gali:
             #  _gali(tinteg, tmax, dt, threshold)
