@@ -182,7 +182,7 @@ id = information_dim(R)
 # Henon attractor directly, because we have a trajectory
 id_direct = information_dim(traj, sizes)
 
-println("Dimensions: $(round(id, 4)), $(round(id_direct, 4))")
+println("Dimensions: $(round(id, digits=4)), $(round(id_direct, digits=4))")
 
 # Benchmark:
 @btime Reconstruction($ts, 2, 2);

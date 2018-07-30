@@ -77,12 +77,12 @@ for j in 1:length(Es)
     ylim(-0.65, 0.65)
     xlabel("\$y\$")
     ylabel("\$p_y\$")
-    text(0.7, 0.9, "\$E = $(round(E, 5))\$", transform = ax[:transAxes])
+    text(0.7, 0.9, "\$E = $(round(E, digits=5))\$", transform = ax[:transAxes])
     tight_layout()
     savefig("hhanim/galipsos_$j.png", dpi = 200)
     if j == 1
         ttim = time()
-        println("Average time per energy: $(round(ttim - tim, 3)) secs")
+        println("Average time per energy: $(round(ttim - tim, digits=3)) secs")
     end
 end
 close("all")

@@ -74,12 +74,12 @@ function barkley_periodic_boundary(T, Nx, Ny)
 end
 
 
-D      = try parse(ARGS[1]) catch 2       end
-τ      = try parse(ARGS[2]) catch 1       end
-B      = try parse(ARGS[3]) catch 1       end
-k      = try parse(ARGS[4]) catch 1       end
-Ttrain = try parse(ARGS[5]) catch 10      end
-noise  = try parse(ARGS[6]) catch 0.0      end
+D      = try Meta.parse(ARGS[1]) catch 2       end
+τ      = try Meta.parse(ARGS[2]) catch 1       end
+B      = try Meta.parse(ARGS[3]) catch 1       end
+k      = try Meta.parse(ARGS[4]) catch 1       end
+Ttrain = try Meta.parse(ARGS[5]) catch 10      end
+noise  = try Meta.parse(ARGS[6]) catch 0.0      end
 inp    = try ARGS[7]  catch "u"     end
 outp   = try ARGS[8] catch "v"     end
 

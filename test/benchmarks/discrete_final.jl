@@ -82,7 +82,7 @@ b3 = @benchmark evolve3!($s3, $N)
 display(b3)
 
 beches = [minimum(b) for b in [b1,b2,b3]]
-i = indmin(beches)
+i = argmin(beches)
 println("Conclusions:")
 println("Minimum time of evolve-call for N=$(N): v$i")
 println("Judged vs v$i:")
