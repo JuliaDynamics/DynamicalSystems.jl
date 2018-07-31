@@ -31,7 +31,7 @@ ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
 
 First, let's see the behavior of GALI for a stable orbit
 ```@example
-figure()
+figure(figsize = (8,4))
 tr = trajectory(ds, 100000)
 
 subplot(1,2,1)
@@ -61,7 +61,7 @@ savefig("gali_discrete_stable.png"); nothing # hide
 Now do the same for a chaotic orbit
 
 ```@docs gali
-figure()
+figure(figsize = (8,4))
 tr = trajectory(ds, 100000, chaotic)
 subplot(1,2,1)
 plot(tr[:,1], tr[:,1+M], alpha = 0.5,
@@ -96,7 +96,7 @@ ds = Systems.henonheiles(sp)
 ```
 First, we see the behavior with a stable periodic orbit
 ```@example gali
-figure()
+figure(figsize = (8,4))
 subplot(1,2,1)
 dt = 1.0
 
@@ -125,7 +125,7 @@ savefig("gali_cont_stable.png"); nothing # hide
 Next, let's see what happens with a quasi-periodic orbit.
 Don't remember to change the `u0` arguments!
 ```@example gali
-figure()
+figure(figsize = (8,4))
 subplot(1,2,1)
 tr = trajectory(ds, 10000.0, qp; dt=dt, diffeq...)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
@@ -151,7 +151,7 @@ savefig("gali_cont_quasi.png"); nothing # hide
 
 Finally, here is GALI of a continuous system with a chaotic orbit
 ```@example gali
-figure()
+figure(figsize = (8,4))
 tr = trajectory(ds, 10000.0, ch; dt=dt, diffeq...)
 subplot(1,2,1)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
