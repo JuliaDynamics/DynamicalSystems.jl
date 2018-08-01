@@ -9,7 +9,7 @@ using Pkg.API: installed
 ins = installed()
 function f()
 for pkg in ["DynamicalSystemsBase", "ChaosTools", "TimeseriesPrediction"]
-  println(rpad(" * $(pkg) ", 30, "⋅"), " $(ins[pkg])")
+  println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
 end
 end
 ```

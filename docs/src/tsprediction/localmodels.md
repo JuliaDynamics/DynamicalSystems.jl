@@ -1,5 +1,8 @@
 # Local Modeling
 
+!!! warn "Not yet on Julia 0.7"
+    `TimeseriesPrediction` has not yet been updated to Julia 0.7!
+
 Local Modeling predicts timeseries using a delay embedded state space reconstruction.
 It finds the nearest neighbors of a query point within this reconstructed space and applies
 a local model to make a prediction. "Local" model refers to the fact that the images
@@ -12,8 +15,7 @@ This Local Modeling is proven to be a very effective tool for timeseries of low-
 
 !!! tip "Reconstruction parameters"
     Don't forget that **DynamicalSystems.jl** also has functions for estimating
-    good parameters for
-    a [`Reconstruction`](@ref): [`estimate_delay`](@ref) and [`estimate_dimension`](@ref).
+    good parameters for delay embedding: [`estimate_delay`](@ref) and [`estimate_dimension`](@ref).
 
 ## Local Model Prediction
 ```@docs

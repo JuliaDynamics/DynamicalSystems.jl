@@ -1,20 +1,21 @@
-## Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
 os:
   - linux
 #  - osx
+# branches:
+#   except:
+#     - 0.7
 julia:
-  - 0.6
+  # - 0.7
+  - nightly
 notifications:
   email:
     on_success: never
-    on_failure: always
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone(pwd())'
-  - julia -e 'Pkg.test("DynamicalSystems")'
+    on_failure: never
+
 after_success:
-  - test $TRAVIS_OS_NAME = "linux" && julia -e julia -e 'Pkg.add("Documenter")'
-  - test $TRAVIS_OS_NAME = "linux" && julia -e 'cd(Pkg.dir("DynamicalSystems")); include(joinpath("docs", "make.jl"))'
-#  - julia -e 'cd(Pkg.dir("DynamicalSystems")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
-#  - julia -e 'cd(Pkg.dir("DynamicalSystems")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+  - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; pkg"add ChaosTools#master"'
+  - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; ENV["PYTHON"]=""; py="PyCall"; Pkg.add(py); Pkg.build(); Pkg.add("PyPlot")'
+  - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; Pkg.add("Documenter"); include(joinpath("docs", "make.jl"))'
+#  - julia -e 'cd(Pkg.dir("DynamicalBilliards")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+#  - julia -e 'cd(Pkg.dir("DynamicalBilliards")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
