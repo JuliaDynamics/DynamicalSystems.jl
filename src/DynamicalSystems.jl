@@ -1,5 +1,3 @@
-__precompile__()
-
 """
 A Julia suite for chaos and nonlinear dynamics
 """
