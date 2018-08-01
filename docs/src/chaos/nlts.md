@@ -2,7 +2,7 @@
 
 ## Estimating Reconstruction Parameters
 The following functions can estimate good values that can be used in
-[`Reconstruction`](@ref) for either the delay time or the
+[`reconstruct`](@ref) for either the delay time or the
 dimension.
 ```@docs
 estimate_delay
@@ -12,7 +12,7 @@ stochastic_indicator
 ---
 
 ## Numerical Lyapunov Exponent
-Given any timeseries, one can first obtain a [`Reconstruction`](@ref) from it using
+Given any timeseries, one can first [`reconstruct`](@ref) it using
 delay coordinates, and then calculate a maximum
 Lyapunov exponent for it. This is done
 with

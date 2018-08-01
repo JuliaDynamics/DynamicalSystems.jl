@@ -31,7 +31,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 ### [Nonlinear Timeseries Analysis](nlts)
 
-1. Methods for estimating good [`Reconstruction`](@ref) parameters.
+1. Methods for estimating good [`reconstruct`](@ref) parameters.
 3. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
 

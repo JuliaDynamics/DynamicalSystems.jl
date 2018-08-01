@@ -50,7 +50,7 @@ The below tutorial is hosted on the Julia channel. *Be careful though!* It is us
    many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 4. Dedicated interface for [numerical data](definition/dataset).
 5. Efficient [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
-5. Delay Coordinates Embedding: flexible and abstracted [`Reconstruction`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
+5. Delay Coordinates Embedding: flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
     * Supports multiple dimensions and multiple timescales.
 
 

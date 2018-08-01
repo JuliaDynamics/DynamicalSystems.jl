@@ -49,7 +49,7 @@ for o in orders
     FP = periodicorbits(ds, o, ics, λs, indss, singss)
     push!(ALLFP, FP)
 end
-println("Total time: $((time() - ttt)/60) mins.")
+println("Total time, including compilation: $((time() - ttt)/60) mins.")
 ```
 
 Plot the phase space of the standard map
@@ -61,6 +61,7 @@ for x in xs
         append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
+figure()
 m = Matrix(dataset)
 PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
 PyPlot.xlim(xs[1], xs[end])

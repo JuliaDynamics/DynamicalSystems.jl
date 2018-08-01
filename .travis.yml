@@ -13,6 +13,8 @@ notifications:
 before_script:
   - julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaDynamics/ChaosTools.jl")'
   - julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaDynamics/TimeseriesPrediction.jl")'
+  - julia -e 'using Pkg; Pkg.add("StaticArrays")'
+  - julia -e 'using Pkg; Pkg.add("OrdinaryDiffEq")'
 
 after_success:
   - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; ENV["PYTHON"]=""; py="PyCall"; Pkg.add(py); Pkg.build(); Pkg.add("PyPlot")'

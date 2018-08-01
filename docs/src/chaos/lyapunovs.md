@@ -38,7 +38,8 @@ ds = Systems.towel()
 ```
 
 ## Maximum Lyapunov Exponent
-The function `lyapunov` calculates the maximum lyapunov exponent of a system, more efficiently than getting the first result of `lyapunovs`:
+It is possible to get only the maximum Lyapunov exponent simply by giving
+`1` as the third argument of [`lyapunovs`](@ref). However, there is a second algorithm that allows you to do the same thing, which is offered by the function `lyapunov`:
 ```@docs
 lyapunov
 ```
