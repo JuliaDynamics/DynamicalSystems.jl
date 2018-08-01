@@ -30,7 +30,7 @@ ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
 ```
 
 First, let's see the behavior of GALI for a stable orbit
-```@example
+```@example gali
 figure(figsize = (8,4))
 tr = trajectory(ds, 100000)
 
@@ -38,7 +38,7 @@ subplot(1,2,1)
 plot(tr[:,1], tr[:,1+M], alpha = 0.5,
 label="stable",marker="o", ms=1, linewidth=0)
 legend()
-#
+
 subplot(1,2,2)
 for k in [4, 5, 6]
     g, t = gali(ds, 1e5, k; threshold=1e-12)
@@ -51,7 +51,7 @@ plot(lt, -4(lt .- 3), label="slope -4")
 plot(lt, -6(lt .- 3), label="slope -6")
 
 xlim(2, 5.5)
-ylim(-12, 1)
+ylim(-12, 2)
 legend()
 tight_layout()
 savefig("gali_discrete_stable.png"); nothing # hide
@@ -223,7 +223,7 @@ end
 
 main(0.9);
 ```
-![](insert standard map here)
+![](https://github.com/JuliaDynamics/Tutorials-and-Resources/blob/master/dynamicalsystems_documentation/gali_standardmap.png?raw=true)
 
 ### Regular orbits in the Henon-Heiles system
 In this example we use the [`poincaresos`](@ref) function to produce
@@ -232,7 +232,9 @@ at different energies. At each energy [`gali`](@ref) is used to color-code
 each initial condition according to how chaotic/regular it is, i.e. how much time
 does it need to exceed the `threshold` of [`gali`](@ref).
 
-![crazy_gali](https://i.imgur.com/JgFOsoS.gif)
+<video width="100%" height="auto" controls>
+<source src="https://github.com/JuliaDynamics/Tutorials-and-Resources/blob/master/dynamicalsystems_documentation/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
+</video>
 
 You can find the script that produced this animation in
 `DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.

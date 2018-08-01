@@ -46,7 +46,7 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
         Δt = 1
         λ = linear_region(ks.*Δt, E)[2]
         # gives the linear slope, i.e. the Lyapunov exponent
-        plot(ks-1, E-E[1], label = "D=$D, λ=$(round(λ, digits = 3))")
+        plot(ks .- 1, E .- E[1], label = "D=$D, λ=$(round(λ, digits = 3))")
         legend()
         tight_layout()
     end
@@ -76,7 +76,7 @@ ks = 1:100
 R = reconstruct(x, 1, 1)
 E = numericallyapunov(R, ks, ntype = FixedMassNeighborhood(2))
 figure()
-plot(ks-1, E-E[1])
+plot(ks .- 1, E .- E[1])
 title("Lyappunov: $(linear_region(ks, E)[2])")
 savefig("badlyap.png"); nothing # hide
 ```
@@ -115,11 +115,11 @@ Now we plot some example computations
 ```@example entropy
 figure()
 for D in [3, 7], τ in [7, 15]
-    R = reconstruct(x, D, τ)
+    r = reconstruct(x, D, τ)
 
-    # E1 = numericallyapunov(R, ks1; ntype = ntype)
+    # E1 = numericallyapunov(r, ks1; ntype = ntype)
     # λ1 = linear_region(ks1 .* dt, E1)[2]
-    E2 = numericallyapunov(R, ks2; ntype = ntype)
+    E2 = numericallyapunov(r, ks2; ntype = ntype)
     λ2 = linear_region(ks2 .* dt, E2)[2]
 
     # plot(ks1,E1.-E1[1], label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
@@ -161,6 +161,7 @@ L = length(x)
 s = x .+ 0.5rand(L) #add noise
 
 U, S = broomhead_king(s, 40)
+summary(U)
 ```
 
 Now let's simply compare the above result with the one you get from doing a "standard" call to [`reconstruct`](@ref):
@@ -180,4 +181,4 @@ savefig("broomhead_king.png"); nothing # hide
 ![](broomhead_king.png)
 
 we have used the same system as in the [delay coordinates reconstruction](/definition/reconstruction) example, and picked the optimal
-delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates fail is much worse than the Broomhead-King coordinates.
+delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.

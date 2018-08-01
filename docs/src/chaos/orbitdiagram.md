@@ -22,8 +22,8 @@ output = orbitdiagram(ds, i, p_index, pvalues; n = n, Ttr = Ttr)
 
 figure()
 for (j, p) in enumerate(pvalues)
-    plot(p .* ones(output[j]), output[j], lw = 0,
-    marker = "o", ms = 0.5, color = "black")
+    plot(p .* ones(length(output[j])), output[j], lw = 0,
+    marker = "o", ms = 0.2, color = "black")
 end
 xlabel("\$r\$"); ylabel("\$x\$")
 savefig("logostic_od.png"); nothing # hide
@@ -96,6 +96,7 @@ reason to use `poincaresos` for this though, because you can simply use
 ```@example orbit
 ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
 a = trajectory(ds, 100000.0, dt = 2π) # every period T = 2π/ω
+figure()
 plot(a[:, 1], a[:, 2], lw = 0, marker ="o", ms = 1)
 xlabel("\$x\$"); ylabel("\$\\dot{x}\$")
 savefig("duffing.png"); nothing # hide
@@ -121,19 +122,19 @@ For example, we will calculate the orbit diagram of the Shinriki oscillator, a c
 ```@example orbit
 ds = Systems.shinriki([-2, 0, 0.2])
 
-pvalues = linspace(19,22,201)
+pvalues = range(19, stop = 22, length = 201)
 i = 1
 plane = (2, 0.0)
 tf = 200.0
 p_index = 1
 
 output = produce_orbitdiagram(ds, plane, i, p_index, pvalues; tfinal = tf,
-Ttr = 200.0, direction = -1, printparams = true)
+Ttr = 200.0, direction = -1, printparams = false)
 
 figure()
 for (j, p) in enumerate(pvalues)
     plot(p .* ones(output[j]), output[j], lw = 0,
-    marker = "o", ms = 0.5, color = "black")
+    marker = "o", ms = 0.2, color = "black")
 end
 xlabel("\$R_1\$"); ylabel("\$V_1\$")
 tight_layout()

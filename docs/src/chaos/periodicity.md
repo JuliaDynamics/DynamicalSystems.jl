@@ -61,7 +61,7 @@ for x in xs
         append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
-figure()
+figure(figsize = (12,12))
 m = Matrix(dataset)
 PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
 PyPlot.xlim(xs[1], xs[end])

@@ -22,7 +22,7 @@ for i in 1:3
         ax = subplot(3,3,k)
         plot(R[:, 1], R[:, 2], color = "C$(k-1)", lw = 0.8)
         title("var = $i, τ = $τ")
-        k+=1
+        global k+=1
     end
 end
 

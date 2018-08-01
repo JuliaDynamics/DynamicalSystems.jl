@@ -49,7 +49,7 @@ pages:
   - Nonlinear Timeseries Analysis: chaos/nlts.md
   - Periodicity: chaos/periodicity.md
   - Chaos Detection: chaos/chaos_detection.md
-  - Visualization: chaos/visualization.md
+  # - Visualization: chaos/visualization.md
 - TimeseriesPrediction:
   - Local Modeling: tsprediction/localmodels.md
   - Spatiotemporal Timeseries: tsprediction/st_prediction.md
