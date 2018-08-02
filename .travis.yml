@@ -11,7 +11,6 @@ notifications:
     on_failure: never
 
 before_script:
-  - julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaDynamics/ChaosTools.jl")'
   - julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaDynamics/TimeseriesPrediction.jl")'
   - julia -e 'using Pkg; Pkg.add("StaticArrays")'
   - julia -e 'using Pkg; Pkg.add("OrdinaryDiffEq")'
