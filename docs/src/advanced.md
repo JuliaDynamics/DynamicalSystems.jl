@@ -19,7 +19,7 @@ get_deviations
 set_deviations!
 ```
 These functions work with *any* possible integrator and it is best to use the
-to change states robustly
+to change states robustly!
 
 ## Re-initializing an integrator
 It is more efficient to re-initialize an integrator using `reinit!`
@@ -31,49 +31,45 @@ an integrator, and a low-level part that does the computation.
 
 The low level part is your friend! Use it! See the [Using `gali`](chaos/chaos_detection/#using-gali) page for an example.
 
-### Discrete
-For discrete systems, the function signature is simply
-```julia
-reinit!(integ, u; t0 = integ.t0, Q0 = nothing)
-```
-which gives you the possibility to optionally re-initialize deviation vectors
-with `Q0` (you *should* do that!).
+The `reinit!` call signature is the same for continuous and discrete systems.
+In the following, `state` is supposed to be a `D` dimensional vector (state of the dynamical system).
 
-To change parameters simply change the field `p` of an integrator.
-```julia
-ds = Systems.henon()
-pinteg = parallel_integrator(ds, [rand(2), rand(2)])
-pinteg.p[2] = 0.45
-```
-For discrete systems there is no general reason to `reinit!` after a parameter change.
+1. `reinit!(integ, state)` : to be used with standard [`integrator`](@ref).
+3. `reinit!(integ, Vector_of_states)` : to be used with the [`parallel_integrator`](@ref).
+2. `reinit!(integ, state, Q0::AbstractMatrix)` : to be used with the [`tangent_integrator`](@ref). This three argument version of `reinit!` is exported from `DynamicalSystemsBase`.
 
-### Continuous
-For continuous systems one needs to properly re-initialize the integrator instance
-so that derivatives are re-computed. Because it is not possible to bundle re-initialization of deviation vectors to `reinit!` of continuous integrators,
-we advise to use `set_state!` and
-`set_deviations!`. This way you also do not have to deal with the fact that
-different integrators have different types of `u`.
+See below for a couple of examples.
 
-You should do something like
+### Re-init of continuous tangent integrator
+Here we compute the [`lyapunovs`](@ref) for many different initial conditions.
 ```julia
 ds = Systems.lorenz()
-integ = tangent_integrator(ds, 2)
-set_state!(integ, rand(3))
-set_deviations!(integ, orthonormal(3,2))
-reinit!(integ, integ.u)
+tinteg = tangent_integrator(ds, 2)
+ics = [rand(3) for i in 1:100]
+for ic in ics
+  reinit!(tinteg, ic, orthonormal(3, 2))
+  λ = ChaosTools._lyapunovs(tinteg, 1000, 0.1, 10.0)
+  # reminder: _lyapunovs(integ, N, dt::Real, Ttr::Real = 0.0)
+end
 ```
-*(it is important to use `integ.u` as the second argument to `reinit!`)*
 
-The above code would work if the integrator was `integrator`, `parallel_integrator` or `tangent_integrator`! (`set_deviations!` only works for tangent integrators!)
 
-The full documentation for `reinit!(::ODEIntegrator)` is [here](http://docs.juliadiffeq.org/latest/basics/integrator.html#Reinit-1). Although,
-for usage within **DynamicalSystems.jl** the other arguments do not matter, because
-steps are never saved.
+### Re-init of discrete parallel integrator
+Here we compute the [`lyapunov`](@ref) for many different parameters.
+```julia
+ds = Systems.henon()
+u0 = rand(SVector{2})
+ps = 1.2:0.01:1.4
+pinteg = parallel_integrator(ds, [u0, u0 + 1e-9rand(SVector{2})])
+for p in ps
+  set_parameter!(ds, 1, p)
+  reinit!(pinteg, [u0, u0 + 1e-9rand(SVector{2})])
+  λ = ChaosTools._lyapunov(pinteg, 1000, 10, 1, 1e-9, 1e-6, 1e-12)
+  # reminder: _lyapunov(pinteg, T, Ttr, dt, d0, ut, lt)
+end
+```
 
-In the continuous case you **must** `reinit!` even after changing a parameter value,
-because the derivatives need to be re-computed.
-
-## Implementation of `DynamicalSystem`
+## `DynamicalSystem` implementation
 ```julia
 abstract type DynamicalSystem{
         IIP,     # is in place , for dispatch purposes and clarity
@@ -86,13 +82,14 @@ abstract type DynamicalSystem{
         IAD}     # is auto-differentiated
     # one-liner: {IIP, S, D, F, P, JAC, JM, IAD}
     # Subtypes of DynamicalSystem have fields:
-    # 1. prob
-    # 2. jacobian (function)
-    # 3. J (matrix)  <- will allow Sparse implementation in the future
+    # 1. f
+    # 2. u0
+    # 3. p
+    # 4. t0
+    # 5. jacobian (function)
+    # 6. J (matrix)
 end
 ```
-This allows easily using multiple dispatch on the first three type parameters,
-which are the most important for dispatching purposes.
+The `DynamicalSystem` stores only the absolutely necessary information. Every other functionality of **DynamicalSystems.jl** initializes an integrator.
 
-The final type-parameter `IAD` is useful when creating the `tangent_integrator`,
-so that the vector field is not computed twice!
+The final type-parameter `IAD` is useful when creating the `tangent_integrator`, so that the vector field is not computed twice!

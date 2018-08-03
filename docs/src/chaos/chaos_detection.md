@@ -236,5 +236,7 @@ does it need to exceed the `threshold` of [`gali`](@ref).
 <source src="https://github.com/JuliaDynamics/Tutorials-and-Resources/blob/master/dynamicalsystems_documentation/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
 
+You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/Tutorials-and-Resources/master/dynamicalsystems_documentation/gali_psos_henonhelies.mp4).
+
 You can find the script that produced this animation in
 `DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
