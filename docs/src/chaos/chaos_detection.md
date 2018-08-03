@@ -60,7 +60,7 @@ savefig("gali_discrete_stable.png"); nothing # hide
 
 Now do the same for a chaotic orbit
 
-```@docs gali
+```@example gali
 figure(figsize = (8,4))
 tr = trajectory(ds, 100000, chaotic)
 subplot(1,2,1)
@@ -116,7 +116,7 @@ for k in [2,3,4]
         loglog(t, 10000 ./ t.^(2k-4), label="slope -$(2k-4)")
     end
 end
-ylim(1e-12, 1)
+ylim(1e-12, 2)
 legend();
 savefig("gali_cont_stable.png"); nothing # hide
 ```
