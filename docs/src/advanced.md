@@ -1,6 +1,9 @@
 # Advanced documentation
 This section overviews the various integrators available from `DynamicalSystemsBase`, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.
 
+# ADD CALLBACK EXAMPLE
+# ADD SPARSE JACOBIAN IN CSM
+
 ## Integrators
 ```@docs
 integrator
@@ -48,8 +51,8 @@ tinteg = tangent_integrator(ds, 2)
 ics = [rand(3) for i in 1:100]
 for ic in ics
   reinit!(tinteg, ic, orthonormal(3, 2))
-  λ = ChaosTools._lyapunovs(tinteg, 1000, 0.1, 10.0)
-  # reminder: _lyapunovs(integ, N, dt::Real, Ttr::Real = 0.0)
+  λ = lyapunovs(tinteg, 1000, 0.1, 10.0)
+  # reminder: lyapunovs(tinteg, N, dt::Real, Ttr::Real = 0.0)
 end
 ```
 
@@ -64,8 +67,8 @@ pinteg = parallel_integrator(ds, [u0, u0 + 1e-9rand(SVector{2})])
 for p in ps
   set_parameter!(ds, 1, p)
   reinit!(pinteg, [u0, u0 + 1e-9rand(SVector{2})])
-  λ = ChaosTools._lyapunov(pinteg, 1000, 10, 1, 1e-9, 1e-6, 1e-12)
-  # reminder: _lyapunov(pinteg, T, Ttr, dt, d0, ut, lt)
+  λ = lyapunov(pinteg, 1000, 10, 1, 1e-9, 1e-6, 1e-12)
+  # reminder: lyapunov(pinteg, T, Ttr, dt, d0, ut, lt)
 end
 ```
 
