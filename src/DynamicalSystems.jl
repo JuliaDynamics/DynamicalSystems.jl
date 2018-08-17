@@ -11,6 +11,9 @@ using Reexport
 
 @reexport using DynamicalSystemsBase
 @reexport using ChaosTools
-@reexport using TimeseriesPrediction
+
+# Visualization routines:
+# using Requires
+# @require PyPlot include("visualizations.jl")
 
 end # module
