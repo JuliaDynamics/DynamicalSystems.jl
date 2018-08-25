@@ -21,18 +21,15 @@ set_state!
 get_deviations
 set_deviations!
 ```
-These functions work with *any* possible integrator and it is best to use the
-to change states robustly!
+!!! note
+    These functions work with *any* possible integrator and it is best to use the to change states robustly!
 
 ## Re-initializing an integrator
 It is more efficient to re-initialize an integrator using `reinit!`
 than to create a new one.
 This can be very helpful when looping over initial conditions and/or parameter values.
 
-All high-level functions from `ChaosTools` have a set-up part that creates
-an integrator, and a low-level part that does the computation.
-
-The low level part is your friend! Use it! See the [Using `gali`](chaos/chaos_detection/#using-gali) page for an example.
+All high-level functions from `ChaosTools` have a set-up part that creates an integrator, and a low-level part that does the computation. The low level part is your friend! Use it! See the [Using `gali`](chaos/chaos_detection/#using-gali) page for an example as well as the section below.
 
 The `reinit!` call signature is the same for continuous and discrete systems.
 In the following, `state` is supposed to be a `D` dimensional vector (state of the dynamical system).
@@ -40,8 +37,6 @@ In the following, `state` is supposed to be a `D` dimensional vector (state of t
 1. `reinit!(integ, state)` : to be used with standard [`integrator`](@ref).
 3. `reinit!(integ, Vector_of_states)` : to be used with the [`parallel_integrator`](@ref).
 2. `reinit!(integ, state, Q0::AbstractMatrix)` : to be used with the [`tangent_integrator`](@ref). This three argument version of `reinit!` is exported from `DynamicalSystemsBase`.
-
-See below for a couple of examples.
 
 ### Re-init of continuous tangent integrator
 Here we compute the [`lyapunovs`](@ref) for many different initial conditions.

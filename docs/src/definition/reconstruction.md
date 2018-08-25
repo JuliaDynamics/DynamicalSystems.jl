@@ -37,14 +37,15 @@ savefig("simple_reconstruction.png"); nothing # hide
     Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `dt`. In the above example the value `τ=30` is good, *only* for the case
     of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
 
-`reconstruct` can also be made given a trajectory (i.e. multidimensional timeseries). For this to be possible, the number of timeseries must be known by Type:
+You can also `reconstruct` multidimensional timeseries. For this to be possible, the number of timeseries must be known by Type:
 ```@example reconstruct
 using StaticArrays: Size
 a = rand(1000, 3) # my trajectory
 
 A = Size(1000, 3)(a) # create array with the size as Type information
 R = reconstruct(A, 2, 2) #aaaall good
-
+```
+```@example reconstruct
 ds = Systems.towel(); tr = trajectory(ds, 10000)
 R = reconstruct(tr, 2, 2) # Dataset size is also known by Type!
 ```
