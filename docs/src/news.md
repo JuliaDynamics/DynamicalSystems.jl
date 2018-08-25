@@ -1,6 +1,6 @@
 # News
 
-## DynamicalSystems v1.0 - Julia 0.7 release
+## DynamicalSystems v1.0 - Julia 1.0 release
 All support for any Julia version before 0.7 is dropped.
 
 Please be sure to check out the `CHANGELOG.md` files of the individual repositories. There all changes are listed in detail. Here we note only the most important ones.
@@ -25,12 +25,12 @@ the new documentation page for more!
 
 ## Cao's Method
 With `ChaosTools v0.8.0`, the well-known method for estimating dimension for a
-[`Reconstruction`](@ref) is now implemented and exported! See [`estimate_dimension`](@ref).
+`Reconstruction` is now implemented and exported! See `estimate_dimension`.
 
 ## Multi-time, Multi-Diensional Reconstructions
 With the latest version of `DynamicalSystemsBase v0.8.0` we now have the possibility
 for both multi-time and multi-dimensional delay reconstructions! The new documentation
-string for [`Reconstruction`](@ref) has all the relevant information.
+string for `Reconstruction` has all the relevant information.
 
 ## Release v0.11.0
 With new version v0.11.0 for **DynamicalSytems.jl** (`DynamicalSystemsBase` and `ChaosTools` at version 0.6) we have some major improvements of the library all around. Here I list the syntactic changes, the internal changes, the prospect for other developers and the gains we have from making all these changes!
@@ -79,7 +79,7 @@ before usage!
 The internals of `DynamicalSystemsBase` have been completely re-worked from the ground up.
 Here are the highlights:
 
-* All [`DynamicalSystem`](@ref) objects are immutable, and contain a problem `prob`
+* All `DynamicalSystem` objects are immutable, and contain a problem `prob`
   the jacobian function and an initialized Jacobian matrix.
 * All functions that use a `DynamicalSystem` have changed behavior.
   The way the functions work now is that
@@ -96,9 +96,9 @@ Here are the highlights:
 
 * Three low-lever integrator constructing functions are available, that only need
   a `DynamicalSystem` and (optionally) an initial state:
-    1. [`integrator`](@ref) for "normal" integration of a system.
-    2. [`tangent_integrator`](@ref) for integration of a state and deviation vectors (that live on the tangent space).
-    3. [`parallel_integrator`](@ref) for integrating in "parallel" a number of states. Notice that the states are integrated at *exact* same times, even for continuous systems.
+    1. `integrator` for "normal" integration of a system.
+    2. `tangent_integrator` for integration of a state and deviation vectors (that live on the tangent space).
+    3. `parallel_integrator` for integrating in "parallel" a number of states. Notice that the states are integrated at *exact* same times, even for continuous systems.
 
 
 * All three of the above integrators work perfectly fine for all eight combinations
@@ -149,12 +149,3 @@ instead of an `ODEProblem`, since the field `.prob` of the system is exactly thi
   @btime lyapunovs($ds, 1000);
   228.265 μs (176 allocations: 11.28 KiB)
   ```
-
-### Still need to be done
-We still need to create higher level functions like `set_state!` or `set_deviations!`
-that set the state or deviation vectors on the integrator. These functions
-will use multiple dispatch and thus work for all 24 combinations.
-
-At the moment a "sloppy" implementation for everything is present in the source code
-of `ChaosTools`, but this can be massively reduced into well-thought functions
-and multiple dispatch usage.

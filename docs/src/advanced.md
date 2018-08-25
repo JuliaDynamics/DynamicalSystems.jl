@@ -2,7 +2,6 @@
 This section overviews the various integrators available from `DynamicalSystemsBase`, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.
 
 # ADD CALLBACK EXAMPLE
-# ADD SPARSE JACOBIAN IN CSM
 
 ## Integrators
 ```@docs
@@ -66,6 +65,33 @@ for p in ps
   # reminder: lyapunov(pinteg, T, Ttr, dt, d0, ut, lt)
 end
 ```
+
+## Using callbacks with integrators
+For the case of continuous systems you can add callbacks from the event handling of **DifferentialEquations.jl**. This is done simply as a keyword argument to the initializers.
+
+In this example we use a simple `SavingCallback` to save the distance between the two states of a [`parallel_integrator`](@ref).
+
+```@example callback
+using DynamicalSystems, DiffEqCallbacks
+using LinearAlgebra: norm
+
+kwargs = (abstol=1e-14, reltol=1e-14, maxiters=1e9)
+ds = Systems.lorenz()
+d0 = 1e-9
+T = 100.0
+
+save_func(u, t, integrator) = norm(u[1] - u[2])
+saved_values = SavedValues(eltype(ds.t0), eltype(get_state(ds)))
+cb = SavingCallback(save_func, saved_values)
+
+u0 = get_state(ds)
+pinteg = parallel_integrator(ds, [u0, u0 + rand(SVector{3})*d0*√3];
+kwargs..., callback = cb)
+step!(pinteg, T)
+t = saved_values.t
+n = saved_values.saveval
+```
+As expected you can see that the recorded distance between two states is increasing.
 
 ## `DynamicalSystem` implementation
 ```julia

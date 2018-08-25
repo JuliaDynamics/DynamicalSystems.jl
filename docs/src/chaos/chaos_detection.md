@@ -123,7 +123,7 @@ savefig("gali_cont_stable.png"); nothing # hide
 ![gali_cont_stable](gali_cont_stable.png)
 
 Next, let's see what happens with a quasi-periodic orbit.
-Don't remember to change the `u0` arguments!
+Don't forget to change the `u0` arguments!
 ```@example gali
 figure(figsize = (8,4))
 subplot(1,2,1)
@@ -208,8 +208,8 @@ function main(k)
             reinit!(tinteg, u0, orthonormal(2,2))
 
             # Low-level call signature of gali:
-            #  _gali(tinteg, tmax, dt, threshold)
-            chaoticity[i, j] = ChaosTools._gali(tinteg, 500, 1, 1e-12)[2][end]
+            #  gali(tinteg, tmax, dt, threshold)
+            chaoticity[i, j] = gali(tinteg, 500, 1, 1e-12)[2][end]
         end
     end
     figure()

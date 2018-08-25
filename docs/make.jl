@@ -6,6 +6,8 @@ using Pkg
 pkg"add TimeseriesPrediction#0.7-inplacerec"
 using TimeseriesPrediction
 
+pkg"add DiffEqCallbacks LinearAlgebra"
+
 makedocs(modules=[DynamicalSystems], doctest=false)
 
 deploydocs(

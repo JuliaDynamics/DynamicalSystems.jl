@@ -128,7 +128,7 @@ ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
 ### Complex Example
 In this example we will go through the implementation of the coupled standard maps
 from our [Predefined Systems](predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps). It is the most complex implementation
-and takes full advantage of the flexibility of the constructors.
+and takes full advantage of the flexibility of the constructors. The example will use a Functor as equations of motion, as well as a sparse matrix for the Jacobian.
 
 Coupled standard maps is a big mapping that can have arbitrary number of
 equations of motion, since you can couple `N` [standard maps](predefined/#DynamicalSystemsBase.Systems.standardmap) which are 2D maps, like:
@@ -215,10 +215,7 @@ a `AbstractVector` as first argument, while the Jacobian always
 takes an `AbstractMatrix`. Therefore we can take advantage of multiple dispatch!
 
 Notice in addition, that the Jacobian function accesses *only half the elements of the matrix*. This is intentional, and takes advantage of the fact that the
-other half is constant.
-
-Because the `DynamicalSystem` constructors allow us to give in a pre-initialized
-Jacobian matrix, we take advantage of that and create:
+other half is constant. We can leverage this further, by making the Jacobian a sparse matrix. Because the `DynamicalSystem` constructors allow us to give in a pre-initialized Jacobian matrix, we take advantage of that and create:
 ```julia
 J = zeros(eltype(u0), 2M, 2M)
 # Set ∂/∂p entries (they are eye(M,M))
@@ -227,16 +224,19 @@ for i in idxs
     J[i, i+M] = 1
     J[i+M, i+M] = 1
 end
-csm(J, u0, p, 0) # apply Jacobian to initial state
+sparseJ = sparse(J)
+
+csm(sparseJ, u0, p, 0) # apply Jacobian to initial state
 ```
 And finally, we are ready to create our dynamical system:
 ```julia
-ds = DiscreteDynamicalSystem(csm, u0, p, csm, J)
+ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
 ```
 ```
 10-dimensional discrete dynamical system
- state:     [5.88772e-6, 0.000539993, 0.000178981, 0.000607429, 0.000927426, 0.000246537, 0.00094118, 0.000703942, 0.000130421, 0.000332372]
- e.o.m.:    CoupledStandardMaps
- in-place?  true
- jacobian:  CoupledStandardMaps
+ state:       [0.000803001, 0.00092095, 0.000313022, …, 3.07769e-5, 0.000670152]
+ e.o.m.:      CoupledStandardMaps
+ in-place?    true
+ jacobian:    CoupledStandardMaps
+ parameters:  Tuple
 ```
