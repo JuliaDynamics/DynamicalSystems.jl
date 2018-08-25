@@ -4,12 +4,14 @@ This is done through the `reconstruct` interface:
 ```@docs
 reconstruct
 ```
+
 ---
+
 Here are some examples of `reconstruct`ing a 3D continuous chaotic system:
-```@example reconstruct
+```@example reconstructed
 using DynamicalSystems, PyPlot
 
-ds = Systems.gissinger()
+ds = Systems.gissinger(ones(3))
 data = trajectory(ds, 1000.0, dt = 0.05)
 
 xyz = columns(data)
@@ -38,14 +40,14 @@ savefig("simple_reconstruction.png"); nothing # hide
     of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
 
 You can also `reconstruct` multidimensional timeseries. For this to be possible, the number of timeseries must be known by Type:
-```@example reconstruct
+```@example reconstructed
 using StaticArrays: Size
 a = rand(1000, 3) # my trajectory
 
 A = Size(1000, 3)(a) # create array with the size as Type information
 R = reconstruct(A, 2, 2) #aaaall good
 ```
-```@example reconstruct
+```@example reconstructed
 ds = Systems.towel(); tr = trajectory(ds, 10000)
 R = reconstruct(tr, 2, 2) # Dataset size is also known by Type!
 ```

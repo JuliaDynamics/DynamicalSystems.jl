@@ -1,9 +1,11 @@
 # News
 
-## DynamicalSystems v0.13 - Julia 0.7 release
-**IMPORTANT: We consider this the beta version of v1.0.0 for DynamicalSystems.jl**! Also, all support for any Julia version before 0.7 is dropped.
+## DynamicalSystems v1.0 - Julia 0.7 release
+All support for any Julia version before 0.7 is dropped.
 
 Please be sure to check out the `CHANGELOG.md` files of the individual repositories. There all changes are listed in detail. Here we note only the most important ones.
+
+* `TimeseriesPrediction` is *not* installed with `DynamicalSystems` for version 1.0, because it is undergoing major changes. It is not even ready for Julia 1.0 actually.
 
 * `DynamicalSystem` has been totally reworked for better clarity: it does not store a "problem" anymore, only the absolutely necessary ingredients to create one. The API did not change though!
 * `Reconstruction` has been renamed to `reconstruct`, and now always returns a `Dataset`. In addition, now the parameter `D` stands for the number of temporal neighbors. **This is a breaking change!**. The change allows more intuition across the different versions of `reconstruct`.

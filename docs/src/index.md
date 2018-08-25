@@ -71,6 +71,9 @@ is a quick summary:
 
 ### [TimeseriesPrediction](tsprediction/localmodels)
 
+!!! warn "Not yet on Julia 0.7"
+    `TimeseriesPrediction` has not yet been updated to Julia 0.7!
+
 * Predicting the future of one or multiple timeseries using average local models.
 * Spatio-temporal timeseries prediction and cross-prediction.
 
