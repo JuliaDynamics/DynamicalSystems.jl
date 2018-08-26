@@ -10,6 +10,16 @@ estimate_dimension
 stochastic_indicator
 ```
 ---
+## Mutual Information
+For one of the methods available to estimate the optimal delay time for [`reconstruct`](@ref), a method to compute the [Mutual Information](http://www.scholarpedia.org/article/Mutual_information) is necessary.
+
+```@docs
+mutinfo
+mutinfo_delaycurve
+```
+
+!!! warn "Mutual Information is very slow!"
+    Please be advised that the current implementation of [`mutinfo`](@ref) is very slow for "normally" sized datasets.
 
 ## Numerical Lyapunov Exponent
 Given any timeseries, one can first [`reconstruct`](@ref) it using
