@@ -1,12 +1,13 @@
 using Documenter, DynamicalSystems, PyPlot
 PyPlot.ioff()
 
+pkg"add DiffEqCallbacks LinearAlgebra DynamicalSystemsBase ChaosTools"
+
 # Add TimeseriesPrediction for documentation:
 using Pkg
 pkg"add TimeseriesPrediction#0.7-inplacerec"
 using TimeseriesPrediction
 
-pkg"add DiffEqCallbacks LinearAlgebra"
 
 makedocs(modules=[DynamicalSystems], doctest=false)
 
