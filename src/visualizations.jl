@@ -21,8 +21,8 @@ function phasespace(ds::DiscreteDynamicalSystem{IIP, S, 2}, limits,
     ax = PyPlot.gca(), kwargs...) where {IIP, S}
 
     data = Dataset{2, eltype(S)}()
-    for x in linspace(limits[1][1], limits[1][2], density)
-        for y in linspace(limits[2][1], limits[2][2], density)
+    for x in range(limits[1][1], stop=limits[1][2], length=density)
+        for y in range(limits[2][1], stop=limits[2][2], length=density)
             append!(data, trajectory(ds, t, SVector{2}(x,y)))
         end
     end
