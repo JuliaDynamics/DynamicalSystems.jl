@@ -1,4 +1,4 @@
-julia 0.7-beta2
+julia 1.0
 DynamicalSystemsBase 1.0
 ChaosTools 1.0
 Reexport
