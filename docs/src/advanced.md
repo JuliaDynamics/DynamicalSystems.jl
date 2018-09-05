@@ -1,8 +1,6 @@
 # Advanced documentation
 This section overviews the various integrators available from `DynamicalSystemsBase`, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.
 
-# ADD CALLBACK EXAMPLE
-
 ## Integrators
 ```@docs
 integrator
