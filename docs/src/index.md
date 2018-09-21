@@ -69,10 +69,8 @@ is a quick summary:
 * Detecting Chaos
 
 
-### [TimeseriesPrediction](tsprediction/localmodels)
-
-!!! warn "Not yet on Julia 0.7"
-    `TimeseriesPrediction` has not yet been updated to Julia 0.7!
+### [TimeseriesPrediction](tsprediction/introduction)
+Please see the [introduction page](tsprediction/introduction) for a detailed description!
 
 * Predicting the future of one or multiple timeseries using average local models.
 * Spatio-temporal timeseries prediction and cross-prediction.

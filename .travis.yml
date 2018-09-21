@@ -11,7 +11,7 @@ notifications:
     on_failure: never
 
 before_script:
-  - julia -e 'using Pkg; pkg"add TimeseriesPrediction#0.7-inplacerec"'
+  - julia -e 'using Pkg; pkg"add TimeseriesPrediction"'
   - julia -e 'using Pkg; Pkg.add("StaticArrays")'
   - julia -e 'using Pkg; Pkg.add("OrdinaryDiffEq")'
 
