@@ -36,6 +36,7 @@ if !Sys.iswindows()
         repo   = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
         #make   = () -> run(`mkdocs build`)
         julia  = "1.0",
-        osname = "linux"
+        osname = "linux",
+        target = "site"
     )
 end
