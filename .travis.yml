@@ -11,7 +11,7 @@ notifications:
     on_failure: never
 
 before_script:
-  - julia -e 'using Pkg; pkg"add TimeseriesPrediction StaticArrays OrdinaryDiffEq FFTW DiffEqCallbacks Literate Documenter"'
+  - julia -e 'using Pkg; pkg"add TimeseriesPrediction StaticArrays OrdinaryDiffEq FFTW DiffEqCallbacks Literate Documenter DynamicalSystemsBase ChaosTools"'
   - julia -e 'using Pkg; pkg"dev Documenter"'
 
 after_success:
