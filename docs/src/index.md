@@ -104,7 +104,7 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
   number = {23},
   pages = {598},
   author = {George Datseris},
-  title = {{DynamicalSystems}.jl: A Julia software library for chaos and nonlinear dynamics},
+  title = {DynamicalSystems.jl: A Julia software library for chaos and nonlinear dynamics},
   journal = {Journal of Open Source Software}
 }
 ```

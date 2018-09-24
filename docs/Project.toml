@@ -1,0 +1,12 @@
+[deps]
+ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
+DiffEqCallbacks = "459566f4-90b8-5000-8ac3-15dfb0a30def"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DocumenterMarkdown = "35a7dc56-b8c5-11e8-06a8-f7e9744e4a90"
+DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
+Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
+TimeseriesPrediction = "f218859d-9706-56aa-9ebf-1fa4ed7b8020"

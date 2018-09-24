@@ -2,7 +2,6 @@
 language: julia
 os:
   - linux
-#  - osx
 julia:
   - 1.0
 notifications:
@@ -11,10 +10,17 @@ notifications:
     on_failure: never
 
 before_script:
-  - julia -e 'using Pkg; pkg"add TimeseriesPrediction StaticArrays OrdinaryDiffEq FFTW DiffEqCallbacks Literate Documenter DynamicalSystemsBase ChaosTools"'
-  - julia -e 'using Pkg; pkg"dev Documenter"'
-  - julia -e 'using Pkg; pkg"dev https://github.com/JuliaDocs/DocumenterMarkdown.jl"'
-
-after_success:
   - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; ENV["PYTHON"]=""; py="PyCall"; Pkg.add(py); Pkg.build(); Pkg.add("PyPlot")'
-  - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; Pkg.add("Documenter"); include(joinpath("docs", "make.jl"))'
+
+script: skip
+
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.0
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
+                                    Pkg.add(PackageSpec(path=pwd()))'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip
