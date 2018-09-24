@@ -3,8 +3,10 @@
 # `examples` folder of the `TimeseriesPrediction` package.
 
 # This is how you can (programmatically) find this folder:
-using TimeseriesPrediction
-exdir = dirname(dirname(pathof(TimeseriesPrediction)))*"/examples"
+# ```julia
+# using TimeseriesPrediction
+# exdir = dirname(dirname(pathof(TimeseriesPrediction)))*"/examples"
+# ```
 
 # ## Temporal Prediction: Kuramoto-Sivashinsky
 # *(this requires `FFTW` to be installed)*
