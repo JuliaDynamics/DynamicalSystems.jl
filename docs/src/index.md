@@ -74,6 +74,7 @@ Please see the [introduction page](tsprediction/introduction) for a detailed des
 
 * Predicting the future of one or multiple timeseries using average local models.
 * Spatio-temporal timeseries prediction and cross-prediction.
+* Multiple spatio-temporal embeddings.
 
 
 ## Our Goals

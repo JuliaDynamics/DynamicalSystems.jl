@@ -44,12 +44,10 @@ ALLFP = Dataset{2, Float64}[];
 Then, do the necessary computations for all orders
 
 ```@example sm
-ttt = time()
 for o in orders
     FP = periodicorbits(ds, o, ics, λs, indss, singss)
     push!(ALLFP, FP)
 end
-println("Total time, including compilation: $((time() - ttt)/60) mins.")
 ```
 
 Plot the phase space of the standard map

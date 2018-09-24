@@ -3,7 +3,7 @@ if Base.HOME_PROJECT[] !== nothing
 end
 
 using DynamicalSystems, TimeseriesPrediction
-using DocumenterMarkdown, Documenter, PyPlot, Literate
+using Documenter, PyPlot, Literate, DocumenterMarkdown
 
 PyPlot.ioff()
 cd(@__DIR__)
@@ -34,6 +34,7 @@ if !Sys.iswindows()
     deploydocs(
         deps   = Deps.pip("mkdocs==0.17.5", "mkdocs-material==2.9.4",
         "python-markdown-math", "pygments", "pymdown-extensions"),
-        repo   = "github.com/JuliaDynamics/DynamicalSystems.jl.git"
+        repo   = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
+        make   = () -> run(`mkdocs build`)
     )
 end

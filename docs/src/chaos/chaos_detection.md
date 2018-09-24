@@ -223,7 +223,7 @@ end
 
 main(0.9);
 ```
-![](https://github.com/JuliaDynamics/Tutorials-and-Resources/blob/master/dynamicalsystems_documentation/gali_standardmap.png?raw=true)
+![](https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/animations/chaos/gali_standardmap.png?raw=true)
 
 ### Regular orbits in the Henon-Heiles system
 In this example we use the [`poincaresos`](@ref) function to produce
@@ -233,10 +233,10 @@ each initial condition according to how chaotic/regular it is, i.e. how much tim
 does it need to exceed the `threshold` of [`gali`](@ref).
 
 <video width="100%" height="auto" controls>
-<source src="https://github.com/JuliaDynamics/Tutorials-and-Resources/blob/master/dynamicalsystems_documentation/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
+<source src="https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/animations/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
 
-You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/Tutorials-and-Resources/master/dynamicalsystems_documentation/gali_psos_henonhelies.mp4).
+You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/master/animations/chaos/gali_psos_henonhelies.mp4).
 
 You can find the script that produced this animation in
 `DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
