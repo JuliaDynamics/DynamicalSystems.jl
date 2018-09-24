@@ -24,7 +24,8 @@ Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
                   name = "stexamples", preprocess = replace_includes)
 
 
-makedocs(modules=[DynamicalSystems, TimeseriesPrediction], doctest=false)
+makedocs(modules=[DynamicalSystems, TimeseriesPrediction], doctest=false,
+format = :markdown)
 
 if !Sys.iswindows()
     deploydocs(
