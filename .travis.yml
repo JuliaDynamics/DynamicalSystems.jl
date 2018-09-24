@@ -11,7 +11,7 @@ notifications:
     on_failure: never
 
 before_script:
-  - julia -e 'using Pkg; pkg"add TimeseriesPrediction StaticArrays OrdinaryDiffEq FFTW DiffEqCallbacks"'
+  - julia -e 'using Pkg; pkg"add TimeseriesPrediction StaticArrays OrdinaryDiffEq FFTW DiffEqCallbacks Literate Documenter"'
 
 after_success:
   - test $TRAVIS_OS_NAME = "linux" && julia -e 'using Pkg; ENV["PYTHON"]=""; py="PyCall"; Pkg.add(py); Pkg.build(); Pkg.add("PyPlot")'

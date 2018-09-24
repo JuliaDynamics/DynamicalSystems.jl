@@ -51,8 +51,10 @@ pages:
   - Chaos Detection: chaos/chaos_detection.md
   # - Visualization: chaos/visualization.md
 - TimeseriesPrediction:
-  - Local Modeling: tsprediction/localmodels.md
-  - Spatiotemporal Timeseries: tsprediction/st_prediction.md
+  - Introduction: tsprediction/introduction.md
+  - Local Modeling & Timeseries Prediction: tsprediction/localmodels.md
+  - Spatio-Temporal Prediction: tsprediction/spatiotemporal.md
+  - Spatio-Temporal Examples: tsprediction/stexamples.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md
