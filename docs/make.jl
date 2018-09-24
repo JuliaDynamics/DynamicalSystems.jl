@@ -3,7 +3,7 @@ if Base.HOME_PROJECT[] !== nothing
 end
 
 using DynamicalSystems, TimeseriesPrediction
-using Documenter, PyPlot, Literate, DocumenterMarkdown
+using Documenter, PyPlot, Literate#, DocumenterMarkdown
 
 PyPlot.ioff()
 cd(@__DIR__)
@@ -27,8 +27,7 @@ Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
                   name = "stexamples", preprocess = replace_includes)
 
 
-makedocs(modules=[DynamicalSystems, TimeseriesPrediction], doctest=false,
-format = :markdown)
+makedocs(modules=[DynamicalSystems, TimeseriesPrediction], doctest=false, root = @__DIR__)
 
 if !Sys.iswindows()
     deploydocs(
