@@ -1,10 +1,10 @@
-using Documenter, DynamicalSystems, PyPlot, TimeseriesPrediction
+using DynamicalSystems, TimeseriesPrediction
+using DocumenterMarkdown, Documenter, PyPlot, Literate
+
 PyPlot.ioff()
 cd(@__DIR__)
 
 # Expand Spatio-temporal examples using Literate:
-using Literate
-
 function replace_includes(str)
 
     included = ["1Dfield_temporalprediction.jl",
@@ -18,7 +18,6 @@ function replace_includes(str)
     end
     return str
 end
-
 # Literate it:
 Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
                   name = "stexamples", preprocess = replace_includes)
