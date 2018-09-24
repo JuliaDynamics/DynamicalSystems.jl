@@ -35,6 +35,8 @@ if !Sys.iswindows()
         deps   = Deps.pip("mkdocs==0.17.5", "mkdocs-material==2.9.4",
         "python-markdown-math", "pygments", "pymdown-extensions"),
         repo   = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
-        make   = () -> run(`mkdocs build`)
+        #make   = () -> run(`mkdocs build`)
+        julia  = "1.0",
+        osname = "linux"
     )
 end
