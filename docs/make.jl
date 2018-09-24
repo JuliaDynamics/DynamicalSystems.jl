@@ -1,3 +1,7 @@
+if Base.HOME_PROJECT[] !== nothing
+   Base.HOME_PROJECT[] = abspath(Base.HOME_PROJECT[])
+end
+
 using DynamicalSystems, TimeseriesPrediction
 using DocumenterMarkdown, Documenter, PyPlot, Literate
 
