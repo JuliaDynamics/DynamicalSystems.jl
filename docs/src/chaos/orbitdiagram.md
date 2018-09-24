@@ -13,19 +13,27 @@ using PyPlot
 
 ds = Systems.logistic()
 i = 1
-pvalues = 2:0.001:4
+pvalues = 3:0.001:4
 ics = [rand() for m in 1:10]
-n = 50
-Ttr = 5000
+n = 2000
+Ttr = 2000
 p_index = 1
 output = orbitdiagram(ds, i, p_index, pvalues; n = n, Ttr = Ttr)
 
-figure()
-for (j, p) in enumerate(pvalues)
-    plot(p .* ones(length(output[j])), output[j], lw = 0,
-    marker = "o", ms = 0.2, color = "black")
+L = length(pvalues)
+x = Vector{Float64}(undef, n*L)
+y = copy(x)
+for j in 1:L
+    x[(1 + (j-1)*n):j*n] .= pvalues[j]
+    y[(1 + (j-1)*n):j*n] .= output[j]
 end
+
+figure()
+PyPlot.title("total points: $(L*n)")
+plot(x, y, ls = "None", ms = 0.5, color = "black", marker = "o", alpha = 0.05)
+xlim(pvalues[1], pvalues[end]); ylim(0,1)
 xlabel("\$r\$"); ylabel("\$x\$")
+tight_layout()
 savefig("logostic_od.png"); nothing # hide
 ```
 ![](logostic_od.png)
@@ -133,7 +141,7 @@ Ttr = 200.0, direction = -1, printparams = false)
 
 figure()
 for (j, p) in enumerate(pvalues)
-    plot(p .* ones(output[j]), output[j], lw = 0,
+    plot(fill(p, length(output[j])), output[j], lw = 0,
     marker = "o", ms = 0.2, color = "black")
 end
 xlabel("\$R_1\$"); ylabel("\$V_1\$")
