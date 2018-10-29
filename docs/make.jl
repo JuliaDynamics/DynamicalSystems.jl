@@ -1,9 +1,5 @@
-if Base.HOME_PROJECT[] !== nothing
-   Base.HOME_PROJECT[] = abspath(Base.HOME_PROJECT[])
-end
-
 using DynamicalSystems, TimeseriesPrediction
-using Documenter, PyPlot, Literate#, DocumenterMarkdown
+using Documenter, PyPlot, Literate, DocumenterMarkdown
 
 PyPlot.ioff()
 cd(@__DIR__)
@@ -25,17 +21,21 @@ end
 # Literate it:
 Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
                   name = "stexamples", preprocess = replace_includes)
+# Literate.notebook("src/tsprediction/stexamples.jl", "src/tsprediction/";
+#                   name = "stexamples", preprocess = replace_includes)
 
 
-makedocs(modules=[DynamicalSystems, TimeseriesPrediction], doctest=false, root = @__DIR__)
+makedocs(modules=[DynamicalSystems, TimeseriesPrediction],
+doctest=false, root = @__DIR__, format = :markdown)
+
+close("all")
 
 if !Sys.iswindows()
     deploydocs(
         deps   = Deps.pip("mkdocs==0.17.5", "mkdocs-material==2.9.4",
         "python-markdown-math", "pygments", "pymdown-extensions"),
         repo   = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
-        #make   = () -> run(`mkdocs build`)
-        julia  = "1.0",
-        osname = "linux"
+        target = "site",
+        make = () -> run(`mkdocs build`)
     )
 end
