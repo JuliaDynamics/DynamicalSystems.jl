@@ -7,8 +7,7 @@ In this page we are simply running files from the
 `examples` folder of the `TimeseriesPrediction` package.
 
 This is how you can (programmatically) find this folder:
-
-```@example stexamples
+```julia
 using TimeseriesPrediction
 exdir = dirname(dirname(pathof(TimeseriesPrediction)))*"/examples"
 ```
@@ -44,6 +43,7 @@ p = 100
 N = Ntrain + p
 
 U, T = KuramotoSivashinsky(64, 22, N÷4, 0.25)
+summary(U)
 ```
 
 ### Temporal prediction of field U
@@ -116,7 +116,10 @@ ax3[:set_title]("Absolute error")
 ax2[:set_ylabel]("space")
 ax3[:set_xlabel]("time")
 tight_layout(w_pad=0.1, h_pad=0.00001)
+savefig("ksprediction.png"); nothing # hide
 ```
+
+![ksprediction](ksprediction.png)
 
 ## Cross Prediction: Barkley Model
 
@@ -140,32 +143,30 @@ testdir = dirname(dirname(pathof(TimeseriesPrediction)))*"/test"
 @assert isdir(testdir)
 include(testdir*"/system_defs.jl")
 
-Nx = 50
-Ny = 50
-Tskip = 100
 Ttrain = 500
 Ttest = 10
-T = Tskip +Ttrain + Ttest
+T = Ttrain + Ttest
 
-U, V = barkley_const_boundary(T, Nx, Ny)
+U, V = barkley(T;tskip=100, ssize=(50,50))
+summary(U)
 ```
 
 ### Cross predict field U from field V
 
 ```@example stexamples
-D = 2
+D = 5
 τ = 1
-B = 2
+B = 1
 k = 1
-bc = ConstantBoundary(20.0)
+bc = PeriodicBoundary()
 
-source_train = V[Tskip + 1:Tskip + Ttrain]
-target_train = U[Tskip + 1:Tskip + Ttrain]
-source_pred  = V[Tskip + Ttrain  - D*τ + 1:  T]
-target_test  = U[Tskip + Ttrain  - D*τ + 1:  T]
+source_train = V[1: Ttrain]
+target_train = U[1: Ttrain]
+source_pred  = V[Ttrain  - D*τ + 1:  T]
+target_test  = U[Ttrain        + 1:  T]
 
 em = cubic_shell_embedding(source_train, D,τ,B,k,bc)
-pcaem = PCAEmbedding(source_train, em) # PCA speeds things up!
+pcaem = PCAEmbedding(source_train, em; maxoutdim=5) # PCA speeds things up!
 
 @time target_pred = crossprediction(source_train, target_train, source_pred, em;
 progress = false)
@@ -190,7 +191,7 @@ target_min = min(minimum(minimum(s) for s in target_test),
 
 Plot various predicted frames (only the last one shown here)
 
-```@example stexamples; continued = true
+```@example stexamples
 for i in [1, length(err)÷2, length(err)]
 
     fig = figure(figsize=(10,10))
@@ -206,11 +207,6 @@ for i in [1, length(err)÷2, length(err)]
         ax[:get_xaxis]()[:set_ticks]([])
         ax[:get_yaxis]()[:set_ticks]([])
         colorbar(im, ax = ax, fraction=0.046, pad=0.04)#, format="%.1f")
-```
-
-ax[:minorticks_off]()
-
-```@example stexamples
     end
     ax1[:set_title]("Source")
     ax2[:set_title]("Target Test")
@@ -219,7 +215,10 @@ ax[:minorticks_off]()
     tight_layout(w_pad=0.6, h_pad=0.00001)
     suptitle("frame $i")
 end
+savefig("barkley_cross.png"); nothing # hide
 ```
+
+![barkley_cross](barkley_cross.png)
 
 ## Temporal Prediction: Periodic Nonlinear Barkley Model
 
@@ -243,14 +242,18 @@ testdir = dirname(dirname(pathof(TimeseriesPrediction)))*"/test"
 @assert isdir(testdir)
 include(testdir*"/system_defs.jl")
 
-Nx = 50
-Ny = 50
-Tskip = 100
-Ttrain = 600
-Ttest = 10
-T = Tskip + Ttrain + Ttest
+Ttrain = 300
+Ttest = 5
+T = Ttrain + Ttest
 
-U, V = barkley_periodic_boundary_nonlin(T, Nx, Ny)
+init = [ 0.6241    0.589685  0.668221   0.194882    0.687645
+         0.656243  0.702544  0.476963   0.00236098  0.636111
+         0.821854  0.868514  0.242682   0.2588      0.30552
+         0.580972  0.355305  0.0805268  0.501724    0.728142
+         0.297559  0.708676  0.583552   0.65363     0.555639]
+
+U, V = barkley(T; tskip=100, ssize=(50,50), init = init)
+summary(U)
 ```
 
 ### Temporal prediction of field U
@@ -262,11 +265,11 @@ r₀ = 1
 c = 1
 bc = PeriodicBoundary()
 
-pool = U[Tskip + 1 : Tskip + Ttrain]
-test  = U[Tskip + Ttrain : T]
+pool = U[1 : Ttrain]
+test  = U[ Ttrain : T]
 
 em = light_cone_embedding(pool, D,τ,r₀,c,bc)
-pcaem = PCAEmbedding(pool, em) # PCA speeds things up!
+pcaem = PCAEmbedding(pool, em; maxoutdim=5) # PCA speeds things up!
 
 @time pred = temporalprediction(pool, em, Ttest; progress = false)
 
@@ -288,7 +291,7 @@ vmin = min(minimum(minimum(s) for s in test),
 
 plot plot plot
 
-```@example stexamples; continued = true
+```@example stexamples
 for i in [1, length(err)÷2, length(err)]
 
     fig = figure(figsize=(10,3))
@@ -303,11 +306,6 @@ for i in [1, length(err)÷2, length(err)]
         ax[:get_xaxis]()[:set_ticks]([])
         ax[:get_yaxis]()[:set_ticks]([])
         colorbar(im, ax = ax, fraction=0.046, pad=0.04)#, format="%.1f")
-```
-
-ax[:minorticks_off]()
-
-```@example stexamples
     end
     ax1[:set_title]("Prediction")
     ax2[:set_title]("Real evolution")
@@ -316,7 +314,10 @@ ax[:minorticks_off]()
     tight_layout(w_pad=0.6, h_pad=0.00001)
     subplots_adjust(top=0.75)
 end
+savefig("barkley_tempo.png"); nothing # hide
 ```
+
+![barkley_tempo](barkley_tempo.png)
 
 *This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
 

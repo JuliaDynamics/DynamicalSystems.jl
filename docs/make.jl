@@ -1,4 +1,4 @@
-using DynamicalSystems, TimeseriesPrediction
+using DynamicalSystems, TimeseriesPrediction, ChaosTools, DynamicalSystemsBase
 using Documenter, PyPlot, Literate, DocumenterMarkdown
 
 PyPlot.ioff()
@@ -25,7 +25,7 @@ Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
 #                   name = "stexamples", preprocess = replace_includes)
 
 
-makedocs(modules=[DynamicalSystems, TimeseriesPrediction],
+makedocs(modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase, TimeseriesPrediction],
 doctest=false, root = @__DIR__, format = :markdown)
 
 close("all")
