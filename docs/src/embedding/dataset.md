@@ -1,6 +1,5 @@
 # Numerical Data
-Numerical data in **DynamicalSystems.jl** is represented by a structure called
-`Dataset`
+Numerical data in **DynamicalSystems.jl** is most often represented by a structure called `Dataset`
 ```@docs
 Dataset
 ```
@@ -22,8 +21,7 @@ for point in data
 end
 ```
 
-All functions from **DynamicalSystems.jl** that manipulate and use data are expecting an `AbstractDataset` subtype. This allows us to define efficient methods that coordinate
-well with other packages, like e.g. [`neighborhood`](@ref).
+Most functions from **DynamicalSystems.jl** that manipulate and use data are expecting an `AbstractDataset` subtype. This allows us to define efficient methods that coordinate well with each other, like e.g. [`neighborhood`](@ref).
 
 If given a matrix, we first convert to `Dataset`. This means that you should *first
 convert* your data to a `Dataset` if you want to call functions more than once, to avoid
@@ -58,7 +56,7 @@ data = Dataset(readdlm("data.txt", ',', Float64))
 ```
 ---
 
-## Neighborhoods in a Dataset
+## Neighborhoods in a dataset
 Combining the excellent performance of [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) with the `AbstractDataset` allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of `AbstractNeighborhood`.
 ```@docs
 neighborhood

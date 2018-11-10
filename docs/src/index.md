@@ -42,7 +42,7 @@ Under the package `DynamicalSystemsBase`:
 * Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 * Library of [predefined well-known dynamical systems](ds/predefined) that have been used extensively in scientific research.
 
-### [Delay Coordinates Embedding](embedding/delay)
+### [Delay Coordinates Embedding](embedding/reconstruction)
 Under the package `DelayEmbeddings`:
 * Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
 * Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
@@ -77,7 +77,15 @@ With **DynamicalSystems.jl** we try to
 3. Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.
 
 ## Installation
-Simply use `Pkg.add("DynamicalSystems")` to install *everything*.
+Simply use `]add DynamicalSystems` to install everything.
+
+---
+
+For more advanced users, you can choose which packages to install and use at a high level. The *package* `DynamicalSystems` serves two purposes: it re-exports everything under a single module `DynamicalSystems` and it also includes the documentation.
+
+All packages **DynamicalSystems.jl** depend on `DelayEmbeddings` which defines core numeric data structures and methods. For example `RecurrenceAnalysis` and `TimeseriesPrediction` depend only on `DelayEmbeddings`. Packages that require equations of motion also depend on `DynamicalSystemsBase`, like for example `ChaosTools`.
+
+If you only need functionality of a specific package you can install only that one, e.g. `]add RecurrenceAnalysis` and only the minimum amount of requirements will be installed.
 
 ## Citing
 There is a (very small) paper associated with **DynamicalSystems.jl**. If we have helped

@@ -35,12 +35,14 @@ docs_dir: 'build'
 
 pages:
 - Introduction: index.md
-- Fundamentals:
-  - Dynamical Systems: definition/general.md
-  - Time Evolution: definition/evolve.md
-  - Numerical Data: definition/dataset.md
-  - Delay Coordinates: definition/reconstruction.md
-  - Predefined Systems: definition/predefined.md
+- Dynamical Systems:
+  - Dynamical System Definition: ds/general.md
+  - Time Evolution: ds/evolve.md
+  - Predefined Systems: ds/predefined.md
+- Delay Coordinates Embedding:
+  - Numerical Data: embedding/dataset.md
+  - Delay Coordinates: embedding/reconstruction.md
+  - Estimating Delay Embedding Parameters: embedding/estimate.md
 - ChaosTools:
   - Features Overview: chaos/overview.md
   - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
@@ -48,13 +50,7 @@ pages:
   - Entropies and Dimensions: chaos/entropies.md
   - Nonlinear Timeseries Analysis: chaos/nlts.md
   - Periodicity: chaos/periodicity.md
-  - Chaos Detection: chaos/chaos_detection.md
-  # - Visualization: chaos/visualization.md
-- TimeseriesPrediction:
-  - Introduction: tsprediction/tsintro.md
-  - Local Modeling & Timeseries Prediction: tsprediction/localmodels.md
-  - Spatio-Temporal Prediction: tsprediction/spatiotemporal.md
-  - Spatio-Temporal Examples: tsprediction/stexamples.md
+  - Chaos Distinction: chaos/chaos_detection.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md
