@@ -38,10 +38,9 @@ Under the package `DynamicalSystemsBase`:
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
 
-
 * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-* Robust implementations of all kinds of integrators, that evolve the system,
-   many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
+* Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
+* Library of [predefined well-known dynamical systems](ds/predefined) that have been used extensively in scientific research.
 
 ### [Delay Coordinates Embedding](embedding/delay)
 Under the package `DelayEmbeddings`:
@@ -50,12 +49,14 @@ Under the package `DelayEmbeddings`:
 * Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
     * Supports multiple dimensions and multiple timescales.
 
+* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
 
-6. Library of [predefined well-known dynamical systems](definition/predefined) that have been used extensively in scientific research.
+* Calculation of Mutual Information: WIP.
 
 ### [ChaosTools](chaos/overview)
-Please see the [overview section](chaos/overview) for a full list of features. Here
-is a quick summary:
+`ChaosTools` is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
+
+Please see the [overview section](chaos/overview) for a full list of features. Here is a quick summary:
 
 * Poincare S.O.S. and orbit diagrams
 * Lyapunov Exponents
@@ -63,6 +64,7 @@ is a quick summary:
 * Lyapunov exponent of a timeseries (numerical data)
 * Finding Fixed Points of Maps
 * GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
+* Nonlinear timeseries analysis
 
 
 ## Our Goals
