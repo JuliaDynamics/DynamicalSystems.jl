@@ -1,31 +1,10 @@
-using DynamicalSystems, TimeseriesPrediction, ChaosTools, DynamicalSystemsBase
+using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using Documenter, PyPlot, Literate, DocumenterMarkdown
 
 PyPlot.ioff()
 cd(@__DIR__)
 
-# Expand Spatio-temporal examples using Literate:
-function replace_includes(str)
-
-    included = ["1Dfield_temporalprediction.jl",
-    "2Dfield_crossprediction.jl", "2Dfield_temporalprediction.jl"]
-
-    path = dirname(dirname(pathof(TimeseriesPrediction)))*"/examples/"
-
-    for ex in included
-        content = read(path*ex, String)
-        str = replace(str, "include(\"$(ex)\")" => content)
-    end
-    return str
-end
-# Literate it:
-Literate.markdown("src/tsprediction/stexamples.jl", "src/tsprediction/";
-                  name = "stexamples", preprocess = replace_includes)
-# Literate.notebook("src/tsprediction/stexamples.jl", "src/tsprediction/";
-#                   name = "stexamples", preprocess = replace_includes)
-
-
-makedocs(modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase, TimeseriesPrediction],
+makedocs(modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase, DelayEmbeddings],
 doctest=false, root = @__DIR__, format = :markdown)
 
 close("all")
