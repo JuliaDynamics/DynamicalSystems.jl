@@ -8,7 +8,7 @@ The current documentation was built with the following versions
 using Pkg.API: installed
 ins = installed()
 function f()
-for pkg in ["DynamicalSystemsBase", "ChaosTools", "TimeseriesPrediction"]
+for pkg in ["DelayEmbeddings", "DynamicalSystemsBase", "ChaosTools"]
   println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
 end
 end
@@ -16,7 +16,7 @@ end
 ```@example versions
 f() # hide
 ```
-See the [News](news) page for recent updates. The latest one is the Julia 0.7 version support!
+See the [News](news) page for recent updates!
 
 !!! info "Introductory textbooks"
     Our library assumes basic some basic knowledge of nonlinear dynamics and complex systems.
@@ -29,28 +29,25 @@ See the [News](news) page for recent updates. The latest one is the Julia 0.7 ve
 !!! example "Jupyter Notebooks / Tutorials"
     [In this repository](https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
-## Video tutorial
-The below tutorial is hosted on the Julia channel. *Be careful though!* It is using an older version of both **DynamicalSystems.jl** as well as Julia! Fortunately, from the side of **DynamicalSystems.jl** there have been very few breaking changes. See the [News](news) for more.
-
-[![Youtube tutorial](http://img.youtube.com/vi/13hqE_1a158/0.jpg)](http://www.youtube.com/watch?v=13hqE_1a158)
-
-
 ## Contents
 
-### [Fundamentals](definition/general)
-
-1. Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), both maps and flows. The following combinations are possible:
+### [Dynamical Systems](ds/general)
+Under the package `DynamicalSystemsBase`:
+* Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), under a unified struct [`DynamicalSystem`](@ref). The following combinations are possible:
     * Continuous or Discrete systems. Continuous systems use [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/) for solving the ODE problem.
     * In-place or out-of-place (large versus small systems).
     * Auto-differentiated or not (for the Jacobian function).
 
 
-2. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-4. Robust implementations of all kinds of integrators, that evolve the system,
+* Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
+* Robust implementations of all kinds of integrators, that evolve the system,
    many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
-4. Dedicated interface for [numerical data](definition/dataset).
-5. Efficient [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
-5. Delay Coordinates Embedding: flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
+
+### [Delay Coordinates Embedding](embedding/delay)
+Under the package `DelayEmbeddings`:
+* Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
+* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
+* Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
     * Supports multiple dimensions and multiple timescales.
 
 
@@ -63,24 +60,13 @@ is a quick summary:
 * Poincare S.O.S. and orbit diagrams
 * Lyapunov Exponents
 * Entropies and Dimensions
-* Estimation of Reconstruction parameters
-* Lyapunov exponent of a timeseries
+* Lyapunov exponent of a timeseries (numerical data)
 * Finding Fixed Points of Maps
-* Detecting Chaos
-
-
-### [TimeseriesPrediction](tsprediction/introduction)
-Please see the [introduction page](tsprediction/introduction) for a detailed description!
-
-* Predicting the future of one or multiple timeseries using average local models.
-* Spatio-temporal timeseries prediction and cross-prediction.
-* Multiple spatio-temporal embeddings.
+* GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
 
 
 ## Our Goals
-The ultimate goal for **DynamicalSystems.jl** is
-to be a useful *library* for students and scientists working on chaos, nonlinear dynamics and
-in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
+The ultimate goal for **DynamicalSystems.jl** is to be a useful **software library** for students and scientists working on chaos, nonlinear dynamics and in general dynamical systems. The word "library" is intended in the literal sense: a place where people go to learn things.
 
 With **DynamicalSystems.jl** we try to
 
