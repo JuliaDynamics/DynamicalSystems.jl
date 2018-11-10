@@ -1,6 +1,6 @@
 export phasespace, plot_linear_regions
 export plot_dataset, plot_trajectory
-using PyPlot
+using Makie
 
 
 """
@@ -26,7 +26,7 @@ function phasespace(ds::DiscreteDynamicalSystem{IIP, S, 2}, limits,
             append!(data, trajectory(ds, t, SVector{2}(x,y)))
         end
     end
-    ax[:plot](data[:,1], data[:,2];
+    scatter(data[:,1], data[:,2];
     marker = "s", ms = 0.5, color="black", kwargs..., lw=0)
     return nothing
 end
@@ -71,19 +71,4 @@ function plot_dataset(data::Dataset, tvec)
         PyPlot.plot(tvec, col, label = "var. $i")
     end
     PyPlot.legend()
-end
-
-"""
-    plot_trajectory(ds::DynamicalSystem, T [, dt])
-Plot each column of the `trajectory` as a timeseries vs `tvec`.
-"""
-function plot_trajectory(ds::DDS, T, dt = 1)
-    data = trajectory(ds, T, dt=dt)
-    tvec = inittime(ds):dt:(T+inittime(ds))
-    plot_dataset(data, tvec)
-end
-function plot_trajectory(ds::CDS, T, dt = 0.01)
-    data = trajectory(ds, T, dt=dt)
-    tvec = inittime(ds):dt:(T+inittime(ds))
-    plot_dataset(data, tvec)
 end
