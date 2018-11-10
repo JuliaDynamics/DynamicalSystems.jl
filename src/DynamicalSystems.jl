@@ -14,20 +14,18 @@ using Reexport
 @reexport using ChaosTools
 
 display_update = false
-update_name = "update_v1.0.0"
+update_name = "update_v1.1.0"
 
 if display_update
 if !isfile(joinpath(@__DIR__, update_name))
 printstyled(stdout,
 """
-\nUpdate message: DynamicalSystems v1.0
+\nUpdate message: DynamicalSystems v1.1
 
-First major release of DynamicalSystems is out!
-
-Minor breaking changes involve renaming `Reconstruction`
-to `reconstruct`. Many internals have also been reworked
-for extra clarity! Please see the "News" page of the
-official documentation!\n
+Delay coordinates embedding & Dataset functionality moved
+to a new package! It is called `DelayEmbeddings`!
+Methods that estimate optimal delay/dimension are also in this
+package!\n
 """; color = :light_magenta)
 touch(joinpath(@__DIR__, update_name))
 end

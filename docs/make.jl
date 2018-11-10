@@ -1,5 +1,5 @@
 using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
-using Documenter, PyPlot, Literate, DocumenterMarkdown
+using Documenter, PyPlot, DocumenterMarkdown
 
 PyPlot.ioff()
 cd(@__DIR__)
