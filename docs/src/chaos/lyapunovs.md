@@ -53,6 +53,6 @@ henon = Systems.henon()
 
 The same is done for continuous systems:
 ```@example lyap
-ross = Systems.lorenz(ρ = 32)
-λ = lyapunov(ross, 10000.0, dt = 10.0, Ttr = 100.0)
+lor = Systems.lorenz(ρ = 32)
+λ = lyapunov(lor, 10000.0, dt = 10.0, Ttr = 100.0)
 ```

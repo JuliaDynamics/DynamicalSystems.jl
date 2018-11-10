@@ -52,7 +52,8 @@ permentropy
 
 For example, we will compute and compare the [`lyapunov`](@ref) exponent of the logistic
 map with the order-6 permutation entropy, like in the original paper.
-```julia
+```@example entropy
+using DynamicalSystems, PyPlot
 ds = Systems.logistic()
 rs = 3.5:0.001:4
 ls = Float64[]; hs = Float64[]
@@ -73,8 +74,10 @@ a2 = subplot(212)
 plot(rs, hs; color = "C1"); ylabel("\$h_6\$")
 xlim(rs[1], rs[end]); xlabel("\$r\$")
 tight_layout()
+savefig("permentropy.png"); nothing # hide
 ```
-![Permutation Entropy](https://i.imgur.com/tsqSA7a.png)
+![](permentropy.png)
+
 
 !!! info "Permutation Entropy performance"
     Even though the current implementation is fine and runs reasonably fast for
