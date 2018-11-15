@@ -19,7 +19,7 @@ f() # hide
 See the [News](news) page for recent updates!
 
 !!! info "Introductory textbooks"
-    Our library assumes basic some basic knowledge of nonlinear dynamics and complex systems.
+    Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
 
     If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
     * Nonlinear Dynamics And Chaos - S. Strogatz
