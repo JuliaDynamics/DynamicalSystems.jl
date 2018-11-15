@@ -4,3 +4,4 @@ DynamicalSystemsBase 1.0
 ChaosTools 1.0
 Reexport
 StaticArrays
+DelayEmbeddings
