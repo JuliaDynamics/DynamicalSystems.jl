@@ -1,4 +1,4 @@
-using DynamicalSystems, Makie
+using DynamicalSystems, Makie, LinearAlgebra
 using DynamicalSystemsBase: CDS
 
 function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
@@ -33,7 +33,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
 
     # Interactive part:
     on(scene.events.mousebuttons) do buttons
-        if ispressed(scene, Mouse.left) && !ispressed(scene, Keyboard.space)
+        if ispressed(scene, Mouse.left)
             pos = to_world(scene, Point2f0(scene.events.mouseposition[]))
 
             x, y = pos; z = plane[2] # third variable comes from plane
@@ -61,14 +61,39 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     return scene
 end
 
-ds = Systems.henonheiles()
+@inline function ż(z, p, t)
+    @inbounds begin
+        A = p.A; B=p.B; D=p.D
+        p₀, p₂ = z[3], z[4]
+        q₀, q₂ = z[1], z[2]
 
+        return SVector{4}(
+            A * p₀,
+            A * p₂,
+            -A * q₀ - 3 * B / √2 * (q₂^2 - q₀^2) - D * q₀ * (q₀^2 + q₂^2),
+            -q₂ * (A + 3 * √2 * B * q₀ + D * (q₀^2 + q₂^2))
+        )
+    end
+end
 
-potential(x, y) = 0.5(x^2 + y^2) + (x^2*y - (y^3)/3)
-energy(x,y,px,py) = 0.5(px^2 + py^2) + potential(x,y)
-const E = energy(get_state(ds)...)
+z0 = SVector{4}(0.0, -2.723, 2.349, -9.801)
+params = (A=1, B=0.55, D=0.4)
+ds = ContinuousDynamicalSystem(ż, z0, params)
+
+function T(p, A)
+    A / 2 * norm(p)^2
+end
+function potential(q, params)
+    @unpack A, B, D = params
+    A / 2 * (q[1]^2 + q[2]^2) + B / √2 * q[1] * (3 * q[2]^2 - q[1]^2) + D / 4 * (q[1]^2 + q[2]^2)^2
+end
+
+H(p, q, params=(A=1, B=0.55, D=0.4)) = T(p, params.A) + potential(q, params)
+
+const E = H([ds.u0[3], ds.u0[4]],[ds.u0[1], ds.u0[2]], params)
+
 function complete(y, py, x)
-    V = potential(x, y)
+    V = potential((x, y), params)
     Ky = 0.5*(py^2)
     Ky + V ≥ E && error("Point has more energy!")
     px = sqrt(2(E - V - Ky))
@@ -84,6 +109,6 @@ chaotic = get_state(ds)
 stable = [0., 0.1, 0.5, 0.]
 
 plane = (1, 0.0)
-tf = 20000.0
+tf = 5000.0
 
-psos = interactivepsos(ds, plane, tf, (2, 4), complete; makiekwargs = (markersize = 0.01,))
+psos = interactivepsos(ds, plane, tf, (2, 4), complete; makiekwargs = (markersize = 0.1,))
