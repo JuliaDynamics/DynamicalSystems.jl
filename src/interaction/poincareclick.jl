@@ -28,7 +28,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     warning && length(data) == 0 && @warn ChaosTools.PSOS_ERROR
 
     # Create the first trajectory on the section:
-    ui, ms = AbstractPlotting.textslider(range(0.0001, stop=0.1, length=1000),
+    ui, ms = AbstractPlotting.textslider(10 .^ range(-6, stop=1, length=1000),
     "markersize", start=0.01)
     scene = Makie.Scene(resolution = (750, 750))
     positions_node = Node(data)
@@ -37,11 +37,14 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
 
     scplot = Makie.scatter(positions_node, color = colors_node, markersize = ms)
 
+    to_screen(scene, mpos) = Point2f0(mpos) .- Point2f0(minimum(pixelarea(scene)[]))
+    mouseposition(scene) = to_world(scene, to_screen(scene, events(scene).mouseposition[]))
     # Interactive part:
     on(scplot.events.mousebuttons) do buttons
         if (ispressed(scplot, Mouse.left) && !ispressed(scplot, Keyboard.space) &&
             AbstractPlotting.is_mouseinside(scplot))
-            pos = to_world(scplot, Point2f0(scplot.events.mouseposition[]))
+
+            pos = mouseposition(scplot)
 
             x, y = pos; z = plane[2] # third variable comes from plane
 
