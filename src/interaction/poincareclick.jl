@@ -28,13 +28,20 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     warning && length(data) == 0 && @warn ChaosTools.PSOS_ERROR
 
     # Create the first trajectory on the section:
+    ui, ms = AbstractPlotting.textslider(range(0.0001, stop=0.1, length=1000),
+    "markersize", start=0.01)
     scene = Makie.Scene(resolution = (750, 750))
-    Makie.scatter!(scene, data; makiekwargs..., color = color(u0))
+    positions_node = Node(data)
+    colors = (c = color(u0); [c for i in 1:length(data)])
+    colors_node = Node(colors)
+
+    scplot = Makie.scatter(positions_node, color = colors_node, markersize = ms)
 
     # Interactive part:
-    on(scene.events.mousebuttons) do buttons
-        if ispressed(scene, Mouse.left) && !ispressed(scene, Keyboard.space)
-            pos = to_world(scene, Point2f0(scene.events.mouseposition[]))
+    on(scplot.events.mousebuttons) do buttons
+        if (ispressed(scplot, Mouse.left) && !ispressed(scplot, Keyboard.space) &&
+            AbstractPlotting.is_mouseinside(scplot))
+            pos = to_world(scplot, Point2f0(scplot.events.mouseposition[]))
 
             x, y = pos; z = plane[2] # third variable comes from plane
 
@@ -52,11 +59,19 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
                 data, integ, f, planecrossing, tf, Ttr, i, rootkw
             )
 
-            Makie.scatter!(scene, data; makiekwargs..., color = color(newstate))
+            positions = positions_node[]; colors = colors_node[]
+            append!(positions, data)
+            append!(colors, (c = color(newstate); [c for i in 1:length(data)]))
+
+            # Notify the signals
+            positions_node[] = positions; colors_node[] = colors
+
+            # Makie.scatter!(scplot, data; makiekwargs..., color = color(newstate))
         end
-        display(scene)
-        return scene
+        # display(scene)
+        # return scene
     end
+    hbox(ui, scplot, parent=scene)
     display(scene)
     return scene
 end
