@@ -30,7 +30,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     # Create the first trajectory on the section:
     ui, ms = AbstractPlotting.textslider(10 .^ range(-6, stop=1, length=1000),
     "markersize", start=0.01)
-    scene = Makie.Scene(resolution = (750, 750))
+    scene = Makie.Scene(resolution = (1500, 1000))
     positions_node = Node(data)
     colors = (c = color(u0); [c for i in 1:length(data)])
     colors_node = Node(colors)
