@@ -1,5 +1,6 @@
 [deps]
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
+DelayEmbeddings = "5732040d-69e3-5649-938a-b6b4f237613f"
 DiffEqCallbacks = "459566f4-90b8-5000-8ac3-15dfb0a30def"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterMarkdown = "997ab1e6-3595-5248-9280-8efb232c3433"
@@ -9,3 +10,6 @@ FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
 OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+Documenter = "~0.20"
