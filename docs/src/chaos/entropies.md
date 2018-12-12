@@ -19,12 +19,10 @@ partition it into boxes to calculate an entropy.
     Partitioning the dataset (i.e. doing a *histogram*) is in general a costly
     operation that depends exponentially on the number of dimensions of the data
     and algebraically to the box size `ε`.
+
     However, in this specific case the partition process has some special aspects
     that can be taken advantage
     of, reducing tremendously the memory allocation and spent time!
-
-    In fact, there is an upper bound to the memory allocated by `non0hist`: A constant
-    multiplied by the length of the array, `N = length(p)`. No matter how small `ε` or how many dimensions the data has, the method can at most assign `N` dictionary entries.
 
 
 The function used internally by `genentropy` is `non0hist`:
