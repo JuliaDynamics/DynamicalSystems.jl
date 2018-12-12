@@ -8,7 +8,7 @@ The current documentation was built with the following versions
 using Pkg.API: installed
 ins = installed()
 function f()
-for pkg in ["DelayEmbeddings", "DynamicalSystemsBase", "ChaosTools"]
+for pkg in ["DelayEmbeddings", "DynamicalSystemsBase", "ChaosTools", "RecurrenceAnalysis"]
   println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
 end
 end
@@ -53,6 +53,15 @@ Under the package `DelayEmbeddings`:
 
 * Calculation of Mutual Information: WIP.
 
+### [RecurrenceAnalysis](rqa/rplots)
+`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots], a field called [Recurrence Quantification Analysis] .
+
+* Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices).
+* Recurrence quantification analysis (RQA):
+  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, trapping time, average/maximum vertical length.
+  * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
+
+
 ### [ChaosTools](chaos/overview)
 `ChaosTools` is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
@@ -81,9 +90,9 @@ Simply use `]add DynamicalSystems` to install everything.
 
 ---
 
-For more advanced users, you can choose which packages to install and use at a high level. The *package* `DynamicalSystems` serves two purposes: it re-exports everything under a single module `DynamicalSystems` and it also includes the documentation.
+For more advanced users, you can choose which packages to install and use at a high level. The *package* `DynamicalSystems` serves two purposes: it re-exports everything under a single module `DynamicalSystems` and it also builds the documentation.
 
-All packages **DynamicalSystems.jl** depend on `DelayEmbeddings` which defines core numeric data structures and methods. For example `RecurrenceAnalysis` and `TimeseriesPrediction` depend only on `DelayEmbeddings`. Packages that require equations of motion also depend on `DynamicalSystemsBase`, like for example `ChaosTools`.
+All packages depend on `DelayEmbeddings` which defines core numeric data structures and methods. For example `RecurrenceAnalysis` and `TimeseriesPrediction` depend only on `DelayEmbeddings`. Packages that require equations of motion also depend on `DynamicalSystemsBase`, like for example `ChaosTools`.
 
 If you only need functionality of a specific package you can install only that one, e.g. `]add RecurrenceAnalysis` and only the minimum amount of requirements will be installed.
 
