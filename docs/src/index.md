@@ -8,7 +8,7 @@ The current documentation was built with the following versions
 using Pkg.API: installed
 ins = installed()
 function f()
-for pkg in ["DelayEmbeddings", "DynamicalSystemsBase", "ChaosTools", "RecurrenceAnalysis"]
+for pkg in ["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"]
   println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
 end
 end
@@ -42,26 +42,6 @@ Under the package `DynamicalSystemsBase`:
 * Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 * Library of [predefined well-known dynamical systems](ds/predefined) that have been used extensively in scientific research.
 
-### [Delay Coordinates Embedding](embedding/reconstruction)
-Under the package `DelayEmbeddings`:
-* Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
-* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
-* Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
-    * Supports multiple dimensions and multiple timescales.
-
-* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
-
-* Calculation of Mutual Information: WIP.
-
-### [RecurrenceAnalysis](rqa/rplots)
-`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots], a field called [Recurrence Quantification Analysis] .
-
-* Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices).
-* Recurrence quantification analysis (RQA):
-  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, trapping time, average/maximum vertical length.
-  * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
-
-
 ### [ChaosTools](chaos/overview)
 `ChaosTools` is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
@@ -75,6 +55,24 @@ Please see the [overview section](chaos/overview) for a full list of features. H
 * GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
 * Nonlinear timeseries analysis
 
+### [Delay Coordinates Embedding](embedding/reconstruction)
+Under the package `DelayEmbeddings`:
+* Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
+* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
+* Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
+    * Supports multiple dimensions and multiple timescales.
+
+* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
+
+* Calculation of Mutual Information: WIP.
+
+### [RecurrenceAnalysis](rqa/rplots)
+`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis] .
+
+* Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices).
+* Recurrence quantification analysis (RQA):
+  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, trapping time, average/maximum vertical length.
+  * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
 
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is to be a useful **software library** for students and scientists working on chaos, nonlinear dynamics and in general dynamical systems. The word "library" is intended in the literal sense: a place where people go to learn things.
