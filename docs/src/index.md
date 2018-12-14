@@ -67,9 +67,9 @@ Under the package `DelayEmbeddings`:
 * Calculation of Mutual Information: WIP.
 
 ### [RecurrenceAnalysis](rqa/rplots)
-`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis] .
+`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
 
-* Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices).
+* [Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices)](rqa/rplots).
 * Recurrence quantification analysis (RQA):
   * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, trapping time, average/maximum vertical length.
   * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)

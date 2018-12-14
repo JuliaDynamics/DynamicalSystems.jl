@@ -28,3 +28,7 @@ recurrenceplot
 ```
 
 ## Distances
+The distance function used in [`recurrencematrix`](@ref) and co. can be specified either as a string or as a `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
+```@docs
+distancematrix
+```
