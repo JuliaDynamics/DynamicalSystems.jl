@@ -11,10 +11,13 @@ estimate_delay
 ## Embedding Dimension
 ```@docs
 estimate_dimension
+DelayEmbeddings.fnn
+DelayEmbeddings.afnn
+DelayEmbeddings.f1nn
 stochastic_indicator
 ```
 ---
 
 
 ## Mutual Information
-WIP
+Coming soon...

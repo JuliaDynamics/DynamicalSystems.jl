@@ -41,12 +41,13 @@ Rp = recurrenceplot(R)
 using PyPlot; figure(figsize = (6, 8))
 ax1 = subplot2grid((3,1), (0,0))
 plot(0:dt:N*dt, tr[:, 2], "k"); xlim(0, N*dt); ylabel("\$y(t)\$")
-yticklabels([])
 ax2 = subplot2grid((3,1), (1, 0), rowspan = 2)
 imshow(Rp, cmap = "Greys_r", extent = (0, N*dt, 0, N*dt))
 xlabel("\$t\$"); ylabel("\$t\$"); tight_layout()
 subplots_adjust(hspace = 0.2)
+savefig("rmatrix.png"); nothing # hide
 ```
+![](rmatrix.png)
 
 ## Distances
 The distance function used in [`recurrencematrix`](@ref) and co. can be specified either as a string or as a `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
