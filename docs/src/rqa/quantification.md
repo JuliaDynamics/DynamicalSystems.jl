@@ -4,6 +4,7 @@ A [`recurrencematrix`](@ref) can be analyzed in several ways to yield informatio
 1. N. Marwan *et al.*, "Recurrence plots for the analysis of complex systems", *Phys. Reports 438*(5-6), 237-329 (2007).
 2. N. Marwan & C.L. Webber, "Mathematical and computational foundations of recurrence quantifications", in: Webber, C.L. & N. Marwan (eds.), *Recurrence Quantification Analysis. Theory and Best Practices*, Springer, pp. 3-43 (2015).
 
+The following functions all accept a recurrence matrix, see the [previous page](rplots).
 ```@docs
 recurrencerate
 determinism
@@ -16,7 +17,8 @@ trappingtime
 maxvert
 RecurrenceAnalysis.entropy
 ```
-Since most of the above functions are fined tuned with keyword arguments, here is a table summarizing them that could be of use
+---
+Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:
 
 
 | Argument  | Default   | Functions | Description |
@@ -31,3 +33,5 @@ In case you need all of the aforementioned functions and you don't want to write
 ```@docs
 rqa
 ```
+---
+See also the [`@windowed`](@ref) macro for a windowed version of the above!

@@ -54,6 +54,7 @@ pages:
 - Recurrence Quantification Analysis:
   - Recurrence Plots: rqa/rplots.md
   - Quantification & Analysis functions: rqa/quantification.md
+  - Windowed RQA: rqa/windowed.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md
