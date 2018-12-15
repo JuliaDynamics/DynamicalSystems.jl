@@ -12,6 +12,7 @@ using Reexport
 @reexport using DelayEmbeddings
 @reexport using DynamicalSystemsBase
 @reexport using ChaosTools
+@reexport using RecurrenceAnalysis
 
 display_update = false
 update_name = "update_v1.1.0"
