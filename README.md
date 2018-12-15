@@ -12,37 +12,11 @@
 
 ---
 
-## Brief Content Overview
-### [DynamicalSystemsBase.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/definition/general/)   
-1. Intuitive, consistent APIs for the definition of general dynamical systems, both maps and flows. In fact we have implementations for 8 possible dynamical systems:
-    * Continuous or Discrete.
-    * In-place or out-of-place (large versus small systems).
-    * Auto-differentiated or not (for the Jacobian function).
-
-4. Dedicated interface for numerical data
-5. Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-4. Robust implementations of all kinds of integrators, that evolve the system,
-   many states of the system, or even deviation vectors. See the advanced documentation for this.
-6. Library of predefined well-known dynamical systems that have been used extensively in scientific research.
-
-
-### [ChaosTools.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/chaos/overview/)
-
-* Lyapunov Exponents
-* Poincare SOS, Orbit Diagrams
-* Entropies and Dimensions
-* Delay Coordinates Embedding
-* Neighborhood estimation
-* Lyapunov exponent of a timeseries
-* Finding Fixed Points of Maps
-* Detecting Chaos
-
-### [TimeseriesPrediction.jl](https://juliadynamics.github.io/DynamicalSystems.jl/latest/tsprediction/localmodels/)
-
-* Local Model Prediction
-* Multiple Local Modeling Types
-* Error Measures
-* Internal Delay Embedding using **ChaosTools.jl**
+## Packages
+* `DelayEmbeddings`
+* `RecurrenceAnalysis`
+* `DynamicalSystemsBase`
+* `ChaosTools`
 
 ## Double pendulum video:
 Checkout this *amazing* video by Cormullion, featuring the double pendulum (logo of our library)

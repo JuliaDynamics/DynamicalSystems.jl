@@ -39,10 +39,6 @@ pages:
   - Dynamical System Definition: ds/general.md
   - Time Evolution: ds/evolve.md
   - Predefined Systems: ds/predefined.md
-- Delay Coordinates Embedding:
-  - Numerical Data: embedding/dataset.md
-  - Delay Coordinates: embedding/reconstruction.md
-  - Estimating Delay Embedding Parameters: embedding/estimate.md
 - ChaosTools:
   - Features Overview: chaos/overview.md
   - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
@@ -51,6 +47,14 @@ pages:
   - Nonlinear Timeseries Analysis: chaos/nlts.md
   - Periodicity: chaos/periodicity.md
   - Chaos Distinction: chaos/chaos_detection.md
+- Delay Coordinates Embedding:
+  - Numerical Data: embedding/dataset.md
+  - Delay Coordinates: embedding/reconstruction.md
+  - Estimating Delay Embedding Parameters: embedding/estimate.md
+- Recurrence Quantification Analysis:
+  - Recurrence Plots: rqa/rplots.md
+  - Quantification & Analysis functions: rqa/quantification.md
+  - Windowed RQA: rqa/windowed.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md
