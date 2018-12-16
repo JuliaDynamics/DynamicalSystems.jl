@@ -15,13 +15,13 @@ using Reexport
 @reexport using RecurrenceAnalysis
 
 display_update = true
-update_name = "update_v1.2.0"
+update_name = "update_v1.1.0"
 
 if display_update
 if !isfile(joinpath(@__DIR__, update_name))
 printstyled(stdout,
 """
-\nUpdate message: DynamicalSystems v1.2
+\nUpdate message: DynamicalSystems v1.1
 
 A new package has joined DynamicalSystems: RecurrenceAnalysis !
 

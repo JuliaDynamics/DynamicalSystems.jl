@@ -1,5 +1,12 @@
 # News
 
+## `RecurrenceAnalysis` joins **DynamicalSystems.jl** in v1.1!
+The excellent Julia package `RecurrenceAnalysis` (authored by Helios de Rosario, `@heliosdrm`) is now part of **DynamicalSystems.jl** and reexported by it. Besides adding all the amazing functionality of `RecurrenceAnalysis` to **DynamicalSystems.jl**, other benefits also sprung up:
+* New package `DelayEmbeddings` that defines `Dataset` and provides all delay embedding functionality.
+* Method to estimate delay embedding dimension (now in `DelayEmbeddings`) was enriched with two more algorithms!
+* Mutual information (currently wip) is also being improved.
+* `RecurrenceAnalysis` now also has a documentation page, soon to be updated with more real world examples.
+
 ## DynamicalSystems v1.0 - Julia 1.0 release
 All support for any Julia version before 0.7 is dropped.
 
