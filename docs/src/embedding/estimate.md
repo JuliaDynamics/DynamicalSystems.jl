@@ -8,14 +8,16 @@ number of temporal neighbors.
 estimate_delay
 ```
 
-## Number of Temporal neighbors
-This also corresponds to the "embedding dimension" but only for univariate timeseries.
+## Embedding Dimension
 ```@docs
 estimate_dimension
+DelayEmbeddings.fnn
+DelayEmbeddings.afnn
+DelayEmbeddings.f1nn
 stochastic_indicator
 ```
 ---
 
 
 ## Mutual Information
-WIP
+Coming soon...

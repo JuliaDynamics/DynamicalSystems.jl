@@ -12,8 +12,9 @@ using Reexport
 @reexport using DelayEmbeddings
 @reexport using DynamicalSystemsBase
 @reexport using ChaosTools
+@reexport using RecurrenceAnalysis
 
-display_update = false
+display_update = true
 update_name = "update_v1.1.0"
 
 if display_update
@@ -22,10 +23,12 @@ printstyled(stdout,
 """
 \nUpdate message: DynamicalSystems v1.1
 
-Delay coordinates embedding & Dataset functionality moved
-to a new package! It is called `DelayEmbeddings`!
-Methods that estimate optimal delay/dimension are also in this
-package!\n
+A new package has joined DynamicalSystems: RecurrenceAnalysis !
+
+This new package offers tools to compute and analyze
+recurrences in your timeseries!
+
+Check out the documentation for more!\n
 """; color = :light_magenta)
 touch(joinpath(@__DIR__, update_name))
 end
