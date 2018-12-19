@@ -14,6 +14,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     @assert typeof(plane) <: Tuple
     @assert length(idxs) == 2
     @assert eltype(idxs) == Int
+    @assert !(plane[1] in idxs)
 
     # This is the internal code of poincaresos. We use the integrator directly!
     ChaosTools._check_plane(plane, D)
@@ -51,7 +52,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
             newstate = try
                complete(x, y, z)
             catch err
-               @error "Could not set state, got error:" exception=err
+               @error "Could not get state, got error:" exception=err
                return
             end
 
@@ -91,8 +92,6 @@ function complete(y, py, x)
     Ky + V ≥ E && error("Point has more energy!")
     px = sqrt(2(E - V - Ky))
     ic = [x, y, px, py]
-    println("new state:")
-    println(ic)
     return ic
 end
 
