@@ -13,25 +13,26 @@ function interactive_orbitdiagram(ds::DDS, i::Int, p_index, p_min, p_max;
     positions = Vector{Point2f0}(undef, n * density)
     integ = integrator(ds)
 
-    # positions_node = Node(positions)
+    positions_node = Node(positions)
 
     pmin, pmax = p_min, p_max
     populate_orbitdiagram!(positions, integ, i, p_index, pmin, pmax, density, n, Ttr)
 
-    scplot = scatter(positions, markersize = 0.01)
+    scplot = scatter(positions_node, markersize = 0.01)
 
     on(scplot.events.mousebuttons) do buttons
         if onlyleftclick(scplot)
             pmin, xmin = mouseposition(scplot)
             # Get xmax, pmax with un-click
-            pmax = 1.5pmin; xmax = 1.5xmin
+            pmax = 1.1pmin; xmax = 1.1xmin
             populate_orbitdiagram!(positions, integ, i,
                                    p_index, pmin, pmax, density, n, Ttr)
-            # positions_node[] = positions
+
+            positions_node[] = positions
             limits = FRect(pmin,xmin,pmax-pmin,xmax-xmin)
-            scplot = scatter(positions, markersize = 0.01, limits = limits)
+            # scplot = scatter(positions, markersize = 0.01, limits = limits)
+            AbstractPlotting.update_limits!(scplot, limits)
         end
-        display(scplot)
     end
     display(scplot)
     return scplot
