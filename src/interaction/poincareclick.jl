@@ -38,8 +38,6 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
 
     scplot = Makie.scatter(positions_node, color = colors_node, markersize = ms)
 
-    to_screen(scene, mpos) = Point2f0(mpos) .- Point2f0(minimum(pixelarea(scene)[]))
-    mouseposition(scene) = to_world(scene, to_screen(scene, events(scene).mouseposition[]))
     # Interactive part:
     on(scplot.events.mousebuttons) do buttons
         if (ispressed(scplot, Mouse.left) && !ispressed(scplot, Keyboard.space) &&
