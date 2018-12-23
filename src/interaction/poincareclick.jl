@@ -39,7 +39,7 @@ function interactivepsos(ds::CDS{IIP, S, D}, plane, tf, idxs, complete;
     scplot = Makie.scatter(positions_node, color = colors_node, markersize = ms)
 
     # Interactive part:
-    on(scplot.events.mousebuttons) do buttons
+    on(events(scplot).mousebuttons) do buttons
         if (ispressed(scplot, Mouse.left) && !ispressed(scplot, Keyboard.space) &&
             AbstractPlotting.is_mouseinside(scplot))
 
