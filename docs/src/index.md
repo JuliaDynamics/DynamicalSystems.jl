@@ -31,19 +31,19 @@ See the [News](news) page for recent updates!
 
 ## Contents
 
-### [Dynamical Systems](ds/general)
-Under the package `DynamicalSystemsBase`:
+### [`DynamicalSystemsBase`](ds/general)
 * Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), under a unified struct [`DynamicalSystem`](@ref). The following combinations are possible:
-    * Continuous or Discrete systems. Continuous systems use [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/) for solving the ODE problem.
-    * In-place or out-of-place (large versus small systems).
-    * Auto-differentiated or not (for the Jacobian function).
+  * Continuous or Discrete systems. Continuous systems use [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/) for solving the ODE problem.
+  * In-place or out-of-place (large versus small systems).
+  * Auto-differentiated or not (for the Jacobian function).
+
 
 * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 * Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 * Library of [predefined well-known dynamical systems](ds/predefined) that have been used extensively in scientific research.
 
-### [ChaosTools](chaos/overview)
-`ChaosTools` is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
+### [`ChaosTools`](chaos/overview)
+Is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
 Please see the [overview section](chaos/overview) for a full list of features. Here is a quick summary:
 
@@ -55,8 +55,8 @@ Please see the [overview section](chaos/overview) for a full list of features. H
 * GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
 * Nonlinear timeseries analysis
 
-### [Delay Coordinates Embedding](embedding/reconstruction)
-Under the package `DelayEmbeddings`:
+### [`DelayEmbeddings`](embedding/reconstruction)
+Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.
 * Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
 * Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
 * Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
@@ -66,13 +66,14 @@ Under the package `DelayEmbeddings`:
 
 * Calculation of Mutual Information: WIP.
 
-### [RecurrenceAnalysis](rqa/rplots)
+### [`RecurrenceAnalysis`](rqa/rplots)
 `RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
 
 * [Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices)](rqa/rplots).
-* Recurrence quantification analysis (RQA):
-  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, trapping time, average/maximum vertical length.
+* [Recurrence quantification analysis](rqa/quantification) (RQA):
+  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, entropy, trapping time, average/maximum vertical length.
   * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
+  * [Windowed versions](rqa/windowed) of the above
 
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is to be a useful **software library** for students and scientists working on chaos, nonlinear dynamics and in general dynamical systems. The word "library" is intended in the literal sense: a place where people go to learn things.
@@ -113,16 +114,17 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 }
 ```
 
+## Issues with Bounties
+Money that **DynamicalSystems.jl** obtains from awards, sponsors or donators are converted into bounties for GitHub issues. The full list of issues that have a bounty is [available here](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+org%3AJuliaDynamics+label%3Abounty).
+
+By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)
+
 ## Contacting
 
-You
-can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions and/or questions about the packages of the JuliaDynamics organization!
+You can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions and/or questions about the packages of the JuliaDynamics organization! If you are using the Julia Slack workplace, please join the channel `#dynamics-bridged`.
 
-Be sure to visit the [Contributor Guide](contributors_guide) page, because you can
-help make this package better without having to write a single line of code!
-Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an
-accurate lower bound of users that this package has already helped!
+## Contributing & Donating
 
-!!! tip "Use latest documentation"
-      We highly suggest our users to read the  [latest](https://JuliaDynamics.github.io/DynamicalSystems.jl/latest) documentation
-      and not the [stable](https://JuliaDynamics.github.io/DynamicalSystems.jl/stable) one.
+Be sure to visit the [Contributor Guide](contributors_guide) page, because you can help make this package better without having to write a single line of code! Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an accurate lower bound of users that this package has already helped!
+
+Finally, you can donate for the development of **DynamicalSystems.jl**. You can do that by adding bounties to existing issues on the GitHub repositories (you can open new issues as well). Every issue has an automatic way to create a bounty using [Bountysource](https://www.bountysource.com/), see the first comment of each issue.
