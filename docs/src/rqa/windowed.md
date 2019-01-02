@@ -21,23 +21,23 @@ To prevent syntax failures in the expansion of the macro, identify the RQA funct
 
 The value returned by the macro will normally be a vector with the same type of numbers as expected by `expr`. In the case of `@windowed rqa(...) ...`, it will return a dictionary with a similar structure as in the default `rqa` function, but replacing scalar values by vectors.
 
-The macro `@windowed` can also be applied to the functions that calculate recurrence matrices (`recurrencematrix`, `crossrecurrencematrix`, `jointrecurrencematrix`). That creates a sparse matrix with the same size as if the macro was not used, but only containing valid values for pairs of points that belong to the `w` first main diagonals (i.e. the separation in time from one point to the other is `w` or smaller). The &lsquo;step&rsquo; parameter `s` has no effect on those functions. Such &lsquo;windowed&rsquo; matrices can be used as the input arguments to calculate windowed RQA parameters, obtaining the same results as if the complete matrix was used (under certain conditions, see below). For instance, the following calculations are equivalent:
+The macro `@windowed` can also be applied to the functions that calculate recurrence matrices (`RecurrenceMatrix`, `CrossRecurrenceMatrix`, `JointRecurrenceMatrix`). That creates a sparse matrix with the same size as if the macro was not used, but only containing valid values for pairs of points that belong to the `w` first main diagonals (i.e. the separation in time from one point to the other is `w` or smaller). The &lsquo;step&rsquo; parameter `s` has no effect on those functions. Such &lsquo;windowed&rsquo; matrices can be used as the input arguments to calculate windowed RQA parameters, obtaining the same results as if the complete matrix was used (under certain conditions, see below). For instance, the following calculations are equivalent:
 
 ```julia
 # Using complete matrix
-rmat = recurrencematrix(x, 1.5)
+rmat = RecurrenceMatrix(x, 1.5)
 d = @windowed determinism(rmat) width=1000 step=250
 
 # Using windowed matrix
-rmatw = @windowed recurrencematrix(x, 1.5) 1000
+rmatw = @windowed RecurrenceMatrix(x, 1.5) 1000
 d = @windowed determinism(rmatw) width=1000 step=250
 ```
 
 The main difference between the two alternatives is that the second one will be faster and consume less memory. To ensure the equivalence between both approaches, the window width used to create the matrix must be greater than the one used to calculate the RQA parameters. Otherwise, the computation of RQA parameters might involve data points whose value is not well defined. Besides, the threshold to identify recurrences should be referred to a fixed scale. For instance:
 
 ```julia
-rmat  =           recurrencematrix(x, 0.1, scale=maximum)
-rmatw = @windowed recurrencematrix(x, 0.1, scale=maximum) 1000
+rmat  =           RecurrenceMatrix(x, 0.1, scale=maximum)
+rmatw = @windowed RecurrenceMatrix(x, 0.1, scale=maximum) 1000
 rmat[1:1000,1:1000] == rmatw[1:1000,1:1000] # FALSE!!!
 ```
 In this example, the `1000×1000` blocks of both matrices differ, because the threshold `0.1` is scaled with respect to the maximum distance between all points of `x` in `rmat`, but in the case of `rmatw` the scale changes between subsets of points. Something similar may happen if the recurrence matrix is calculated for a fixed recurrence rate (with the option `fixedrate=true`).

@@ -14,9 +14,9 @@ where $d(x[i], y[j])$ stands for the _distance_ between trajectory $x$ at point 
 
 With `RecurrenceAnalysis` you can use the following functions to access these matrices
 ```@docs
-recurrencematrix
-crossrecurrencematrix
-jointrecurrencematrix
+RecurrenceMatrix
+CrossRecurrenceMatrix
+JointRecurrenceMatrix
 ```
 
 ## Plottable Format
@@ -33,7 +33,7 @@ using DynamicalSystems
 ro = Systems.roessler(a=0.15, b=0.20, c=10.0)
 N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
-R = recurrencematrix(tr, 5.0; metric = "euclidean")
+R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
 Rp = recurrenceplot(R)
 ```
 
@@ -50,7 +50,7 @@ savefig("rmatrix.png"); nothing # hide
 ![](rmatrix.png)
 
 ## Distances
-The distance function used in [`recurrencematrix`](@ref) and co. can be specified either as a string or as a `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
+The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as a string or as a `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
 ```@docs
 distancematrix
 ```
