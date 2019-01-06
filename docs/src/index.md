@@ -64,7 +64,7 @@ Is a package for performing delay coordinate embeddings and finding optimal para
 
 * Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
 
-* Calculation of Mutual Information: WIP.
+* Fast calculation of mutual information: [`mutualinformation`](@ref).
 
 ### [`RecurrenceAnalysis`](rqa/rplots)
 `RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
