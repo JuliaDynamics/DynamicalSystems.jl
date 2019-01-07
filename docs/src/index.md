@@ -1,6 +1,6 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
 
-# Introduction
+## Introduction
 **DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
 
 The current documentation was built with the following versions

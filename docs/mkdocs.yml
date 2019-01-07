@@ -34,7 +34,7 @@ extra_javascript:
 docs_dir: 'build'
 
 pages:
-- Introduction: index.md
+- Introduction & Contents: index.md
 - Dynamical Systems:
   - Dynamical System Definition: ds/general.md
   - Time Evolution: ds/evolve.md
