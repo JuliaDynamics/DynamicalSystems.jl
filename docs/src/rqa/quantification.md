@@ -15,7 +15,7 @@ trend
 laminarity
 trappingtime
 maxvert
-RecurrenceAnalysis.entropy
+rqaentropy
 ```
 ---
 Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:
