@@ -53,7 +53,7 @@ savefig("rmatrix.png"); nothing # hide
 and here is exactly the same process, but using the embedded trajectory instead
 ```@example recurrence
 y = tr[:, 2]
-τ = estimate_delay(y, "first_zero")
+τ = estimate_delay(y, "mi_min")
 m = reconstruct(y, 2, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 Rp = recurrenceplot(R)
