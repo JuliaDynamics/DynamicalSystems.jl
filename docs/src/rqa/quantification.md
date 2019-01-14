@@ -8,14 +8,17 @@ The following functions all accept a recurrence matrix, see the [previous page](
 ```@docs
 recurrencerate
 determinism
-avgdiag
-maxdiag
+dl_average
+dl_max
+dl_entropy
 divergence
 trend
 laminarity
 trappingtime
-maxvert
-rqaentropy
+vl_average
+vl_max
+vl_entropy
+recurrencestructures
 ```
 ---
 Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:
