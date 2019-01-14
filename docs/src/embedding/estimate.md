@@ -6,6 +6,7 @@ number of temporal neighbors.
 ## Delay Time
 ```@docs
 estimate_delay
+exponential_decay_fit
 ```
 ### Mutual Information
 ```@docs
