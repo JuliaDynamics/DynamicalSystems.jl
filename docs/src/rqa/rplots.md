@@ -57,12 +57,9 @@ y = tr[:, 2]
 m = reconstruct(y, 2, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 Rp = recurrenceplot(R)
-figure(figsize = (6, 8)); ax1 = subplot2grid((3,1), (0,0))
-plot(0:dt:N*dt, tr[:, 2], "k"); xlim(0, N*dt); ylabel("\$y(t)\$")
-ax2 = subplot2grid((3,1), (1, 0), rowspan = 2)
+figure(figsize = (6, 6));
 imshow(Rp, cmap = "Greys_r", extent = (0, N*dt, 0, N*dt))
 xlabel("\$t\$"); ylabel("\$t\$"); tight_layout()
-subplots_adjust(hspace = 0.2)
 savefig("rmatrix2.png"); nothing # hide
 ```
 ![](rmatrix2.png)
