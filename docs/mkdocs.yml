@@ -35,11 +35,11 @@ docs_dir: 'build'
 
 pages:
 - Introduction & Contents: index.md
-- `DynamicalSystemsBase`:
+- DynamicalSystemsBase:
   - Dynamical System Definition: ds/general.md
   - Time Evolution: ds/evolve.md
   - Predefined Systems: ds/predefined.md
-- `ChaosTools`:
+- ChaosTools:
   - Features Overview: chaos/overview.md
   - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
   - Lyapunov Exponents: chaos/lyapunovs.md
@@ -47,11 +47,11 @@ pages:
   - Nonlinear Timeseries Analysis: chaos/nlts.md
   - Periodicity: chaos/periodicity.md
   - Chaos Distinction: chaos/chaos_detection.md
-- `DelayEmbeddings`:
+- DelayEmbeddings:
   - Numerical Data: embedding/dataset.md
   - Delay Coordinates: embedding/reconstruction.md
   - Estimating Delay Embedding Parameters: embedding/estimate.md
-- `RecurrenceAnalysis`:
+- RecurrenceAnalysis:
   - Recurrence Plots: rqa/rplots.md
   - Quantification & Analysis functions: rqa/quantification.md
   - Windowed RQA: rqa/windowed.md
