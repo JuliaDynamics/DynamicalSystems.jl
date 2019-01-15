@@ -30,6 +30,7 @@ See the [News](news) page for recent updates!
     [In this repository](https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
 ## Contents
+The _module_ `DynamicalSystems` re-exports all following functionality, grouped into different packages.
 
 ### [`DynamicalSystemsBase`](ds/general)
 * Intuitive, consistent APIs for the definition of general [dynamical systems](definition/general), under a unified struct [`DynamicalSystem`](@ref). The following combinations are possible:
@@ -85,7 +86,7 @@ With **DynamicalSystems.jl** we try to
 3. Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.
 
 ## Installation
-Simply use `]add DynamicalSystems` to install everything.
+Simply use `]add DynamicalSystems` to install everything. Alternatively you can also do `using Pkg; Pkg.add("DynamicalSystems")`.
 
 ---
 
