@@ -5,7 +5,7 @@ A [Recurrence plot](https://en.wikipedia.org/wiki/Recurrence_plot) (which refers
 
 The central structure used in these recurrences is the (cross-) recurrence matrix:
 ```math
-R(i, j) = \begin{cases}
+R[i, j] = \begin{cases}
 1 \quad \text{if}\quad d(x[i], y[j]) \le \varepsilon\\
 0 \quad \text{else}
 \end{cases}
@@ -35,6 +35,8 @@ ro = Systems.roessler(a=0.15, b=0.20, c=10.0)
 N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
+```
+```@example recurrence
 Rp = recurrenceplot(R)
 ```
 
