@@ -1,6 +1,8 @@
 A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is what is known as [delay coordinates embedding](https://en.wikipedia.org/wiki/Takens%27_theorem) or delay coordinates *reconstruction*.
 
-This is done through `reconstruct` or `embed`:
+## Reconstruct/Embed
+
+Delay embedding reconstructions are done through `reconstruct` or `embed`:
 ```@docs
 reconstruct
 embed
@@ -51,4 +53,11 @@ R = reconstruct(A, 2, 2) #aaaall good
 ```@example reconstructed
 ds = Systems.towel(); tr = trajectory(ds, 10000)
 R = reconstruct(tr, 2, 2) # Dataset size is also known by Type!
+```
+
+## Embedding Functors
+The high level functions [`embed`](@ref), [`reconstruct`](@ref) utilize a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface. The low level interface is composed of the following two structures:
+```@docs
+DelayEmbedding
+MTDelayEmbedding
 ```
