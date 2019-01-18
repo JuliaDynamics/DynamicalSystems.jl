@@ -46,9 +46,8 @@ Since most of the above functions can be fined tuned with keyword arguments, her
 
 | Argument  | Default   | Functions | Description |
 | --------  | --------  | --------- | -----------
-| `scale`   | 1         | `RecurrenceMatrix`<br/>`CrossRecurrenceMatrix`<br/>`JointRecurrenceMatrix` | Function or fixed number to scale the threshold or radius that is used to identify recurrences. Use `maximum` if the threshold is to be taken as a fraction of the maximum distance, `mean` if it is a fraction of the mean distance, etc., and `1` (identity scale, applied by default) to keep the threshold without scaling. |
-| `theiler` | 0         | `recurrencerate`<br/>`determinism`<br/>`_average`<br/>`_max`<br/>`divergence`<br/>`_entropy`<br/>`trend`<br/>`laminarity`<br/>`trappingtime`<br/> `meanrecurrencetime`<br/>`nmprt` | Theiler window: number of diagonals around the LOI **excluded** from the analysis. The value `0` means that the LOI is _included_ in the analysis. Use `1` to exclude the LOI. |
-| `lmin`    | 2         | `determinism`<br/>`dl_average`<br/>`_max`<br/>`divergence`<br/>`_entropy`<br/>`laminarity`<br/>`trappingtime`<br/> `meanrecurrencetime`<br/>`nmprt` | Minimum length of the recurrent structures (diagonal or vertical) considered in the analysis. |
+| `theiler` | 0         | `recurrencerate`<br/>`determinism`<br/>`*_average`<br/>`*_max`<br/>`*_entropy`<br/>`divergence`<br/>`trend`<br/>`laminarity`<br/>`trappingtime`<br/> `meanrecurrencetime`<br/>`nmprt` | Theiler window: number of diagonals around the LOI **excluded** from the analysis. The value `0` means that the LOI is _included_ in the analysis. Use `1` to exclude the LOI. |
+| `lmin`    | 2         | `determinism`<br/>`*_average`<br/>`*_max`<br/>`*_entropy`<br/>`divergence`<br/>`laminarity`<br/>`trappingtime`<br/> `meanrecurrencetime`<br/>`nmprt` | Minimum length of the recurrent structures (diagonal or vertical) considered in the analysis. |
 | `border`  | 10        | `trend`  | Number of diagonals excluded from the analysis near the border of the matrix. |
 
 ## All-in-one Bundle
