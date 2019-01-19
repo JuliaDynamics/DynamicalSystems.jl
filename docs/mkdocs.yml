@@ -8,6 +8,8 @@ theme:
   palette:
     primary: 'deep purple'
     accent: 'teal'
+  font:
+    code: 'Source Code Pro'
 extra:
   social:
     - type: 'github'
