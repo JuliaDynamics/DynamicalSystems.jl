@@ -9,6 +9,7 @@ theme:
     primary: 'deep purple'
     accent: 'teal'
   font:
+    text: 'Montserrat'
     code: 'Source Code Pro'
 extra:
   social:
