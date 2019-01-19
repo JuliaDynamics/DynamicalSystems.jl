@@ -20,31 +20,60 @@ CrossRecurrenceMatrix
 JointRecurrenceMatrix
 ```
 
-## Plottable Format
-The recurrence matrices are internally stored as sparse matrices with boolean values. To create the recurrence plots, one needs to obtain a full form out of them.
+## Simple Recurrence Plots
+The recurrence matrices are internally stored as sparse matrices with boolean values. Typically in the literature one does not "see" the matrices themselves but instead a plot of them (hence "Recurrence Plots"). By default, when a Recurrence Matrix is created we "show" a mini plot of it which is text-based scatterplot.
 
-This functionality is supported by the following function:
-```@docs
-recurrenceplot
-```
-## Example
-Here is a recurrence plot of a full trajectory of the Roessler system:
+Here is an example recurrence plot/matrix of a full trajectory of the Roessler system:
 ```@example recurrence
 using DynamicalSystems
 ro = Systems.roessler(a=0.15, b=0.20, c=10.0)
 N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
+
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
 ```
 ```@example recurrence
-Rp = recurrenceplot(R)
+typeof(R)
+```
+```@example recurrence
+summary(R)
 ```
 
+---
+
+The above simple plotting functionality is possible through the package [`UnicodePlots`](https://github.com/Evizero/UnicodePlots.jl). The following function creates the plot:
+```@docs
+textrecurrenceplot
+```
+
+---
+
+Here is the same plot but using strictly ASCII characters
+```@example recurrence
+textrecurrenceplot(R; ascii = true, color = :red)
+```
+
+Strictly ASCII produces a plot of lower quality, but it does not require robust Unicode support which can increase compatibility.
+
+## Advanced Recurrence Plots
+A text-based plot is cool, fast and simple. But often one needs the full resolution offered by the data of a recurrence matrix. This functionality is supported by the following function:
+```@docs
+recurrenceplot
+```
+
+---
+
+```@example recurrence
+Rp = recurrenceplot(R) # <- this is the important line
+```
+
+So let's plot this thing now:
 ```@example recurrence
 using PyPlot; figure(figsize = (6, 8))
 ax1 = subplot2grid((3,1), (0,0))
 plot(0:dt:N*dt, tr[:, 2], "k"); xlim(0, N*dt); ylabel("\$y(t)\$")
 ax2 = subplot2grid((3,1), (1, 0), rowspan = 2)
+
 imshow(Rp, cmap = "Greys_r", extent = (0, N*dt, 0, N*dt))
 xlabel("\$t\$"); ylabel("\$t\$"); tight_layout()
 subplots_adjust(hspace = 0.2)
