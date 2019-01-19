@@ -50,7 +50,7 @@ textrecurrenceplot
 
 Here is the same plot but using strictly ASCII characters
 ```@example recurrence
-textrecurrenceplot(R; ascii = true, color = :red)
+textrecurrenceplot(R; ascii = true)
 ```
 
 Strictly ASCII produces a plot of lower quality, but it does not require robust Unicode support which can increase compatibility.
@@ -62,6 +62,8 @@ recurrenceplot
 ```
 
 ---
+
+Example:
 
 ```@example recurrence
 Rp = recurrenceplot(R) # <- this is the important line
