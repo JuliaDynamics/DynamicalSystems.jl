@@ -66,7 +66,7 @@ recurrenceplot
 Example:
 
 ```@example recurrence
-Rp = recurrenceplot(R) # <- this is the important line
+Rp = recurrenceplot(R)
 ```
 
 So let's plot this thing now:
