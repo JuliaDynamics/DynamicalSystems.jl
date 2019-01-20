@@ -48,12 +48,12 @@ textrecurrenceplot
 
 ---
 
-Here is the same plot but using strictly ASCII characters
+Here is the same plot but using Unicode Braille characters
 ```@example recurrence
-textrecurrenceplot(R; ascii = true)
+textrecurrenceplot(R; ascii = false)
 ```
 
-Strictly ASCII produces a plot of lower quality, but it does not require robust Unicode support which can increase compatibility.
+As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. Juno, which is where it is the default printing type.
 
 ## Advanced Recurrence Plots
 A text-based plot is cool, fast and simple. But often one needs the full resolution offered by the data of a recurrence matrix. This functionality is supported by the following function:
