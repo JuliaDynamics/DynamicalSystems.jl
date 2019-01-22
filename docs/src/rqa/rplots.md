@@ -26,7 +26,7 @@ The recurrence matrices are internally stored as sparse matrices with boolean va
 Here is an example recurrence plot/matrix of a full trajectory of the Roessler system:
 ```@example recurrence
 using DynamicalSystems
-ro = Systems.roessler(a=0.15, b=0.20, c=10.0)
+ro = Systems.roessler(ones(3), a=0.15, b=0.20, c=10.0)
 N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
 
