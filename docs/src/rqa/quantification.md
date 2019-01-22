@@ -55,6 +55,8 @@ vl_entropy
 ```@docs
 meanrecurrencetime
 nmprt
+rt_entropy
+rt_average
 ```
 ---
 

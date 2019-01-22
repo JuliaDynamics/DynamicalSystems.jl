@@ -89,6 +89,7 @@ savefig("rmatrix.png"); nothing # hide
 
 and here is exactly the same process, but using the embedded trajectory instead
 ```@example recurrence
+using PyPlot # hide
 y = tr[:, 2]
 τ = estimate_delay(y, "mi_min")
 m = reconstruct(y, 2, τ)
