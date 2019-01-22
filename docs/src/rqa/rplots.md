@@ -53,7 +53,9 @@ Here is the same plot but using Unicode Braille characters
 textrecurrenceplot(R; ascii = false)
 ```
 
-As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. Juno, which is where it is the default printing type.
+As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. Juno, which is where it is the default printing type. Here is how it looks like in a dark background:
+
+![](rqaplot in Juno.PNG)
 
 ## Advanced Recurrence Plots
 A text-based plot is cool, fast and simple. But often one needs the full resolution offered by the data of a recurrence matrix. This functionality is supported by the following function:
