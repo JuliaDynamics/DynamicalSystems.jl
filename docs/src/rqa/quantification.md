@@ -13,7 +13,7 @@ The functions described in this page all accept a recurrence matrix (`x`), see t
 ## RQA Measures
 
 ### All-in-one Bundle
-In case you need all of the RQA-related functions (see below) and you don't want to write 10 lines of code to compute them all (since they are so many) we provide an all-in-one function that computes all of them and returns a dictionary of the result!
+In case you need all of the RQA-related functions (see below) and you don't want to write 10 lines of code to compute them all (since they are so many) we provide an all-in-one function that computes all of them and returns a NamedTuple of the results!
 ```@docs
 rqa
 ```
