@@ -31,7 +31,7 @@ N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
 
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
-using UnicodePlots; recurrenceplot(R; canvas = DotCanvas) # hide
+recurrenceplot(R; ascii = true)
 ```
 ```@example recurrence
 typeof(R)
