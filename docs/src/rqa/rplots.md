@@ -76,10 +76,11 @@ For example, here is the representation of the above `R` from the Roessler syste
 using PyPlot
 figure(figsize = (10,5))
 
-subplot(121)
+ax = subplot(121)
 xs, ys = coordinates(R)
 scatter(xs, ys, color = "k", s = 1)
 xlim(1, size(R)[1]); ylim(1, size(R)[2]);
+ax[:set_aspect]("equal")
 
 subplot(122)
 Rg = grayscale(R)
