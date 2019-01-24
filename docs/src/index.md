@@ -43,6 +43,17 @@ The _module_ `DynamicalSystems` re-exports all following functionality, grouped 
 * Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [advanced documentation](advanced) for this.
 * Library of [predefined well-known dynamical systems](ds/predefined) that have been used extensively in scientific research.
 
+### [`DelayEmbeddings`](embedding/reconstruction)
+Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.
+* Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
+* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
+* Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
+    * Supports multiple dimensions and multiple timescales.
+
+* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
+
+* Fast calculation of mutual information: [`mutualinformation`](@ref).
+
 ### [`ChaosTools`](chaos/overview)
 Is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
@@ -55,17 +66,6 @@ Please see the [overview section](chaos/overview) for a full list of features. H
 * Finding Fixed Points of Maps
 * GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
 * Nonlinear timeseries analysis
-
-### [`DelayEmbeddings`](embedding/reconstruction)
-Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.
-* Unified & dedicated interface for [numerical data](embedding/dataset): [`Dataset`](@ref).
-* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
-* Flexible and abstracted [`reconstruct`](@ref) interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.
-    * Supports multiple dimensions and multiple timescales.
-
-* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
-
-* Fast calculation of mutual information: [`mutualinformation`](@ref).
 
 ### [`RecurrenceAnalysis`](rqa/rplots)
 `RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
