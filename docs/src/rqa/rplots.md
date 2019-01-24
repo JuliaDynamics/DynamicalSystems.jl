@@ -21,7 +21,7 @@ JointRecurrenceMatrix
 ```
 
 ## Simple Recurrence Plots
-The recurrence matrices are internally stored as sparse matrices with boolean values. Typically in the literature one does not "see" the matrices themselves but instead a plot of them (hence "Recurrence Plots"). By default, when a Recurrence Matrix is created we "show" a mini plot of it which is text-based scatterplot.
+The recurrence matrices are internally stored as sparse matrices with boolean values. Typically in the literature one does not "see" the matrices themselves but instead a plot of them (hence "Recurrence Plots"). By default, when a Recurrence Matrix is created we "show" a mini plot of it which is a text-based scatterplot.
 
 Here is an example recurrence plot/matrix of a full trajectory of the Roessler system:
 ```@example recurrence
@@ -31,8 +31,7 @@ N = 2000; dt = 0.05
 tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
 
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
-using UnicodePlots # hide
-textrecurrenceplot(R; canvas = DotCanvas) # hide
+using UnicodePlots; recurrenceplot(R; canvas = DotCanvas) # hide
 ```
 ```@example recurrence
 typeof(R)
@@ -45,14 +44,14 @@ summary(R)
 
 The above simple plotting functionality is possible through the package [`UnicodePlots`](https://github.com/Evizero/UnicodePlots.jl). The following function creates the plot:
 ```@docs
-textrecurrenceplot
+recurrenceplot
 ```
 
 ---
 
 Here is the same plot but using Unicode Braille characters
 ```@example recurrence
-textrecurrenceplot(R; ascii = false)
+recurrenceplot(R; ascii = false)
 ```
 
 As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. Juno, which is where it is the default printing type. Here is how it looks like in a dark background:
@@ -60,32 +59,35 @@ As you can see, the Unicode based plotting doesn't display nicely everywhere. It
 ![](rqaplot in Juno.PNG)
 
 ## Advanced Recurrence Plots
-A text-based plot is cool, fast and simple. But often one needs the full resolution offered by the data of a recurrence matrix. This functionality is supported by the following function:
+A text-based plot is cool, fast and simple. But often one needs the full resolution offered by the data of a recurrence matrix.
+
+There are two more ways to plot a recurrence matrix using `RecurrenceAnalysis`:
+
 ```@docs
-recurrenceplot
+coordinates
+grayscale
 ```
 
 ---
 
-Example:
+For example, here is the representation of the above `R` from the Roessler system using both plotting approaches:
 
 ```@example recurrence
-Rp = recurrenceplot(R)
-```
+using PyPlot
+figure(figsize = (10,5))
 
-So let's plot this thing now:
-```@example recurrence
-using PyPlot; figure(figsize = (6, 8))
-ax1 = subplot2grid((3,1), (0,0))
-plot(0:dt:N*dt, tr[:, 2], "k"); xlim(0, N*dt); PyPlot.ylabel("\$y(t)\$")
-ax2 = subplot2grid((3,1), (1, 0), rowspan = 2)
+subplot(121)
+xs, ys = coordinates(R)
+scatter(xs, ys, color = "k", s = 1)
+xlim(1, size(R)[1]); ylim(1, size(R)[2]);
 
-imshow(Rp, cmap = "binary_r", extent = (0, N*dt, 0, N*dt))
-PyPlot.xlabel("\$t\$"); PyPlot.ylabel("\$t\$"); tight_layout()
-subplots_adjust(hspace = 0.2)
-savefig("rmatrix.png"); nothing # hide
+subplot(122)
+Rg = grayscale(R)
+imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
+savefig("different_rplots.png"); nothing # hide
 ```
-![](rmatrix.png)
+![](different_rplots.png)
+
 
 and here is exactly the same process, but using the embedded trajectory instead
 ```@example recurrence
@@ -94,15 +96,62 @@ y = tr[:, 2]
 τ = estimate_delay(y, "mi_min")
 m = reconstruct(y, 2, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
-Rp = recurrenceplot(R)
-figure(figsize = (6, 6));
-imshow(Rp, cmap = "binary_r", extent = (0, N*dt, 0, N*dt))
-PyPlot.xlabel("\$t\$"); PyPlot.ylabel("\$t\$"); tight_layout()
+
+figure(figsize = (5,5))
+
+xs, ys = coordinates(R)
+scatter(xs, ys, color = "k", s = 1)
+xlim(1, size(R)[1]); ylim(1, size(R)[2]);
 savefig("rmatrix2.png"); nothing # hide
 ```
 ![](rmatrix2.png)
 
 which justifies why recurrence plots are so fitting to be used in embedded timeseries.
+
+!!! warning "Careful when using Recurrence Plots"
+    It is easy when using `grayscale` to not change the width/height parameters. These are however very important when the matrix size exceeds the display size! Most plotting libraries may resample arbitrarily or simply limit the displayed pixels, so one needs to be extra careful.
+
+    Besides graphical problems there are also other potential pitfalls dealing with the conceptual understanding and use of recurrence plots. All of these are summarized in the following paper which we suggest users to take a look at:
+
+    N. Marwan, *How to avoid potential pitfalls in recurrence plot based data analysis*, Int. J. of Bifurcations and Chaos ([arXiv](http://arxiv.org/abs/1007.2215)).
+
+
+## Example
+
+In the following we will plot recurrence plots of the Lorenz system for a periodic and chaotic regime (using scatter plot).
+
+```@example recurrence
+using PyPlot # hide
+lor = Systems.lorenz()
+figure(figsize = (12,8))
+
+for (i, ρ) in enumerate((69.75, 28.0))
+    set_parameter!(lor, 2, ρ)
+    ε = 2.0
+    t, dt = 20.0, 0.01
+    tr = trajectory(lor, t; dt = dt, Ttr = 200.0)
+    tvec = 0:dt:t
+
+    x = tr[:, 2]
+    subplot2grid((3,2), (0, i-1))
+    plot((0:dt:t), x, "k", lw = 1.0)
+    PyPlot.title("ρ = $ρ, " * (i != 1 ? "not " : "") * "periodic")
+
+    subplot2grid((3,2), (1, i-1), rowspan = 2)
+    R = RecurrenceMatrix(tr, ε)
+    x, y = coordinates(R)
+    scatter(tvec[x], tvec[y], s = 1, alpha = 0.1, color = "k")
+    xlim(1, t); ylim(1, t); gca()[:set_aspect]("equal")
+    PyPlot.xlabel("t"); i == 1 && PyPlot.ylabel("t");
+end
+PyPlot.tight_layout()
+savefig("rplotexamples.png"); nothing # hide
+```
+![](rplotexamples.png)
+
+On the left we see long (infinite) diagonals repeated over and over for different times. This is the case for periodic systems as they visit exactly the same area on the phase space again and again. The distance between the offset diagonals also coincides with the periodicity of the system, which is around `t ≈ 4`.
+
+On the right we see a structure typical of chaotic motion on a strange attractor such as the one of the Lorenz system: the orbit visits neighborhoods of previous points but then quickly diverges again. This results in many small diagonal lines.
 
 ## Distances
 The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as a string or as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
