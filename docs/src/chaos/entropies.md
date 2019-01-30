@@ -73,6 +73,7 @@ Hs = genentropy.(1, ες, Ref(tr))
 
 ```@example entropy
 xs = @. -log(ες)
+figure()
 plot(xs, Hs)
 ylabel("\$H_1\$")
 xlabel("\$-\\log (\\epsilon)\$");
@@ -87,6 +88,7 @@ Given that we _see_ the plot, we can estimate where the linear scaling region st
 ```@example entropy
 lrs, slopes = linear_regions(xs, Hs, tol = 0.2)
 
+figure()
 for i in 1:length(lrs)-1
     plot(xs[lrs[i]:lrs[i+1]], Hs[lrs[i]:lrs[i+1]], marker = "o")
 end
