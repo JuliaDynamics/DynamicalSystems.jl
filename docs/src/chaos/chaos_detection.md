@@ -233,10 +233,10 @@ each initial condition according to how chaotic/regular it is, i.e. how much tim
 does it need to exceed the `threshold` of [`gali`](@ref).
 
 <video width="100%" height="auto" controls>
-<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/master/animations/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
 
-You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/master/animations/chaos/gali_psos_henonhelies.mp4?raw=true).
+You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true).
 
 You can find the script that produced this animation in
 `DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.

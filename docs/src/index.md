@@ -1,4 +1,4 @@
-![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
+![DynamicalSystems.jl logo: The Double Pendulum](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true)
 
 ## Introduction
 **DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
