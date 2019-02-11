@@ -86,7 +86,7 @@ The slope of the linear scaling region of the above plot is the generalized dime
 Given that we _see_ the plot, we can estimate where the linear scaling region starts and ends. However, we can use the function [`linear_region`](@ref) to get an estimate of the result as well. First let's visualize what it does:
 
 ```@example entropy
-lrs, slopes = linear_regions(xs, Hs, tol = 0.2)
+lrs, slopes = linear_regions(xs, Hs, tol = 0.25)
 
 figure()
 for i in 1:length(lrs)-1
@@ -98,7 +98,7 @@ savefig("genentropy2.png"); nothing # hide
 ```
 ![](genentropy2.png)
 
-The [`linear_region`](@ref) function  computes the slope of the above pink region:
+The [`linear_region`](@ref) function  computes the slope of the largest region:
 
 ```@example entropy
 linear_region(xs, Hs)[2]

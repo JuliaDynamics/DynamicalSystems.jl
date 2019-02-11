@@ -5,7 +5,11 @@ of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_ex
 This page treats systems where the equations of motion are known. If instead
 you have numerical data, see the [nonlinear timeseries analysis page](nlts).
 
-## Lyapunov spectrum
+!!! info "Performance depends on the solver"
+    Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
+
+## Lyapunov Spectrum
+
 The function `lyapunovs` calculates the entire spectrum of the Lyapunov
 exponents of a system:
 ```@docs
