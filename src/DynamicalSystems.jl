@@ -15,20 +15,26 @@ using Reexport
 @reexport using RecurrenceAnalysis
 
 display_update = true
-update_name = "update_v1.1.0"
+update_name = "update_v1.2.0"
 
 if display_update
 if !isfile(joinpath(@__DIR__, update_name))
 printstyled(stdout,
 """
-\nUpdate message: DynamicalSystems v1.1
+\nUpdate message: DynamicalSystems v1.2
 
-A new package has joined DynamicalSystems: RecurrenceAnalysis !
+The default solver for continuous systems has changed
+from `Vern9` to `SimpleATsit5` from SimpleDiffEq.jl.
 
-This new package offers tools to compute and analyze
-recurrences in your timeseries!
+This drops the OrdinaryDiffEq dependency, reduces precompilation times
+and significantly improves first run times!
 
-Check out the documentation for more!\n
+Even though not an API change, the numeric results you obtain
+(in case you used the default solver) will change slightly.
+Please be aware of this!
+
+You can do `using OrdinaryDiffEq` to access the previous solver
+and pass keyword `alg = Vern9()` to use it.\n
 """; color = :light_magenta)
 touch(joinpath(@__DIR__, update_name))
 end

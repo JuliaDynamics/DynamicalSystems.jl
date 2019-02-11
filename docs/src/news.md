@@ -1,4 +1,13 @@
 # News
+## New default solver in v1.2; `OrdinaryDiffEq` dependency dropped!
+In the newest version of **DynamicalSystems.jl**, which includes `DynamicalSystemsBase v1.2`, the default solver for all continuous systems has been changed to **`SimpleATsit5`** from the package [SimpleDiffEq.jl](https://github.com/JuliaDiffEq/SimpleDiffEq.jl). The previous default solver was `Vern9` from `OrdinaryDiffEq` This has reduced the "first run time" massively for functions that use a `ContinuousDynamicalSystem`!
+
+In addition the `OrdinaryDiffEq` dependency was dropped. This is a big benefit for precompilation times! This does *not* mean that you can't use all the solvers from `OrdinaryDiffEq`! You can still use any solver you want, provided that you do `using OrdinaryDiffEq` to access the solvers!
+
+!!! warning "Numeric values will change slightly"
+    Although there was no API change the default solver did change. This means that if you were using the default solver for some code, the numeric values you will now obtain will slightly change as a result. This does not mean that any functionality broke, but be aware that if you were depending on the *exact value* of e.g. `lyapunovs`, you will now have a different value instead.
+
+    Provided that you have already been using long enough integration times, the convergence of your results has not been affected though.
 
 ## `RecurrenceAnalysis` joins **DynamicalSystems.jl** in v1.1!
 The excellent Julia package `RecurrenceAnalysis` (authored by Helios de Rosario, `@heliosdrm`) is now part of **DynamicalSystems.jl** and reexported by it. Besides adding all the amazing functionality of `RecurrenceAnalysis` to **DynamicalSystems.jl**, other benefits also sprung up:
@@ -15,7 +24,7 @@ Please be sure to check out the `CHANGELOG.md` files of the individual repositor
 * `TimeseriesPrediction` is *not* installed with `DynamicalSystems` for version 1.0, because it is undergoing major changes. It is not even ready for Julia 1.0 actually.
 
 * `DynamicalSystem` has been totally reworked for better clarity: it does not store a "problem" anymore, only the absolutely necessary ingredients to create one. The API did not change though!
-* `Reconstruction` has been renamed to `reconstruct`, and now always returns a `Dataset`. In addition, now the parameter `D` stands for the number of temporal neighbors. **This is a breaking change!**. The change allows more intuition across the different versions of `reconstruct`.
+* `Reconstruction` has been renamed to `reconstruct`, and now always returns a `Dataset`. In addition, now the parameter `D` (now renamed to `γ`) stands for the number of temporal neighbors. **This is a breaking change!**. The change allows more intuition across the different versions of `reconstruct`.
 * The various offered integrators became more robust, and now allow passing callbacks etc. for the DifferentialEquations.jl event handling.
 * Brand new algorithm for computing Poincare surfaces of section. It is not also more clear and understandable from the old one, but also much faster as well!!!
 * Mutual information computation method. Also new method for optimal delay time using the Mutual information!

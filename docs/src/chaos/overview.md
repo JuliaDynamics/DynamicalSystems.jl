@@ -14,6 +14,11 @@ The following treat systems where the equations of motion are known:
 1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
 2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovs`](@ref).
 
+### [Chaos Detection](chaos_detection)
+
+1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
+    * Implemented for both discrete and continuous systems.
+
 
 ### [Entropies and Dimensions](entropies)
 
@@ -31,16 +36,10 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 ### [Nonlinear Timeseries Analysis](nlts)
 
-1. Methods for estimating good [`reconstruct`](@ref) parameters.
-3. Broomhead-King coordinates: [`broomhead_king`](@ref).
+1. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
 
 ### [Periodicity](periodicity)
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
-
-### [Chaos Detection](chaos_detection)
-
-1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
-    * Implemented for both discrete and continuous systems.

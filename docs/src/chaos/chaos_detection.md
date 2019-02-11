@@ -8,6 +8,9 @@ the computation costly. There are
 many alternatives that are both more efficient and more accurate in characterizing
 chaotic and regular motion, some of which are included in **DynamicalSystems.jl**.
 
+!!! info "Performance depends on the solver"
+    Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
+
 ## Generalized Alignment Index
 "GALI" for sort, is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
 motion. It is one

@@ -62,7 +62,7 @@ for j in 1:length(Es)
 
         # compute gali (using advanced usage)
         reinit!(tinteg, u, orthonormal(4,4))
-        regularity = ChaosTools._gali(tinteg, tgali, 1, 1e-12)[2][end]/tgali
+        regularity = gali(tinteg, tgali, 1, 1e-12)[2][end]/tgali
 
         # Plot PSOS with color corresponding to regularity
         y = psos[:, 2]; py = psos[:, 4]

@@ -52,24 +52,33 @@ poincaresos
 ```
 ---
 
-An example of the [Henon-Heiles](/definition/predefined/#DynamicalSystemsBase.Systems.henonheiles) system using a quasi-periodic solution
+Here is an example of the [Henon-Heiles](https://en.wikipedia.org/wiki/H%C3%A9non%E2%80%93Heiles_system) system showing the mixed nature of the phase space
 ```@example orbit
-ds = Systems.henonheiles([0., 0.1, 0.5, 0.])
-output = poincaresos(ds, (3, 0.0), 2000.0)
+using DynamicalSystems, PyPlot
+
+hh = Systems.henonheiles()
+
+plane = (1, 0.0)
+u0s = [[0.0, -0.25, 0.42081, 0.0],
+[0.0, -0.31596, 0.354461, 0.0591255],
+[0.0, 0.1, 0.5, 0.0],
+[0.0, -0.0910355, 0.459522, -0.173339],
+[0.0, -0.205144, 0.449328, -0.0162098]]
 
 figure()
-plot(output[:, 2], output[:, 4], lw = 0.0, marker=".")
-xlabel("\$q_2\$"); ylabel("\$p_2\$");
+for u0 in u0s
+    psos = poincaresos(hh, plane, 20000.0; u0 = u0)
+    scatter(psos[:, 2], psos[:, 4], s = 2.0)
+end
+xlabel("\$q_2\$"); ylabel("\$p_2\$")
 savefig("hhpsos.png"); nothing # hide
 ```
 ![](hhpsos.png)
 
-Here the surface of section was the (hyper-) plane that $p_1 = 0$. As expected the section is 1-dimensional, because the torus the solution lives in is 2-dimensional. if
-we produced the PSOS for much longer times, the result would be a filled line instead
-of individual points.
+Here the surface of section was the (hyper-) plane that $q_1 = 0$. Some chaotic and regular orbits can be seen in the plot. You can tell the regular orbits apart because they look like a single connected curve. This is the result of cutting a 2-torus by a plane!
 
 ---
-One more example with a more complex hyperplane:
+Finally here is one more example with a more complex hyperplane:
 ```@example orbit
 gis = Systems.gissinger([2.32865, 2.02514, 1.98312])
 
@@ -81,14 +90,16 @@ const Γ = 0.9 # default parameters of the system
 Np(μ) = SVector{3}(sqrt(ν + Γ*sqrt(ν/μ)), -sqrt(μ + Γ*sqrt(μ/ν)), -sqrt(μ*ν))
 Nm(μ) = SVector{3}(-sqrt(ν + Γ*sqrt(ν/μ)), sqrt(μ + Γ*sqrt(μ/ν)), -sqrt(μ*ν))
 
-# Create hyperplane using normal vector to vector connecting points:
-gis_plane(μ) = (d = (Np(μ) - Nm(μ)); [d[2], -d[1], 0, 0])
+# Create hyperplane passing through Np, Nm and 0:
+using LinearAlgebra
+gis_plane(μ) = [cross(Np(μ), Nm(μ))..., 0]
 
-μ = 0.12
+μ = 0.119
 set_parameter!(gis, 1, μ)
 figure(figsize = (8,6))
-psos = poincaresos(gis, gis_plane(μ), 5000.0, Ttr = 200.0, direction = -1)
+psos = poincaresos(gis, gis_plane(μ), 10000.0, Ttr = 200.0,)
 plot3D(columns(psos)..., marker = "o", ls = "None", ms = 2.0);
+xlabel("Q"); ylabel("D"); zlabel("V");
 savefig("gispsos.png"); nothing # hide
 ```
 ![](gispsos.png)
@@ -130,14 +141,14 @@ For example, we will calculate the orbit diagram of the Shinriki oscillator, a c
 ```@example orbit
 ds = Systems.shinriki([-2, 0, 0.2])
 
-pvalues = range(19, stop = 22, length = 201)
+pvalues = range(19, stop = 22, length = 401)
 i = 1
 plane = (2, 0.0)
 tf = 200.0
 p_index = 1
 
-output = produce_orbitdiagram(ds, plane, i, p_index, pvalues; tfinal = tf,
-Ttr = 200.0, direction = -1, printparams = false)
+output = produce_orbitdiagram(ds, plane, i, p_index, pvalues;
+                              tfinal = tf, Ttr = 200.0)
 
 figure()
 for (j, p) in enumerate(pvalues)
