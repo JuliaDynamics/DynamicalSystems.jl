@@ -1,5 +1,5 @@
-# Lyapunov Exponents
-Lyapunov exponents measure rates of separation of nearby trajectories in the flow
+# Lyapunov exponents
+Lyapunov exponents measure exponential rates of separation of nearby trajectories in the flow
 of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_exponent) and the [Scholarpedia](http://www.scholarpedia.org/article/Lyapunov_exponent) entries have a lot of valuable information about the history and usage of these quantities.
 
 This page treats systems where the equations of motion are known. If instead
@@ -9,6 +9,7 @@ you have numerical data, see the [nonlinear timeseries analysis page](nlts).
     Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
 
 ## Lyapunov Spectrum
+
 The function `lyapunovs` calculates the entire spectrum of the Lyapunov
 exponents of a system:
 ```@docs
@@ -16,7 +17,7 @@ lyapunovs
 ```
 ---
 As you can see, the documentation string is detailed and self-contained. For example,
-the lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
+the Lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
 is calculated as:
 ```@example lyap
 using DynamicalSystems
