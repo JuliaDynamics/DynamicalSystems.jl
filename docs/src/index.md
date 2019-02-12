@@ -6,7 +6,7 @@
 !!! info JuliaDynamics
     **DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), check out our [website](https://juliadynamics.github.io/JuliaDynamics/) for more cool stuff!
 
----
+
 
 The documentation you are reading now was built with the following stable versions:
 ```@setup versions
@@ -32,7 +32,7 @@ See the [News](news) page for recent updates!
     * Chaos in Dynamical Systems - E. Ott
 
 !!! example "Jupyter Notebooks / Tutorials"
-    [In this repository](https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
+    [In this repository](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
 ## Contents
 The _module_ `DynamicalSystems` re-exports all following functionality, grouped into different packages.
