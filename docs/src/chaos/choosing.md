@@ -11,10 +11,11 @@ DynamicalSystemsBase.DEFAULT_SOLVER
 which is a Runge-Kutta-like solver. The number in the solver's name is the "order" of the solver.
 
 ## Speed of a solver
-How fast is a problem solved is not trivial to say. The following two things are general truths:
+Estimating a given solver's performance for a particular problem is not trivial. The following are general rules of thumb:
 
 1. Higher order solvers call the equations of motion function more times per step.
 2. Higher order solvers can cover larger timespans per step.
+3. Higher order solvers do better at small tolerances.
 
 This means that there is a delicate balance between how expensive is your function and how large of a step a solver can take while it is still efficient. In general you want to strike a point of taking large steps but also not calling the function exceedingly often.
 
@@ -39,4 +40,8 @@ using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq
 @btime lyapunovs(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
 ```
 
-As you can see `Vern9` is "faster" in doing the _entire_ computation! Of course this does not have to be universally true. It is true for the Lorenz system, but for your specific system you should do dedicated benchmarks!
+As you can see `Vern9` is faster in doing the _entire_ computation! Of course this does not have to be universally true. It is true for the Lorenz system, but for your specific system you should do dedicated benchmarks!
+
+## DifferentialEquations.jl
+
+For more info about the possible solvers be sure to head over to the documentation of [DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/)!
