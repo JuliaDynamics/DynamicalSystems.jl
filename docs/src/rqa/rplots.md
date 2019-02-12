@@ -124,26 +124,26 @@ In the following we will plot recurrence plots of the Lorenz system for a period
 ```@example recurrence
 using PyPlot # hide
 lor = Systems.lorenz()
-figure(figsize = (12,8))
+figure(figsize = (10,10))
 
 for (i, ρ) in enumerate((69.75, 28.0))
     set_parameter!(lor, 2, ρ)
-    ε = 2.0
     t, dt = 20.0, 0.01
-    tr = trajectory(lor, t; dt = dt, Ttr = 200.0)
+    tr = trajectory(lor, t; dt = dt, Ttr = 2000.0)
     tvec = 0:dt:t
 
-    x = tr[:, 2]
-    subplot2grid((3,2), (0, i-1))
-    plot((0:dt:t), x, "k", lw = 1.0)
-    PyPlot.title("ρ = $ρ, " * (i != 1 ? "not " : "") * "periodic")
+    subplot(2,2, i)
+    plot(tr[:, 1], tr[:, 3], color = "C$(i+1)", label = "X vs Z")
+    title("ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic")); legend()
 
-    subplot2grid((3,2), (1, i-1), rowspan = 2)
+    ε = i == 1 ? 5.0 : 3.0
     R = RecurrenceMatrix(tr, ε)
+
+    subplot(2,2,i+2)
     x, y = coordinates(R)
-    scatter(tvec[x], tvec[y], s = 1, alpha = 0.1, color = "k")
-    xlim(1, t); ylim(1, t); gca()[:set_aspect]("equal")
-    PyPlot.xlabel("t"); i == 1 && PyPlot.ylabel("t");
+    scatter(tvec[x], tvec[y], s = 1, alpha = 0.2, color = "C$(i+1)")
+    xlim(0, t); ylim(0, t); gca()[:set_aspect]("equal")
+    xlabel("t"); i == 1 && ylabel("t");
 end
 PyPlot.tight_layout()
 savefig("rplotexamples.png"); nothing # hide

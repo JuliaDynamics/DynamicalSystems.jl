@@ -19,3 +19,5 @@ if !Sys.iswindows()
         make = () -> run(`mkdocs build`)
     )
 end
+
+PyPlot.ion()
