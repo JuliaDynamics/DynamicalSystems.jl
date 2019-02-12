@@ -3,6 +3,11 @@
 ## Introduction
 **DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
 
+!!! info JuliaDynamics
+    **DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), check out our [website](https://juliadynamics.github.io/JuliaDynamics/) for more cool stuff!
+
+---
+
 The documentation you are reading now was built with the following stable versions:
 ```@setup versions
 using Pkg.API: installed
