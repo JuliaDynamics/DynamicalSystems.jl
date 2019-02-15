@@ -81,7 +81,7 @@ Please see the [overview section](chaos/overview) for a full list of features. H
   * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
   * [Windowed versions](rqa/windowed) of the above
 
-### [`InteractiveChaos`]
+### `InteractiveChaos`
 `InteractiveChaos` is a package that provides applications for interactively exploring dynamical systems. It is an _extension_ of **DynamicalSystems.jl** and builds upon existing code by hooking up to the `DynamicalSystem` structure.
 
 `InteractiveChaos` **is not installed with DynamicalSystems.jl**. To install it do `]add InteractiveChaos Makie`. `Makie` is necessary for providing a plotting backend, since `InteractiveChaos` does not install one by default.
