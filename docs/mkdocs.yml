@@ -59,6 +59,9 @@ pages:
   - Recurrence Plots: rqa/rplots.md
   - Quantification & Analysis functions: rqa/quantification.md
   - Windowed RQA: rqa/windowed.md
+- InteractiveChaos:
+  - Orbit Diagram: interact/od.md
+  - Poincaré Surface of Section: interact/psos.md
 - Advanced Documentation: advanced.md
 - Contributor Guide: contributors_guide.md
 - News: news.md

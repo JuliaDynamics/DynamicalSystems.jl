@@ -1,11 +1,12 @@
 using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using RecurrenceAnalysis, Documenter, PyPlot, DocumenterMarkdown
+using InteractiveChaos
 
 PyPlot.ioff()
 cd(@__DIR__)
 
 makedocs(modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-DelayEmbeddings, RecurrenceAnalysis],
+DelayEmbeddings, RecurrenceAnalysis, InteractiveChaos],
 doctest=false, root = @__DIR__, format = Markdown())
 
 close("all")

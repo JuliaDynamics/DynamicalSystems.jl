@@ -13,7 +13,7 @@ The documentation you are reading now was built with the following stable versio
 using Pkg.API: installed
 ins = installed()
 function f()
-for pkg in ["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"]
+for pkg in ["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools", "InteractiveChaos"]
   println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
 end
 end
@@ -80,6 +80,19 @@ Please see the [overview section](chaos/overview) for a full list of features. H
   * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, entropy, trapping time, average/maximum vertical length.
   * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
   * [Windowed versions](rqa/windowed) of the above
+
+### [`InteractiveChaos`]
+`InteractiveChaos` is a package that provides applications for interactively exploring dynamical systems. It is an _extension_ of **DynamicalSystems.jl** and builds upon existing code by hooking up to the `DynamicalSystem` structure.
+
+`InteractiveChaos` **is not installed with DynamicalSystems.jl**. To install it do `]add InteractiveChaos Makie`. `Makie` is necessary for providing a plotting backend, since `InteractiveChaos` does not install one by default.
+
+The functionality of `InteractiveChaos` is contained within individual functions, all of which launch a dedicated interactive application. Here is their list:
+
+* [`interactive_orbitdiagram`](@ref)
+* [`interactive_poincaresos`](@ref)
+
+!!! info "Videos & Animations"
+    Besides the documentation strings, each interactive function is accompanied with an animation (`.gif` or `.mp4` file) displayed after the docstring, as well as a video tutorial demonstrating its use. See the individual pages for the video links (by clicking the documentation string links)!
 
 ## Our Goals
 The ultimate goal for **DynamicalSystems.jl** is to be a useful **software library** for students and scientists working on chaos, nonlinear dynamics and in general dynamical systems. The word "library" is intended in the literal sense: a place where people go to learn things.
