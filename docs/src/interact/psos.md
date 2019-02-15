@@ -31,7 +31,9 @@ plane = (1, 0.0)
 psos = interactive_poincaresos(ds, plane, (2, 4), complete; markersizes = (-5, -1))
 ```
 
-Coming soon.
+<video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/interactive_psos.mp4?raw=true" type="video/mp4">
+</video>
 
 ## Video Tutorial
 Coming soon.
