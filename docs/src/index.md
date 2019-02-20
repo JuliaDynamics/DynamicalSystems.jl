@@ -90,6 +90,7 @@ The functionality of `InteractiveChaos` is contained within individual functions
 
 * [`interactive_orbitdiagram`](@ref)
 * [`interactive_poincaresos`](@ref)
+* [`trajectory_highlighter`](@ref)
 
 !!! info "Videos & Animations"
     Besides the documentation strings, each interactive function is accompanied with an animation (`.gif` or `.mp4` file) displayed after the docstring, as well as a video tutorial demonstrating its use. See the individual pages for the video links (by clicking the documentation string links)!
