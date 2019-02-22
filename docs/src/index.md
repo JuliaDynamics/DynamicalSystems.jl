@@ -34,6 +34,12 @@ See the [News](news) page for recent updates!
 !!! example "Jupyter Notebooks / Tutorials"
     [In this repository](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
 
+## YouTube tutorial
+
+You can find a tutorial on **DynamicalSystems.jl** hosted on the official YouTube channel of the Julia language:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Contents
 The _module_ `DynamicalSystems` re-exports all following functionality, grouped into different packages.
 
