@@ -68,6 +68,3 @@ nbins = 10, α = 0.05, linewidth = 4.0, hname = "regularity")
 <video width="100%" height="auto" controls autoplay loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/highlighter3D.mp4?raw=true" type="video/mp4">
 </video>
-
-## Video Tutorial
-Coming soon.
