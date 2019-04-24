@@ -80,7 +80,7 @@ ax = subplot(121)
 xs, ys = coordinates(R)
 scatter(xs, ys, color = "k", s = 1)
 xlim(1, size(R)[1]); ylim(1, size(R)[2]);
-ax[:set_aspect]("equal")
+ax.set_aspect("equal")
 
 subplot(122)
 Rg = grayscale(R)
@@ -142,7 +142,7 @@ for (i, ρ) in enumerate((69.75, 28.0))
     subplot(2,2,i+2)
     x, y = coordinates(R)
     scatter(tvec[x], tvec[y], s = 1, alpha = 0.2, color = "C$(i+1)")
-    xlim(0, t); ylim(0, t); gca()[:set_aspect]("equal")
+    xlim(0, t); ylim(0, t); gca().set_aspect("equal")
     xlabel("t"); i == 1 && ylabel("t");
 end
 PyPlot.tight_layout()

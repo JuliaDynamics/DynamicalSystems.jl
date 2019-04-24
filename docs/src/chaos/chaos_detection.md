@@ -226,7 +226,7 @@ end
 
 main(0.9);
 ```
-![](https://github.com/JuliaDynamics/JuliaDynamicsDocumentation.jl/tree/master/animations/chaos/gali_standardmap.png?raw=true)
+![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_standardmap.png?raw=true)
 
 ### Regular orbits in the Henon-Heiles system
 In this example we use the [`poincaresos`](@ref) function to produce

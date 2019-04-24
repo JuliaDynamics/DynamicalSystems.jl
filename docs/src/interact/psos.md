@@ -36,4 +36,4 @@ psos = interactive_poincaresos(ds, plane, (2, 4), complete; markersizes = (-5, -
 </video>
 
 ## Video Tutorial
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=SozXxa7blJs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SozXxa7blJs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -151,7 +151,7 @@ end
 f = figure(figsize = (10,6))
 a1 = subplot(211)
 plot(rs, ls); ylim(-2, log(2)); ylabel("\$\\lambda\$")
-a1[:axes][:get_xaxis]()[:set_ticklabels]([])
+a1.axes.get_xaxis().set_ticklabels([])
 xlim(rs[1], rs[end]);
 
 a2 = subplot(212)

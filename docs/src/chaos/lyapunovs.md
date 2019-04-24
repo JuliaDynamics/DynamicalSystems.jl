@@ -41,6 +41,25 @@ ds = Systems.towel()
   237.226 μs (45 allocations: 4.27 KiB)
 ```
 
+Here is an example of plotting the exponents of the Roessler system for various parameters:
+```@example lyap
+ds = Systems.roessler()
+
+cs = 4:0.01:6; λs = zeros(length(cs), 3)
+for (i, c) in enumerate(cs)
+    set_parameter!(ds, 3, c)
+    λs[i, :] .= lyapunovs(ds, 10000; Ttr = 500.0)
+end
+
+figure()
+plot(cs, λs)
+tight_layout() # hide
+savefig("rosl_l.png"); nothing # hide
+```
+![](osl_l.png)
+
+
+
 ## Maximum Lyapunov Exponent
 It is possible to get only the maximum Lyapunov exponent simply by giving
 `1` as the third argument of [`lyapunovs`](@ref). However, there is a second algorithm that allows you to do the same thing, which is offered by the function `lyapunov`:

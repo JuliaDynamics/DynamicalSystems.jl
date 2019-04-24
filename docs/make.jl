@@ -1,9 +1,12 @@
+cd(@__DIR__)
+using Pkg
+Pkg.activate(@__DIR__)
+
 using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using RecurrenceAnalysis, Documenter, PyPlot, DocumenterMarkdown
 using InteractiveChaos
 
 PyPlot.ioff()
-cd(@__DIR__)
 
 makedocs(modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
 DelayEmbeddings, RecurrenceAnalysis, InteractiveChaos],
