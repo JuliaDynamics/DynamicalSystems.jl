@@ -1,0 +1,18 @@
+name = "DynamicalSystems"
+uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+
+[deps]
+ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
+DelayEmbeddings = "5732040d-69e3-5649-938a-b6b4f237613f"
+DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+RecurrenceAnalysis = "639c3291-70d9-5ea2-8c5b-839eba1ee399"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+ChaosTools = "≥ 1.5.0"
+DelayEmbeddings = "≥ 0.2.0"
+DynamicalSystemsBase = "≥ 1.2.3"
+RecurrenceAnalysis = "≥ 0.5.0"
+julia = "≥ 1.0.0"
