@@ -1,5 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
+version = "1.2.1"
 
 [deps]
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"

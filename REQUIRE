@@ -1,7 +1,0 @@
-julia 1.0
-DelayEmbeddings 0.2
-DynamicalSystemsBase 1.2.3
-ChaosTools 1.5
-Reexport
-StaticArrays
-RecurrenceAnalysis 0.5
