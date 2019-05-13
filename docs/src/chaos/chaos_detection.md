@@ -1,21 +1,18 @@
 # Chaos Detection
-Being able to detect and distinguish chaotic from regular behavior is crucial in the
-study of dynamical systems. Most of the time a positive maximum [`lyapunov`](@ref) exponent
+Being able to detect and distinguish chaotic from regular behavior is crucial in the study of dynamical systems.
+Most of the time a positive maximum [`lyapunov`](@ref) exponent
 and a bounded system indicate chaos.
 
-However, the convergence of the Lyapunov exponent is often very slow and
-the computation costly. There are
-many alternatives that are both more efficient and more accurate in characterizing
-chaotic and regular motion, some of which are included in **DynamicalSystems.jl**.
+However, the convergence of the Lyapunov exponent is often very slow and the computation costly.
+Not only that, but sometimes the exponent can be misleading, as the types of chaotic behavior vary greatly with respect to their predictability.
+There are many alternatives that are both more efficient and more accurate in characterizing chaotic and regular motion, some of which are included in **DynamicalSystems.jl**.
 
 !!! info "Performance depends on the solver"
     Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
 
 ## Generalized Alignment Index
-"GALI" for sort, is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic
-motion. It is one
-of the most recent and cheapest methods for distinguishing chaos, introduced first in
-2007 by Skokos, Bountis & Antonopoulos.
+"GALI" for sort, is a method that relies on the fact that initially orthogonal deviation vectors tend to align towards the direction of the maximum Lyapunov exponent for chaotic motion.
+It is one of the most recent and cheapest methods for distinguishing chaotic and regular behavior, introduced first in 2007 by Skokos, Bountis & Antonopoulos.
 ```@docs
 gali
 ```
@@ -176,11 +173,10 @@ savefig("gali_cont_chaos.png"); nothing # hide
 ```
 ![gali_cont_chaos](gali_cont_chaos.png)
 
-As you can see, the results of both discrete and continuous systems match
-very well the theory described in [`gali`](@ref).
+As you can see, the results of both discrete and continuous systems match very well the theory described in [`gali`](@ref).
 
-## Using GALI
-No-one in their right mind would try to fit power-laws in order to distinguish between chaotic and regular behavior, like the above examples. These were just demonstrations and proofs that the method works as expected in all cases.
+### Using GALI
+No-one in their right mind would try to fit power-laws in order to distinguish between chaotic and regular behavior, like the above examples. These were just proofs that the method works as expected in all cases.
 
 The most common usage of $\text{GALI}_k$ is to define a (sufficiently) small
 amount of time and a (sufficiently) small threshold and see whether $\text{GALI}_k$
@@ -188,8 +184,7 @@ stays below it, for a (sufficiently) big $k$.
 
 The following is an example of [advanced usage](advanced):
 ```julia
-using DynamicalSystems
-using PyPlot, StaticArrays
+using DynamicalSystems, PyPlot
 
 function main(k)
 
@@ -243,3 +238,49 @@ You can download the video using [this link](https://raw.githubusercontent.com/J
 
 You can find the script that produced this animation in
 `DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
+
+## Predictability of a chaotic system
+Even if a system is "formally" chaotic, it can still be in phases where it is very predictable, because the correlation coefficient between nearby trajectories vanishes very slowly with time.
+[Wernecke, Sándor & Gros](https://www.nature.com/articles/s41598-017-01083-x) have developed an algorithm that allows one to classify a dynamical system to one of three categories: strongly chaotic, partially predictable chaos or regular (called *laminar* in their paper).
+
+We have implemented their algorithm in the function [`predictability`](@ref). **Note** that we set up the implementation to always return regular behavior for negative Lyapunov exponent. You may want to override this for research purposes.
+
+```@docs
+predictability
+```
+
+### Example 1 - Lorenz System
+For the first example we simply replicate the results of the paper:
+```@example gali
+using DynamicalSystems
+
+pars = [180.7, 180.95, 181.10]
+expected = [:SC, :PPC, :REG]
+lz = Systems.lorenz()
+for (ex, ρ) in zip(expected, pars)
+    set_parameter!(lz, 2, ρ)
+    chaos_type, ν, C = predictability(lz; maxiters = 1e9)
+    println("Expected: $(ex) | Got: $(chaos_type)")
+end
+```
+
+### Example 2 - Hénon Map
+For the second example we create something similar to figure 2 of the paper, but for the Hénon map.
+
+```@example gali
+figure()
+he = Systems.henon()
+as = 0.8:0.005:1.225
+od = orbitdiagram(he, 1, 1, as; n = 2000, Ttr = 2000)
+colors = Dict(:REG => "b", :PPC => "g", :SC => "r")
+for (i, a) in enumerate(as)
+    set_parameter!(he, 1, a)
+    chaos_type, ν, C = predictability(he; T_max = 400000, Ttr = 2000)
+    scatter(a .* ones(length(od[i])), od[i], c = colors[chaos_type], s = 2,
+    alpha = 0.05)
+end
+xlabel("\$a\$"); ylabel("\$x\$")
+title("predictability of Hénon map"); tight_layout()
+savefig("partial_henon.png"); nothing # hide
+```
+![partial_henon](partial_henon.png)

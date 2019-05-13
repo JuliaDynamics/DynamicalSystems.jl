@@ -14,11 +14,12 @@ The following treat systems where the equations of motion are known:
 1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
 2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovs`](@ref).
 
-### [Chaos Detection](chaos_detection)
+### [Categorizing Chaos](chaos_detection)
 
 1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
     * Implemented for both discrete and continuous systems.
-
+2. A test to categorize strong chaos, partially predictable chaos and regular behavior: [`predictability`](@ref).
+    * Implemented for both discrete and continuous systems.
 
 ### [Entropies and Dimensions](entropies)
 

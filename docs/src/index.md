@@ -75,7 +75,7 @@ Please see the [overview section](chaos/overview) for a full list of features. H
 * Entropies and Dimensions
 * Lyapunov exponent of a timeseries (numerical data)
 * Finding Fixed Points of Maps
-* GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior
+* Categorizing and distinguishing chaotic and regular behavior
 * Nonlinear timeseries analysis
 
 ### [`RecurrenceAnalysis`](rqa/rplots)
