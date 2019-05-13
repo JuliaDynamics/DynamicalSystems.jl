@@ -1,4 +1,7 @@
 # News
+## Predictability of a dynamical system in v1.3
+See the function [`predictability`](@ref)!
+
 ## New default solver in v1.2; `OrdinaryDiffEq` dependency dropped!
 In the newest version of **DynamicalSystems.jl**, which includes `DynamicalSystemsBase v1.2`, the default solver for all continuous systems has been changed to **`SimpleATsit5`** from the package [SimpleDiffEq.jl](https://github.com/JuliaDiffEq/SimpleDiffEq.jl). The previous default solver was `Vern9` from `OrdinaryDiffEq` This has reduced the "first run time" massively for functions that use a `ContinuousDynamicalSystem`!
 

@@ -41,22 +41,23 @@ ds = Systems.towel()
   237.226 μs (45 allocations: 4.27 KiB)
 ```
 
-Here is an example of plotting the exponents of the Roessler system for various parameters:
+Here is an example of plotting the exponents of the Roessler system for various parameters (using the advanced usage):
 ```@example lyap
-ds = Systems.roessler()
+using DynamicalSystems, PyPlot
 
-cs = 4:0.01:6; λs = zeros(length(cs), 3)
-for (i, c) in enumerate(cs)
-    set_parameter!(ds, 3, c)
-    λs[i, :] .= lyapunovs(ds, 10000; Ttr = 500.0)
+he = Systems.henon()
+as = 0.8:0.005:1.225; λs = zeros(length(as), 2)
+for (i, a) in enumerate(as)
+    set_parameter!(he, 1, a)
+    λs[i, :] .= lyapunovs(he, 10000; Ttr = 500)
 end
 
 figure()
-plot(cs, λs)
+plot(as, λs); xlabel("\$a\$"); ylabel("\$\\lambda\$")
 tight_layout() # hide
-savefig("rosl_l.png"); nothing # hide
+savefig("heλ.png"); nothing # hide
 ```
-![](osl_l.png)
+![](heλ.png)
 
 
 
@@ -69,7 +70,7 @@ lyapunov
 ---
 For example:
 ```@example lyap
-using DynamicalSystems
+using DynamicalSystems, PyPlot
 henon = Systems.henon()
 λ = lyapunov(henon, 10000, d0 = 1e-7, upper_threshold = 1e-4, Ttr = 100)
 ```

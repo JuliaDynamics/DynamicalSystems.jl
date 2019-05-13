@@ -249,28 +249,13 @@ We have implemented their algorithm in the function [`predictability`](@ref). **
 predictability
 ```
 
-### Example 1 - Lorenz System
-For the first example we simply replicate the results of the paper:
-```@example gali
-using DynamicalSystems
-
-pars = [180.7, 180.95, 181.10]
-expected = [:SC, :PPC, :REG]
-lz = Systems.lorenz()
-for (ex, ρ) in zip(expected, pars)
-    set_parameter!(lz, 2, ρ)
-    chaos_type, ν, C = predictability(lz; maxiters = 1e9)
-    println("Expected: $(ex) | Got: $(chaos_type)")
-end
-```
-
-### Example 2 - Hénon Map
-For the second example we create something similar to figure 2 of the paper, but for the Hénon map.
+### Example Hénon Map
+We will create something similar to figure 2 of the paper, but for the Hénon map.
 
 ```@example gali
 figure()
 he = Systems.henon()
-as = 0.8:0.005:1.225
+as = 0.8:0.01:1.225
 od = orbitdiagram(he, 1, 1, as; n = 2000, Ttr = 2000)
 colors = Dict(:REG => "b", :PPC => "g", :SC => "r")
 for (i, a) in enumerate(as)
