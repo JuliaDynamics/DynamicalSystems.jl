@@ -50,7 +50,7 @@ pages:
   - Features Overview: chaos/overview.md
   - Orbit Diagrams & PSOS: chaos/orbitdiagram.md
   - Lyapunov Exponents: chaos/lyapunovs.md
-  - Chaos Distinction: chaos/chaos_detection.md
+  - Chaos Detection: chaos/chaos_detection.md
   - Entropies and Dimensions: chaos/entropies.md
   - Nonlinear Timeseries Analysis: chaos/nlts.md
   - Periodicity: chaos/periodicity.md

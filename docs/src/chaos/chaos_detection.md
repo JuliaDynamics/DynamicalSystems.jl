@@ -3,9 +3,8 @@ Being able to detect and distinguish chaotic from regular behavior is crucial in
 Most of the time a positive maximum [`lyapunov`](@ref) exponent
 and a bounded system indicate chaos.
 
-However, the convergence of the Lyapunov exponent is often very slow and the computation costly.
-Not only that, but sometimes the exponent can be misleading, as the types of chaotic behavior vary greatly with respect to their predictability.
-There are many alternatives that are both more efficient and more accurate in characterizing chaotic and regular motion, some of which are included in **DynamicalSystems.jl**.
+However, the convergence of the Lyapunov exponent can be slow, or even misleading, as the types of chaotic behavior vary greatly with respect to their predictability.
+There are many alternatives, some more efficient and some more accurate in characterizing chaotic and regular motion. Some of these methods are included in **DynamicalSystems.jl**.
 
 !!! info "Performance depends on the solver"
     Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
