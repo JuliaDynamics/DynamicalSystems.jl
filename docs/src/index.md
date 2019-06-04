@@ -1,7 +1,10 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true)
 
 ## Introduction
-**DynamicalSystems.jl** is a Julia software library for the exploration of chaos and nonlinear dynamics.
+**DynamicalSystems.jl** is an award-winning Julia software library for the exploration of chaos and nonlinear dynamics.
+
+!!! info "DSWeb Competition 1st place winner"
+    **DynamicalSystems.jl** has won the first place in the 2018 Software Contest held by the dynamical systems division of SIAM. For more details see the [official statement](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest)
 
 !!! info "JuliaDynamics"
     **DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), check out our [website](https://juliadynamics.github.io/JuliaDynamics/) for more cool stuff!
