@@ -13,10 +13,10 @@
 ---
 
 ## Packages
-* `DelayEmbeddings`
-* `RecurrenceAnalysis`
-* `DynamicalSystemsBase`
-* `ChaosTools`
+* [`DelayEmbeddings`](https://github.com/JuliaDynamics/DelayEmbeddings.jl)
+* [`RecurrenceAnalysis`](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl)
+* [`DynamicalSystemsBase`](https://github.com/JuliaDynamics/DynamicalSystemsBase.jl)
+* [`ChaosTools`](https://github.com/JuliaDynamics/ChaosTools.jl)
 
 ## Double pendulum video:
 Checkout this *amazing* video by Cormullion, featuring the double pendulum (logo of our library)
