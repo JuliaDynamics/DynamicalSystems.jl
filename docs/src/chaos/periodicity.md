@@ -92,3 +92,8 @@ You can confirm for yourself that this is correct, for many reasons:
 3. Besides fixed points of previous orders, *original* fixed points of
    order $n$ come in (possible multiples of) $2n$-sized pairs (see e.g. order 5).
    This is a direct consequence of the Poincaré–Birkhoff theorem.
+   
+## Determining Periodicity
+
+Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, `ChaosTools` has many ways for you to do this.
+
