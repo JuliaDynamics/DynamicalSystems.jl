@@ -44,3 +44,4 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
+2. Estimating the period of a timeseries: [`estimate_period`](@ref).

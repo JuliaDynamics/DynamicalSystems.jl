@@ -77,7 +77,7 @@ Please see the [overview section](chaos/overview) for a full list of features. H
 * Lyapunov Exponents
 * Entropies and Dimensions
 * Lyapunov exponent of a timeseries (numerical data)
-* Finding Fixed Points of Maps
+* Periodic behavior
 * Categorizing and distinguishing chaotic and regular behavior
 * Nonlinear timeseries analysis
 
