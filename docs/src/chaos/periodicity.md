@@ -1,8 +1,9 @@
+# Periodicity
+In this page we describe methods related with period behavior of dynamical systems or univariate timeseries.
+
 ## Detecting Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
-of low dimensional dynamical systems is affected by the position and the stability
-properties of the [periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits)
-existing in the chaotic sea.
+of low dimensional dynamical systems is affected by the position and the stability properties of the [periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits) of a dynamical system.
 
 Finding unstable (or stable) periodic orbits of a discrete mapping analytically
 rapidly becomes impossible for higher orders of fixed points.
@@ -92,8 +93,13 @@ You can confirm for yourself that this is correct, for many reasons:
 3. Besides fixed points of previous orders, *original* fixed points of
    order $n$ come in (possible multiples of) $2n$-sized pairs (see e.g. order 5).
    This is a direct consequence of the Poincaré–Birkhoff theorem.
-   
+
 ## Determining Periodicity
 
-Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, `ChaosTools` has many ways for you to do this.
+Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, the function [`estimate_period`](@ref) from `ChaosTools` offers many ways for you to do this, given the system's timeseries as an input.
+```@docs
+estimate_period
+```
 
+### Examples
+WIP.
