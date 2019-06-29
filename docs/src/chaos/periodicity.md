@@ -1,5 +1,5 @@
 # Periodicity
-In this page we describe methods related with period behavior of dynamical systems or univariate timeseries.
+In this page we describe methods related with the periodic behavior of dynamical systems or univariate timeseries.
 
 ## Detecting Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
