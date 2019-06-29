@@ -97,9 +97,13 @@ You can confirm for yourself that this is correct, for many reasons:
 ## Determining Periodicity
 
 Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, the function [`estimate_period`](@ref) from `ChaosTools` offers many ways for you to do this, given the system's timeseries as an input.
+
 ```@docs
 estimate_period
 ```
+
+We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.  The figure below summarizes this:
+![Period estimation methods](periodestimationmethods.png)
 
 ### Examples
 WIP.
