@@ -39,9 +39,9 @@ using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq, Statistics
 b1 = @benchmark lyapunovs(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
 b2 = @benchmark lyapunovs(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
 println("Timing for SimpleATsit5:")
-display(mean(b1))
+println(mean(b1))
 println("Timing for Vern9:")
-display(mean(b2))
+println(mean(b2))
 ```
 
 As you can see `Vern9` is faster in doing the _entire_ computation! Of course this does not have to be universally true. It is true for the Lorenz system, but for your specific system you should do dedicated benchmarks!
