@@ -1,4 +1,7 @@
 # News
+## Estimating the period of a timeseries
+New function `estimate_period` in `ChaosTools v1.7.0`!
+
 ## Predictability of a dynamical system in v1.3
 See the function [`predictability`](@ref)!
 

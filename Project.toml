@@ -13,8 +13,8 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
-ChaosTools = "1.6.0"
-DelayEmbeddings = "≥ 0.2.0"
+ChaosTools = "1.7.0"
+DelayEmbeddings = "1"
 DynamicalSystemsBase = "1.2.3"
 RecurrenceAnalysis = "1"
 julia = "1"
