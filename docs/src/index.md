@@ -33,6 +33,7 @@ See the [News](news) page for recent updates!
     * Nonlinear Dynamics And Chaos - S. Strogatz
     * An Exploration of Dynamical Systems and Chaos - J. Argyris *et al.*
     * Chaos in Dynamical Systems - E. Ott
+    * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
 
 !!! example "Jupyter Notebooks / Tutorials"
     [In this repository](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials) you can find various Jupyter notebooks that have been used as introductory tutorials for **DynamicalSystems.jl**!
