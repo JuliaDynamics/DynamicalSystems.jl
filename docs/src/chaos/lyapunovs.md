@@ -94,7 +94,7 @@ ds = Systems.towel()
   237.226 μs (45 allocations: 4.27 KiB)
 ```
 
-Here is an example of plotting the exponents of the Roessler system for various parameters (using the advanced usage):
+Here is an example of plotting the exponents of the Henon map for various parameters:
 ```@example lyap
 using DynamicalSystems, PyPlot
 

@@ -28,9 +28,7 @@ When contributing code, you should keep these things in mind:
   **reliability of the implementation**. One of cornerstones of all of
   **DynamicalSystems.jl** is to have clear and readable source code. Fortunately,
   Julia allows you to have perfectly readable code but also super fast ;)
-* For new methods and systems please follow the convention
-  of the documentation strings (do e.g. `?lyapunov` to see how they are
-  structured).
+* For the documentation strings of new methods and systems please follow the convention of the documentation strings of JuliaDynamics. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be. A mandatory `## References` section lists the related literature that is cited.
 * Have enough comments in your code so that somebody that knows the method,
   can also understand the code immediately.
 * Always have a reference to the original work that introduces the method
