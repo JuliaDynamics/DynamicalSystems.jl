@@ -1,7 +1,7 @@
 # Periodicity
 In this page we describe methods related to the periodic behavior of dynamical systems or univariate timeseries.
 
-## Detecting Stable and Unstable Periodic Orbits of Maps
+## Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
 of low dimensional dynamical systems is affected by the position and the stability properties of the [periodic orbits](http://www.scholarpedia.org/article/Unstable_periodic_orbits) of a dynamical system.
 
@@ -98,12 +98,12 @@ You can confirm for yourself that this is correct, for many reasons:
 
 Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, the function [`estimate_period`](@ref) from `ChaosTools` offers many ways for you to do this, given the system's timeseries as an input.
 
+We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.  The figure below summarizes this:
+![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/periodestimationmethods.png?raw=true)
+
 ```@docs
 estimate_period
 ```
-
-We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.  The figure below summarizes this:
-![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/periodestimationmethods.png?raw=true)
 
 ### Example
 Here we will use a modified FitzHugh-Nagumo system that results in periodic behavior, and then try to estimate its period. First, let's see the trajectory:
@@ -122,7 +122,7 @@ g, e, b  = 0.8, 0.04, 0.0
 p0 = [e, b, g]
 
 fhn = ContinuousDynamicalSystem(FHN, SVector(-2, -0.6667), p0)
-T = 1000.0
+T, dt = 1000.0, 0.1
 v = trajectory(fhn, T; dt = dt)[:, 1]
 t = 0:dt:T
 
@@ -130,13 +130,15 @@ figure()
 plot(0:dt:T, v)
 savefig("fhn_trajectory.png"); nothing # hide
 ```
+![A periodic trajectory](fhn_trajectory.png)
+
 Examining the figure, one can see that the period of the system is around `91` time units. To estimate it numerically let's use some of the methods:
 ```@example sm
-estimate_period(vs, :autocorrelation, t)
+estimate_period(v, :autocorrelation, t)
 ```
 ```@example sm
-estimate_period(vs, :periodogram, t)
+estimate_period(v, :periodogram, t)
 ```
 ```@example sm
-estimate_period(vs, :zerocrossing, t)
+estimate_period(v, :zerocrossing, t)
 ```
