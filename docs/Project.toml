@@ -15,3 +15,10 @@ RecurrenceAnalysis = "639c3291-70d9-5ea2-8c5b-839eba1ee399"
 SimpleDiffEq = "05bca326-078c-5bf0-a5bf-ce7c7982d7fd"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
+
+[compat]
+ChaosTools = "1.8"
+DelayEmbeddings = "1"
+DynamicalSystemsBase = "1.2.3"
+RecurrenceAnalysis = "1"
+julia = "1"
