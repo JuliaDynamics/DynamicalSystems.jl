@@ -3,7 +3,7 @@ Being able to detect and distinguish chaotic from regular behavior is crucial in
 Most of the time a positive maximum [`lyapunov`](@ref) exponent
 and a bounded system indicate chaos.
 
-However, the convergence of the Lyapunov exponent can be slow, or even misleading, as the types of chaotic behavior vary greatly with respect to their predictability.
+However, the convergence of the Lyapunov exponent can be slow, or even misleading, as the types of chaotic behavior vary with respect to their predictability.
 There are many alternatives, some more efficient and some more accurate in characterizing chaotic and regular motion. Some of these methods are included in **DynamicalSystems.jl**.
 
 !!! info "Performance depends on the solver"
@@ -268,3 +268,13 @@ title("predictability of Hénon map"); tight_layout()
 savefig("partial_henon.png"); nothing # hide
 ```
 ![partial_henon](partial_henon.png)
+
+## The 0-1 test for chaos
+The methods mentioned in this page so far require a `DynamicalSystem` instance.
+But of course this is not always the case. The so-called "0 to 1" test for chaos, by Gottwald & Melbourne, takes as an input a timeseries and outputs a boolean `true` if the timeseries is chaotic or `false` if it is not.
+
+Notice that the method does have a lot of caveats, so you should read the review paper before using.
+
+```@docs
+testchaos01
+```

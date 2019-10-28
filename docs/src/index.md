@@ -3,12 +3,15 @@
 ## Introduction
 **DynamicalSystems.jl** is an award-winning Julia software library for the exploration of chaos and nonlinear dynamics.
 
-!!! info "DSWeb Competition 1st place winner"
+!!! success "DSWeb Competition 1st place winner"
     **DynamicalSystems.jl** has won the first place in the 2018 Software Contest held by the dynamical systems division of SIAM. For more details see the [official statement](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest)
 
 !!! info "JuliaDynamics"
     **DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), check out our [website](https://juliadynamics.github.io/JuliaDynamics/) for more cool stuff!
 
+!!! tip "Latest news"
+    The 0-1 test for chaos is now included in **DynamicalSystems.jl** (`testchaos01`), as well as the Pomeau-Manneville map! Both results
+    of a Hacktoberfest 2019 hackathon!
 
 
 The documentation you are reading now was built with the following stable versions:
@@ -24,7 +27,6 @@ end
 ```@example versions
 f() # hide
 ```
-See the [News](news) page for recent updates!
 
 !!! info "Introductory textbooks"
     Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
