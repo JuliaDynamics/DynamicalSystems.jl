@@ -9,7 +9,7 @@ scaling of a dataset.
 
 ---
 
-The main way of computing entropies in **DynamicalSystems.jl** is the "generalized entropy":
+One way of computing entropies in **DynamicalSystems.jl** is the "generalized entropy":
 ```@docs
 genentropy
 ```
@@ -124,15 +124,15 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 ---
 
 
-## Other Entropies and Dimensions
-
-### Permutation Entropy
+## Permutation Entropy
 The permutation entropy is introduced by C. Bandt and B. Pompe as a
 "A Natural Complexity Measure for Timeseries", which directly applies to arbitrary real-world data and is particularly useful in the presence of dynamical or observational noise.
 
 ```@docs
 permentropy
 ```
+
+---
 
 For example, we will compute and compare the [`lyapunov`](@ref) exponent of the logistic
 map with the order-6 permutation entropy, like in the original paper.
@@ -169,7 +169,7 @@ savefig("permentropy.png"); nothing # hide
     keeps track of this, and contains information on how to improve performance.
 
 
-### Kaplan-Yorke Dimension
+## Kaplan-Yorke Dimension
 ```@docs
 kaplanyorke_dim
 ```
