@@ -240,3 +240,20 @@ ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
  jacobian:    CoupledStandardMaps
  parameters:  Tuple
 ```
+
+### A comment on using automatic Jacobians
+
+Notice that if you are using automatic differentiation for the Jacobian, you should take care to not define your equations of motion so that they explicitly use, or return, `Float64` numbers.
+This is because `ForwardDiff` uses `DualNumbers` for differentiation.
+For example, if you did
+```julia
+function lorenz(u,p,t)
+    σ, ρ, β = p
+    dx = zeros(3)
+    du1 = σ*(u[2] - u[1]) +
+    du2 = u[1]*(ρ - u[3]) - u[2]
+    du3 = u[1]*u[2] - β*u[3]
+    return SVector{Float64, 3}(du1, du2, du3)
+end
+```
+this function could not be used to autodifferentiate, as you would get an error when adding dual numbers to `SVector{Float64}`. Instead, leave the number type untyped, or use `eltype(u)` as the number type.
