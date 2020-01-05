@@ -27,6 +27,29 @@ trajectory
 Notice that if you want to do repeated evolutions of different states of a
 continuous system, you should use the [`integrator`](@ref) interface instead.
 
+## Example
+```@example
+ds = Systems.towel()
+tr = trajectory(ds, 100)
+```
+
+To get every 3-rd point of the trajectory, do
+```@example
+tr = trajectory(ds, 100; dt = 3)
+```
+
+Identical syntax is used for continuous systems
+```@example
+ds = Systems.lorenz()
+tr = trajectory(ds, 10.0; dt = 0.01)
+```
+
+And a final example controlling the integrator accuracy:
+```@example
+ds = Systems.lorenz()
+tr = trajectory(ds, 10.0; dt = 0.1, atol = 1e-9, rtol = 1e-9)
+```
+
 ## Solution precision for continuous systems
 A numerical solution of an ODE is not the "true" solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.
 
