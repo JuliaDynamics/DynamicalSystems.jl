@@ -111,16 +111,29 @@ systems with periodic time dependence, like e.g. the [Duffing oscillator](/defin
 
 A "cut" through the phase-space can be produced at every period $T = 2\pi/\omega$. There is no
 reason to use `poincaresos` for this though, because you can simply use
-[`trajectory`](@ref) and get the solution with a certain time sampling rate:
-```@example orbit
+[`trajectory`](@ref) and get the solution with a certain time sampling rate.
+For example, this piece of code:
+```julia
+using DynamicalSystems, Plots
+
 ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
-a = trajectory(ds, 100000.0, dt = 2π) # every period T = 2π/ω
-figure()
-plot(a[:, 1], a[:, 2], lw = 0, marker ="o", ms = 1)
-xlabel("\$x\$"); ylabel("\$\\dot{x}\$")
-savefig("duffing.png"); nothing # hide
+
+frames=120
+a = trajectory(ds, 100000.0, dt = 2π/frames, Ttr=20π) # every period T = 2π/ω
+
+orbit_length = div(size(a)[1], frames)
+a = Matrix(a)
+
+@gif for i in 1:frames
+    orbit_points = i:frames:(orbit_length*frames)
+    scatter(a[i:frames:(orbit_length*frames), 1], a[i:frames:(orbit_length*frames), 2], markersize=1, html_output_format=:png,
+        leg=false, framestyle=:none, xlims=extrema(a[:,1]), ylims=extrema(a[:,2]))
+end
 ```
-![](duffing.png)
+
+Produces this nice animation:
+
+![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/Duffing_stroboscopic_plot.gif?raw=true)
 
 
 ## Producing Orbit Diagrams for Flows
