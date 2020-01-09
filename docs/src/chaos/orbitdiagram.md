@@ -126,7 +126,7 @@ a = Matrix(a)
 
 @gif for i in 1:frames
     orbit_points = i:frames:(orbit_length*frames)
-    scatter(a[i:frames:(orbit_length*frames), 1], a[i:frames:(orbit_length*frames), 2], markersize=1, html_output_format=:png,
+    scatter(a[orbit_points, 1], a[orbit_points, 2], markersize=1, html_output_format=:png,
         leg=false, framestyle=:none, xlims=extrema(a[:,1]), ylims=extrema(a[:,2]))
 end
 ```
