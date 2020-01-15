@@ -28,24 +28,25 @@ Notice that if you want to do repeated evolutions of different states of a
 continuous system, you should use the [`integrator`](@ref) interface instead.
 
 ## Example
-```@example
+```@example traject
+using DynamicalSystems
 ds = Systems.towel()
 tr = trajectory(ds, 100)
 ```
 
 To get every 3-rd point of the trajectory, do
-```@example
+```@example traject
 tr = trajectory(ds, 100; dt = 3)
 ```
 
 Identical syntax is used for continuous systems
-```@example
+```@example traject
 ds = Systems.lorenz()
 tr = trajectory(ds, 10.0; dt = 0.01)
 ```
 
 And a final example controlling the integrator accuracy:
-```@example
+```@example traject
 ds = Systems.lorenz()
 tr = trajectory(ds, 10.0; dt = 0.1, atol = 1e-9, rtol = 1e-9)
 ```
