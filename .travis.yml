@@ -3,7 +3,7 @@ language: julia
 os:
   - linux
 julia:
-  - 1.1
+  - 1
 notifications:
   email:
     on_success: never
@@ -17,7 +17,7 @@ script: skip
 jobs:
   include:
     - stage: "Documentation"
-      julia: 1.1
+      julia: 1
       os: linux
       script:
         - julia --project=docs/ --color=yes -e 'using Pkg; Pkg.instantiate();
