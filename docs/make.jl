@@ -29,7 +29,6 @@ makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
          DelayEmbeddings, RecurrenceAnalysis],
 doctest=false,
-depth = 1,
 sitename= "DynamicalSystems.jl",
 root = @__DIR__,
 format = Documenter.HTML(
@@ -38,6 +37,7 @@ format = Documenter.HTML(
         "assets/logo.ico",
         asset("https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap", class=:css),
         ],
+    collapselevel = 1,
     ),
 pages = [
     "Introduction" => "index.md",
