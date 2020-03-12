@@ -1,4 +1,4 @@
-# Predefined Systems
+# Predefined Dynamical Systems
 Predefined systems exist in the `Systems` submodule in the form of functions that return a `DynamicalSystem`. They are accessed
 like:
 ```julia

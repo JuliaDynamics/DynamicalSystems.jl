@@ -127,11 +127,11 @@ ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
 
 ### Complex Example
 In this example we will go through the implementation of the coupled standard maps
-from our [Predefined Systems](predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps). It is the most complex implementation
+from our [Predefined Dynamical Systems](@ref). It is the most complex implementation
 and takes full advantage of the flexibility of the constructors. The example will use a Functor as equations of motion, as well as a sparse matrix for the Jacobian.
 
 Coupled standard maps is a big mapping that can have arbitrary number of
-equations of motion, since you can couple `N` [standard maps](predefined/#DynamicalSystemsBase.Systems.standardmap) which are 2D maps, like:
+equations of motion, since you can couple `N` standard maps which are 2D maps, like:
 
 ```math
 \theta_{i}' = \theta_i + p_{i}' \\

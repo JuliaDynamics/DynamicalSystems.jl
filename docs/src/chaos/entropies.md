@@ -14,7 +14,7 @@ One way of computing entropies in **DynamicalSystems.jl** is the "generalized en
 genentropy
 ```
 ---
-Basically, given a [dataset](system_definition/#numerical-data) you can partition it into boxes to calculate an entropy. See below for a detailed example.
+Basically, given a [`Dataset`](@ref) you can partition it into boxes to calculate an entropy. See below for a detailed example.
 
 !!! tip "Worried about memory overflow? Don't be!"
     Partitioning the dataset (i.e. doing a *histogram*) is in general a costly
@@ -109,7 +109,7 @@ This result is an approximation of the information dimension (because we used `Î
 
 The above pipeline is bundled in [`generalized_dim`](@ref).
 For example, the dimension of the strange attractor of the
-[HÃ©non map](system_definition/#DynamicalSystems.Systems.henon), following the above approach but taking automated steps, is:
+[`Systems.henon`](@ref) map, following the above approach but taking automated steps, is:
 ```@example entropy
 using DynamicalSystems
 hen = Systems.henon()

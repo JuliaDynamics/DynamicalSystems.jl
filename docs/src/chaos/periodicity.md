@@ -19,7 +19,7 @@ lambdaperms
 ```
 ---
 ### Standard Map example
-For example, let's find the fixed points of the [Standard Map](system_definition/#DynamicalSystems.Systems.standardmap) of order 2, 3, 4, 5, 6
+For example, let's find the fixed points of the [`Systems.standardmap`](@ref) of order 2, 3, 4, 5, 6
 and 8. We will use all permutations for the `signs` but only one for the `inds`.
 We will also only use one `λ` value, and a 21×21 density of initial conditions.
 

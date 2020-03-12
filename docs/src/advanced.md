@@ -26,7 +26,7 @@ It is more efficient to re-initialize an integrator using `reinit!`
 than to create a new one.
 This can be very helpful when looping over initial conditions and/or parameter values.
 
-All high-level functions from `ChaosTools` have a set-up part that creates an integrator, and a low-level part that does the computation. The low level part is your friend! Use it! See the [Using `gali`](chaos/chaos_detection/#using-gali) page for an example as well as the section below.
+All high-level functions from `ChaosTools` have a set-up part that creates an integrator, and a low-level part that does the computation. The low level part is your friend! Use it! See the [Using GALI](@ref) page for an example as well as the section below.
 
 The `reinit!` call signature is the same for continuous and discrete systems.
 In the following, `state` is supposed to be a `D` dimensional vector (state of the dynamical system).

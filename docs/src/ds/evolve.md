@@ -54,7 +54,7 @@ tr = trajectory(ds, 10.0; dt = 0.1, atol = 1e-9, rtol = 1e-9)
 ## Solution precision for continuous systems
 A numerical solution of an ODE is not the "true" solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.
 
-DifferentialEquations.jl offers a tool, called [Uncertainty Quantification](http://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification.html),
+DifferentialEquations.jl offers a tool, called [Uncertainty Quantification](https://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification/),
 which allows users to asses up to what time-scales the numerical solution is close
 to the "true" solution. For example, using the default solving parameters of
 **DynamicalSystems.jl**, the Lorenz system is accurate up to time `t = 50.0`.
