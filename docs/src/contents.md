@@ -40,7 +40,7 @@ The following treat systems where the equations of motion are known:
 1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
 2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovs`](@ref).
 
-## [Detecting & Categorizing Chaos](@ref)
+### [Detecting & Categorizing Chaos](@ref)
 
 1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
     * Implemented for both discrete and continuous systems.
