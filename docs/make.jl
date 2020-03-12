@@ -35,7 +35,7 @@ root = @__DIR__,
 format = Documenter.HTML(
     prettyurls = CI,
     assets = [
-        # "assets/logo.png",
+        "assets/logo.ico",
         asset("https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap", class=:css),
         ],
     ),
