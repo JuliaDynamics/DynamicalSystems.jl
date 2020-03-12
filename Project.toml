@@ -1,7 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "1.5.0"
+version = "1.4.0"
 
 [deps]
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
@@ -16,5 +16,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 ChaosTools = "1.8"
 DelayEmbeddings = "1"
 DynamicalSystemsBase = "1.2.3"
+StaticArrays = "0.12"
 RecurrenceAnalysis = "1"
+Reexport = "0.2"
 julia = "1"
