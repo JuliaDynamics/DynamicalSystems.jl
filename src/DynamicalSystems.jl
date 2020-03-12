@@ -14,8 +14,8 @@ using Reexport
 @reexport using ChaosTools
 @reexport using RecurrenceAnalysis
 
-display_update = true
-update_name = "update_v1.3.0"
+display_update = false
+update_name = "update_v1.4.0"
 
 if display_update
 if !isfile(joinpath(@__DIR__, update_name))

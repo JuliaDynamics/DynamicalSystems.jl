@@ -1,3 +1,4 @@
+# Orbit Diagrams & PSOS
 ## Orbit Diagrams of Maps
 An orbit diagram (also called bifurcation diagram) is a way to visualize the asymptotic
 behavior of a map, when a parameter of the system is changed
@@ -107,7 +108,7 @@ savefig("gispsos.png"); nothing # hide
 
 ### Stroboscopic Map
 A special case of a PSOS is a stroboscopic map, which is defined for non-autonomous
-systems with periodic time dependence, like e.g. the [Duffing oscillator](/definition/predefined/#DynamicalSystemsBase.Systems.duffing).
+systems with periodic time dependence, like e.g. the [`Systems.duffing`](@ref) oscillator.
 
 A "cut" through the phase-space can be produced at every period $T = 2\pi/\omega$. There is no
 reason to use `poincaresos` for this though, because you can simply use

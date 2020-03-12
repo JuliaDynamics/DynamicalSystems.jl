@@ -1,9 +1,9 @@
-# Lyapunov exponents
+# Lyapunov Exponents
 Lyapunov exponents measure exponential rates of separation of nearby trajectories in the flow
 of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_exponent) and the [Scholarpedia](http://www.scholarpedia.org/article/Lyapunov_exponent) entries have a lot of valuable information about the history and usage of these quantities.
 
 This page treats systems where the equations of motion are known. If instead
-you have numerical data, see the [nonlinear timeseries analysis page](nlts).
+you have numerical data, see [`numericallyapunov`](@ref).
 
 !!! info "Performance depends on the solver"
     Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.

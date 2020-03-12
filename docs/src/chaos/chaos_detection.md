@@ -1,4 +1,4 @@
-# Chaos Detection
+# Detecting & Categorizing Chaos
 Being able to detect and distinguish chaotic from regular behavior is crucial in the study of dynamical systems.
 Most of the time a positive maximum [`lyapunov`](@ref) exponent
 and a bounded system indicate chaos.
@@ -181,41 +181,40 @@ The most common usage of $\text{GALI}_k$ is to define a (sufficiently) small
 amount of time and a (sufficiently) small threshold and see whether $\text{GALI}_k$
 stays below it, for a (sufficiently) big $k$.
 
-The following is an example of [advanced usage](advanced):
+The following is an example of advanced usage (see [Advanced documentation](@ref)):
 ```julia
 using DynamicalSystems, PyPlot
 
 function main(k)
+# Measure of chaoticity: final time of gali_2
+dens = 201
+chaoticity = zeros(Int, dens, dens)
 
-    # Measure of chaoticity: final time of gali_2
-    dens = 201
-    chaoticity = zeros(Int, dens, dens)
+θs = ps = range(0, stop = 2π, length = dens+1)
+ds = Systems.standardmap(k = k)
 
-    θs = ps = range(0, stop = 2π, length = dens+1)
-    ds = Systems.standardmap(k = k)
+tinteg = tangent_integrator(ds, 2)
 
-    tinteg = tangent_integrator(ds, 2)
+for (i, θ) ∈ enumerate(θs[1:dens])
+    println("i = $(i)")
+    for (j, p) ∈ enumerate(ps[1:dens])
 
-    for (i, θ) ∈ enumerate(θs[1:dens])
-        println("i = $(i)")
-        for (j, p) ∈ enumerate(ps[1:dens])
+        # new initial state is the system initial state
+        u0 = SVector{2}(θ, p)
+        reinit!(tinteg, u0, orthonormal(2,2))
 
-            # new initial state is the system initial state
-            u0 = SVector{2}(θ, p)
-            reinit!(tinteg, u0, orthonormal(2,2))
-
-            # Low-level call signature of gali:
-            #  gali(tinteg, tmax, dt, threshold)
-            chaoticity[i, j] = gali(tinteg, 500, 1, 1e-12)[2][end]
-        end
+        # Low-level call signature of gali:
+        #  gali(tinteg, tmax, dt, threshold)
+        chaoticity[i, j] = gali(tinteg, 500, 1, 1e-12)[2][end]
     end
-    figure()
-    pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
-    chaoticity')
-    colorbar()
-    xlabel("\$\\theta\$")
-    ylabel("\$p\$")
-    return
+end
+figure()
+pcolormesh(θs .- (θs[2] - θs[1])/2, ps .- (ps[2] - ps[1])/2,
+chaoticity')
+colorbar()
+xlabel("\$\\theta\$")
+ylabel("\$p\$")
+return
 end
 
 main(0.9);
@@ -224,7 +223,7 @@ main(0.9);
 
 ### Regular orbits in the Henon-Heiles system
 In this example we use the [`poincaresos`](@ref) function to produce
-surfaces of section of the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles) system
+surfaces of section of the [`Systems.henonheiles`](@ref) system
 at different energies. At each energy [`gali`](@ref) is used to color-code
 each initial condition according to how chaotic/regular it is, i.e. how much time
 does it need to exceed the `threshold` of [`gali`](@ref).
@@ -277,4 +276,14 @@ Notice that the method does have a lot of caveats, so you should read the review
 
 ```@docs
 testchaos01
+```
+
+## Expansion entropy
+The expansion entropy is a quantity that is suggested by B. Hunt and E. Ott as a measure that can define chaos (so far no widely accepted definition of chaos exists). Positive expansion entropy means chaos.
+
+```@docs
+expansionentropy
+boxregion
+expansionentropy_sample
+expansionentropy_batch
 ```

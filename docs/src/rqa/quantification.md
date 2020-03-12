@@ -1,4 +1,4 @@
-# Quantification & Analysis functions
+# Recurrence Quantification Analysis
 A [`RecurrenceMatrix`](@ref) can be analyzed in several ways to yield information about the dynamics of the trajectory. All these various *measures* and functions are collectively called "Recurrence Quantification Analysis" (RQA).
 
 To understand how each measure can be useful, we suggest to see the review articles listed in our documentation strings, namely:
@@ -8,7 +8,7 @@ To understand how each measure can be useful, we suggest to see the review artic
 
 You can also check the wikipedia page for [Recurrence quantification analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
 
-The functions described in this page all accept a recurrence matrix (`x`), see the [previous page](rplots).
+The functions described in this page all accept a recurrence matrix (`x`), see [`RecurrenceMatrix`](@ref).
 
 ## RQA Measures
 
@@ -27,7 +27,7 @@ rqa
 
 ---
 
-See also the [`@windowed`](@ref) macro for a windowed version of [`rqa`](@def)!
+See also the [`@windowed`](@ref) macro for a windowed version of `rqa`.
 
 ### Classical RQA Measures
 ```@docs
