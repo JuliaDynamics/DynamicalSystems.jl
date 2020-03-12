@@ -29,12 +29,13 @@ makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
          DelayEmbeddings, RecurrenceAnalysis],
 doctest=false,
+depth = 1,
 sitename= "DynamicalSystems.jl",
 root = @__DIR__,
 format = Documenter.HTML(
     prettyurls = CI,
     assets = [
-        "assets/logo.ico",
+        # "assets/logo.png",
         asset("https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap", class=:css),
         ],
     ),
