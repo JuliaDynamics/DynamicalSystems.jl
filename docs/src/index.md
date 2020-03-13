@@ -92,3 +92,6 @@ You can [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussio
 Be sure to visit the [Contributor Guide](@ref) page, because you can help make this package better without having to write a single line of code! Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an accurate lower bound of users that this package has already helped!
 
 Finally, you can donate for the development of **DynamicalSystems.jl**. You can do that by adding bounties to existing issues on the GitHub repositories (you can open new issues as well). Every issue has an automatic way to create a bounty using [Bountysource](https://www.bountysource.com/), see the first comment of each issue.
+
+## Contributor list
+The GitHub "contributor list" for DynamicalSystems.jl is misleading. For a true list of contributors you should visit the GitHub's contributor list for the sub-packages of DynamicalSystems.jl, e.g. [ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl/graphs/contributors).
