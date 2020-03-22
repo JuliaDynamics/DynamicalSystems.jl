@@ -82,9 +82,10 @@ If however the `Metric` is `Cityblock()`, calculate
 the absolute distance of *only the first elements* of the `m+k` and `n+k` points
 of the reconstruction `R` (distance ``d_F`` in ref. [^1]).
 ## References
-[^1] : Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
+[^1]: Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
 (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)
-[^2] : Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
+
+[^2]: Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """ ChaosTools.numericallyapunov
 
 end # module
