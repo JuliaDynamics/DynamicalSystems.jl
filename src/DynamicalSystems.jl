@@ -69,23 +69,23 @@ identify the slope
 immediatelly, assuming you
 have choosen sufficiently good `ks` such that the linear scaling region is bigger
 than the saturated region.
-The algorithm used in this function is due to Parlitz [^1], which itself
-expands upon Kantz [^2]. In sort, for
+The algorithm used in this function is due to Parlitz [^Skokos2016], which itself
+expands upon Kantz [^Kantz1994]. In sort, for
 each reference state a neighborhood is evaluated. Then, for each point in this
 neighborhood, the logarithmic distance between reference state and neighborhood
 state is
 calculated as the "time" index `k` increases. The average of the above over
 all neighborhood states over all reference states is the returned result.
 If the `Metric` is `Euclidean()` then use the Euclidean distance of the
-full `D`-dimensional points (distance ``d_E`` in ref. [^1]).
+full `D`-dimensional points (distance ``d_E`` in ref. [^Skokos2016]).
 If however the `Metric` is `Cityblock()`, calculate
 the absolute distance of *only the first elements* of the `m+k` and `n+k` points
-of the reconstruction `R` (distance ``d_F`` in ref. [^1]).
+of the reconstruction `R` (distance ``d_F`` in ref. [^Skokos2016]).
 ## References
-[^1]: Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
+[^Skokos2016]: Skokos, C. H. *et al.*, *Chaos Detection and Predictability* - Chapter 1
 (section 1.3.2), Lecture Notes in Physics **915**, Springer (2016)
 
-[^2]: Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
+[^Kantz1994]: Kantz, H., Phys. Lett. A **185**, pp 77–87 (1994)
 """ ChaosTools.numericallyapunov
 
 end # module
