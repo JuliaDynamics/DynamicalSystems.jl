@@ -63,3 +63,9 @@ The high level functions [`embed`](@ref), [`reconstruct`](@ref) utilize a low-le
 DelayEmbedding
 MTDelayEmbedding
 ```
+
+## Generalized Embeddings
+```@docs
+genembed
+GeneralizedEmbedding
+```

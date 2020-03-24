@@ -4,7 +4,7 @@
 It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
 
 !!! tip "Latest news"
-    Expansion entropy from Ott and Hunt implemented as [`expansionentropy`](@ref)!
+    Generalized embeddings in [`genembed`](@ref)!
 
 
 The documentation you are reading now was built with the following stable versions:
