@@ -61,7 +61,9 @@ R = reconstruct(tr, 2, 2) # Dataset size is also known by Type!
 The high level functions [`embed`](@ref), [`reconstruct`](@ref) utilize a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface. The low level interface is composed of the following two structures:
 ```@docs
 DelayEmbedding
+WeightedDelayEmbedding
 MTDelayEmbedding
+τrange
 ```
 
 ## Generalized Embeddings
