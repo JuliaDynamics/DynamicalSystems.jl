@@ -50,3 +50,8 @@ DelayEmbeddings.f1nn
 stochastic_indicator
 ```
 ---
+
+## Unified approach
+```@docs
+pecora
+```
