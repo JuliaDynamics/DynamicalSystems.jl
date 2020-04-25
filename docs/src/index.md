@@ -8,17 +8,9 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 
 
 The documentation you are reading now was built with the following stable versions:
-```@setup versions
-using Pkg.API: installed
-ins = installed()
-function f()
-for pkg in ["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"]
-  println(rpad(" * $(pkg) ", 30, "."), " $(ins[pkg])")
-end
-end
-```
 ```@example versions
-f() # hide
+using Pkg
+Pkg.status(["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"])
 ```
 
 !!! info "Introductory textbooks"
