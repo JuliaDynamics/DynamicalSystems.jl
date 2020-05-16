@@ -6,13 +6,6 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 !!! tip "Latest news"
     Generalized embeddings in [`genembed`](@ref)!
 
-
-The documentation you are reading now was built with the following stable versions:
-```@example versions
-using Pkg
-Pkg.status(["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"])
-```
-
 !!! info "Introductory textbooks"
     Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
 
@@ -31,6 +24,12 @@ For more advanced users, you can choose which packages to install and use at a h
 All packages depend on `DelayEmbeddings` which defines core numeric data structures and methods. For example `RecurrenceAnalysis` and `TimeseriesPrediction` depend only on `DelayEmbeddings`. Packages that require equations of motion also depend on `DynamicalSystemsBase`, like for example `ChaosTools`.
 
 If you only need functionality of a specific package you can install only that one, e.g. `]add RecurrenceAnalysis` and only the minimum amount of requirements will be installed.
+
+The documentation you are reading now was built with the following stable versions:
+```@example versions
+using Pkg
+Pkg.status(["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "ChaosTools"])
+```
 
 ## Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
