@@ -32,7 +32,7 @@ non0hist
 ```
 ---
 
-## Attractor Dimension Estimation
+## Generalized Dimension Estimation
 There are numerous methods that one can use to calculate a so-called "dimension" of a
 dataset, like for example the [Fractal dimension](https://en.wikipedia.org/wiki/Fractal_dimension). This real number can offer
 a lot of information about the object that the dataset represents.
@@ -56,7 +56,7 @@ linear_region
 ```
 ---
 
-## Example
+### Example
 For an example of using entropies to compute the dimension of an attractor let's use everyone's favorite system:
 ```@example entropy
 using DynamicalSystems, PyPlot
@@ -123,6 +123,12 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
 ---
 
+## Grassberger-Proccacia dimension
+```@docs
+kernel
+correlationsum
+grassberger
+```
 
 ## Permutation Entropy
 The permutation entropy is introduced by C. Bandt and B. Pompe as a
