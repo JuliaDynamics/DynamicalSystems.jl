@@ -241,7 +241,7 @@ ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
  parameters:  Tuple
 ```
 
-### A comment on using automatic Jacobians
+## A comment on using automatic Jacobians
 
 Notice that if you are using automatic differentiation for the Jacobian, you should take care to not define your equations of motion so that they explicitly use, or return, `Float64` numbers.
 This is because `ForwardDiff` uses `DualNumbers` for differentiation.
