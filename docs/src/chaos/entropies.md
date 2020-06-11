@@ -29,6 +29,7 @@ Basically, given a [`Dataset`](@ref) you can partition it into boxes to calculat
 The function used internally by `genentropy` is `non0hist`:
 ```@docs
 non0hist
+binhist
 ```
 ---
 
@@ -123,9 +124,9 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
 ---
 
-## Grassberger-Proccacia dimension
+## Correlation sum (Grassberger-Proccacia)
 ```@docs
-kernel
+kernelprob
 correlationsum
 grassberger
 ```
