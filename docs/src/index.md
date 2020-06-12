@@ -4,17 +4,14 @@
 It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
 
 !!! tip "Latest news"
-    Generalized embeddings in [`genembed`](@ref)!
+    Correlation sum and related dimension: [`correlationsum`](@ref)!
 
 !!! info "Introductory textbooks"
     Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
 
     If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
-    * Nonlinear Dynamics And Chaos - S. Strogatz
-    * An Exploration of Dynamical Systems and Chaos - J. Argyris *et al.*
     * Chaos in Dynamical Systems - E. Ott
     * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
-    * Chaos and Integrability in Nonlinear Dynamics - M. Tabor
 
 ## Installation
 Simply use `]add DynamicalSystems` to install everything. Alternatively you can also do `using Pkg; Pkg.add("DynamicalSystems")`.
