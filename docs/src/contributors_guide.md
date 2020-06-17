@@ -1,5 +1,9 @@
 # Contributor Guide
 
+*TL;DR: See ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
+
+---
+
 The ultimate goal for **DynamicalSystems.jl** is
 to be a useful *library* for scientists working on chaos, nonlinear dynamics and
 in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
@@ -15,9 +19,9 @@ If you want to help the cause, there are many ways to contribute to the **Dynami
 2. Suggest methods that you think should be included in our library. This should be
    done by opening a new issue that describes the method, gives references to papers
    using the method and also justifies why the method should be included.
-3. Contribute code by solving issues. The easiest issues to tackle are the ones with label ["good first issue"](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22good+first+issue%22+).
+3. Contribute code by solving issues. The easiest issues to tackle are the ones with label ["good first issue"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+).
 4. Contribute code by implementing new methods! That is the most **awesome** way to
-   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag ["wanted feature"](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22wanted+feature%22+), which can get you started on a big contribution!
+   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag ["wanted feature"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+), which can get you started on a big contribution!
 5. Contribute code by defining a new pre-defined dynamical system that you found useful.
 
 ## Contributing Code
