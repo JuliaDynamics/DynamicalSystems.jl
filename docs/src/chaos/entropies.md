@@ -129,6 +129,7 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 kernelprob
 correlationsum
 grassberger
+takens_best_estimate
 ```
 
 ## Permutation Entropy
