@@ -5,6 +5,10 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 
 !!! tip "Latest news"
     Correlation sum and related dimension: [`correlationsum`](@ref)!
+    
+!!! tip "Star us on GitHub!"
+    If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
+    This gives us an accurate lower bound of the (satisfied) user count.
 
 !!! info "Introductory textbooks"
     Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
