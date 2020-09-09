@@ -42,15 +42,15 @@ format = Documenter.HTML(
 pages = [
     "Introduction" => "index.md",
     "Contents" => "contents.md",
+    "Dynamical System Definition" => "ds/general.md",
+    "Predefined Dynamical Systems" => "ds/predefined.md",
+    "Numerical Data" => "embedding/dataset.md",
     "DelayEmbeddings" => [
-        "Numerical Data" => "embedding/dataset.md",
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Estimating Delay Embedding Parameters" => "embedding/estimate.md",
     ],
     "DynamicalSystemsBase" => [
-        "Dynamical System Definition" => "ds/general.md",
         "Time Evolution" => "ds/evolve.md",
-        "Predefined Dynamical Systems" => "ds/predefined.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
