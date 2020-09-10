@@ -55,7 +55,7 @@ pages = [
        "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
        "Entropies and Dimensions" => "chaos/entropies.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       "Periodicity" => "chaos/periodicity.md",
+       "Periodicity & Ergodicity" => "chaos/periodicity.md",
        "Choosing a solver" => "chaos/choosing.md",
     ],
     "RecurrenceAnalysis" => [

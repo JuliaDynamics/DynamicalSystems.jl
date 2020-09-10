@@ -128,7 +128,7 @@ ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
 ## Complex Example
 In this example we will go through the implementation of the coupled standard maps
 from our [Predefined Dynamical Systems](@ref). It is the most complex implementation
-and takes full advantage of the flexibility of the constructors. The example will use a Functor as equations of motion, as well as a sparse matrix for the Jacobian.
+and takes full advantage of the flexibility of the constructors. The example will use a function-like-object as equations of motion, as well as a sparse matrix for the Jacobian.
 
 Coupled standard maps is a big mapping that can have arbitrary number of
 equations of motion, since you can couple `N` standard maps which are 2D maps, like:
@@ -170,7 +170,7 @@ idxsp1 = SV(circshift(idxs, -1)...)  #indexes of thetas + 1
 csm = CoupledStandardMaps{M}(idxs, idxsm1, idxsp1);
 ```
 
-We will now use this struct to define a [functor](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1), a Type that also acts as a function.
+We will now use this struct to define a [function-like-object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects), a Type that also acts as a function.
 ```julia
 function (f::CoupledStandardMaps{N})(xnew::AbstractVector, x, p, n) where {N}
     ks, Γ = p

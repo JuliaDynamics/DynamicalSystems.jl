@@ -8,7 +8,7 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 !!! tip "Latest news"
     Correlation sum and related dimension: [`correlationsum`](@ref)!
 
-!!! tip "Star us on GitHub!"
+!!! info "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
     This gives us an accurate lower bound of the (satisfied) user count.
 
