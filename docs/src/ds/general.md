@@ -241,8 +241,7 @@ ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
  parameters:  Tuple
 ```
 
-## A comment on using automatic Jacobians
-
+## Automatic Jacobians
 Notice that if you are using automatic differentiation for the Jacobian, you should take care to NOT define your equations of motion so that they explicitly use, or return, `Float64` numbers.
 This is because `ForwardDiff` uses `DualNumbers` for differentiation.
 For example, if you did
@@ -259,18 +258,6 @@ end
 this function could not be used to auto-differentiate, as you would get an error when adding dual numbers to `SVector{Float64}`. Instead, leave the number type untyped, or use `eltype(u)` as the number type.
 
 ## Time Evolution of Systems
-
-!!! info "Trajectory and Timeseries"
-    The word "timeseries" can be confusing, because it can mean a univariate (also called scalar or one-dimensional)
-    timeseries or a multivariate (also called multi-dimensional) timeseries. To resolve this confusion, in
-    **DynamicalSystems.jl** we have the following convention: **"timeseries"** always
-    refers to a one-dimensional vector of numbers, which exists with respect to
-    some other one-dimensional vector of numbers that corresponds to a time-vector.
-    On the other hand,
-    the word **"trajectory"** is used to refer to a *multi-dimensional* timeseries,
-    which is of course simply a group/set of one-dimensional timeseries.
-    A trajectory is represented by a [`Dataset`](@ref).
-
 
 **DynamicalSystems.jl** provides a convenient function for getting a trajectory
 of a system at equally spaced time points:

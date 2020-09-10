@@ -7,7 +7,7 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 
 !!! tip "Latest news"
     Correlation sum and related dimension: [`correlationsum`](@ref)!
-    
+
 !!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
     This gives us an accurate lower bound of the (satisfied) user count.
@@ -61,10 +61,10 @@ Pkg.status(["DelayEmbeddings", "RecurrenceAnalysis", "DynamicalSystemsBase", "Ch
 
 ## Our Goals
 **DynamicalSystems.jl** was created with three goals in mind.
-The first, was to fill the missing gap of a software for nonlinear dynamics and chaos of the highest quality in any programming language.
-The second, was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics and chaos.
+The first was to fill the missing gap of a software for nonlinear dynamics and chaos of the highest quality (none exist in any programming language).
+The second was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics and chaos.
 
-The third, was to fundamentally change the perception of the role of code in both scientific education as well as research.
+The third was to fundamentally change the perception of the role of code in both scientific education as well as research.
 It is rarely the case that real, _runnable_ code is shown in the classroom, because it is often long and messy.
 This is especially hurtful for nonlinear dynamics, a field where computer-assisted exploration is critical.
 But published work in this field fares even worse, with the overwhelming majority of published research not sharing the code used to create the paper.
@@ -111,7 +111,7 @@ You can also [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for disc
 
 ## Contributing & Donating
 
-*TL;DR: See ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
+*TL;DR: See ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+).*
 
 ---
 

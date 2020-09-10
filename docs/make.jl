@@ -1,7 +1,7 @@
 cd(@__DIR__)
+CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
 Pkg.activate(@__DIR__)
-CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 CI && Pkg.instantiate()
 
 using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
@@ -47,10 +47,7 @@ pages = [
     "Numerical Data" => "embedding/dataset.md",
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
-        "Estimating Delay Embedding Parameters" => "embedding/estimate.md",
-    ],
-    "DynamicalSystemsBase" => [
-        "Time Evolution" => "ds/evolve.md",
+        "Optimal DCE Parameters" => "embedding/estimate.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
