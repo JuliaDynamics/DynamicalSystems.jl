@@ -12,8 +12,8 @@ The function $f$ is called the _dynamic rule_ of the system, also known as _equa
 
 In addition $f$, information about the Jacobian of the system $J_f$ is also used throughout the library.
 
-!!! warn
-    Keep in mind that almost all functions of **DynamicalSystems.jl** assume that $f$ is differentiable!
+!!! warning
+    Keep in mind that almost all functions of **DynamicalSystems.jl** that use a `DynamicalSystem` assume that ``f`` is differentiable!
 
 ## Creating a Dynamical System
 ```@docs
