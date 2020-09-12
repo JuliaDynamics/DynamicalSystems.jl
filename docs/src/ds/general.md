@@ -1,25 +1,26 @@
-# Dynamical Systems
-Currently a system in **DynamicalSystems.jl** can be either continuous
+# Dynamical System Definition
+In **DynamicalSystems.jl** a Dynamical System can be either in continuous time
 ```math
 \frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t),
 ```
-or discrete
+or discrete time
 ```math
 \vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)
 ```
-where $p$ contains the parameters of the system. In addition to the above equations
-of motion, information about the Jacobian of the system is also part of a "dynamical system".
+where $u$ is the state of the system and $p$ contains the parameters of the system.
+The function $f$ is called the _dynamic rule_ of the system, also known as _equations of motion_.
 
-Keep in mind that almost all functions of **DynamicalSystems.jl** assume that $\vec{f}$ is differentiable!
+In addition $f$, information about the Jacobian of the system $J_f$ is also used throughout the library.
+
+!!! warning
+    Keep in mind that almost all functions of **DynamicalSystems.jl** that use a `DynamicalSystem` assume that ``f`` is differentiable!
 
 ## Creating a Dynamical System
 ```@docs
 DynamicalSystem
 ```
 
----
-
-## Definition Table
+### Definition Table
 
 Here is a handy table that summarizes in what form should be the functions required for the equations of motion and the Jacobian, for each system type:
 
@@ -40,7 +41,7 @@ Here is a handy table that summarizes in what form should be the functions requi
     well as by some name.
 
 
-## General Functions
+### Convenience functions
 The following functions are defined for convenience for any dynamical system:
 ```@docs
 dimension
@@ -48,8 +49,7 @@ jacobian
 set_parameter!
 ```
 
-## Examples
-### Continuous, out-of-place
+## Example: continuous, out-of-place
 Let's see an example for a small system, which is a case where out-of-place
 equations of motion are preferred.
 ```julia
@@ -82,7 +82,7 @@ ds = ContinuousDynamicalSystem(loop, rand(3), [10.0, 28.0, 8/3], loop_jac)
  jacobian:  loop_jac
 ```
 
-### Discrete, in-place
+## Example: discrete, in-place
 The following example is only 2-dimensional, and thus once again it is "correct" to
 use out-of-place version with `SVector`. For the sake of example though, we use
 the in-place version.
@@ -125,10 +125,10 @@ ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
  jacobian:  ForwardDiff
 ```
 
-### Complex Example
+## Complex Example
 In this example we will go through the implementation of the coupled standard maps
 from our [Predefined Dynamical Systems](@ref). It is the most complex implementation
-and takes full advantage of the flexibility of the constructors. The example will use a Functor as equations of motion, as well as a sparse matrix for the Jacobian.
+and takes full advantage of the flexibility of the constructors. The example will use a function-like-object as equations of motion, as well as a sparse matrix for the Jacobian.
 
 Coupled standard maps is a big mapping that can have arbitrary number of
 equations of motion, since you can couple `N` standard maps which are 2D maps, like:
@@ -170,7 +170,7 @@ idxsp1 = SV(circshift(idxs, -1)...)  #indexes of thetas + 1
 csm = CoupledStandardMaps{M}(idxs, idxsm1, idxsp1);
 ```
 
-We will now use this struct to define a [functor](https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1), a Type that also acts as a function.
+We will now use this struct to define a [function-like-object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects), a Type that also acts as a function.
 ```julia
 function (f::CoupledStandardMaps{N})(xnew::AbstractVector, x, p, n) where {N}
     ks, Γ = p
@@ -241,9 +241,8 @@ ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
  parameters:  Tuple
 ```
 
-## A comment on using automatic Jacobians
-
-Notice that if you are using automatic differentiation for the Jacobian, you should take care to not define your equations of motion so that they explicitly use, or return, `Float64` numbers.
+## Automatic Jacobians
+Notice that if you are using automatic differentiation for the Jacobian, you should take care to NOT define your equations of motion so that they explicitly use, or return, `Float64` numbers.
 This is because `ForwardDiff` uses `DualNumbers` for differentiation.
 For example, if you did
 ```julia
@@ -256,4 +255,61 @@ function lorenz(u,p,t)
     return SVector{Float64, 3}(du1, du2, du3)
 end
 ```
-this function could not be used to autodifferentiate, as you would get an error when adding dual numbers to `SVector{Float64}`. Instead, leave the number type untyped, or use `eltype(u)` as the number type.
+this function could not be used to auto-differentiate, as you would get an error when adding dual numbers to `SVector{Float64}`. Instead, leave the number type untyped, or use `eltype(u)` as the number type.
+
+## Time Evolution of Systems
+
+**DynamicalSystems.jl** provides a convenient function for getting a trajectory
+of a system at equally spaced time points:
+```@docs
+trajectory
+```
+
+Notice that if you want to do repeated evolutions of different states of a
+continuous system, you should use the [`integrator`](@ref) interface instead.
+
+### Example
+```@example traject
+using DynamicalSystems
+ds = Systems.towel()
+```
+
+```@example traject
+tr = trajectory(ds, 100)
+```
+
+To get every 3-rd point of the trajectory, do
+```@example traject
+tr = trajectory(ds, 100; dt = 3)
+```
+
+Identical syntax is used for continuous systems
+```@example traject
+ds = Systems.lorenz()
+```
+```@example traject
+tr = trajectory(ds, 10.0; dt = 0.01)
+```
+
+And a final example controlling the integrator accuracy:
+```@example traject
+ds = Systems.lorenz()
+tr = trajectory(ds, 10.0; dt = 0.1, abstol = 1e-9, reltol = 1e-9)
+```
+
+### Solution precision for continuous systems
+A numerical solution of an ODE is not the "true" solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.
+
+DifferentialEquations.jl offers a tool, called [Uncertainty Quantification](https://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification/),
+which allows users to asses up to what time-scales the numerical solution is close
+to the "true" solution. For example, using the default solving parameters of
+**DynamicalSystems.jl**, the Lorenz system is accurate up to time `t = 50.0`.
+
+However, fortunately for us, there is not too much worry about the numerical solution diverging from the true solution. That is because of the [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) (or
+[shadowing lemma](http://www.scholarpedia.org/article/Shadowing_lemma_for_flows)):
+
+!!! quote "Shadowing Theorem"
+    Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.
+
+This simply means that one can always numerically study chaos not only qualitatively but also quantitatively. For more information, see the book *Chaos in Dynamical Systems* by E. Ott, or the
+[scholarpedia](http://www.scholarpedia.org/article/Shadowing_lemma_for_flows) entry.

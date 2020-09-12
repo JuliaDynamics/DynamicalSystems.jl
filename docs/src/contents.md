@@ -3,7 +3,7 @@ The _module_ `DynamicalSystems` re-exports all following functionality, grouped 
 
 ## `DynamicalSystemsBase`
 * Intuitive, consistent APIs for the definition of general dynamical systems under a unified struct [`DynamicalSystem`](@ref). The following combinations are possible:
-  * Continuous or Discrete systems. Continuous systems use [`DifferentialEquations.jl`](http://docs.juliadiffeq.org/latest/) for solving the ODE problem.
+  * Continuous or Discrete systems. Continuous systems use [DifferentialEquations.jl](https://diffeq.sciml.ai/latest/) for solving the ODE problem.
   * In-place or out-of-place (large versus small systems).
   * Auto-differentiated or not (for the Jacobian function).
 
@@ -15,12 +15,11 @@ The _module_ `DynamicalSystems` re-exports all following functionality, grouped 
 ## `DelayEmbeddings`
 Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.
 * Unified & dedicated interface for numerical data: [`Dataset`](@ref).
-* Simple and extendable [`neighborhood`](@ref) estimation by interfacing [`NearestNeighbors`](https://github.com/KristofferC/NearestNeighbors.jl).
 * Flexible, super-efficient and abstracted [Delay Coordinates Embedding](@ref) interface.
     * Supports multiple dimensions and multiple timescales.
 
 * Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
-
+* [Unified approach](@ref) of finding optimal embeddings (advanced algorithms).
 * Fast calculation of mutual information: [`mutualinformation`](@ref).
 
 ## `ChaosTools`
@@ -67,12 +66,12 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 1. Broomhead-King coordinates: [`broomhead_king`](@ref).
 3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
 
-### [Periodicity](@ref)
+### [Periodicity & Ergodicity](@ref)
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 2. Estimating the period of a timeseries: [`estimate_period`](@ref).
-
+3. Return and transit time statistics for a subset of the state space: [`transit_time_statistics`](@ref).
 
 ## `RecurrenceAnalysis`
 `RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).

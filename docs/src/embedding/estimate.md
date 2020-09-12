@@ -1,9 +1,15 @@
-# Estimating Delay Embedding Parameters
-The following functions can estimate good values that can be used in
-[`reconstruct`](@ref) for either the delay time or the
-number of temporal neighbors.
+# Optimal DCE Parameters
+This page discusses and provides algorithms for estimating optimal parameters to do Delay Coordinates Embedding (DCE) with.
 
-## Delay Time
+The approaches can be grouped into two schools:
+1. **Independent**, where one tries to independently find the best value for a delay time `τ` and an embedding dimension `d`.
+2. **Unified**, where at the same time an optimal combination of `τ, d` is found.
+
+The independent approach is something "old school", while recent scientific research has shifted almost exclusively to unified approaches.
+
+In addition, the unified approaches are the only ones that can accommodate multi-variate inputs. This means that if you have multiple measured input timeseries, you should be able to take advantage of all of them for the best possible embedding of the dynamical system's set.
+
+## Independent delay time
 ```@docs
 estimate_delay
 exponential_decay_fit
@@ -13,11 +19,7 @@ exponential_decay_fit
 mutualinformation
 ```
 
----
-
-Besides the above method, there also exists code that computes mutual information in two other ways. Both ways are in the file `DelayEmbedding\src\old_mutual_info.jl`. The first way is the original algorithm of Fraser, while the second is the algorithm of Kraskov. Both of these implementations are inferior to the one exposed here (performance-wise).
-
-## Embedding Dimension
+## Independent embedding dimension
 ```@docs
 estimate_dimension
 ```
@@ -47,11 +49,22 @@ savefig("estimateD.png"); nothing # hide
 DelayEmbeddings.fnn
 DelayEmbeddings.afnn
 DelayEmbeddings.f1nn
-stochastic_indicator
+DelayEmbeddings.stochastic_indicator
 ```
 ---
 
 ## Unified approach
+Several algorithms have been created to implement a unified approach to delay coordinates embedding. You can find some implementations below:
 ```@docs
 pecora
+uzal_cost
+garcia_almeida_embedding
+mdop_embedding
+```
+
+### Low-level functions of unified approach
+```@docs
+DelayEmbeddings.n_statistic
+DelayEmbeddings.beta_statistic
+DelayEmbeddings.mdop_maximum_delay
 ```

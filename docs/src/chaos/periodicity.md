@@ -1,5 +1,5 @@
-# Periodicity
-In this page we describe methods related to the periodic behavior of dynamical systems or univariate timeseries.
+# Periodicity & Ergodicity
+In this page we describe methods related to the periodic behavior of dynamical systems or univariate timeseries, *or* related to the ergodic property of chaotic sets.
 
 ## Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
@@ -94,11 +94,11 @@ You can confirm for yourself that this is correct, for many reasons:
    order $n$ come in (possible multiples of) $2n$-sized pairs (see e.g. order 5).
    This is a direct consequence of the Poincaré–Birkhoff theorem.
 
-## Determining Periodicity
+## Estimating the Period
 
-Once you have determined that your system is periodic, you might want to find out what its period is.  Fortunately, the function [`estimate_period`](@ref) from `ChaosTools` offers many ways for you to do this, given the system's timeseries as an input.
-
-We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.  The figure below summarizes this:
+The function [`estimate_period`](@ref) from `ChaosTools` offers ways for estimating the period (either exact for periodic timeseries, or approximate for near-periodic ones) of a given timeseries.
+We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.
+The figure below summarizes this:
 ![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/periodestimationmethods.png?raw=true)
 
 ```@docs
@@ -141,4 +141,10 @@ estimate_period(v, :periodogram, t)
 ```
 ```@example sm
 estimate_period(v, :zerocrossing, t)
+```
+
+## Return time statistics
+
+```@docs
+transit_time_statistics
 ```

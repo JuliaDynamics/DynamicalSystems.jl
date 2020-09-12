@@ -1,7 +1,7 @@
 cd(@__DIR__)
+CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
 Pkg.activate(@__DIR__)
-CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 CI && Pkg.instantiate()
 
 using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
@@ -42,15 +42,12 @@ format = Documenter.HTML(
 pages = [
     "Introduction" => "index.md",
     "Contents" => "contents.md",
+    "Dynamical System Definition" => "ds/general.md",
+    "Predefined Dynamical Systems" => "ds/predefined.md",
+    "Numerical Data" => "embedding/dataset.md",
     "DelayEmbeddings" => [
-        "Numerical Data" => "embedding/dataset.md",
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
-        "Estimating Delay Embedding Parameters" => "embedding/estimate.md",
-    ],
-    "DynamicalSystemsBase" => [
-        "Dynamical System Definition" => "ds/general.md",
-        "Time Evolution" => "ds/evolve.md",
-        "Predefined Dynamical Systems" => "ds/predefined.md",
+        "Optimal DCE Parameters" => "embedding/estimate.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
@@ -58,7 +55,7 @@ pages = [
        "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
        "Entropies and Dimensions" => "chaos/entropies.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       "Periodicity" => "chaos/periodicity.md",
+       "Periodicity & Ergodicity" => "chaos/periodicity.md",
        "Choosing a solver" => "chaos/choosing.md",
     ],
     "RecurrenceAnalysis" => [
