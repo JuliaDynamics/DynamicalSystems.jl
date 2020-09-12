@@ -3,7 +3,7 @@ This page discusses and provides algorithms for estimating optimal parameters to
 
 The approaches can be grouped into two schools:
 1. **Independent**, where one tries to independently find the best value for a delay time `τ` and an embedding dimension `d`.
-2. **Unified**, where at the same time   following functions can estimate good values that can be used in
+2. **Unified**, where at the same time an optimal combination of `τ, d` is found.
 
 The independent approach is something "old school", while recent scientific research has shifted almost exclusively to unified approaches.
 
