@@ -146,5 +146,6 @@ estimate_period(v, :zerocrossing, t)
 ## Return time statistics
 
 ```@docs
+mean_return_times
 transit_time_statistics
 ```

@@ -42,6 +42,7 @@ Based on the definition of the [generalized entropy](#ChaosTools.genentropy), on
 dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
+estimate_boxsizes
 ```
 ---
 !!! danger "Be wary when using `generalized_dim`"
@@ -50,10 +51,11 @@ generalized_dim
     an actual function and therefore you should be careful
     when considering the validity of the returned number.
 
+### Methods to identify linear regions
 ```@docs
-estimate_boxsizes
 linear_regions
 linear_region
+linreg
 ```
 ---
 
