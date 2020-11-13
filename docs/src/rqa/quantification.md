@@ -39,7 +39,6 @@ dl_entropy
 divergence
 trend
 ```
----
 
 ### Extended RQA Measures
 ```@docs
@@ -49,7 +48,6 @@ vl_average
 vl_max
 vl_entropy
 ```
----
 
 ### Recurrence Time Measures
 ```@docs
@@ -58,7 +56,11 @@ nmprt
 rt_entropy
 rt_average
 ```
----
+
+### Network-inspired RQA Measures
+```@docs
+transitivity
+```
 
 ## Keyword table
 Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:
