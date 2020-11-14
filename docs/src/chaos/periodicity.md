@@ -24,7 +24,7 @@ and 8. We will use all permutations for the `signs` but only one for the `inds`.
 We will also only use one `λ` value, and a 21×21 density of initial conditions.
 
 First, initialize everything
-```@example sm
+```@example MAIN
 using DynamicalSystems, PyPlot, StaticArrays
 
 ds = Systems.standardmap()
@@ -44,7 +44,7 @@ ALLFP = Dataset{2, Float64}[];
 ```
 Then, do the necessary computations for all orders
 
-```@example sm
+```@example MAIN
 for o in orders
     FP = periodicorbits(ds, o, ics, λs, indss, singss)
     push!(ALLFP, FP)
@@ -52,7 +52,7 @@ end
 ```
 
 Plot the phase space of the standard map
-```@example sm
+```@example MAIN
 iters = 1000
 dataset = trajectory(ds, iters)
 for x in xs
@@ -68,7 +68,7 @@ PyPlot.ylim(ys[1], ys[end]);
 ```
 
 and finally, plot the fixed points
-```@example sm
+```@example MAIN
 markers = ["D", "^", "s", "p", "h", "8"]
 colors = ["b", "g", "r", "c", "m", "grey"]
 
@@ -107,7 +107,7 @@ estimate_period
 
 ### Example
 Here we will use a modified FitzHugh-Nagumo system that results in periodic behavior, and then try to estimate its period. First, let's see the trajectory:
-```@example sm
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 function FHN(u, p, t)
@@ -133,13 +133,13 @@ savefig("fhn_trajectory.png"); nothing # hide
 ![A periodic trajectory](fhn_trajectory.png)
 
 Examining the figure, one can see that the period of the system is around `91` time units. To estimate it numerically let's use some of the methods:
-```@example sm
+```@example MAIN
 estimate_period(v, :autocorrelation, t)
 ```
-```@example sm
+```@example MAIN
 estimate_period(v, :periodogram, t)
 ```
-```@example sm
+```@example MAIN
 estimate_period(v, :zerocrossing, t)
 ```
 

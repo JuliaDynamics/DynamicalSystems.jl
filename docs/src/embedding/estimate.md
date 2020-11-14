@@ -2,7 +2,7 @@
 This page discusses and provides algorithms for estimating optimal parameters to do Delay Coordinates Embedding (DCE) with.
 
 The approaches can be grouped into two schools:
-1. **Independent**, where one tries to independently find the best value for a delay time `τ` and an embedding dimension `d`.
+1. **Independent** (also called **traditional**), where one tries to independently find the best value for a delay time `τ` and an embedding dimension `d`.
 2. **Unified**, where at the same time an optimal combination of `τ, d` is found.
 
 The independent approach is something "old school", while recent scientific research has shifted almost exclusively to unified approaches.
@@ -21,36 +21,40 @@ mutualinformation
 
 ## Independent embedding dimension
 ```@docs
-estimate_dimension
+optimal_traditional_de
+delay_afnn
+delay_ifnn
+delay_fnn
+delay_f1nn
 ```
 
 ### Example
-```@example estimateD
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 ds = Systems.roessler()
+# This trajectory is a chaotic attractor with fractal dim ≈ 2
+# therefore the set needs at least embedding dimension of 3
 tr = trajectory(ds, 1000.0; dt = 0.05)
+x = tr[:, 1]
 
-τ = estimate_delay(tr[:, 1], "mi_min") # first minimum of mutual information
-
-figure();
-for method in ["afnn", "fnn", "f1nn"]
-    Ds = estimate_dimension(tr[:, 1], τ, 1:6, method)
-    plot(1:6, Ds ./ maximum(Ds), label = method, marker = "o")
+dmax = 7
+fig = figure()
+for (i, method) in enumerate(["afnn", "fnn", "f1nn", "ifnn"])
+    # Plot statistic used to estimate optimal embedding
+    # as well as the automated output embedding
+    𝒟, τ, E = optimal_traditional_de(x, method; dmax)
+    plot(1:dmax, E; label = method, marker = "o", ms = 5, color = "C$(i-1)")
+    optimal_d = size(𝒟, 2)
+    scatter(optimal_d, E[optimal_d]; marker = "s", s = 100, color = "C$(i-1)")
 end
-legend(); xlabel("\$\\gamma\$ (temporal neighbors)")
+legend(); xlabel("embedding dimension")
+ylabel("estimator")
 tight_layout()
-savefig("estimateD.png"); nothing # hide
+fig.savefig("estimateD.png"); nothing # hide
 ```
 ![](estimateD.png)
 
-### Functions
-```@docs
-DelayEmbeddings.fnn
-DelayEmbeddings.afnn
-DelayEmbeddings.f1nn
-DelayEmbeddings.stochastic_indicator
-```
 ---
 
 ## Unified approach

@@ -23,7 +23,11 @@ end
 Themes.compile(joinpath(@__DIR__, "juliadynamics-light.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-light.css"))
 Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-dark.css"))
 
+# %% Build docs
 PyPlot.ioff()
+cd(@__DIR__)
+ENV["JULIA_DEBUG"] = "Documenter"
+
 
 makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
@@ -42,9 +46,11 @@ format = Documenter.HTML(
 pages = [
     "Introduction" => "index.md",
     "Contents" => "contents.md",
-    "Dynamical System Definition" => "ds/general.md",
-    "Predefined Dynamical Systems" => "ds/predefined.md",
-    "Numerical Data" => "embedding/dataset.md",
+    "Dynamical systems" => [
+        "Dynamical System Definition" => "ds/general.md",
+        "Predefined Dynamical Systems" => "ds/predefined.md",
+        "Numerical Data" => "embedding/dataset.md",
+    ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Optimal DCE Parameters" => "embedding/estimate.md",
@@ -68,8 +74,6 @@ pages = [
 ],
 )
 
-close("all")
-
 if CI
     deploydocs(
         repo = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
@@ -78,4 +82,5 @@ if CI
     )
 end
 
+PyPlot.close("all")
 PyPlot.ion()
