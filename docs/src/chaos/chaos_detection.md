@@ -18,7 +18,7 @@ gali
 ---
 ### Discrete Example
 We will use 3 coupled standard maps as an example for a discrete system:
-```@example gali
+```@example MAIN
 using DynamicalSystems
 using PyPlot
 M = 3; ks = 3ones(M); Γ = 0.1;
@@ -29,7 +29,7 @@ ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
 ```
 
 First, let's see the behavior of GALI for a stable orbit
-```@example gali
+```@example MAIN
 figure(figsize = (8,4))
 tr = trajectory(ds, 100000)
 
@@ -59,7 +59,7 @@ savefig("gali_discrete_stable.png"); nothing # hide
 
 Now do the same for a chaotic orbit
 
-```@example gali
+```@example MAIN
 figure(figsize = (8,4))
 tr = trajectory(ds, 100000, chaotic)
 subplot(1,2,1)
@@ -85,7 +85,7 @@ savefig("gali_discrete_chaos.png"); nothing # hide
 
 ### Continuous Example
 As an example of a continuous system, let's see the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles):
-```@example gali
+```@example MAIN
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
 sp = [0, .295456, .407308431, 0] # stable periodic orbit: 1D torus
@@ -94,7 +94,7 @@ ch = [0, -0.25, 0.42081, 0]      # chaotic orbit
 ds = Systems.henonheiles(sp)
 ```
 First, we see the behavior with a stable periodic orbit
-```@example gali
+```@example MAIN
 figure(figsize = (8,4))
 subplot(1,2,1)
 dt = 1.0
@@ -123,7 +123,7 @@ savefig("gali_cont_stable.png"); nothing # hide
 
 Next, let's see what happens with a quasi-periodic orbit.
 Don't forget to change the `u0` arguments!
-```@example gali
+```@example MAIN
 figure(figsize = (8,4))
 subplot(1,2,1)
 tr = trajectory(ds, 10000.0, qp; dt=dt, diffeq...)
@@ -149,7 +149,7 @@ savefig("gali_cont_quasi.png"); nothing # hide
 ![gali_cont_quasi](gali_cont_quasi.png)
 
 Finally, here is GALI of a continuous system with a chaotic orbit
-```@example gali
+```@example MAIN
 figure(figsize = (8,4))
 tr = trajectory(ds, 10000.0, ch; dt=dt, diffeq...)
 subplot(1,2,1)
@@ -250,7 +250,7 @@ predictability
 ### Example Hénon Map
 We will create something similar to figure 2 of the paper, but for the Hénon map.
 
-```@example gali
+```@example MAIN
 figure()
 he = Systems.henon()
 as = 0.8:0.01:1.225

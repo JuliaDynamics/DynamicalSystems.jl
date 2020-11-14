@@ -8,7 +8,7 @@ orbitdiagram
 ---
 
 For example, let's compute the famous orbit diagram of the logistic map:
-```@example orbit
+```@example MAIN
 using DynamicalSystems
 using PyPlot
 
@@ -54,7 +54,7 @@ poincaresos
 ---
 
 Here is an example of the [Henon-Heiles](https://en.wikipedia.org/wiki/H%C3%A9non%E2%80%93Heiles_system) system showing the mixed nature of the phase space
-```@example orbit
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 hh = Systems.henonheiles()
@@ -80,7 +80,7 @@ Here the surface of section was the (hyper-) plane that $q_1 = 0$. Some chaotic 
 
 ---
 Finally here is one more example with a more complex hyperplane:
-```@example orbit
+```@example MAIN
 gis = Systems.gissinger([2.32865, 2.02514, 1.98312])
 
 # Define appropriate hyperplane for gissinger system
@@ -152,7 +152,7 @@ produce_orbitdiagram
 
 For example, we will calculate the orbit diagram of the Shinriki oscillator, a continuous system that undergoes a period doubling route to chaos, much like the logistic map!
 
-```@example orbit
+```@example MAIN
 ds = Systems.shinriki([-2, 0, 0.2])
 
 pvalues = range(19, stop = 22, length = 401)

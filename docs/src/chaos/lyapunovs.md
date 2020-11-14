@@ -25,21 +25,21 @@ y_{n+1} &= bx_n
 \end{aligned}
 ```
 Let's get a trajectory
-```@example lyap
+```@example MAIN
 using DynamicalSystems, PyPlot
 henon = Systems.henon()
 tr1 = trajectory(henon, 100)
 summary(tr1)
 ```
 and create one more trajectory that starts very close to the first one
-```@example lyap
+```@example MAIN
 u2 = get_state(henon) + (1e-9 * ones(dimension(henon)))
 tr2 = trajectory(henon, 100, u2)
 summary(tr2)
 ```
 
 We now want to demonstrate how the distance between these two trajectories increases with time:
-```@example lyap
+```@example MAIN
 using LinearAlgebra: norm
 
 figure(figsize=(8,5))
@@ -72,14 +72,14 @@ lyapunovs
 As you can see, the documentation string is detailed and self-contained. For example,
 the Lyapunov spectrum of the [folded towel map](http://www.scholarpedia.org/article/Hyperchaos)
 is calculated as:
-```@example lyap
+```@example MAIN
 using DynamicalSystems
 
 ds = Systems.towel()
 λλ = lyapunovs(ds, 10000)
 ```
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
-```@example lyap
+```@example MAIN
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
 λλ = lyapunovs(lor, 10000, dt = 0.1)
 ```
@@ -95,7 +95,7 @@ ds = Systems.towel()
 ```
 
 Here is an example of plotting the exponents of the Henon map for various parameters:
-```@example lyap
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 he = Systems.henon()
@@ -122,14 +122,14 @@ lyapunov
 ```
 ---
 For example:
-```@example lyap
+```@example MAIN
 using DynamicalSystems, PyPlot
 henon = Systems.henon()
 λ = lyapunov(henon, 10000, d0 = 1e-7, upper_threshold = 1e-4, Ttr = 100)
 ```
 
 The same is done for continuous systems:
-```@example lyap
+```@example MAIN
 lor = Systems.lorenz(ρ = 32)
 λ = lyapunov(lor, 10000.0, dt = 10.0, Ttr = 100.0)
 ```

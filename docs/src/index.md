@@ -6,7 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! tip "Latest news"
-    Correlation sum and related dimension: [`correlationsum`](@ref)!
+    Rework and improvement of optimal embedding dimension: [`optimal_traditional_de`](@ref)!
 
 !!! info "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).

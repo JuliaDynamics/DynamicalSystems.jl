@@ -13,7 +13,7 @@ The function `numericallyapunov` has a total of 4 different approaches for the a
 combining 2 types of distances with 2 types of neighborhoods.
 
 ### Example of Numerical Lyapunov computation
-```@example entropy
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 ds = Systems.henon()
@@ -40,7 +40,7 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
         tight_layout()
     end
 end
-savefig("numerlyap.png"); nothing # hide
+fig.savefig("numerlyap.png"); nothing # hide
 ```
 ![](numerlyap.png)
 
@@ -52,7 +52,7 @@ savefig("numerlyap.png"); nothing # hide
     the range at which the exponential expansion region is valid!
 
 Let's revisit the example of the previous section:
-```@example entropy
+```@example MAIN
 ds = Systems.henon()
 data = trajectory(ds, 100000)
 x = data[:, 1]
@@ -60,14 +60,14 @@ length(x)
 ```
 The timeseries of such length could be considered big. A time length of 100 seems
 very small. Yet it turns out it is way too big! The following
-```@example entropy
+```@example MAIN
 ks = 1:100
 R = reconstruct(x, 1, 1)
 E = numericallyapunov(R, ks, ntype = FixedMassNeighborhood(2))
-figure()
+fig = figure()
 plot(ks .- 1, E .- E[1])
 title("Lyappunov: $(linear_region(ks, E)[2])")
-savefig("badlyap.png"); nothing # hide
+fig.savefig("badlyap.png"); nothing # hide
 ```
 ![](badlyap.png)
 
@@ -81,7 +81,7 @@ a slope near 0! (or if you were to give bigger tolerance as a keyword argument)
 ### Case of a Continuous system
 The process for continuous systems works identically with discrete, but one must be
 a bit more thoughtful when choosing parameters. The following example helps the users get familiar with the process:
-```@example entropy
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 ntype = FixedMassNeighborhood(5) #5 nearest neighbors of each state
@@ -93,15 +93,15 @@ x = trajectory(ds, 1000.0; dt = dt)[:, 1]
 ```
 
 We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `numericallyapunovs`)
-```@example entropy
+```@example MAIN
 ks1 = 0:200
 ```
 and in fact it is even better to not increment the `ks` one by one but instead do
-```@example entropy
+```@example MAIN
 ks2 = 0:4:200
 ```
 Now we plot some example computations
-```@example entropy
+```@example MAIN
 figure()
 for D in [3, 7], τ in [7, 15]
     r = reconstruct(x, D, τ)
@@ -139,7 +139,7 @@ of superficial dimensions due to noise.
 Take the following example where we produce noisy data from a system and then use
 Broomhead-King coordinates as an alternative to "vanilla" delay coordinates:
 
-```@example entropy
+```@example MAIN
 using DynamicalSystems, PyPlot
 
 ds = Systems.gissinger()
@@ -154,8 +154,8 @@ summary(U)
 ```
 
 Now let's simply compare the above result with the one you get from doing a "standard" call to [`reconstruct`](@ref):
-```@example entropy
-figure(figsize= (10,6))
+```@example MAIN
+fig=figure(figsize= (10,6))
 subplot(1,2,1)
 plot(U[:, 1], U[:, 2])
 title("Broomhead-King of s")
@@ -165,7 +165,7 @@ R = reconstruct(s, 1, 30)
 plot(columns(R)...; color = "C3")
 title("2D reconstruction of s")
 tight_layout()
-savefig("broomhead_king.png"); nothing # hide
+fig.savefig("broomhead_king.png"); nothing # hide
 ```
 ![](broomhead_king.png)
 
@@ -173,5 +173,5 @@ we have used the same system as in the [Delay Coordinates Embedding](@ref) examp
 delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.
 
 ## Nearest Neighbor Prediction
-Nearest neighbor timeseries prediction is a method commonly listed under nonlinear timeseries analysis. 
+Nearest neighbor timeseries prediction is a method commonly listed under nonlinear timeseries analysis.
 This is not part of DynamicalSystems.jl, because in JuliaDynamics we have a dedicated package for this, [TimeseriesPrediction.jl](https://juliadynamics.github.io/TimeseriesPrediction.jl/dev/).

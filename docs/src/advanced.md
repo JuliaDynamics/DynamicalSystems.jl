@@ -69,7 +69,7 @@ For the case of continuous systems you can add callbacks from the event handling
 
 In this example we use a simple `SavingCallback` to save the distance between the two states of a [`parallel_integrator`](@ref).
 
-```@example callback
+```@example MAIN
 using DynamicalSystems, DiffEqCallbacks
 using LinearAlgebra: norm
 

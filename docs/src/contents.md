@@ -1,7 +1,7 @@
 # Contents
-The _module_ `DynamicalSystems` re-exports all following functionality, grouped into different packages.
+The _module_ `DynamicalSystems` re-exports all following functionality.
 
-## `DynamicalSystemsBase`
+## Core types
 * Intuitive, consistent APIs for the definition of general dynamical systems under a unified struct [`DynamicalSystem`](@ref). The following combinations are possible:
   * Continuous or Discrete systems. Continuous systems use [DifferentialEquations.jl](https://diffeq.sciml.ai/latest/) for solving the ODE problem.
   * In-place or out-of-place (large versus small systems).
@@ -11,19 +11,21 @@ The _module_ `DynamicalSystems` re-exports all following functionality, grouped 
 * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
 * Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [Advanced documentation](@ref) for this.
 * Library of [Predefined Dynamical Systems](@ref) that have been used extensively in scientific research.
-
-## `DelayEmbeddings`
-Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.
 * Unified & dedicated interface for numerical data: [`Dataset`](@ref).
+
+## [Delay Coordinates Embedding](@ref)
+Performing delay coordinate embeddings and finding optimal parameters for doing so.
 * Flexible, super-efficient and abstracted [Delay Coordinates Embedding](@ref) interface.
     * Supports multiple dimensions and multiple timescales.
 
-* Methods that estimate optimal embedding parameters: the delay time ([`estimate_delay`](@ref)) and the number of temporal neighbors  ([`estimate_dimension`](@ref)).
+* Methods that estimate optimal embedding parameters: [Optimal DCE Parameters](@ref).
 * [Unified approach](@ref) of finding optimal embeddings (advanced algorithms).
 * Fast calculation of mutual information: [`mutualinformation`](@ref).
+* Unified neighborhood interface.
 
-## `ChaosTools`
-Is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
+## ChaosTools
+[ChaosTools.jl](https://github.com/JuliaDynamics/InteractiveChaos.jl) is a collection of many algorithms for (chaotic or not) dynamical systems.
+All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
 
 ### [Orbit Diagrams & PSOS](@ref)
@@ -71,10 +73,10 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 2. Estimating the period of a timeseries: [`estimate_period`](@ref).
-3. Return and transit time statistics for a subset of the state space: [`transit_time_statistics`](@ref).
+3. Return and transit time statistics for a subset of the state space: [`mean_return_times`](@ref), [`exit_entry_times`](@ref).
 
-## `RecurrenceAnalysis`
-`RecurrenceAnalysis` offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
+## Recurrence Analysis
+[RecurrenceAnalysis.jl](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl) offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
 
 * [Recurrence Plots](@ref), with cross-recurrence and joint-recurrence.
 * [Recurrence Quantification Analysis](@ref) (RQA):
