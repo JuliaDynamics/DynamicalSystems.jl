@@ -1,7 +1,7 @@
 # Nonlinear Timeseries Analysis
 
 ## Numerical Lyapunov Exponent
-Given any timeseries, one can first [`reconstruct`](@ref) it using
+Given any timeseries, one can first [`embed`](@ref) it using
 delay coordinates, and then calculate a maximum
 Lyapunov exponent for it. This is done
 with
@@ -28,8 +28,8 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
     subplot(1, 2, i)
     ntype = FixedMassNeighborhood(2)
     title("Distance: $(di)", size = 18)
-    for D in [1, 3, 6]
-        R = reconstruct(x, D, 1)
+    for D in [2, 4, 7]
+        R = embed(x, D, 1)
         E = numericallyapunov(R, ks;
         refstates = ℜ, distance = di, ntype = ntype)
         Δt = 1
@@ -62,7 +62,7 @@ The timeseries of such length could be considered big. A time length of 100 seem
 very small. Yet it turns out it is way too big! The following
 ```@example MAIN
 ks = 1:100
-R = reconstruct(x, 1, 1)
+R = embed(x, 2, 1)
 E = numericallyapunov(R, ks, ntype = FixedMassNeighborhood(2))
 fig = figure()
 plot(ks .- 1, E .- E[1])
@@ -103,8 +103,8 @@ ks2 = 0:4:200
 Now we plot some example computations
 ```@example MAIN
 figure()
-for D in [3, 7], τ in [7, 15]
-    r = reconstruct(x, D, τ)
+for D in [4, 8], τ in [7, 15]
+    r = embed(x, D, τ)
 
     # E1 = numericallyapunov(r, ks1; ntype = ntype)
     # λ1 = linear_region(ks1 .* dt, E1)[2]
@@ -153,7 +153,7 @@ U, S = broomhead_king(s, 40)
 summary(U)
 ```
 
-Now let's simply compare the above result with the one you get from doing a "standard" call to [`reconstruct`](@ref):
+Now let's simply compare the above result with the one you get from doing a "standard" call to [`embed`](@ref):
 ```@example MAIN
 fig=figure(figsize= (10,6))
 subplot(1,2,1)
@@ -161,9 +161,9 @@ plot(U[:, 1], U[:, 2])
 title("Broomhead-King of s")
 
 subplot(1,2,2)
-R = reconstruct(s, 1, 30)
+R = embed(s, 2, 30)
 plot(columns(R)...; color = "C3")
-title("2D reconstruction of s")
+title("2D embedding of s")
 tight_layout()
 fig.savefig("broomhead_king.png"); nothing # hide
 ```

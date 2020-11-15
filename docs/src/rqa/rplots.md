@@ -24,7 +24,7 @@ JointRecurrenceMatrix
 The recurrence matrices are internally stored as sparse matrices with boolean values. Typically in the literature one does not "see" the matrices themselves but instead a plot of them (hence "Recurrence Plots"). By default, when a Recurrence Matrix is created we "show" a mini plot of it which is a text-based scatterplot.
 
 Here is an example recurrence plot/matrix of a full trajectory of the Roessler system:
-```@example recurrence
+```@example MAIN
 using DynamicalSystems
 ro = Systems.roessler(ones(3), a=0.15, b=0.20, c=10.0)
 N = 2000; dt = 0.05
@@ -33,10 +33,10 @@ tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
 recurrenceplot(R; ascii = true)
 ```
-```@example recurrence
+```@example MAIN
 typeof(R)
 ```
-```@example recurrence
+```@example MAIN
 summary(R)
 ```
 
@@ -50,7 +50,7 @@ recurrenceplot
 ---
 
 Here is the same plot but using Unicode Braille characters
-```@example recurrence
+```@example MAIN
 recurrenceplot(R; ascii = false)
 ```
 
@@ -72,7 +72,7 @@ grayscale
 
 For example, here is the representation of the above `R` from the Roessler system using both plotting approaches:
 
-```@example recurrence
+```@example MAIN
 using PyPlot
 figure(figsize = (10,5))
 
@@ -91,11 +91,11 @@ savefig("different_rplots.png"); nothing # hide
 
 
 and here is exactly the same process, but using the embedded trajectory instead
-```@example recurrence
+```@example MAIN
 using PyPlot # hide
 y = tr[:, 2]
 τ = estimate_delay(y, "mi_min")
-m = reconstruct(y, 2, τ)
+m = embed(y, 3, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 
 figure(figsize = (5,5))
@@ -121,7 +121,7 @@ which justifies why recurrence plots are so fitting to be used in embedded times
 
 In the following we will plot recurrence plots of the Lorenz system for a periodic and chaotic regime (using scatter plot).
 
-```@example recurrence
+```@example MAIN
 using PyPlot # hide
 lor = Systems.lorenz()
 figure(figsize = (10,10))
