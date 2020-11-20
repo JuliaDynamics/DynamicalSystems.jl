@@ -1,4 +1,6 @@
 # Unified Optimal Embedding
+Unified approaches try to create an optimal embedding by in parallel optimizing what combination of delay times and embedding dimensions suits best.
+
 In addition, the unified approaches are the only ones that can accommodate multi-variate inputs. This means that if you have multiple measured input timeseries, you should be able to take advantage of all of them for the best possible embedding of the dynamical system's set.
 
 ## An example
@@ -136,7 +138,11 @@ w2 = estimate_delay(d2, "mi_min")
 theiler = minimum(hcat(w1,w2))
 
 Y_d, τ_vals_d, ts_vals_d, Ls_d , ε★_d = pecuzal_embedding(dummy_set; τs = 0:Tmax , w = theiler)
+
+size(Y_d)
 ```
+
+So, no (proper) embedding is done.
 
 ## All unified algorithms
 
@@ -154,5 +160,4 @@ pecuzal_embedding
 DelayEmbeddings.n_statistic
 DelayEmbeddings.beta_statistic
 DelayEmbeddings.mdop_maximum_delay
-DelayEmbeddings.garcia_embedding_cycle
 ```
