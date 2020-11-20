@@ -53,7 +53,8 @@ pages = [
     ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
-        "Optimal DCE Parameters" => "embedding/estimate.md",
+        "Traditional Optimal Embedding" => "embedding/traditional.md",
+        "Unified Optimal Embedding" => "embedding/unified.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
