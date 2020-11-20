@@ -18,8 +18,8 @@ Performing delay coordinate embeddings and finding optimal parameters for doing 
 * Flexible, super-efficient and abstracted [Delay Coordinates Embedding](@ref) interface.
     * Supports multiple dimensions and multiple timescales.
 
-* Methods that estimate optimal embedding parameters: [Optimal DCE Parameters](@ref).
-* [Unified approach](@ref) of finding optimal embeddings (advanced algorithms).
+* Methods that estimate optimal embedding parameters: [Traditional Optimal Embedding](@ref).
+* [Unified Optimal Embedding](@ref) approach (advanced algorithms).
 * Fast calculation of mutual information: [`mutualinformation`](@ref).
 * Unified neighborhood interface.
 

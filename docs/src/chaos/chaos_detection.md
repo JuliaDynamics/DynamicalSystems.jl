@@ -84,7 +84,7 @@ savefig("gali_discrete_chaos.png"); nothing # hide
 
 
 ### Continuous Example
-As an example of a continuous system, let's see the [`henonheiles`](system_definition/#DynamicalSystems.Systems.henonheiles):
+As an example of a continuous system, let's see the Henon-Heiles:
 ```@example MAIN
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
