@@ -31,7 +31,7 @@ ENV["JULIA_DEBUG"] = "Documenter"
 
 makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-         DelayEmbeddings, RecurrenceAnalysis],
+         DelayEmbeddings, RecurrenceAnalysis, Entropies],
 doctest=false,
 sitename= "DynamicalSystems.jl",
 root = @__DIR__,
@@ -51,6 +51,10 @@ pages = [
         "Predefined Dynamical Systems" => "ds/predefined.md",
         "Numerical Data" => "embedding/dataset.md",
     ],
+    "Entropies" => [
+        "Entropies & Probabilities" => "entropies/api.md",
+        "Probabilities Estimators" => "entropies/estimators.md",
+    ]
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Traditional Optimal Embedding" => "embedding/traditional.md",
