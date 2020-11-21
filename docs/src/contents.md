@@ -13,6 +13,12 @@ The _module_ `DynamicalSystems` re-exports all following functionality.
 * Library of [Predefined Dynamical Systems](@ref) that have been used extensively in scientific research.
 * Unified & dedicated interface for numerical data: [`Dataset`](@ref).
 
+## Entropies
+* An interface to estimate [Entropies & Probabilities](@ref) from trajectories or state space sets.
+* Fast and cheap (memory-wise) method for computing histograms of large datasets: [`binhist`](@ref).
+* Dozens of [Probabilities Estimators](@ref) for doing so, including standard binning, counting, permutations, nearest neighbor based, time-scale based, among others.
+
+
 ## [Delay Coordinates Embedding](@ref)
 Performing delay coordinate embeddings and finding optimal parameters for doing so.
 * Flexible, super-efficient and abstracted [Delay Coordinates Embedding](@ref) interface.
@@ -50,12 +56,11 @@ The following treat systems where the equations of motion are known:
 1. The 0-1 test for chaos: [`testchaos01`](@ref)
 1. The expansion entropy: [`expansionentropy`](@ref).
 
-### [Entropies and Dimensions](@ref)
+### [Fractal Dimension](@ref)
 
-1. Generalized (Renyi) entropy: [`genentropy`](@ref).
-2. Permutation entropy: [`permentropy`](@ref).
-2. Fast and cheap (memory-wise) method for computing entropies of large datasets.
-3. Generalized dimensions (e.g. capacity dimension, information dimension, etc.): [`generalized_dim`](@ref).
+1. Dozens of methods to calculate a fractal dimension
+1. Entropy-based
+3. Correlation-sum-based
 3. Kaplan-Yorke dimension: [`kaplanyorke_dim`](@ref).
 
 And, in order to automatically deduce dimensions, we also offer methods for:
