@@ -2,7 +2,7 @@ using DynamicalSystems, BenchmarkTools, StaticArrays
 
 ds = Systems.towel()
 
-function lyapunovs_normal(ds::DiscreteDS, N::Real; Ttr::Real = 100)
+function lyapunovspectrum_normal(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
     u = evolve(ds, Ttr)
     D = length(u)
@@ -26,7 +26,7 @@ function lyapunovs_normal(ds::DiscreteDS, N::Real; Ttr::Real = 100)
     λ./N
 end
 
-function lyapunovs_static(ds::DiscreteDS, N::Real; Ttr::Real = 100)
+function lyapunovspectrum_static(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 
     u = evolve(ds, Ttr)
     D = length(u)
@@ -51,10 +51,10 @@ function lyapunovs_static(ds::DiscreteDS, N::Real; Ttr::Real = 100)
 end
 
 N = 100000
-lyapunovs_normal(ds, 100000)
-lyapunovs_static(ds, 100000)
+lyapunovspectrum_normal(ds, 100000)
+lyapunovspectrum_static(ds, 100000)
 
-a = @btime lyapunovs_normal(ds, 100000);
-b = @btime lyapunovs_static(ds, 100000);
+a = @btime lyapunovspectrum_normal(ds, 100000);
+b = @btime lyapunovspectrum_static(ds, 100000);
 
 # qr static is 3 times faster and does 0 allocations.

@@ -122,7 +122,7 @@ end
 # Benchmark it
 
 
-function lyapunovs1(ds::ContinuousDynamicalSystem, N::Real=1000;
+function lyapunovspectrum1(ds::ContinuousDynamicalSystem, N::Real=1000;
     Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
     # Initialize
     tstops = dt:dt:N*dt
@@ -153,7 +153,7 @@ function lyapunovs1(ds::ContinuousDynamicalSystem, N::Real=1000;
     λ./(integ.t) #return spectrum
 end
 
-function lyapunovs1(ds::ContinuousDynamicalSystem, N::Real=1000;
+function lyapunovspectrum1(ds::ContinuousDynamicalSystem, N::Real=1000;
     Ttr::Real = 0.0, diff_eq_kwargs::Dict = Dict(), dt::Real = 0.1)
     # Initialize
     tstops = dt:dt:N*dt
@@ -188,14 +188,14 @@ dimension(ds) = 3
 function binteg()
     A = Dict(:abstol=> 1e-6, :reltol=>1e-6)
     ds1 = lorenz1()
-    ls1 = lyapunovs1(ds1, 5000.0, diff_eq_kwargs=A)
-    b1 = @benchmark lyapunovs1($ds1, 500.0, diff_eq_kwargs=$A)
+    ls1 = lyapunovspectrum1(ds1, 5000.0, diff_eq_kwargs=A)
+    b1 = @benchmark lyapunovspectrum1($ds1, 500.0, diff_eq_kwargs=$A)
     println("Lyapunovs 1: $(ls1)")
     Juno.render(b1)
 
     ds2 = lorenz2()
-    ls2 = lyapunovs1(ds2, 5000.0, diff_eq_kwargs=A)
-    b2 = @benchmark lyapunovs1($ds2, 500.0, diff_eq_kwargs=$A)
+    ls2 = lyapunovspectrum1(ds2, 5000.0, diff_eq_kwargs=A)
+    b2 = @benchmark lyapunovspectrum1($ds2, 500.0, diff_eq_kwargs=$A)
     println("Lyapunovs 2: $(ls2)")
 
     Juno.render(b2)

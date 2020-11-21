@@ -22,22 +22,22 @@ This means that there is a delicate balance between how expensive is your functi
 ## How do I pick?
 The answer to this question is easy: **benchmarks!**
 
-Here is a simple case: let's compute the Lyapunov spectrum of the Lorenz system using [`lyapunovs`](@ref):
+Here is a simple case: let's compute the Lyapunov spectrum of the Lorenz system using [`lyapunovspectrum`](@ref):
 ```@example solver
 ds = Systems.lorenz()
 tols = (abstol = 1e-6, reltol = 1e-6)
-lyapunovs(ds, 2000; Ttr = 100.0, tols...)
+lyapunovspectrum(ds, 2000; Ttr = 100.0, tols...)
 ```
 
 The above uses the default solver. Let's now benchmark using two different solvers, `SimpleATsit5` and `Vern9`. Since the `SimpleATsit5` case is of lower order, naively one might think it is faster because it makes less function calls. This argument is not necessarily true though.
 
-It is important to understand that when calling `lyapunovs(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*dt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
+It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*dt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
 
 Here are the numbers:
 ```@example solver
 using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq, Statistics
-b1 = @benchmark lyapunovs(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
-b2 = @benchmark lyapunovs(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
+b1 = @benchmark lyapunovspectrum(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
+b2 = @benchmark lyapunovspectrum(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
 println("Timing for SimpleATsit5:")
 println(mean(b1))
 println("Timing for Vern9:")

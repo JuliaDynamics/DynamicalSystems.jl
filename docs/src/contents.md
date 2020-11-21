@@ -39,7 +39,7 @@ All algorithms are independent of each other but they are also not expansive eno
 The following treat systems where the equations of motion are known:
 
 1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
-2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovs`](@ref).
+2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovspectrum`](@ref).
 
 ### [Detecting & Categorizing Chaos](@ref)
 

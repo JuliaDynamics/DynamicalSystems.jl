@@ -68,7 +68,7 @@ label="chaotic",marker="o", ms=1, linewidth=0)
 legend()
 
 subplot(1,2,2)
-ls = lyapunovs(ds, 100000; u0 = chaotic)
+ls = lyapunovspectrum(ds, 100000; u0 = chaotic)
 for k in [2,3,6]
     ex = sum(ls[1] - ls[j] for j in 2:k)
     g, t = gali(ds, 1000, k; u0 = chaotic)
@@ -158,7 +158,7 @@ label="ch",marker="o",markersize=2, linewidth=0)
 legend()
 
 subplot(1,2,2)
-ls = lyapunovs(ds, 5000.0; dt=dt, u0 = ch, diffeq...)
+ls = lyapunovspectrum(ds, 5000.0; dt=dt, u0 = ch, diffeq...)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
     g, t = gali(ds, 1000, k; u0 = ch, dt = dt, diffeq...)

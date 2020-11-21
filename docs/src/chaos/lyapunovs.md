@@ -63,10 +63,10 @@ The *initial* slope of the `d` vs `n` plot (before the curve saturates) is appro
 
 ## Lyapunov Spectrum
 
-The function `lyapunovs` calculates the entire spectrum of the Lyapunov
+The function `lyapunovspectrum` calculates the entire spectrum of the Lyapunov
 exponents of a system:
 ```@docs
-lyapunovs
+lyapunovspectrum
 ```
 ---
 As you can see, the documentation string is detailed and self-contained. For example,
@@ -76,19 +76,19 @@ is calculated as:
 using DynamicalSystems
 
 ds = Systems.towel()
-λλ = lyapunovs(ds, 10000)
+λλ = lyapunovspectrum(ds, 10000)
 ```
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
-λλ = lyapunovs(lor, 10000, dt = 0.1)
+λλ = lyapunovspectrum(lor, 10000, dt = 0.1)
 ```
 
-`lyapunovs` is also very fast:
+`lyapunovspectrum` is also very fast:
 ```julia
 using BenchmarkTools
 ds = Systems.towel()
-@btime lyapunovs($ds, 2000);
+@btime lyapunovspectrum($ds, 2000);
 ```
 ```
   237.226 μs (45 allocations: 4.27 KiB)
@@ -102,7 +102,7 @@ he = Systems.henon()
 as = 0.8:0.005:1.225; λs = zeros(length(as), 2)
 for (i, a) in enumerate(as)
     set_parameter!(he, 1, a)
-    λs[i, :] .= lyapunovs(he, 10000; Ttr = 500)
+    λs[i, :] .= lyapunovspectrum(he, 10000; Ttr = 500)
 end
 
 figure()
@@ -116,7 +116,7 @@ savefig("heλ.png"); nothing # hide
 
 ## Maximum Lyapunov Exponent
 It is possible to get only the maximum Lyapunov exponent simply by giving
-`1` as the third argument of [`lyapunovs`](@ref). However, there is a second algorithm that allows you to do the same thing, which is offered by the function `lyapunov`:
+`1` as the third argument of [`lyapunovspectrum`](@ref). However, there is a second algorithm that allows you to do the same thing, which is offered by the function `lyapunov`:
 ```@docs
 lyapunov
 ```

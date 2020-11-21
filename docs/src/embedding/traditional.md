@@ -24,6 +24,7 @@ delay_afnn
 delay_ifnn
 delay_fnn
 delay_f1nn
+DelayEmbeddings.stochastic_indicator
 ```
 
 ## Example

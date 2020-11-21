@@ -8,7 +8,7 @@ The main **API** for this is contained in two functions:
 * [`probabilities`](@ref) which computes probability distributions of given datasets
 * [`genentropy`](@ref) which uses the output of [`probabilities`](@ref), or a set of pre-computed [`Probabilities`](@ref), to calculate entropies.
 
-These functions dispatch on subtypes of [`ProbabilitiesEstimator`](@ref), which are summarized in the [Probabilities Estimators](@ref) page.
+These functions dispatch on subtypes of `ProbabilitiesEstimator`, which are summarized in the [Probabilities Estimators](@ref) page.
 
 ## Probabilities
 
@@ -27,8 +27,8 @@ binhist
 ## Generalized entropy
 
 In the study of dynamical systems there are many quantities that identify as "entropy".
-Notice that these quantities are not the more commonly known
-[thermodynamic ones](https://en.wikipedia.org/wiki/Entropy), used in Statistical Physics. Rather, they are more like the to the entropies of [information theory](https://en.wikipedia.org/wiki/Entropy_(information_theory)).
+Notice that these quantities are not the [thermodynamic ones](https://en.wikipedia.org/wiki/Entropy), used in Statistical Physics.
+Rather, they are more like the to the entropies of [information theory](https://en.wikipedia.org/wiki/Entropy_(information_theory)).
 
 All of the entropy-related quantities boil down to one thing: first extracting probabilities from a dataset and then applying the generalized entropy formula using [`genentropy`](@ref).
 

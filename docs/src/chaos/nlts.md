@@ -92,7 +92,7 @@ dt = 0.05
 x = trajectory(ds, 1000.0; dt = dt)[:, 1]
 ```
 
-We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `numericallyapunovs`)
+We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `numericallyapunovspectrum`)
 ```@example MAIN
 ks1 = 0:200
 ```

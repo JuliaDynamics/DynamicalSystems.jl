@@ -48,6 +48,7 @@ N = 500
 D = Dataset(sort([rand(𝒩) for i = 1:N]))
 x, y = columns(D)
 p = probabilities(D, NaiveKernel(1.5))
+figure()
 surf(x, y, p.p)
 xlabel("x"); ylabel("y")
 savefig("kernel_surface.png"); nothing # hide

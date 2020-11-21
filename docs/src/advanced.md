@@ -36,15 +36,15 @@ In the following, `state` is supposed to be a `D` dimensional vector (state of t
 2. `reinit!(integ, state, Q0::AbstractMatrix)` : to be used with the [`tangent_integrator`](@ref). This three argument version of `reinit!` is exported from `DynamicalSystemsBase`.
 
 ### Re-init of continuous tangent integrator
-Here we compute the [`lyapunovs`](@ref) for many different initial conditions.
+Here we compute the [`lyapunovspectrum`](@ref) for many different initial conditions.
 ```julia
 ds = Systems.lorenz()
 tinteg = tangent_integrator(ds, 2)
 ics = [rand(3) for i in 1:100]
 for ic in ics
   reinit!(tinteg, ic, orthonormal(3, 2))
-  λ = lyapunovs(tinteg, 1000, 0.1, 10.0)
-  # reminder: lyapunovs(tinteg, N, dt::Real, Ttr::Real = 0.0)
+  λ = lyapunovspectrum(tinteg, 1000, 0.1, 10.0)
+  # reminder: lyapunovspectrum(tinteg, N, dt::Real, Ttr::Real = 0.0)
 end
 ```
 

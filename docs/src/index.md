@@ -24,7 +24,7 @@ The individual packages that compose `DynamicalSystems` interact flawlessly with
 2. Numerical data, that can represent measured experiments, or sampled trajectories of dynamical systems, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
 
 These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
-For example, using [`lyapunovs`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
+For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
 Alternatively, by using [`numericallyapunov`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory.
 
 All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.

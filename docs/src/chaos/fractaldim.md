@@ -73,7 +73,7 @@ For example, the dimension of the strange attractor of the
 using DynamicalSystems
 hen = Systems.henon()
 tr = trajectory(hen, 200000)
-D_hen = generalized_dim(tr, 1)
+D_hen = generalized_dim(tr; α = 1)
 ```
 
 As a side note, be sure that you have enough data points, otherwise the values you will get will never be correct, as is demonstrated by
@@ -95,7 +95,7 @@ Notice that calling this function requires you to pass the Lyapunov exponents in
 ```@example MAIN
 using DynamicalSystems
 hen = Systems.henon()
-D_kp = kaplanyorke_dim(lyapunovs(hen, 100000))
+D_kp = kaplanyorke_dim(lyapunovspectrum(hen, 100000))
 ```
 
 ## Linear scaling regions

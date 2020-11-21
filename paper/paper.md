@@ -131,11 +131,11 @@ ds = ContinuousDynamicalSystem(lorenz, u0, p, lorenz_jac)
  in-place?  false
  jacobian:  lorenz_jac
 ```
-This structure can now be given to functions like `lyapunovs`
+This structure can now be given to functions like `lyapunovspectrum`
 ```julia
 # Calculate the full lyapunov spectrum by doing QR-decomposition 2000 times
 # and evolving in between for 2.0 units of time
-λs = lyapunovs(ds, 2000; dt = 2.0)
+λs = lyapunovspectrum(ds, 2000; dt = 2.0)
 ```
 ```
 Float64[3]
@@ -146,7 +146,7 @@ Float64[3]
 ```julia
 # benchmark:
 using BenchmarkTools
-@btime lyapunovs($ds, 2000; dt = 2.0);
+@btime lyapunovspectrum($ds, 2000; dt = 2.0);
 ```
 ```
   225.790 ms (348 allocations: 35.58 KiB)
