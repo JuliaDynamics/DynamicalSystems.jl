@@ -4,7 +4,8 @@ using Pkg
 Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
 
-using DynamicalSystems, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
+using DynamicalSystems
+using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using RecurrenceAnalysis, Documenter, PyPlot
 using DocumenterTools: Themes
 
@@ -54,7 +55,7 @@ pages = [
     "Entropies" => [
         "Entropies & Probabilities" => "entropies/api.md",
         "Probabilities Estimators" => "entropies/estimators.md",
-    ]
+    ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Traditional Optimal Embedding" => "embedding/traditional.md",

@@ -11,6 +11,7 @@ using Reexport
 
 @reexport using DelayEmbeddings
 @reexport using DynamicalSystemsBase
+@reexport using Entropies
 @reexport using ChaosTools
 @reexport using RecurrenceAnalysis
 

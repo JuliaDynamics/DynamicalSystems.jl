@@ -50,7 +50,7 @@ x, y = columns(D)
 p = probabilities(D, NaiveKernel(1.5))
 surf(x, y, p.p)
 xlabel("x"); ylabel("y")
-savefig("kernel_surface.png")
+savefig("kernel_surface.png"); nothing # hide
 ```
 
 ![](kernel_surface.png)
@@ -76,7 +76,7 @@ estimators nicely converge to the true entropy with increasing time series lengt
 For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0` (red line).
 
 ```@example
-using Entropies, DelayEmbeddings, StatsBase
+using DynamicalSystems, PyPlot
 import Distributions: Uniform, Normal
 
 Ns = [100:100:500; 1000:1000:10000]
@@ -118,7 +118,7 @@ PyPlot.plot(Ns, mean.(Ekr) .- StatsBase.std.(Ekr); color = "C2", label = "");
 
 xlabel("Time step"); ylabel("Entropy (nats)"); legend()
 tight_layout()
-PyPlot.savefig("nn_entropy_example.png")
+PyPlot.savefig("nn_entropy_example.png"); nothing # hide
 ```
 
 ![](nn_entropy_example.png)
@@ -139,7 +139,7 @@ logistic map. Entropy estimates using [`SymbolicWeightedPermutation`](@ref)
 and [`SymbolicAmplitudeAwarePermutation`](@ref) are added here for comparison.
 
 ```@example
-using DynamicalSystems, PyPlot, Entropies
+using DynamicalSystems, PyPlot
 
 ds = Systems.logistic()
 rs = 3.4:0.001:4
@@ -215,7 +215,7 @@ energy is contained at one scale) and higher for very irregular signals (energy 
 more out across scales).
 
 ```@example
-using Entropies, PyPlot
+using DynamicalSystems, PyPlot
 N, a = 1000, 10
 t = LinRange(0, 2*a*π, N)
 
@@ -224,9 +224,9 @@ y = sin.(t .+  cos.(t/0.5));
 z = sin.(rand(1:15, N) ./ rand(1:10, N))
 
 est = TimeScaleMODWT()
-h_x = Entropies.genentropy(x, est)
-h_y = Entropies.genentropy(y, est)
-h_z = Entropies.genentropy(z, est)
+h_x = genentropy(x, est)
+h_y = genentropy(y, est)
+h_z = genentropy(z, est)
 
 f = figure(figsize = (10,6))
 ax = subplot(311)
