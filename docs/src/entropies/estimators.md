@@ -189,20 +189,6 @@ savefig("permentropy.png"); nothing # hide
 
 ![](permentropy.png)
 
-
-## Weighted permutation (symbolic)
-
-```@docs
-SymbolicWeightedPermutation
-```
-
-
-## Amplitude-aware permutation (symbolic)
-
-```@docs
-SymbolicAmplitudeAwarePermutation
-```
-
 ## Time-scale (wavelet)
 
 ```@docs
