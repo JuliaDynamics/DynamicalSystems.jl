@@ -1,6 +1,7 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
+Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
 DelayEmbeddings = "5732040d-69e3-5649-938a-b6b4f237613f"
 DiffEqCallbacks = "459566f4-90b8-5000-8ac3-15dfb0a30def"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
