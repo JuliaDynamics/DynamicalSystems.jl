@@ -59,9 +59,3 @@ jobs:
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
         run:
           julia --project=docs docs/make.jl
-      - name: Doctests
-        run: |
-          julia --project=docs -e '
-            using Documenter: doctest
-            using YourPackage # actually use your own package name here and on the next line
-            doctest(YourPackage)'
