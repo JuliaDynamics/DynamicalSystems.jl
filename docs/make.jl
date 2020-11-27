@@ -6,7 +6,7 @@ CI && Pkg.instantiate()
 
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
-using Documenter, PyPlot, Conda
+using Documenter, PyPlot
 using DocumenterTools: Themes
 
 # %%
