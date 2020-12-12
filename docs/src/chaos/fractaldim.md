@@ -27,7 +27,7 @@ Our goal is to compute entropies for many different partition sizes `ε`, so let
 tr = trajectory(lor, 100.0; Ttr = 10.0)
 
 ες = ℯ .^ (-3.5:0.5:3.5) # semi-random guess
-Hs = genentropy.(Ref(tr), ες; α = 1)
+Hs = genentropy.(Ref(tr), ες; q = 1)
 ```
 
 ```@example MAIN
@@ -40,7 +40,7 @@ savefig("genentropy1.png"); nothing # hide
 ```
 ![](genentropy1.png)
 
-The slope of the linear scaling region of the above plot is the generalized dimension (of order α = 2) for the attractor of the Lorenz system.
+The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 2) for the attractor of the Lorenz system.
 
 Given that we _see_ the plot, we can estimate where the linear scaling region starts and ends. However, we can use the function [`linear_region`](@ref) to get an estimate of the result as well. First let's visualize what it does:
 
@@ -62,7 +62,7 @@ The [`linear_region`](@ref) function  computes the slope of the largest region:
 ```@example MAIN
 linear_region(xs, Hs)[2]
 ```
-This result is an approximation of the information dimension (because we used `α = 1`) of the Lorenz attractor.
+This result is an approximation of the information dimension (because we used `q = 1`) of the Lorenz attractor.
 
 ---
 
@@ -73,7 +73,7 @@ For example, the dimension of the strange attractor of the
 using DynamicalSystems
 hen = Systems.henon()
 tr = trajectory(hen, 200000)
-D_hen = generalized_dim(tr; α = 1)
+D_hen = generalized_dim(tr; q = 1)
 ```
 
 As a side note, be sure that you have enough data points, otherwise the values you will get will never be correct, as is demonstrated by
