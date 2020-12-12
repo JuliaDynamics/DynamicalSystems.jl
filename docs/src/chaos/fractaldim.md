@@ -99,7 +99,7 @@ D_kp = kaplanyorke_dim(lyapunovspectrum(hen, 100000))
 ```
 
 ## Linear scaling regions
-And other utilities.
+And other utilities, especially [`linreg`](@ref).
 ```@docs
 linear_regions
 linear_region
