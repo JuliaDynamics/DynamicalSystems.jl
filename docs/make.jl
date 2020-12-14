@@ -6,6 +6,7 @@ CI && Pkg.instantiate()
 
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
+using Neighborhood
 using Documenter, PyPlot
 using DocumenterTools: Themes
 
@@ -32,7 +33,7 @@ ENV["JULIA_DEBUG"] = "Documenter"
 
 makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-         DelayEmbeddings, RecurrenceAnalysis, Entropies],
+         DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood],
 doctest=false,
 sitename= "DynamicalSystems.jl",
 root = @__DIR__,
