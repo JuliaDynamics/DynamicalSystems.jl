@@ -12,9 +12,22 @@ The independent approach is something "old school", while recent scientific rese
 estimate_delay
 exponential_decay_fit
 ```
-### Mutual Information
+### Self Mutual Information
+
 ```@docs
-mutualinformation
+selfmutualinfo
+```
+
+Notice that mutual information between two *different* timeseries x, y exists in JuliaDynamics as well, but in the package [TransferEntropy.jl](https://github.com/JuliaDynamics/TransferEntropy.jl).
+It is also trivial to define it yourself using [`genentropy`](@ref) by doing
+
+```julia
+function mutualinfo(x, y, est; base = 2, α = 1)
+    X = genentropy(Dataset(x), est; base = base, α = α)
+    Y = genentropy(Dataset(y), est; base = base, α = α)
+    XY = genentropy(Dataset(x, y), est; base = base, α = α)
+    return X + Y - XY
+end
 ```
 
 ## Optimal embedding dimension

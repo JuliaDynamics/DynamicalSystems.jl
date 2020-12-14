@@ -84,8 +84,6 @@ a bit more thoughtful when choosing parameters. The following example helps the 
 ```@example MAIN
 using DynamicalSystems, PyPlot
 
-ntype = FixedMassNeighborhood(5) #5 nearest neighbors of each state
-
 ds = Systems.lorenz()
 # create a timeseries of 1 dimension
 dt = 0.05
@@ -103,16 +101,18 @@ ks2 = 0:4:200
 Now we plot some example computations
 ```@example MAIN
 figure()
-for D in [4, 8], τ in [7, 15]
-    r = embed(x, D, τ)
+ntype = NeighborNumber(5) #5 nearest neighbors of each state
 
-    # E1 = numericallyapunov(r, ks1; ntype = ntype)
+for d in [4, 8], τ in [7, 15]
+    r = embed(x, d, τ)
+
+    # E1 = numericallyapunov(r, ks1; ntype)
     # λ1 = linear_region(ks1 .* dt, E1)[2]
-    E2 = numericallyapunov(r, ks2; ntype = ntype)
-    λ2 = linear_region(ks2 .* dt, E2)[2]
+    # plot(ks1,E1.-E1[1], label = "dense, d=$(d), τ=$(τ), λ=$(round(λ1, 3))")
 
-    # plot(ks1,E1.-E1[1], label = "dense, D=$(D), τ=$(τ), λ=$(round(λ1, 3))")
-    plot(ks2,E2.-E2[1], label = "D=$(D), τ=$(τ), λ=$(round(λ2, digits = 3))")
+    E2 = numericallyapunov(r, ks2; ntype)
+    λ2 = linear_region(ks2 .* dt, E2)[2]
+    plot(ks2,E2.-E2[1], label = "d=$(d), τ=$(τ), λ=$(round(λ2, digits = 3))")
 end
 
 legend()
