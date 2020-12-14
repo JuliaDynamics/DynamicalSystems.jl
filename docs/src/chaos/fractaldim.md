@@ -79,6 +79,16 @@ D_hen = generalized_dim(tr; q = 1)
 As a side note, be sure that you have enough data points, otherwise the values you will get will never be correct, as is demonstrated by
 J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
+
+## Linear scaling regions
+And other utilities, especially [`linreg`](@ref), used in both [`generalized_dim`] and [`grassberger`](@ref).
+```@docs
+linear_regions
+linear_region
+linreg
+estimate_boxsizes
+```
+
 ## Correlation dimension
 ```@docs
 kernelprob
@@ -96,13 +106,4 @@ Notice that calling this function requires you to pass the Lyapunov exponents in
 using DynamicalSystems
 hen = Systems.henon()
 D_kp = kaplanyorke_dim(lyapunovspectrum(hen, 100000))
-```
-
-## Linear scaling regions
-And other utilities, especially [`linreg`](@ref).
-```@docs
-linear_regions
-linear_region
-linreg
-estimate_boxsizes
 ```
