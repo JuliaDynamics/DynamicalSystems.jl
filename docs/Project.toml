@@ -16,11 +16,3 @@ RecurrenceAnalysis = "639c3291-70d9-5ea2-8c5b-839eba1ee399"
 SimpleDiffEq = "05bca326-078c-5bf0-a5bf-ce7c7982d7fd"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-
-[compat]
-ChaosTools = "1.8"
-DelayEmbeddings = "1"
-Documenter = "0.24.6"
-DynamicalSystemsBase = "1.2.3"
-RecurrenceAnalysis = "1"
-julia = "1"
