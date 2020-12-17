@@ -10,7 +10,7 @@ or discrete time
 where $u$ is the state of the system and $p$ contains the parameters of the system.
 The function $f$ is called the _dynamic rule_ of the system, also known as _equations of motion_.
 
-In addition $f$, information about the Jacobian of the system $J_f$ is also used throughout the library.
+In addition to $f$, information about the Jacobian of the system $J_f$ is also used throughout the library.
 
 !!! warning
     Keep in mind that almost all functions of **DynamicalSystems.jl** that use a `DynamicalSystem` assume that ``f`` is differentiable!
