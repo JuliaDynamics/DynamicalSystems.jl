@@ -17,11 +17,20 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 ```julia
 using Pkg; Pkg.add("DynamicalSystems")
 ```
+The documentation you are reading now was built with the following stable versions:
+```@example versions
+using Pkg
+Pkg.status([
+    "DelayEmbeddings", "RecurrenceAnalysis",
+    "DynamicalSystemsBase", "ChaosTools",
+    "Entropies",
+])
+```
 
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
 
 1. The [`DynamicalSystem`](@ref) represents a dynamical system with known dynamic rule ``f``. The system can be in discrete time (often called a map), ``\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)``, or in continuous time (often called an ordinary differential equation) ``\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)``. In both cases ``u`` is the _state_ of the dynamical system and ``p`` a parameter container. You should have a look at the page [Dynamical System Definition](@ref) for how to create this object. A list of several pre-defined systems exists in the [Predefined Dynamical Systems](@ref) page.
-2. Numerical data, that can represent measured experiments, or sampled trajectories of dynamical systems, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
+2. Numerical data, that can represent measured experiments, sampled trajectories of dynamical systems, or just sets in the state space, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
 
 These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
 For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
@@ -44,23 +53,6 @@ In addition, a full 2-hours YouTube tutorial is available below:
     If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
     * Chaos in Dynamical Systems - E. Ott
     * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
-
-
-### Advanced installation
-For more advanced users, you can choose which packages to install and use at a high level.
-All packages depend on `DelayEmbeddings` which defines core numeric data structures and methods. For example `RecurrenceAnalysis` and `TimeseriesPrediction` depend only on `DelayEmbeddings`. Packages that require equations of motion also depend on `DynamicalSystemsBase`, like for example `ChaosTools`.
-
-If you only need functionality of a specific package you can install only that one, e.g. `]add RecurrenceAnalysis` and only the minimum amount of requirements will be installed.
-
-The documentation you are reading now was built with the following stable versions:
-```@example versions
-using Pkg
-Pkg.status([
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",
-])
-```
 
 
 ## Our Goals
