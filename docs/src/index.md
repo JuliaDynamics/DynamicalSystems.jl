@@ -53,7 +53,8 @@ All packages depend on `DelayEmbeddings` which defines core numeric data structu
 If you only need functionality of a specific package you can install only that one, e.g. `]add RecurrenceAnalysis` and only the minimum amount of requirements will be installed.
 
 The documentation you are reading now was built with the following stable versions:
-```@example versions
+```@example MAIN
+include("style.jl") # hide
 using Pkg
 Pkg.status([
     "DelayEmbeddings", "RecurrenceAnalysis",
