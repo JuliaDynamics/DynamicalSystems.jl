@@ -54,7 +54,6 @@ If you only need functionality of a specific package you can install only that o
 
 The documentation you are reading now was built with the following stable versions:
 ```@example MAIN
-include("style.jl") # hide
 using Pkg
 Pkg.status([
     "DelayEmbeddings", "RecurrenceAnalysis",

@@ -25,6 +25,9 @@ end
 Themes.compile(joinpath(@__DIR__, "juliadynamics-light.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-light.css"))
 Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-dark.css"))
 
+# %% Style for plots inside documentation
+include("style.jl")
+
 # %% Build docs
 PyPlot.ioff()
 cd(@__DIR__)
@@ -79,6 +82,7 @@ pages = [
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
+expandfirst = ["index.md"],
 )
 
 if CI

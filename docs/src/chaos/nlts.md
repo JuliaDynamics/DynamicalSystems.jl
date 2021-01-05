@@ -26,7 +26,7 @@ fig = figure(figsize=(10,6))
 
 for (i, di) in enumerate([Euclidean(), Cityblock()])
     subplot(1, 2, i)
-    ntype = FixedMassNeighborhood(2)
+    ntype = NeighborNumber(2)
     title("Distance: $(di)", size = 18)
     for D in [2, 4, 7]
         R = embed(x, D, 1)
@@ -63,7 +63,7 @@ very small. Yet it turns out it is way too big! The following
 ```@example MAIN
 ks = 1:100
 R = embed(x, 2, 1)
-E = numericallyapunov(R, ks, ntype = FixedMassNeighborhood(2))
+E = numericallyapunov(R, ks, ntype = NeighborNumber(2))
 fig = figure()
 plot(ks .- 1, E .- E[1])
 title("Lyappunov: $(linear_region(ks, E)[2])")
