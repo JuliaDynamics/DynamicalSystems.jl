@@ -2,7 +2,7 @@
 This page discusses and provides algorithms for estimating optimal parameters to do Delay Coordinates Embedding (DCE) with.
 
 The approaches can be grouped into two schools:
-1. **Traditional** (also called **independent**), where one tries to independently find the best value for a delay time `τ` and an embedding dimension `d`.
+1. **Traditional**, where one tries to find the best value for a delay time `τ` and then an optimal embedding dimension `d`.
 2. **Unified**, where at the same time an optimal combination of `τ, d` is found, and is discussed in the [Unified Optimal Embedding](@ref) page.
 
 The independent approach is something "old school", while recent scientific research has shifted almost exclusively to unified approaches.
