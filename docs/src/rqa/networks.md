@@ -31,10 +31,11 @@ network = SimpleGraph(R)
 
 The package [GraphPlot](https://github.com/JuliaGraphs/GraphPlot.jl) provides tools for the visualization of such graphs: the following plot displays the links between the nodes of the network, which are positioned in the corresponding X-Y coordinates of the original time series for clarity:
 
-```@example MAIN
+```julia
 using GraphPlot
 gplot(network, tr[:,1], tr[:,2])
 ```
+![](henon_network.svg)
 
 ## Recurrence Network measures
 
