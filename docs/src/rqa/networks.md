@@ -58,9 +58,8 @@ rna
     This second definition is often named with the distinctive term of "transitivity", as in the output of `rna`, whereas the corresponding function of the `LightGraphs` package is `global_clustering_coefficient`. The "global clustering coefficient" as by Watts and Strogatz could be obtained as `mean(local_clustering_coefficient(network))` -- with `network` being a graph object as in the previous example. (The function `mean` is in the Julia standard library, and can be brought into scope with the command `using Statistics`.)
 
 
-[^1]: D.J. Watts & S.H. Strogatz, ["Collective dynamics of 'small-world' networks", *Nature 393*(6684), 440–442 (1998)](https://doi.org/10.1038%2F30918)
+[^1]: D.J. Watts & S.H. Strogatz, "Collective dynamics of 'small-world' networks", *Nature 393*(6684), 440–442 (1998) [DOI:10.1038%2F30918](https://doi.org/10.1038%2F30918)
 
-[^2]: A. Barrat & M. Weight, ["On the properties of small-world network models", *The European Physical Journal B* 13, 547–560 (2000)](https://doi.org/10.1007/s100510050067)
+[^2]: A. Barrat & M. Weight, "On the properties of small-world network models", *The European Physical Journal B* 13, 547–560 (2000)  [DOI:10.1007/s100510050067](https://doi.org/10.1007/s100510050067)
 
-[^3]: R.V. Donner *et al.* ["Recurrence networks — a novel paradigm for nonlinear time series analysis",
-*New Journal of Physics* 12, 033025 (2010)](https://doi.org/10.1088/1367-2630/12/3/033025)
+[^3]: R.V. Donner *et al.* "Recurrence networks — a novel paradigm for nonlinear time series analysis", *New Journal of Physics* 12, 033025 (2010) [DOI:10.1088/1367-2630/12/3/033025](https://doi.org/10.1088/1367-2630/12/3/033025)
