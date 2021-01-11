@@ -78,6 +78,7 @@ pages = [
         "Recurrence Plots" => "rqa/rplots.md",
         "Recurrence Quantification Analysis" => "rqa/quantification.md",
         "Windowed RQA" => "rqa/windowed.md",
+        "Recurrence Network Analysis" => "rqa/networks.md",
     ],
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
