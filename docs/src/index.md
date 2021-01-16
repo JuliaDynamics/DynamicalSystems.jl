@@ -55,6 +55,12 @@ In addition, a full 2-hours YouTube tutorial is available below:
     * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
 
 
+### Advanced Installation
+Notice that for targeted usage of `DynamicalSystems` (e.g. you only need a specific function like [`lyapunovspectrum`](@ref) or [`rqa`](@ref)),
+you don't have to install the entire `DynamicalSystems` suite. You can leave with only installing the necessary package that exports
+the function you need. You see this information prefacing the function. E.g. for `rqa` you will see `RecurrenceAnalysis.rqa`, which
+means that you need to install `RecurrenceAnalysis` to use it. 
+
 ## Our Goals
 **DynamicalSystems.jl** was created with three goals in mind.
 The first was to fill the missing gap of a software for nonlinear dynamics and chaos of the highest quality (none exist in any programming language).
