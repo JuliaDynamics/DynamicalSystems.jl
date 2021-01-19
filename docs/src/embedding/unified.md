@@ -62,7 +62,7 @@ here the *continuity statistic*.
 ```@example MAIN
 using PyPlot
 
-figure(figsize=(8., 5.))
+figure(figsize=(5., 3.))
 plot(εs[:,1], label="1st embedding cycle")
 scatter([τ_vals[2]], [εs[τ_vals[2],1]])
 plot(εs[:,2], label="2nd embedding cycle")
@@ -71,7 +71,7 @@ plot(εs[:,3], label="3rd embedding cycle")
 title("Continuity statistics PECUZAL Lorenz")
 xlabel("delay τ")
 ylabel("⟨ε⋆⟩")
-legend(loc="upper left")
+legend(loc="center right")
 grid()
 savefig("continuity_uni.png"); nothing # hide
 ```
