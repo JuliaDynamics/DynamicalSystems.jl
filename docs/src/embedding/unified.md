@@ -152,7 +152,7 @@ Random.seed!(1234)
 d1 = randn(1000)
 d2 = rand(1000)
 Tmax = 100
-dummy_set = Dataset(hcat(d1,d2))
+dummy_set = Dataset(d1,d2)
 
 w1 = estimate_delay(d1, "mi_min")
 w2 = estimate_delay(d2, "mi_min")
