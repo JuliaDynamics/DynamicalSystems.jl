@@ -51,7 +51,7 @@ end
 figx = 8 # default width correspoding to full text width
 figy = 6  # default height corresponding to 1 row of plots
 PyPlot.rc("figure", figsize = (figx, figy))
-PyPlot.rc("savefig", dpi = 600, transparent = true, format = "png")
+PyPlot.rc("savefig", dpi = 600, transparent = false, format = "png")
 
 # set default color cycle
 PyPlot.rc("axes", prop_cycle = matplotlib.cycler(color=COLORS.c))
