@@ -37,7 +37,7 @@ PyPlot.rc("font", size = 24) # set default fontsize
 PyPlot.rc("xtick", labelsize = 22)
 PyPlot.rc("ytick", labelsize = 22)
 PyPlot.rc("axes", labelsize = 28)
-PyPlot.rc("legend", fontsize = 28)
+PyPlot.rc("legend", fontsize = 22)
 # PyPlot.rc("font", family = "Times New Roman") # Serif main font
 PyPlot.rc("font", family = "DejaVu Sans") # sans main font
 # PyPlot.rc("mathtext", rm = "sanserif", fontset="dejavusans") # sans math font
