@@ -62,7 +62,7 @@ here the *continuity statistic*.
 ```@example MAIN
 using PyPlot
 
-figure(figsize=(5., 3.))
+figure()
 plot(εs[:,1], label="1st embedding cycle")
 scatter([τ_vals[2]], [εs[τ_vals[2],1]])
 plot(εs[:,2], label="2nd embedding cycle")
@@ -71,7 +71,7 @@ plot(εs[:,3], label="3rd embedding cycle")
 title("Continuity statistics PECUZAL Lorenz")
 xlabel("delay τ")
 ylabel("⟨ε⋆⟩")
-legend(loc="center right")
+legend(loc="center right"; fontsize = 20)
 grid()
 savefig("continuity_uni.png"); nothing # hide
 ```
@@ -99,7 +99,7 @@ println(ts_vals_m)
 println(Ls_m)
 println("L_total_multi: $(sum(Ls_m))")
 ```
-PECUZAL offers a 6-dimensional embedding using the un-lagged *z*- and *x*-component
+PECUZAL returns a 6-dimensional embedding using the un-lagged *z*- and *x*-component
 as 1st and 3rd component of the reconstruction vectors, as well as the *x*-component
 lagged by 12, 79, 64, and 53 samples. The total decrease of *ΔL* is ~-1.64, and
 thus, way smaller compared to the univariate case, as we would expect it. Nevertheless,
@@ -156,7 +156,7 @@ dummy_set = Dataset(hcat(d1,d2))
 
 w1 = estimate_delay(d1, "mi_min")
 w2 = estimate_delay(d2, "mi_min")
-theiler = minimum(hcat(w1,w2))
+theiler = min(w1, w2)
 
 Y_d, τ_vals_d, ts_vals_d, Ls_d , ε★_d = pecuzal_embedding(dummy_set; τs = 0:Tmax , w = theiler, econ = true)
 
