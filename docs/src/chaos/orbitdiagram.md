@@ -44,14 +44,14 @@ Notice that if you are using `PyPlot`, the plotting process will be slow, since 
 The function is not limited to 1D maps, and can be applied just as well to any
 discrete system.
 
-## Poincaré Surface of Section
+## Poincaré Surface of Section and Map
 Also called [Poincaré map](https://en.wikipedia.org/wiki/Poincar%C3%A9_map) is a
 technique to reduce a continuous system into a discrete map with 1 less dimension.
 We are doing this using the function:
 ```@docs
 poincaresos
+poincaremap
 ```
----
 
 Here is an example of the [Henon-Heiles](https://en.wikipedia.org/wiki/H%C3%A9non%E2%80%93Heiles_system) system showing the mixed nature of the phase space
 ```@example MAIN
@@ -72,6 +72,7 @@ for u0 in u0s
     scatter(psos[:, 2], psos[:, 4], s = 2.0)
 end
 xlabel("\$q_2\$"); ylabel("\$p_2\$")
+tight_layout(pad = 0.3) # hide
 savefig("hhpsos.png"); nothing # hide
 ```
 ![](hhpsos.png)
@@ -101,6 +102,7 @@ figure(figsize = (8,6))
 psos = poincaresos(gis, gis_plane(μ), 10000.0, Ttr = 200.0,)
 plot3D(columns(psos)..., marker = "o", ls = "None", ms = 2.0);
 xlabel("Q"); ylabel("D"); zlabel("V");
+tight_layout(pad = 0.3) # hide
 savefig("gispsos.png"); nothing # hide
 ```
 ![](gispsos.png)
@@ -170,7 +172,7 @@ for (j, p) in enumerate(pvalues)
     marker = "o", ms = 0.2, color = "black")
 end
 xlabel("\$R_1\$"); ylabel("\$V_1\$")
-tight_layout()
+tight_layout(pad = 0.3) # hide
 savefig("shinriki.png"); nothing # hide
 ```
 ![](shinriki.png)
