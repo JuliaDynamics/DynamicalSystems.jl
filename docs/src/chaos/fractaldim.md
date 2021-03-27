@@ -1,7 +1,7 @@
 # Fractal Dimension
 
 There are numerous methods that one can use to calculate a so-called "dimension" of a dataset which in the context of dynamical systems is called the [Fractal dimension](https://en.wikipedia.org/wiki/Fractal_dimension).
-Several variants of a computationally feasible fractal dimension exist.
+Several variants of a computationally feasible fractal dimension exist and a simple usage example is shown in the [Fractal dimension example](@ref) subsection.
 
 ## Generalized dimension
 Based on the definition of the [Generalized entropy](#ChaosTools.genentropy), one can calculate an appropriate dimension, called *generalized dimension*:
@@ -15,7 +15,7 @@ generalized_dim
     an actual function and therefore you should be careful
     when considering the validity of the returned number.
 
-### Example
+## Fractal dimension example
 For an example of using entropies to compute the dimension of an attractor let's use everyone's favorite system:
 ```@example MAIN
 using DynamicalSystems, PyPlot
@@ -36,11 +36,12 @@ figure()
 plot(xs, Hs)
 ylabel("\$H_1\$")
 xlabel("\$-\\log (\\epsilon)\$");
+tight_layout(pad=0.3) # hide
 savefig("genentropy1.png"); nothing # hide
 ```
 ![](genentropy1.png)
 
-The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 2) for the attractor of the Lorenz system.
+The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 1) for the attractor of the Lorenz system.
 
 Given that we _see_ the plot, we can estimate where the linear scaling region starts and ends. However, we can use the function [`linear_region`](@ref) to get an estimate of the result as well. First let's visualize what it does:
 
@@ -60,7 +61,7 @@ savefig("genentropy2.png"); nothing # hide
 The [`linear_region`](@ref) function  computes the slope of the largest region:
 
 ```@example MAIN
-linear_region(xs, Hs)[2]
+Δ = linear_region(xs, Hs)[2]
 ```
 This result is an approximation of the information dimension (because we used `q = 1`) of the Lorenz attractor.
 
@@ -91,10 +92,10 @@ estimate_boxsizes
 
 ## Correlation dimension
 ```@docs
-kernelprob
 correlationsum
 grassberger
 takens_best_estimate
+kernelprob
 ```
 
 ## Kaplan-Yorke Dimension
