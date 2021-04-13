@@ -93,6 +93,7 @@ estimate_boxsizes
 ## Correlation dimension
 ```@docs
 correlationsum
+boxed_correlationsum
 grassberger
 takens_best_estimate
 kernelprob

@@ -175,3 +175,8 @@ delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay co
 ## Nearest Neighbor Prediction
 Nearest neighbor timeseries prediction is a method commonly listed under nonlinear timeseries analysis.
 This is not part of DynamicalSystems.jl, because in JuliaDynamics we have a dedicated package for this, [TimeseriesPrediction.jl](https://juliadynamics.github.io/TimeseriesPrediction.jl/dev/).
+
+## DyCA - Dynamical Component Analysis
+```@docs
+dyca
+```
