@@ -95,6 +95,7 @@ estimate_boxsizes
 correlationsum
 boxed_correlationsum
 grassberger
+correlationsum_fixedmass
 takens_best_estimate
 kernelprob
 ```
