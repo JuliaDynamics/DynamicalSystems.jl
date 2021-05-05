@@ -16,7 +16,7 @@ jobs:
       matrix:
         version:
           - '1'
-        os:  [ubuntu-latest, windows-latest, macos-latest]
+        os:  [ubuntu-latest]
         arch:
           - x64
     steps:
@@ -85,9 +85,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
         run: julia --project=docs --color=yes docs/make.jl
-      - name: Doctests
-        run: |
-          julia --project=docs -e '
-            using Documenter: doctest
-            using Agents
-            doctest(Agents)'
