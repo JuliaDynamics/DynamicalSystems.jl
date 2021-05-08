@@ -23,15 +23,15 @@ Now we define the grid of ICs that we want to analyze and launch the procedure:
 xg = range(-2.2,2.2,length=200)
 yg = range(-2.2,2.2,length=200)
 basin, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
+basin
 ```
 
 ```@example MAIN
 using PyPlot
-figure()
-pcolormesh(xg, yg, basin')
-tight_layout(pad=0.3); savefig("stroboscopic_basin.png"); nothing # hide
+fig = figure()
+pcolormesh(xg, yg, basin'; cmap = "Accent")
+fig
 ```
-![](stroboscopic_basin.png)
 
 ## Poincaré map example
 
@@ -50,11 +50,10 @@ xg=range(-6.,6.,length=200)
 yg=range(-6.,6.,length=200)
 basin, attractors = basins_map2D(xg, yg, pmap)
 
-figure()
-pcolormesh(xg, yg, basin')
-tight_layout(pad=0.3); savefig("poincare_basin.png"); nothing # hide
+fig = figure()
+pcolormesh(xg, yg, basin'; cmap = "Accent")
+fig
 ```
-![](poincare_basin.png)
 
 
 ## Discrete system example
@@ -85,11 +84,10 @@ xg=range(-1.5,1.5,length=200)
 yg=range(-1.5,1.5,length=200)
 
 basin, attractors  = basins_map2D(xg, yg, integ)
-figure
-pcolormesh(xg, yg, basin')
-tight_layout(pad=0.3); savefig("newton_basin.png"); nothing # hide
+fig = figure()
+pcolormesh(xg, yg, basin'; cmap = "Accent")
+fig
 ```
-![](newton_basin.png)
 
 ## Basins in Higher Dimensions
 When it is not so simple to define a 2D stroboscopic map or Poincaré map, which is the case in continuous dynamical systems of higher dimensionality, you can always try the general method [`basins_general`](@ref). It is slower and may requires some tuning.
@@ -109,7 +107,7 @@ Alright, so far so good, we found 3 attractors (the 3 points of the magnetic pen
 Let's visualize this beauty now
 
 ```@example MAIN
-pcolormesh(xg, yg, basin')
-tight_layout(pad=0.3); savefig("magnetic_basin.png"); nothing # hide
+fig = figure()
+pcolormesh(xg, yg, basin'; cmap = "Accent")
+fig
 ```
-![](magnetic_basin.png)

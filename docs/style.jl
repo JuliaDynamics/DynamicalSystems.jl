@@ -48,8 +48,8 @@ for z in ("x", "y")
     PyPlot.rc("$(z)tick.minor", size = 3, visible = false)
 end
 
-figx = 8 # default width correspoding to full text width
-figy = 6  # default height corresponding to 1 row of plots
+figx = 9
+figy = 7 
 PyPlot.rc("figure", figsize = (figx, figy))
 PyPlot.rc("savefig", dpi = 300, transparent = false, format = "png")
 
