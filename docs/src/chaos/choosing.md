@@ -4,7 +4,7 @@
 
 ## Default Solver
 The default solver is:
-```@example solver
+```@example MAIN
 using DynamicalSystems
 DynamicalSystemsBase.DEFAULT_SOLVER
 ```
@@ -23,7 +23,7 @@ This means that there is a delicate balance between how expensive is your functi
 The answer to this question is easy: **benchmarks!**
 
 Here is a simple case: let's compute the Lyapunov spectrum of the Lorenz system using [`lyapunovspectrum`](@ref):
-```@example solver
+```@example MAIN
 ds = Systems.lorenz()
 tols = (abstol = 1e-6, reltol = 1e-6)
 lyapunovspectrum(ds, 2000; Ttr = 100.0, tols...)
@@ -34,7 +34,7 @@ The above uses the default solver. Let's now benchmark using two different solve
 It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*dt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
 
 Here are the numbers:
-```@example solver
+```@example MAIN
 using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq, Statistics
 b1 = @benchmark lyapunovspectrum(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
 b2 = @benchmark lyapunovspectrum(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
