@@ -29,7 +29,7 @@ basin, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
 using PyPlot
 figure()
 pcolormesh(xg, yg, basin')
-savefig("stroboscopic_basin.png"); nothing # hide
+tight_layout(pad=0.3); savefig("stroboscopic_basin.png"); nothing # hide
 ```
 ![](stroboscopic_basin.png)
 
@@ -52,7 +52,7 @@ basin, attractors = basins_map2D(xg, yg, pmap)
 
 figure()
 pcolormesh(xg, yg, basin')
-savefig("poincare_basin.png"); nothing # hide
+tight_layout(pad=0.3); savefig("poincare_basin.png"); nothing # hide
 ```
 ![](poincare_basin.png)
 
@@ -87,7 +87,7 @@ yg=range(-1.5,1.5,length=200)
 basin, attractors  = basins_map2D(xg, yg, integ)
 figure
 pcolormesh(xg, yg, basin')
-savefig("newton_basin.png"); nothing # hide
+tight_layout(pad=0.3); savefig("newton_basin.png"); nothing # hide
 ```
 ![](newton_basin.png)
 
@@ -110,6 +110,6 @@ Let's visualize this beauty now
 
 ```@example MAIN
 pcolormesh(xg, yg, basin')
-savefig("magnetic_basin.png"); nothing # hide
+tight_layout(pad=0.3); savefig("magnetic_basin.png"); nothing # hide
 ```
 ![](magnetic_basin.png)

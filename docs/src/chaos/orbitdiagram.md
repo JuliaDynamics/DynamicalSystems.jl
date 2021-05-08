@@ -14,7 +14,7 @@ using PyPlot
 
 ds = Systems.logistic()
 i = 1
-pvalues = 3:0.001:4
+pvalues = 3:0.01:4
 ics = [rand() for m in 1:10]
 n = 2000
 Ttr = 2000
@@ -30,12 +30,12 @@ for j in 1:L
 end
 
 figure()
-PyPlot.title("total points: $(L*n)")
 plot(x, y, ls = "None", ms = 0.5, color = "black", marker = "o", alpha = 0.05)
+PyPlot.title("total points: $(L*n)")
 xlim(pvalues[1], pvalues[end]); ylim(0,1)
 xlabel("\$r\$"); ylabel("\$x\$")
 tight_layout()
-savefig("logostic_od.png"); nothing # hide
+tight_layout(pad=0.3); savefig("logostic_od.png"); nothing # hide
 ```
 ![](logostic_od.png)
 
@@ -72,8 +72,7 @@ for u0 in u0s
     scatter(psos[:, 2], psos[:, 4], s = 2.0)
 end
 xlabel("\$q_2\$"); ylabel("\$p_2\$")
-tight_layout(pad = 0.3) # hide
-savefig("hhpsos.png"); nothing # hide
+tight_layout(pad=0.3); savefig("hhpsos.png"); nothing # hide
 ```
 ![](hhpsos.png)
 
@@ -102,8 +101,7 @@ figure(figsize = (8,6))
 psos = poincaresos(gis, gis_plane(μ), 10000.0, Ttr = 200.0,)
 plot3D(columns(psos)..., marker = "o", ls = "None", ms = 2.0);
 xlabel("Q"); ylabel("D"); zlabel("V");
-tight_layout(pad = 0.3) # hide
-savefig("gispsos.png"); nothing # hide
+tight_layout(pad=0.3); savefig("gispsos.png"); nothing # hide
 ```
 ![](gispsos.png)
 
@@ -150,14 +148,13 @@ We have bundled this process in the following function:
 ```@docs
 produce_orbitdiagram
 ```
----
 
 For example, we will calculate the orbit diagram of the Shinriki oscillator, a continuous system that undergoes a period doubling route to chaos, much like the logistic map!
 
 ```@example MAIN
 ds = Systems.shinriki([-2, 0, 0.2])
 
-pvalues = range(19, stop = 22, length = 401)
+pvalues = range(19, stop = 22, length = 201)
 i = 1
 plane = (2, 0.0)
 tf = 200.0
@@ -172,7 +169,6 @@ for (j, p) in enumerate(pvalues)
     marker = "o", ms = 0.2, color = "black")
 end
 xlabel("\$R_1\$"); ylabel("\$V_1\$")
-tight_layout(pad = 0.3) # hide
-savefig("shinriki.png"); nothing # hide
+tight_layout(pad=0.3); savefig("shinriki.png"); nothing # hide
 ```
 ![](shinriki.png)
