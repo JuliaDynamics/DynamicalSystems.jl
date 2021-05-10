@@ -63,16 +63,16 @@ pages = [
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Traditional Optimal Embedding" => "embedding/traditional.md",
-        # "Unified Optimal Embedding" => "embedding/unified.md",
+        "Unified Optimal Embedding" => "embedding/unified.md",
     ],
     "ChaosTools" => [
-       # "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
-       # "Lyapunov Exponents" => "chaos/lyapunovs.md",
-       # "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
-       # "Fractal Dimension" => "chaos/fractaldim.md",
-       # "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       # "Periodicity & Ergodicity" => "chaos/periodicity.md",
-       # "Choosing a solver" => "chaos/choosing.md",
+       "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
+       "Lyapunov Exponents" => "chaos/lyapunovs.md",
+       "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
+       "Fractal Dimension" => "chaos/fractaldim.md",
+       "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
+       "Periodicity & Ergodicity" => "chaos/periodicity.md",
+       "Choosing a solver" => "chaos/choosing.md",
        "Basins of Attraction" => "chaos/basins.md"
     ],
     "RecurrenceAnalysis" => [

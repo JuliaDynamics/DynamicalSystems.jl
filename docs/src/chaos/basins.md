@@ -30,7 +30,7 @@ basin
 using PyPlot
 fig = figure()
 pcolormesh(xg, yg, basin'; cmap = "Accent")
-fig
+fig.tight_layout(pad=0.3); fig
 ```
 
 ## Poincaré map example
@@ -52,7 +52,7 @@ basin, attractors = basins_map2D(xg, yg, pmap)
 
 fig = figure()
 pcolormesh(xg, yg, basin'; cmap = "Accent")
-fig
+fig.tight_layout(pad=0.3); fig
 ```
 
 
@@ -86,7 +86,7 @@ yg=range(-1.5,1.5,length=200)
 basin, attractors  = basins_map2D(xg, yg, integ)
 fig = figure()
 pcolormesh(xg, yg, basin'; cmap = "Accent")
-fig
+fig.tight_layout(pad=0.3); fig
 ```
 
 ## Basins in Higher Dimensions

@@ -48,4 +48,4 @@ As you can see `Vern9` is faster in doing the _entire_ computation! Of course th
 
 ## DifferentialEquations.jl
 
-For more info about the possible solvers be sure to head over to the documentation of [DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/)!
+For more info about the possible solvers be sure to head over to the documentation of [DifferentialEquations.jl](https://diffeq.sciml.ai/latest/)!

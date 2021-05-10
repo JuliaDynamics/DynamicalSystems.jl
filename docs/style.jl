@@ -49,7 +49,7 @@ for z in ("x", "y")
 end
 
 figx = 9
-figy = 7 
+figy = 7
 PyPlot.rc("figure", figsize = (figx, figy))
 PyPlot.rc("savefig", dpi = 300, transparent = false, format = "png")
 

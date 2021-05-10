@@ -5,9 +5,11 @@ In addition, the unified approaches are the only ones that can accommodate multi
 
 ## An example
 
-In following we illustrate the most recent unified optimal embedding method, called PECUZAL, on three examples.
+### Univariate input
+
+In following we illustrate the most recent unified optimal embedding method, called PECUZAL, on three examples (see [`pecuzal_embedding`](@ref)).
 We start with a univariate case, i.e. we only feed in one time series,
-here the *x*-component of the Lorenz system.  
+here the x-component of the Lorenz system.  
 ```@example MAIN
 using DynamicalSystems
 
@@ -18,11 +20,10 @@ s = vec(tr[:, 1]) # input timeseries = x component of Lorenz
 theiler = estimate_delay(s, "mi_min") # estimate a Theiler window
 Tmax = 100 # maximum possible delay
 
-Y, τ_vals, ts_vals, Ls , εs = pecuzal_embedding(s; τs = 0:Tmax , w = theiler, econ = true)
+Y, τ_vals, ts_vals, Ls, εs = pecuzal_embedding(s; τs = 0:Tmax , w = theiler, econ = true)
 
-println(τ_vals)
-println(ts_vals)
-println(Ls)
+println("τ_vals = ", τ_vals)
+println("Ls = ", Ls)
 println("L_total_uni: $(sum(Ls))")
 ```
 The output reveals that PECUZAL suggests a 3-dimensional embedding out of the
@@ -30,39 +31,15 @@ un-lagged time series as the 1st component of the reconstruction, the time
 series lagged by 18 samples as the 2nd component and the time series lagged by
 9 samples as the 3rd component. In the third embedding cycle there is no *ΔL<0*
 and the algorithm breaks. The result after two successful embedding cycles is
-the 3-dimensional embedding shown above. The total obtained decrease of *ΔL*
-throughout all encountered embedding cycles has been ~-1.24.
+the 3-dimensional embedding `Y` which is also returned.
+The total obtained decrease of *ΔL* throughout all encountered embedding cycles has been ~ -1.24.
+
+
+We can also look at *continuity statistic*
 ```@example MAIN
 using PyPlot
 
-figure(figsize=(14., 8.))
-subplot(1,2,1, projection="3d")
-plot3D(Y[:,1], Y[:,2], Y[:,3],"gray")
-title("PECUZAL reconstructed")
-xlabel("x(t+$(τ_vals[1]))")
-ylabel("x(t+$(τ_vals[2]))")
-zlabel("x(t+$(τ_vals[3]))")
-grid()
-
-subplot(1,2,2, projection="3d")
-plot3D(tr[:,1], tr[:,2], tr[:,3],"gray")
-title("Original")
-xlabel("x(t)")
-ylabel("y(t)")
-zlabel("z(t)")
-grid()
-
-tight_layout()
-savefig("pecuzal_uni.png"); nothing # hide
-```
-![](pecuzal_uni.png)
-
-We can also look at the output of the low-level function leading to the results,
-here the *continuity statistic*.
-```@example MAIN
-using PyPlot
-
-figure()
+fig = figure()
 plot(εs[:,1], label="1st embedding cycle")
 scatter([τ_vals[2]], [εs[τ_vals[2],1]])
 plot(εs[:,2], label="2nd embedding cycle")
@@ -72,33 +49,38 @@ title("Continuity statistics PECUZAL Lorenz")
 xlabel("delay τ")
 ylabel("⟨ε⋆⟩")
 legend(loc="center right"; fontsize = 20)
-grid()
-savefig("continuity_uni.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](continuity_uni.png)
 
 The picked delay values are marked with filled circles. As already mentioned, the
 third embedding cycle did not contribute to the embedding, i.e. there has been
 no delay value chosen.
+
+### Multivariate input
+
 Similar to the approach in the preceding example, we now highlight the capability
 of the PECUZAL embedding method for a multivariate input. The idea is now to feed
 in all three time series to the algorithm, even though this is a very
 far-from-reality example. We already have an adequate representation of the
 system we want to reconstruct, namely the three time series from the numerical
 integration. But let us see what PECUZAL suggests for a reconstruction.
-```@example MAIN
+
+```julia
 # compute Theiler window
 w1 = estimate_delay(tr[:,1], "mi_min")
 w2 = estimate_delay(tr[:,2], "mi_min")
 w3 = estimate_delay(tr[:,3], "mi_min")
-w = maximum(hcat(w1,w2,w3))
-Y_m, τ_vals_m, ts_vals_m, Ls_m , εs_m = pecuzal_embedding(tr; τs = 0:Tmax , w = theiler, econ = true)
+w = max(w1,w2,w3)
+Y_m, τ_vals_m, ts_vals_m, = pecuzal_embedding(tr; τs = 0:Tmax , w = theiler, econ = true)
 
 println(τ_vals_m)
 println(ts_vals_m)
-println(Ls_m)
-println("L_total_multi: $(sum(Ls_m))")
 ```
+```
+[0, 12, 0, 79, 64, 53]
+[3, 1, 1, 1, 1, 1]
+```
+
 PECUZAL returns a 6-dimensional embedding using the un-lagged *z*- and *x*-component
 as 1st and 3rd component of the reconstruction vectors, as well as the *x*-component
 lagged by 12, 79, 64, and 53 samples. The total decrease of *ΔL* is ~-1.64, and
@@ -112,35 +94,32 @@ Y_mt, τ_vals_mt, ts_vals_mt, Ls_mt , εs_mt = pecuzal_embedding(tr; τs = 0:Tma
 
 println(τ_vals_mt)
 println(ts_vals_mt)
-println(Ls_mt)
-println("L_total_multi_t: $(sum(Ls_mt))")
 ```
+As you can see here the algorithm stopped already at 3-dimensional embedding.
+
 Let's plot these three components:
 ```@example MAIN
-
 ts_str = ["x", "y", "z"]
 
-figure(figsize=(14., 8.))
+fig = figure(figsize = (12, 6))
 subplot(1,2,1, projection="3d")
-plot3D(Y_m[:,1], Y_m[:,2], Y_m[:,3],"gray")
+plot3D(Y_m[:,1], Y_m[:,2], Y_m[:,3]; lw = 1.0, c = "C0")
 title("PECUZAL reconstructed")
 xlabel("$(ts_str[ts_vals_m[1]])(t+$(τ_vals_m[1]))")
 ylabel("$(ts_str[ts_vals_m[2]])(t+$(τ_vals_m[2]))")
 zlabel("$(ts_str[ts_vals_m[3]])(t+$(τ_vals_m[3]))")
-grid()
+xticks([]); yticks([]); zticks([]);
 
 subplot(1,2,2, projection="3d")
-plot3D(tr[:,1], tr[:,2], tr[:,3],"gray")
+plot3D(tr[:,1], tr[:,2], tr[:,3]; lw = 1.0, c = "C1")
 title("Original")
 xlabel("x(t)")
 ylabel("y(t)")
 zlabel("z(t)")
-grid()
+xticks([]); yticks([]); zticks([]);
 
-tight_layout()
-savefig("pecuzal_multi.png"); nothing # hide
+tight_layout(pad = 0.3); fig
 ```
-![](pecuzal_multi.png)
 
 Finally we show what PECUZAL does with a non-deterministic source:
 
