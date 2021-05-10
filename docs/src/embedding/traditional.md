@@ -62,7 +62,5 @@ for (i, method) in enumerate(["afnn", "fnn", "f1nn", "ifnn"])
 end
 legend(); xlabel("embedding dimension")
 ylabel("estimator")
-tight_layout()
-fig.savefig("estimateD.png"); nothing # hide
+tight_layout(pad = 0.3); fig
 ```
-![](estimateD.png)

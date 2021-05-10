@@ -15,7 +15,8 @@ It is one of the most recent and cheapest methods for distinguishing chaotic and
 ```@docs
 gali
 ```
----
+
+
 ### Discrete Example
 We will use 3 coupled standard maps as an example for a discrete system:
 ```@example MAIN
@@ -25,17 +26,16 @@ M = 3; ks = 3ones(M); Γ = 0.1;
 stable = [π, π, π, 0.01, 0, 0] .+ 0.1
 chaotic = rand(2M)
 
-ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
+ds = Systems.coupledstandardmaps(M, stable; ks, Γ)
 ```
 
-First, let's see the behavior of GALI for a stable orbit
+For this example we will see the behavior of GALI for a stable orbit
 ```@example MAIN
-figure(figsize = (8,4))
+fig = figure(figsize = (9,5))
 tr = trajectory(ds, 100000)
 
 subplot(1,2,1)
-plot(tr[:,1], tr[:,1+M], alpha = 0.5,
-label="stable",marker="o", ms=1, linewidth=0)
+plot(tr[:,1], tr[:,1+M], label="stable", marker="o", ms=1, lw=0)
 legend()
 
 subplot(1,2,2)
@@ -51,89 +51,33 @@ plot(lt, -6(lt .- 3), label="slope -6")
 
 xlim(2, 5.5)
 ylim(-12, 2)
-legend()
-tight_layout()
-savefig("gali_discrete_stable.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![gali_discrete_stable](gali_discrete_stable.png)
-
-Now do the same for a chaotic orbit
-
-```@example MAIN
-figure(figsize = (8,4))
-tr = trajectory(ds, 100000, chaotic)
-subplot(1,2,1)
-plot(tr[:,1], tr[:,1+M], alpha = 0.5,
-label="chaotic",marker="o", ms=1, linewidth=0)
-legend()
-
-subplot(1,2,2)
-ls = lyapunovspectrum(ds, 100000; u0 = chaotic)
-for k in [2,3,6]
-    ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k; u0 = chaotic)
-    semilogy(t, exp.(-ex.*t), label="exp. k=$k")
-    semilogy(t, g, label="GALI_$(k)")
-end
-legend()
-xlim(0,100)
-ylim(1e-12, 1)
-savefig("gali_discrete_chaos.png"); nothing # hide
-```
-![gali_discrete_chaos](gali_discrete_chaos.png)
-
 
 ### Continuous Example
 As an example of a continuous system, let's see the Henon-Heiles:
 ```@example MAIN
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
+dt = 1.0
+diffeq = (abstol=1e-9, retol=1e-9, alg = Vern9(), maxiters = typemax(Int))
 sp = [0, .295456, .407308431, 0] # stable periodic orbit: 1D torus
 qp = [0, .483000, .278980390, 0] # quasiperiodic orbit: 2D torus
 ch = [0, -0.25, 0.42081, 0]      # chaotic orbit
 ds = Systems.henonheiles(sp)
 ```
-First, we see the behavior with a stable periodic orbit
+Let's see what happens with a quasi-periodic orbit:
 ```@example MAIN
-figure(figsize = (8,4))
+fig = figure(figsize = (9,5))
 subplot(1,2,1)
-dt = 1.0
-
-diffeq = (abstol=1e-9, reltol=1e-9, alg = Tsit5(), maxiters = typemax(Int))
-tr = trajectory(ds, 10000.0; dt=dt, diffeq...)
-plot(tr[:,1], tr[:,3], alpha = 0.5,
-label="sp",marker="o",markersize=2, linewidth=0)
-legend()
-
-subplot(1,2,2)
-for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; dt = dt, diffeq...)
-    loglog(t, g, label="GALI_$(k)")
-    if k < 4
-        loglog(t, 100 ./ t.^(k-1), label="slope -$(k-1)")
-    else
-        loglog(t, 10000 ./ t.^(2k-4), label="slope -$(2k-4)")
-    end
-end
-ylim(1e-12, 2)
-legend();
-savefig("gali_cont_stable.png"); nothing # hide
-```
-![gali_cont_stable](gali_cont_stable.png)
-
-Next, let's see what happens with a quasi-periodic orbit.
-Don't forget to change the `u0` arguments!
-```@example MAIN
-figure(figsize = (8,4))
-subplot(1,2,1)
-tr = trajectory(ds, 10000.0, qp; dt=dt, diffeq...)
+tr = trajectory(ds, 10000.0, qp; dt, diffeq...)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="qp",marker="o",markersize=2, linewidth=0)
 legend()
 
 subplot(1,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; u0 = qp, dt = dt, diffeq...)
+    g, t = gali(ds, 10000.0, k; u0 = qp, dt, diffeq...)
     loglog(t, g, label="GALI_$(k)")
     if k == 2
         loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
@@ -142,33 +86,29 @@ for k in [2,3,4]
     end
 end
 ylim(1e-12, 2)
-legend()
-tight_layout()
-savefig("gali_cont_quasi.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
 ![gali_cont_quasi](gali_cont_quasi.png)
 
 Finally, here is GALI of a continuous system with a chaotic orbit
 ```@example MAIN
-figure(figsize = (8,4))
-tr = trajectory(ds, 10000.0, ch; dt=dt, diffeq...)
+fig = figure(figsize = (9,5))
+tr = trajectory(ds, 10000.0, ch; dt, diffeq...)
 subplot(1,2,1)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="ch",marker="o",markersize=2, linewidth=0)
 legend()
 
 subplot(1,2,2)
-ls = lyapunovspectrum(ds, 5000.0; dt=dt, u0 = ch, diffeq...)
+ls = lyapunovspectrum(ds, 5000.0; dt, u0 = ch, diffeq...)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
     g, t = gali(ds, 1000, k; u0 = ch, dt = dt, diffeq...)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
-legend()
 ylim(1e-16, 1)
-tight_layout()
-savefig("gali_cont_chaos.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
 ![gali_cont_chaos](gali_cont_chaos.png)
 
@@ -251,7 +191,7 @@ predictability
 We will create something similar to figure 2 of the paper, but for the Hénon map.
 
 ```@example MAIN
-figure()
+fig = figure()
 he = Systems.henon()
 as = 0.8:0.01:1.225
 od = orbitdiagram(he, 1, 1, as; n = 2000, Ttr = 2000)
@@ -264,7 +204,7 @@ for (i, a) in enumerate(as)
 end
 xlabel("\$a\$"); ylabel("\$x\$")
 title("predictability of Hénon map"); tight_layout()
-savefig("partial_henon.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
 ![partial_henon](partial_henon.png)
 

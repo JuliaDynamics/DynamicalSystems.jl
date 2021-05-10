@@ -6,7 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! tip "Latest news"
-    Rework and improvement of optimal embedding dimension: [`optimal_traditional_de`](@ref)!
+    [Basins of Attraction](@ref)!
 
 !!! info "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
@@ -16,15 +16,6 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 **DynamicalSystems.jl** is a collection of Julia packages bundled together under a single package `DynamicalSystems`. To install this bundle you can do:
 ```julia
 using Pkg; Pkg.add("DynamicalSystems")
-```
-The documentation you are reading now was built with the following stable versions:
-```@example versions
-using Pkg
-Pkg.status([
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",
-])
 ```
 
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
@@ -59,7 +50,7 @@ In addition, a full 2-hours YouTube tutorial is available below:
 Notice that for targeted usage of `DynamicalSystems` (e.g. you only need a specific function like [`lyapunovspectrum`](@ref) or [`rqa`](@ref)),
 you don't have to install the entire `DynamicalSystems` suite. You can leave with only installing the necessary package that exports
 the function you need. You see this information prefacing the function. E.g. for `rqa` you will see `RecurrenceAnalysis.rqa`, which
-means that you need to install `RecurrenceAnalysis` to use it. 
+means that you need to install `RecurrenceAnalysis` to use it.
 
 ## Our Goals
 **DynamicalSystems.jl** was created with three goals in mind.

@@ -9,11 +9,12 @@ using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSyste
 using Neighborhood
 using Documenter, PyPlot
 using DocumenterTools: Themes
+import Downloads
 
 # %%
 # download the themes
 for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
-    download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
+    Downloads.download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
 end
 # create the themes
 for w in ("light", "dark")
@@ -25,14 +26,13 @@ end
 Themes.compile(joinpath(@__DIR__, "juliadynamics-light.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-light.css"))
 Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-dark.css"))
 
-# %% Style for plots inside documentation
+# %% Build docs
+# Style for plots inside documentation
 include("style.jl")
 
-# %% Build docs
 PyPlot.ioff()
 cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
-
 
 makedocs(
 modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
@@ -72,7 +72,7 @@ pages = [
        "Fractal Dimension" => "chaos/fractaldim.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
        "Periodicity & Ergodicity" => "chaos/periodicity.md",
-       "Choosing a solver" => "chaos/choosing.md",
+       "Basins of Attraction" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [
         "Recurrence Plots" => "rqa/rplots.md",
@@ -86,6 +86,9 @@ pages = [
 expandfirst = ["index.md"],
 )
 
+PyPlot.close("all")
+PyPlot.ion()
+
 if CI
     deploydocs(
         repo = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
@@ -93,6 +96,3 @@ if CI
         push_preview = true
     )
 end
-
-PyPlot.close("all")
-PyPlot.ion()

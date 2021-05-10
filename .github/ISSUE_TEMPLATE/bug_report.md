@@ -17,4 +17,14 @@ If the code is **runnable**, it will help us identify the problem faster.
 
 **Package versions**
 
-Please provide the versions you use (you can do `Pkg.status()`).
+Please provide the versions you use. To do this, run the code:
+```julia
+using Pkg
+Pkg.status([
+    "DynamicalSystems",
+    "DelayEmbeddings", "RecurrenceAnalysis",
+    "DynamicalSystemsBase", "ChaosTools",
+    "Entropies",];
+    mode = PKGMODE_MANIFEST
+)
+```

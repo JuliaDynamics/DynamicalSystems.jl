@@ -77,7 +77,7 @@ estimators nicely converge to the true entropy with increasing time series lengt
 For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0` (red line).
 
 ```@example
-using DynamicalSystems, PyPlot
+using DynamicalSystems, PyPlot, Statistics
 import Distributions: Uniform, Normal
 
 Ns = [100:100:500; 1000:1000:10000]
@@ -103,23 +103,20 @@ for N in Ns
     push!(Ekr, kr)
 end
 
-# Plot
-using PyPlot, StatsBase
-f = figure(figsize = (5,6))
+f = figure()
 ax = subplot(211)
 px = PyPlot.plot(Ns, mean.(Ekl); color = "C1", label = "KozachenkoLeonenko");
-PyPlot.plot(Ns, mean.(Ekl) .+ StatsBase.std.(Ekl); color = "C1", label = "");
-PyPlot.plot(Ns, mean.(Ekl) .- StatsBase.std.(Ekl); color = "C1", label = "");
+PyPlot.plot(Ns, mean.(Ekl) .+ std.(Ekl); color = "C1", label = "");
+PyPlot.plot(Ns, mean.(Ekl) .- std.(Ekl); color = "C1", label = "");
 
 xlabel("Time step"); ylabel("Entropy (nats)"); legend()
 ay = subplot(212)
 py = PyPlot.plot(Ns, mean.(Ekr); color = "C2", label = "Kraskov");
-PyPlot.plot(Ns, mean.(Ekr) .+ StatsBase.std.(Ekr); color = "C2", label = "");
-PyPlot.plot(Ns, mean.(Ekr) .- StatsBase.std.(Ekr); color = "C2", label = "");
+PyPlot.plot(Ns, mean.(Ekr) .+ std.(Ekr); color = "C2", label = "");
+PyPlot.plot(Ns, mean.(Ekr) .- std.(Ekr); color = "C2", label = "");
 
 xlabel("Time step"); ylabel("Entropy (nats)"); legend()
-tight_layout()
-PyPlot.savefig("nn_entropy_example.png"); nothing # hide
+f.tight_layout(pad=0.3); f
 ```
 
 ![](nn_entropy_example.png)
@@ -166,7 +163,7 @@ for r in rs
     push!(hs_perm, hperm); push!(hs_wtperm, hwtperm); push!(hs_ampperm, hampperm)
 end
 
-f = figure(figsize = (6, 8))
+f = figure()
 a1 = subplot(411)
 plot(rs, lyaps); ylim(-2, log(2)); ylabel("\$\\lambda\$")
 a1.axes.get_xaxis().set_ticklabels([])
@@ -183,11 +180,8 @@ xlabel(""); ylabel("\$h_6 (SWP)\$")
 a4 = subplot(414)
 plot(rs, hs_ampperm; color = "C4"); xlim(rs[1], rs[end]);
 xlabel("\$r\$"); ylabel("\$h_6 (SAAP)\$")
-tight_layout()
-savefig("permentropy.png"); nothing # hide
+f.tight_layout(pad=0.3); f
 ```
-
-![](permentropy.png)
 
 ## Time-scale (wavelet)
 
@@ -215,7 +209,7 @@ h_x = genentropy(x, est)
 h_y = genentropy(y, est)
 h_z = genentropy(z, est)
 
-f = figure(figsize = (10,6))
+fig = figure()
 ax = subplot(311)
 px = plot(t, x; color = "C1", label = "h=$(h=round(h_x, sigdigits = 5))");
 ylabel("x"); legend()
@@ -225,11 +219,8 @@ ylabel("y"); legend()
 az = subplot(313)
 pz = plot(t, z; color = "C3", label = "h=$(h=round(h_z, sigdigits = 5))");
 ylabel("z"); xlabel("Time"); legend()
-tight_layout()
-savefig("waveletentropy.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-
-![](waveletentropy.png)
 
 ## Utility methods
 

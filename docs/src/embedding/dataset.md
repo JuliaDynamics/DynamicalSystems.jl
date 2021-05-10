@@ -15,8 +15,10 @@
 
 Trajectories (and in general sets in state space) in **DynamicalSystems.jl** are represented by a structure called `Dataset`
 (while timeseries are standard Julia `Vector`s).
+It is recommended to always [`regularize`](@ref) input data.
 ```@docs
 Dataset
+regularize
 ```
 
 In essence a `Dataset` is simply a wrapper for a `Vector` of `SVector`s.

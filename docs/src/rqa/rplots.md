@@ -74,7 +74,7 @@ For example, here is the representation of the above `R` from the Roessler syste
 
 ```@example MAIN
 using PyPlot
-figure(figsize = (10,5))
+fig = figure(figsize = (10,5))
 
 ax = subplot(121)
 xs, ys = coordinates(R)
@@ -85,27 +85,23 @@ ax.set_aspect("equal")
 subplot(122)
 Rg = grayscale(R)
 imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
-savefig("different_rplots.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](different_rplots.png)
-
 
 and here is exactly the same process, but using the embedded trajectory instead
 ```@example MAIN
-using PyPlot # hide
 y = tr[:, 2]
 τ = estimate_delay(y, "mi_min")
 m = embed(y, 3, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 
-figure(figsize = (5,5))
+fig = figure()
 
 xs, ys = coordinates(R)
 scatter(xs, ys, color = "k", s = 1)
 xlim(1, size(R)[1]); ylim(1, size(R)[2]);
-savefig("rmatrix2.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](rmatrix2.png)
 
 which justifies why recurrence plots are so fitting to be used in embedded timeseries.
 
@@ -124,7 +120,7 @@ In the following we will plot recurrence plots of the Lorenz system for a period
 ```@example MAIN
 using PyPlot # hide
 lor = Systems.lorenz()
-figure(figsize = (10,10))
+fig = figure(figsize = (10,10))
 
 for (i, ρ) in enumerate((69.75, 28.0))
     set_parameter!(lor, 2, ρ)
@@ -145,10 +141,8 @@ for (i, ρ) in enumerate((69.75, 28.0))
     xlim(0, t); ylim(0, t); gca().set_aspect("equal")
     xlabel("t"); i == 1 && ylabel("t");
 end
-PyPlot.tight_layout()
-savefig("rplotexamples.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](rplotexamples.png)
 
 On the left we see long (infinite) diagonals repeated over and over for different times. This is the case for periodic systems as they visit exactly the same area on the phase space again and again. The distance between the offset diagonals also coincides with the periodicity of the system, which is around `t ≈ 4`.
 

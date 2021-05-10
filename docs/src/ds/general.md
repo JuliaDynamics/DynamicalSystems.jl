@@ -52,7 +52,7 @@ set_parameter!
 ## Example: continuous, out-of-place
 Let's see an example for a small system, which is a case where out-of-place
 equations of motion are preferred.
-```julia
+```@example MAIN
 using DynamicalSystems # also exports relevant StaticArrays names
 # Lorenz system
 # Equations of motion:
@@ -74,19 +74,12 @@ end
 
 ds = ContinuousDynamicalSystem(loop, rand(3), [10.0, 28.0, 8/3], loop_jac)
 ```
-```
-3-dimensional continuous dynamical system
- state:     [0.068248, 0.828095, 0.0743729]
- e.o.m.:    loop
- in-place?  false
- jacobian:  loop_jac
-```
 
 ## Example: discrete, in-place
 The following example is only 2-dimensional, and thus once again it is "correct" to
 use out-of-place version with `SVector`. For the sake of example though, we use
 the in-place version.
-```julia
+```@example MAIN
 # Henon map.
 # equations of motion:
 function hiip(dx, x, p, n)
@@ -104,25 +97,12 @@ function hiip_jac(J, x, p, n)
 end
 ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3], hiip_jac)
 ```
-```
-2-dimensional discrete dynamical system
- state:     [0.0, 0.0]
- e.o.m.:    hiip
- in-place?  true
- jacobian:  hiip_jac
-```
+
 Or, if you don't want to write a Jacobian and want to use the
 auto-differentiation capabilities of **DynamicalSystems.jl**, which use the module
 [`ForwardDiff`](http://www.juliadiff.org/ForwardDiff.jl/stable/index.html):
-```julia
+```@example MAIN
 ds = DiscreteDynamicalSystem(hiip, zeros(2), [1.4, 0.3])
-```
-```
-2-dimensional discrete dynamical system
- state:     [0.0, 0.0]
- e.o.m.:    hiip
- in-place?  true
- jacobian:  ForwardDiff
 ```
 
 ## Complex Example
@@ -140,7 +120,7 @@ p_{i}' = p_i + k_i\sin(\theta_i) - \Gamma \left[\sin(\theta_{i+1} - \theta_{i}) 
 
 To model this, we will make a dedicated `struct`, which is parameterized on the
 number of coupled maps:
-```julia
+```@example MAIN
 struct CoupledStandardMaps{N}
     idxs::SVector{N, Int}
     idxsm1::SVector{N, Int}
@@ -151,7 +131,7 @@ end
 
 We initialize the struct with the amount of standard maps we want to couple,
 and we also define appropriate parameters:
-```julia
+```@example MAIN
 M = 5  # couple number
 u0 = 0.001rand(2M) #initial state
 ks = 0.9ones(M) # nonlinearity parameters
@@ -171,7 +151,7 @@ csm = CoupledStandardMaps{M}(idxs, idxsm1, idxsp1);
 ```
 
 We will now use this struct to define a [function-like-object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects), a Type that also acts as a function.
-```julia
+```@example MAIN
 function (f::CoupledStandardMaps{N})(xnew::AbstractVector, x, p, n) where {N}
     ks, Γ = p
     @inbounds for i in f.idxs
@@ -188,7 +168,7 @@ end
 ```
 
 We will use *the same* `struct` to create a function for the Jacobian:
-```julia
+```@example MAIN
 function (f::CoupledStandardMaps{M})(
     J::AbstractMatrix, x, p, n) where {M}
 
@@ -216,7 +196,8 @@ takes an `AbstractMatrix`. Therefore we can take advantage of multiple dispatch!
 
 Notice in addition, that the Jacobian function accesses *only half the elements of the matrix*. This is intentional, and takes advantage of the fact that the
 other half is constant. We can leverage this further, by making the Jacobian a sparse matrix. Because the `DynamicalSystem` constructors allow us to give in a pre-initialized Jacobian matrix, we take advantage of that and create:
-```julia
+```@example MAIN
+using SparseArrays
 J = zeros(eltype(u0), 2M, 2M)
 # Set ∂/∂p entries (they are eye(M,M))
 # And they dont change they are constants
@@ -229,16 +210,8 @@ sparseJ = sparse(J)
 csm(sparseJ, u0, p, 0) # apply Jacobian to initial state
 ```
 And finally, we are ready to create our dynamical system:
-```julia
+```@example MAIN
 ds = DiscreteDynamicalSystem(csm, u0, p, csm, sparseJ)
-```
-```
-10-dimensional discrete dynamical system
- state:       [0.000803001, 0.00092095, 0.000313022, …, 3.07769e-5, 0.000670152]
- e.o.m.:      CoupledStandardMaps
- in-place?    true
- jacobian:    CoupledStandardMaps
- parameters:  Tuple
 ```
 
 ## Automatic Jacobians
@@ -269,30 +242,25 @@ Notice that if you want to do repeated evolutions of different states of a
 continuous system, you should use the [`integrator`](@ref) interface instead.
 
 ### Example
-```@example traject
+```@example MAIN
 using DynamicalSystems
 ds = Systems.towel()
 ```
 
-```@example traject
+```@example MAIN
 tr = trajectory(ds, 100)
 ```
 
-To get every 3-rd point of the trajectory, do
-```@example traject
-tr = trajectory(ds, 100; dt = 3)
-```
-
 Identical syntax is used for continuous systems
-```@example traject
+```@example MAIN
 ds = Systems.lorenz()
 ```
-```@example traject
+```@example MAIN
 tr = trajectory(ds, 10.0; dt = 0.01)
 ```
 
 And a final example controlling the integrator accuracy:
-```@example traject
+```@example MAIN
 ds = Systems.lorenz()
 tr = trajectory(ds, 10.0; dt = 0.1, abstol = 1e-9, reltol = 1e-9)
 ```

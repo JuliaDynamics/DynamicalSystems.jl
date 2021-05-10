@@ -33,11 +33,11 @@ PyPlot.rc("lines", lw = 2)
 PyPlot.rc("axes", grid = true)
 PyPlot.rc("grid", color = "0.75", alpha = 0.75)
 
-PyPlot.rc("font", size = 24) # set default fontsize
-PyPlot.rc("xtick", labelsize = 22)
-PyPlot.rc("ytick", labelsize = 22)
-PyPlot.rc("axes", labelsize = 28)
-PyPlot.rc("legend", fontsize = 22)
+PyPlot.rc("font", size = 22) # set default fontsize
+PyPlot.rc("xtick", labelsize = 20)
+PyPlot.rc("ytick", labelsize = 20)
+PyPlot.rc("axes", labelsize = 24)
+PyPlot.rc("legend", fontsize = 20)
 # PyPlot.rc("font", family = "Times New Roman") # Serif main font
 PyPlot.rc("font", family = "DejaVu Sans") # sans main font
 # PyPlot.rc("mathtext", rm = "sanserif", fontset="dejavusans") # sans math font
@@ -48,10 +48,10 @@ for z in ("x", "y")
     PyPlot.rc("$(z)tick.minor", size = 3, visible = false)
 end
 
-figx = 8 # default width correspoding to full text width
-figy = 6  # default height corresponding to 1 row of plots
+figx = 9
+figy = 7
 PyPlot.rc("figure", figsize = (figx, figy))
-PyPlot.rc("savefig", dpi = 600, transparent = false, format = "png")
+PyPlot.rc("savefig", dpi = 300, transparent = false, format = "png")
 
 # set default color cycle
 PyPlot.rc("axes", prop_cycle = matplotlib.cycler(color=COLORS.c))
