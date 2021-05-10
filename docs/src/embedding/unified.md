@@ -103,11 +103,11 @@ ts_str = ["x", "y", "z"]
 
 fig = figure(figsize = (12, 6))
 subplot(1,2,1, projection="3d")
-plot3D(Y_m[:,1], Y_m[:,2], Y_m[:,3]; lw = 1.0, c = "C0")
+plot3D(Y_mt[:,1], Y_mt[:,2], Y_mt[:,3]; lw = 1.0, c = "C0")
 title("PECUZAL reconstructed")
-xlabel("$(ts_str[ts_vals_m[1]])(t+$(τ_vals_m[1]))")
-ylabel("$(ts_str[ts_vals_m[2]])(t+$(τ_vals_m[2]))")
-zlabel("$(ts_str[ts_vals_m[3]])(t+$(τ_vals_m[3]))")
+xlabel("$(ts_str[ts_vals_mt[1]])(t+$(τ_vals_mt[1]))")
+ylabel("$(ts_str[ts_vals_mt[2]])(t+$(τ_vals_mt[2]))")
+zlabel("$(ts_str[ts_vals_mt[3]])(t+$(τ_vals_mt[3]))")
 xticks([]); yticks([]); zticks([]);
 
 subplot(1,2,2, projection="3d")

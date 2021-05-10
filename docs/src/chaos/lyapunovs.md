@@ -42,7 +42,7 @@ We now want to demonstrate how the distance between these two trajectories incre
 ```@example MAIN
 using LinearAlgebra: norm
 
-figure(figsize=(8,5))
+fig = figure()
 
 # Plot the x-coordinate of the two trajectories:
 ax1 = subplot(2,1,1)
@@ -54,10 +54,8 @@ ylabel("x")
 ax2 = subplot(2,1,2, sharex = ax1)
 d = [norm(tr1[i] - tr2[i]) for i in 1:length(tr2)]
 ylabel("d"); xlabel("n"); semilogy(d);
-tight_layout() # hide
-savefig("demonstration.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](demonstration.png)
 
 The *initial* slope of the `d` vs `n` plot (before the curve saturates) is approximately the maximum Lyapunov exponent!
 
@@ -105,12 +103,11 @@ for (i, a) in enumerate(as)
     λs[i, :] .= lyapunovspectrum(he, 10000; Ttr = 500)
 end
 
-figure()
+fig = figure()
 plot(as, λs); xlabel("\$a\$"); ylabel("\$\\lambda\$")
 tight_layout() # hide
-savefig("heλ.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](heλ.png)
 
 
 

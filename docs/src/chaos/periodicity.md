@@ -17,7 +17,7 @@ periodicorbits
 lambdamatrix
 lambdaperms
 ```
----
+
 ### Standard Map example
 For example, let's find the fixed points of the [`Systems.standardmap`](@ref) of order 2, 3, 4, 5, 6
 and 8. We will use all permutations for the `signs` but only one for the `inds`.
@@ -60,7 +60,7 @@ for x in xs
         append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
-figure(figsize = (12,12))
+fig = figure()
 m = Matrix(dataset)
 PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
 PyPlot.xlim(xs[1], xs[end])
@@ -82,9 +82,8 @@ end
 legend(loc="upper right", framealpha=0.9)
 xlabel("\$\\theta\$")
 ylabel("\$p\$")
-savefig("fixedpoints.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![Fixed points of the standard map](fixedpoints.png)
 
 You can confirm for yourself that this is correct, for many reasons:
 
@@ -126,11 +125,10 @@ T, dt = 1000.0, 0.1
 v = trajectory(fhn, T; dt = dt)[:, 1]
 t = 0:dt:T
 
-figure()
+fig = figure()
 plot(0:dt:T, v)
-savefig("fhn_trajectory.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![A periodic trajectory](fhn_trajectory.png)
 
 Examining the figure, one can see that the period of the system is around `91` time units. To estimate it numerically let's use some of the methods:
 ```@example MAIN
@@ -144,7 +142,6 @@ estimate_period(v, :zerocrossing, t)
 ```
 
 ## Return time statistics
-
 ```@docs
 mean_return_times
 exit_entry_times

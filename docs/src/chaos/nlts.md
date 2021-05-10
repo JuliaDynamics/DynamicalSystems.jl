@@ -40,10 +40,8 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
         tight_layout()
     end
 end
-fig.savefig("numerlyap.png"); nothing # hide
+tight_layout(pad=0.3); fig
 ```
-![](numerlyap.png)
-
 
 ### Bad Time-axis (`ks`) length
 
@@ -67,9 +65,8 @@ E = numericallyapunov(R, ks, ntype = NeighborNumber(2))
 fig = figure()
 plot(ks .- 1, E .- E[1])
 title("Lyappunov: $(linear_region(ks, E)[2])")
-fig.savefig("badlyap.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](badlyap.png)
 
 Notice that even though this value
 for the Lyapunov exponent is correct, it happened to be correct simply due to the
@@ -100,7 +97,7 @@ ks2 = 0:4:200
 ```
 Now we plot some example computations
 ```@example MAIN
-figure()
+fig = figure()
 ntype = NeighborNumber(5) #5 nearest neighbors of each state
 
 for d in [4, 8], τ in [7, 15]
@@ -119,10 +116,8 @@ legend()
 xlabel("k (0.05×t)")
 ylabel("E - E(0)")
 title("Continuous Reconstruction Lyapunov")
-tight_layout()
-savefig("continuousnumlyap.png"); nothing # hide
+fig.tight_layout(pad=0.3); fig
 ```
-![](continuousnumlyap.png)
 
 As you can see, using `τ = 15` is not a great choice! The estimates with
 `τ = 7` though are very good (the actual value is around `λ ≈ 0.89...`).
@@ -164,10 +159,8 @@ subplot(1,2,2)
 R = embed(s, 2, 30)
 plot(columns(R)...; color = "C3")
 title("2D embedding of s")
-tight_layout()
-fig.savefig("broomhead_king.png"); nothing # hide
+fig.tight_layout(pad=0.3)
 ```
-![](broomhead_king.png)
 
 we have used the same system as in the [Delay Coordinates Embedding](@ref) example, and picked the optimal
 delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.

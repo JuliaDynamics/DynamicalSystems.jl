@@ -72,8 +72,7 @@ pages = [
        "Fractal Dimension" => "chaos/fractaldim.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
        "Periodicity & Ergodicity" => "chaos/periodicity.md",
-       "Choosing a solver" => "chaos/choosing.md",
-       "Basins of Attraction" => "chaos/basins.md"
+       "Basins of Attraction" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [
         "Recurrence Plots" => "rqa/rplots.md",
@@ -87,6 +86,9 @@ pages = [
 expandfirst = ["index.md"],
 )
 
+PyPlot.close("all")
+PyPlot.ion()
+
 if CI
     deploydocs(
         repo = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
@@ -94,6 +96,3 @@ if CI
         push_preview = true
     )
 end
-
-PyPlot.close("all")
-PyPlot.ion()

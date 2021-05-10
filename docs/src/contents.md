@@ -26,7 +26,7 @@ Performing delay coordinate embeddings and finding optimal parameters for doing 
 
 * Methods that estimate optimal embedding parameters: [Traditional Optimal Embedding](@ref).
 * [Unified Optimal Embedding](@ref) approach (advanced algorithms).
-* Fast calculation of mutual information: [`mutualinformation`](@ref).
+* Fast calculation of mutual information: [`selfmutualinfo`](@ref).
 * Unified neighborhood interface.
 
 ## ChaosTools
@@ -79,6 +79,9 @@ And, in order to automatically deduce dimensions, we also offer methods for:
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 2. Estimating the period of a timeseries: [`estimate_period`](@ref).
 3. Return and transit time statistics for a subset of the state space: [`mean_return_times`](@ref), [`exit_entry_times`](@ref).
+
+### [Basins of Attraction](@ref)
+* Efficient algorithms for calculating basins of attraction on a planar projection.
 
 ## Recurrence Analysis
 [RecurrenceAnalysis.jl](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl) offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
