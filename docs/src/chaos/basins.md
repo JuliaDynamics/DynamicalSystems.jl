@@ -1,6 +1,6 @@
-# Basins of Attraction
+# Attractor Basins, Tipping Points
 
-In this page we list several functions related with basins of attraction and their properties. In the example [Basins in Higher Dimensions](@ref) we try to apply every single function listed below, so check this for an example application of everything listed here!
+In this page we list several functions related with basins of attraction and tipping points. In the example [Basins in Higher Dimensions](@ref) we try to apply every single function listed below, so check this for an example application of everything listed here!
 
 ## Computing Basins of Attraction
 
@@ -17,8 +17,9 @@ basins_general
 uncertainty_exponent
 ```
 
-## Tipping probabilities
+## Tipping points
 ```@docs
+basin_fractions
 tipping_probabilities
 ```
 
@@ -149,6 +150,6 @@ fig
 ```@example MAIN
 P = tipping_probabilities(basins_before, basins_after)
 ```
-As you can see `P` has size 3×2, as after the change only 2 attractors exist while the
+As you can see `P` has size 3×2, as after the change only 2 attractors exist, while the
 first row of `P` is exactly 50% probability to each other magnet, as it should be due
 to the system's symmetry.

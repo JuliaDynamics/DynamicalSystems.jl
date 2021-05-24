@@ -80,7 +80,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 2. Estimating the period of a timeseries: [`estimate_period`](@ref).
 3. Return and transit time statistics for a subset of the state space: [`mean_return_times`](@ref), [`exit_entry_times`](@ref).
 
-### [Basins of Attraction](@ref)
+### [Attractor Basins, Tipping Points](@ref)
 * Efficient algorithms for calculating basins of attraction on a planar projection: [`basins_map2D`](@ref), [`basins_general`](@ref)
 * Final state sensitivity: [`uncertainty_exponent`](@ref).
 * Tipping probabilities: [`tipping_probabilities`](@ref).
