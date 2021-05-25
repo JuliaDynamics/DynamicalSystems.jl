@@ -6,7 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! tip "Latest news"
-    [Basins of Attraction](@ref)!
+    [Attractor Basins, Tipping Points](@ref)!
 
 !!! info "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
