@@ -26,7 +26,7 @@ tipping_probabilities
 ## Stroboscopic map example
 First define a dynamical system on the plane, for example with a *stroboscopic* map or Poincaré section. For example we can set up an dynamical system with a stroboscopic map using a periodically driven 2D continuous dynamical system, like the Duffing oscillator:
 ```@example MAIN
-using DynamicalSystems
+using DynamicalSystems, PyPlot
 ω=1.0; f = 0.2
 ds =Systems.duffing([0.1, 0.25]; ω, f, d = 0.15, β = -1)
 integ = integrator(ds; reltol=1e-8)
@@ -35,16 +35,23 @@ integ = integrator(ds; reltol=1e-8)
 Now we define the grid of ICs that we want to analyze and launch the procedure:
 
 ```@example MAIN
-xg = range(-2.2,2.2,length=200)
-yg = range(-2.2,2.2,length=200)
+xg = yg = range(-2.2,2.2,length=200)
 basin, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
 basin
 ```
 
+And visualize the result as a heatmap, scattering the found attractors via scatter.
+
 ```@example MAIN
-using PyPlot
 fig = figure()
 pcolormesh(xg, yg, basin')
+function scatter_attractors(attractors)
+    for k ∈ keys(attractors)
+        x, y = columns(attractors[k])
+        scatter(x, y; color = "C$k", alpha = 0.75)
+    end
+end
+scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
 
@@ -66,6 +73,7 @@ basin, attractors = basins_map2D(xg, yg, pmap)
 
 fig = figure()
 pcolormesh(xg, yg, basin')
+scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
 
@@ -76,14 +84,14 @@ as one passes its integrator directly into [`basins_map2D`](@ref)
 ```@example MAIN
 function newton_map(dz, z, p, n)
     z1 = z[1] + im*z[2]
-    dz1 = f(z1, p[1])/df(z1, p[1])
+    dz1 = newton_f(z1, p[1])/newton_df(z1, p[1])
     z1 = z1 - dz1
     dz[1]=real(z1)
     dz[2]=imag(z1)
     return
 end
-f(x, p) = x^p - 1
-df(x, p)= p*x^(p-1)
+newton_f(x, p) = x^p - 1
+newton_df(x, p)= p*x^(p-1)
 
 # dummy Jacobian function to keep the initializator quiet
 function newton_map_J(J,z0, p, n)
@@ -92,11 +100,12 @@ end
 
 ds = DiscreteDynamicalSystem(newton_map,[0.1, 0.2], [3.0], newton_map_J)
 integ = integrator(ds)
-xg = yg range(-1.5,1.5,length=200)
+xg = yg = range(-1.5,1.5,length=400)
 
-basin, attractors  = basins_map2D(xg, yg, integ)
+basin, attractors = basins_map2D(xg, yg, integ)
 fig = figure()
 pcolormesh(xg, yg, basin')
+scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
 
@@ -119,7 +128,8 @@ Let's visualize this beauty now
 ```@example MAIN
 fig = figure()
 pcolormesh(xg, yg, basins')
-fig
+scatter_attractors(attractors)
+fig.tight_layout(pad=0.3); fig
 ```
 
 ### Computing the uncertainty exponent
@@ -130,7 +140,7 @@ The calculation is straightforward:
 ε, f_ε, α = uncertainty_exponent(xg, yg, basins)
 fig = figure()
 plot(log.(ε), log.(f_ε))
-# TODO: Add line plot
+plot(log.(ε), log.(ε) .* α)
 fig
 ```
 
