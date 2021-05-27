@@ -160,6 +160,5 @@ fig
 ```@example MAIN
 P = tipping_probabilities(basins_before, basins_after)
 ```
-As you can see `P` has size 3×2, as after the change only 2 attractors exist, while the
-first row of `P` is exactly 50% probability to each other magnet, as it should be due
-to the system's symmetry.
+As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our space discretization isn't accurate enough to find the 3rd because it has such a small basin).
+Also, the first row of `P` is exactly 50% probability to each other magnet, as it should be due to the system's symmetry.

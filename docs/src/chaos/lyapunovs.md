@@ -105,7 +105,6 @@ end
 
 fig = figure()
 plot(as, λs); xlabel("\$a\$"); ylabel("\$\\lambda\$")
-tight_layout() # hide
 fig.tight_layout(pad=0.3); fig
 ```
 
@@ -129,4 +128,24 @@ The same is done for continuous systems:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32)
 λ = lyapunov(lor, 10000.0, dt = 10.0, Ttr = 100.0)
+```
+
+## Local Growth Rates
+```@docs
+local_growth_rates
+```
+Here is a simple example using the Henon map
+```@example MAIN
+ds = Systems.henon()
+points = trajectory(ds, 2000; Ttr = 100)
+
+λlocal = local_growth_rates(ds, points; Δt = 1)
+
+λmeans = mean(λlocal; dims = 2)
+λstds = std(λlocal; dims = 2)
+fig = figure()
+x, y = columns(points)
+scatter(x, y; c=vec(λmeans), alpha = 0.5)
+colorbar()
+fig.tight_layout(pad=0.3); fig
 ```
