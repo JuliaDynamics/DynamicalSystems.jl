@@ -8,7 +8,7 @@ In DynamicalSystems.jl we provide performant methods for estimating basins of at
 The performance of these methods comes from a _constraint on a 2D plane_, as you will see below.
 
 ```@docs
-basins_map2D
+basins_2D
 basins_general
 match_attractors!
 ```
@@ -37,7 +37,7 @@ Now we define the grid of ICs that we want to analyze and launch the procedure:
 
 ```@example MAIN
 xg = yg = range(-2.2,2.2,length=200)
-basins, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
+basins, attractors = basins_2D(xg, yg, integ; T=2π/ω)
 basins
 ```
 
@@ -45,11 +45,13 @@ And visualize the result as a heatmap, scattering the found attractors via scatt
 
 ```@example MAIN
 fig = figure()
+
 # Make qualitative colormap
 LC =  matplotlib.colors.ListedColormap
-cmap = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
+cmap = LC([matplotlib.colors.to_rgb("C$k") for k in 0:3])
+vmin = 1; vmax = 4
 
-pcolormesh(xg, yg, basins'; cmap)
+pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
 function scatter_attractors(attractors)
     for k ∈ keys(attractors)
         x, y = columns(attractors[k])
@@ -62,29 +64,29 @@ fig.tight_layout(pad=0.3); fig
 
 ## Poincaré map example
 
-A Poincaré map of a 3D continuous system is a 2D discrete system and can be directly passed into [`basins_map2D`](@ref).
+A Poincaré map of a 3D continuous system is a 2D discrete system and can be directly passed into [`basins_2D`](@ref).
 ```@example MAIN
 ds = Systems.rikitake(μ = 0.47, α = 1.0)
 plane = (3, 0.0)
 pmap = poincaremap(ds, (3, 0.), Tmax=1e6;
-    idxs = 1:2, rootkw = (xrtol = 1e-8, atol = 1e-8), reltol=1e-9
+    idxs = 1:2, rootkw = (xrtol = 1e-12, atol = 1e-12), reltol=1e-9
 )
 ```
 
-Once the Poincaré map has been created, we simply call [`basins_map2D`](@ref)
+Once the Poincaré map has been created, we simply call [`basins_2D`](@ref)
 ```@example MAIN
 xg = yg = range(-6.,6.,length=200)
-basin, attractors = basins_map2D(xg, yg, pmap)
+basin, attractors = basins_2D(xg, yg, pmap)
 
 fig = figure()
-pcolormesh(xg, yg, basin'; cmap)
+pcolormesh(xg, yg, basin'; cmap, vmin, vmax)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
 
 ## Discrete system example
 The process to compute the attraction basins of a discrete 2D dynamical system is trivial,
-as one passes its integrator directly into [`basins_map2D`](@ref)
+as one passes its integrator directly into [`basins_2D`](@ref)
 
 ```@example MAIN
 function newton_map(dz, z, p, n)
@@ -107,9 +109,9 @@ ds = DiscreteDynamicalSystem(newton_map,[0.1, 0.2], [3.0], newton_map_J)
 integ = integrator(ds)
 xg = yg = range(-1.5,1.5,length=400)
 
-basin, attractors = basins_map2D(xg, yg, integ)
+basin, attractors = basins_2D(xg, yg, integ)
 fig = figure()
-pcolormesh(xg, yg, basin'; cmap)
+pcolormesh(xg, yg, basin'; cmap, vmin, vmax)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -132,7 +134,7 @@ Let's visualize this beauty now
 
 ```@example MAIN
 fig = figure()
-pcolormesh(xg, yg, basins'; cmap)
+pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -158,7 +160,7 @@ ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1]
 basins_after, attractors_after = basins_general(xg, yg, ds; reltol = 1e-9)
 match_attractors!(basins, attractors, basins_after, attractors_after)
 fig = figure()
-pcolormesh(xg, yg, basins_after'; vmin = 1, vmax = 3, cmap)
+pcolormesh(xg, yg, basins_after'; vmin, vmax, cmap)
 scatter_attractors(attractors_after)
 fig.tight_layout(pad=0.3); fig
 ```
