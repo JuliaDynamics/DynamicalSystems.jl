@@ -124,7 +124,7 @@ The initial conditions are set on this grid and all others variables are set to 
 ```@example MAIN
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3)
 xg = yg = range(-4, 4, length=150)
-@time basins, attractors = basins_general(xg, yg, ds; idxs = 1:2, reltol = 1e-9)
+@time basins, attractors = basins_general(xg, yg, ds; reltol = 1e-9)
 attractors
 ```
 Alright, so far so good, we found 3 attractors (the 3 points of the magnetic pendulum).
@@ -155,7 +155,7 @@ as the "before" state. For the "after" state we will change the `γ` parameter o
 third magnet to be so small, it's basin of attraction will virtually disappear.
 ```@example MAIN
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1])
-basins_after, attractors_after = basins_general(xg, yg, ds; idxs = 1:2, reltol = 1e-9)
+basins_after, attractors_after = basins_general(xg, yg, ds; reltol = 1e-9)
 match_attractors!(basins, attractors, basins_after, attractors_after)
 fig = figure()
 pcolormesh(xg, yg, basins_after'; vmin = 1, vmax = 3, cmap)
