@@ -30,7 +30,7 @@ Performing delay coordinate embeddings and finding optimal parameters for doing 
 * Unified neighborhood interface.
 
 ## ChaosTools
-[ChaosTools.jl](https://github.com/JuliaDynamics/InteractiveChaos.jl) is a collection of many algorithms for (chaotic or not) dynamical systems.
+[ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl) is a collection of many algorithms for (chaotic or not) dynamical systems.
 All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
 
 
@@ -46,6 +46,7 @@ The following treat systems where the equations of motion are known:
 
 1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
 2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovspectrum`](@ref).
+3. Finite-time, finite-size lyapunov exponent (a.k.a. nonlinear Lyapunov exponent): [`local_growth_rates`](@ref).
 
 ### [Detecting & Categorizing Chaos](@ref)
 
@@ -90,6 +91,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 
 * [Recurrence Plots](@ref), with cross-recurrence and joint-recurrence.
 * [Recurrence Quantification Analysis](@ref) (RQA):
-  * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, entropy, trapping time, average/maximum vertical length.
-  * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
-  * [Windowed RQA](@ref) of the above
+    * Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, entropy, trapping time, average/maximum vertical length.
+    * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
+    * [Windowed RQA](@ref) of the above
+* [Recurrence Networks](@ref)

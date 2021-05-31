@@ -10,6 +10,7 @@ The performance of these methods comes from a _constraint on a 2D plane_, as you
 ```@docs
 basins_map2D
 basins_general
+match_attractors!
 ```
 
 ## Final state sensitivity
@@ -36,19 +37,23 @@ Now we define the grid of ICs that we want to analyze and launch the procedure:
 
 ```@example MAIN
 xg = yg = range(-2.2,2.2,length=200)
-basin, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
-basin
+basins, attractors = basins_map2D(xg, yg, integ; T=2π/ω)
+basins
 ```
 
 And visualize the result as a heatmap, scattering the found attractors via scatter.
 
 ```@example MAIN
 fig = figure()
-pcolormesh(xg, yg, basin')
+# Make qualitative colormap
+LC =  matplotlib.colors.ListedColormap
+cmap = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
+
+pcolormesh(xg, yg, basins'; cmap)
 function scatter_attractors(attractors)
     for k ∈ keys(attractors)
         x, y = columns(attractors[k])
-        scatter(x, y; color = "C$k", alpha = 0.75)
+        scatter(x, y; color = "C$(k-1)", alpha = 0.75, edgecolor = "white")
     end
 end
 scatter_attractors(attractors)
@@ -72,7 +77,7 @@ xg = yg = range(-6.,6.,length=200)
 basin, attractors = basins_map2D(xg, yg, pmap)
 
 fig = figure()
-pcolormesh(xg, yg, basin')
+pcolormesh(xg, yg, basin'; cmap)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -104,7 +109,7 @@ xg = yg = range(-1.5,1.5,length=400)
 
 basin, attractors = basins_map2D(xg, yg, integ)
 fig = figure()
-pcolormesh(xg, yg, basin')
+pcolormesh(xg, yg, basin'; cmap)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -127,7 +132,7 @@ Let's visualize this beauty now
 
 ```@example MAIN
 fig = figure()
-pcolormesh(xg, yg, basins')
+pcolormesh(xg, yg, basins'; cmap)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -141,7 +146,7 @@ The calculation is straightforward:
 fig = figure()
 plot(log.(ε), log.(f_ε))
 plot(log.(ε), log.(ε) .* α)
-fig
+fig.tight_layout(pad=0.3); fig
 ```
 
 ### Computing the tipping probabilities
@@ -149,16 +154,17 @@ We will compute the tipping probabilities using the magnetic pendulum's example
 as the "before" state. For the "after" state we will change the `γ` parameter of the
 third magnet to be so small, it's basin of attraction will virtually disappear.
 ```@example MAIN
-basins_before = basins # store previous basins
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1])
-basins_after, = basins_general(xg, yg, ds; idxs = 1:2, reltol = 1e-9)
+basins_after, attractors_after = basins_general(xg, yg, ds; idxs = 1:2, reltol = 1e-9)
+match_attractors!(basins, attractors, basins_after, attractors_after)
 fig = figure()
-pcolormesh(xg, yg, basins_after')
-fig
+pcolormesh(xg, yg, basins_after'; vmin = 1, vmax = 3, cmap)
+scatter_attractors(attractors_after)
+fig.tight_layout(pad=0.3); fig
 ```
 
 ```@example MAIN
-P = tipping_probabilities(basins_before, basins_after)
+P = tipping_probabilities(basins, basins_after)
 ```
-As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our space discretization isn't accurate enough to find the 3rd because it has such a small basin).
+As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our state space discretization isn't accurate enough to find the 3rd because it has such a small basin).
 Also, the first row of `P` is exactly 50% probability to each other magnet, as it should be due to the system's symmetry.
