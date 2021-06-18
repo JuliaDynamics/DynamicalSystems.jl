@@ -64,7 +64,7 @@ R = embed(x, 2, 1)
 E = numericallyapunov(R, ks, ntype = NeighborNumber(2))
 fig = figure()
 plot(ks .- 1, E .- E[1])
-title("Lyappunov: $(linear_region(ks, E)[2])")
+title("Lyapunov: $(linear_region(ks, E)[2])")
 fig.tight_layout(pad=0.3); fig
 ```
 
