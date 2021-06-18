@@ -136,6 +136,8 @@ local_growth_rates
 ```
 Here is a simple example using the Henon map
 ```@example MAIN
+using Statistics
+
 ds = Systems.henon()
 points = trajectory(ds, 2000; Ttr = 100)
 
