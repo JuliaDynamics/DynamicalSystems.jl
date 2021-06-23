@@ -75,11 +75,13 @@ using DynamicalSystems, PyPlot
 ω=1.0; f = 0.2
 ds = Systems.duffing([0.1, 0.25]; ω, f, d = 0.15, β = -1)
 ```
-
-Now we define the grid of ICs that we want to analyze and launch the procedure:
+For stroboscopic maps, we strongly recommend using a higher precision integrator from OrdinaryDiffEq.jl.
 
 ```@example MAIN
-basins, attractors = basins_of_attraction((xg, yg), ds; T=2π/ω)
+using OrdinaryDiffEq
+diffeq = (alg = Tsit5(), reltol = 1e-9)
+xg = yg = range(-2.2,2.2,length=200)
+basins, attractors = basins_of_attraction((xg, yg), ds; T=2π/ω, diffeq)
 basins
 ```
 
@@ -88,29 +90,6 @@ And visualize the result as a heatmap, scattering the found attractors via scatt
 ```@example MAIN
 fig = figure()
 pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
-```
-
-## Poincaré map example
-[`basins_of_attraction`](@ref) can also be used with a [`poincaremap`](@ref).
-Notice that within the algorithm the `poincaremap` is treated as a `D` dimensional system (full state space), even though formally the dimensionality of the map is `D-1`. For optimal results it is suited to use as `grid` the same hyperplane that the map is defined on.
-
-Example:
-```@example MAIN
-ds = Systems.rikitake(μ = 0.47, α = 1.0)
-plane = (3, 0.0)
-pmap = poincaremap(ds, (3, 0.), Tmax=1e6;
-    idxs = 1:2, rootkw = (xrtol = 1e-12, atol = 1e-12), reltol=1e-9
-)
-```
-
-```@example MAIN
-xg = yg = range(-6.,6.,length=200)
-basin, attractors = basins_of_attraction((xg, yg), pmap)
-
-fig = figure()
-pcolormesh(xg, yg, basin'; cmap, vmin, vmax)
 scatter_attractors(attractors)
 fig.tight_layout(pad=0.3); fig
 ```
@@ -167,3 +146,73 @@ P = tipping_probabilities(basins, basins_after)
 ```
 As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our state space discretization isn't accurate enough to find the 3rd because it has such a small basin).
 Also, the first row of `P` is 50% probability to each other magnet, as it should be due to the system's symmetry.
+
+## Higher-dimensional basins
+To showcase the power of [`basins_of_attraction`](@ref) we need to use a system whose attractors span higher-dimensional space. An example is 
+```@example MAIN
+ds = Systems.thomas_cyclical(b = 0.1665)
+```
+which, for this parameter, contains 5 coexisting attractors. 3 of them are entangled periodic orbits that span across all three dimensions, and the remaining 2 are fixed points.
+
+To compute the basins we define a three-dimensional grid and call on it [`basins_of_attraction`](@ref).
+
+```julia
+# This computation takes about an hour
+xg = yg = zg = range(-6.0, 6.0; length = 250)
+basins, attractors = basins_of_attraction((xg, yg, zg), ds)
+attractors
+```
+```
+Dict{Int16, Dataset{3, Float64}} with 5 entries:
+  5 => 3-dimensional Dataset{Float64} with 1 points
+  4 => 3-dimensional Dataset{Float64} with 362 points
+  2 => 3-dimensional Dataset{Float64} with 364 points
+  3 => 3-dimensional Dataset{Float64} with 362 points
+  1 => 3-dimensional Dataset{Float64} with 1 points
+```
+
+The basins of attraction are very complicated. We can try to visualize them by animating the 2D slices at each z value, to obtain:
+
+```@raw html
+<video width="75%" height="auto" controls loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/cyclical_basins.mp4?raw=true" type="video/mp4">
+</video>
+```
+
+Then, we visualize the attractors to obtain:
+
+```@raw html
+<video width="75%" height="auto" controls loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/cyclical_attractors.mp4?raw=true" type="video/mp4">
+</video>
+```
+
+In the animation above, the scattered points are the attractor values the function [`basins_of_attraction`](@ref) found by itself. Of course, for the periodic orbits these points are incomplete. Once the function's logic understood we are on an attractor, it stops computing. However, we also simulated lines, by evolving initial conditions colored appropriately with the basins output.
+
+The animation was produced with the code:
+```julia
+using GLMakie
+fig = Figure()
+display(fig)
+ax = fig[1,1] = Axis3(fig; title = "found attractors")
+cmap = cgrad(COLORSCHEME[1:5], 5; categorical = true)
+
+for i in keys(attractors)
+    tr = attractors[i]
+    markersize = length(attractors[i]) > 10 ? 2000 : 6000
+    marker = length(attractors[i]) > 10 ? :circle : :rect
+    scatter!(ax, columns(tr)...; markersize, marker, transparency = true, color = cmap[i])
+    j = findfirst(isequal(i), bsn)
+    x = xg[j[1]]
+    y = yg[j[2]]
+    z = zg[j[3]]
+    tr = trajectory(ds, 100, SVector(x,y,z); Ttr = 100)
+    lines!(ax, columns(tr)...; linewidth = 1.0, color = cmap[i])
+end
+
+a = range(0, 2π; length = 200) .+ π/4
+
+record(fig, "cyclical_attractors.mp4", 1:length(a)) do i
+    ax.azimuth = a[i]
+end
+```
