@@ -152,7 +152,7 @@ The above uses the default solver. Let's now benchmark using two different solve
 It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*dt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
 
 Here are the numbers:
-```@example MAIN
+```julia
 using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq, Statistics
 b1 = @benchmark lyapunovspectrum(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
 b2 = @benchmark lyapunovspectrum(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
@@ -160,6 +160,13 @@ println("Timing for SimpleATsit5:")
 println(mean(b1))
 println("Timing for Vern9:")
 println(mean(b2))
+```
+
+```
+Timing for SimpleATsit5:
+TrialEstimate(53.517 ms)
+Timing for Vern9:
+TrialEstimate(27.511 ms)
 ```
 
 As you can see `Vern9` is faster in doing the _entire_ computation! Of course this does not have to be universally true. It is true for the Lorenz system, but for your specific system you should do dedicated benchmarks!
