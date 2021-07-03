@@ -14,14 +14,13 @@ function Base.getindex(c::CyclicContainer)
 end
 Base.iterate(c::CyclicContainer, i = 1) = iterate(c.c, i)
 
-# TODO: Green and blue are not that well distinguishable
 COLORSCHEME = [
-   "#1b2e34",
-   "#499cbf",
-   "#E84646",
-   "#068624",
-   "#985CC9",
-   "#878787"
+    "#2F2F2F",
+    "#6847B9",
+    "#33CBD8",
+    "#E22411",
+    "#968A8A",
+    "#B6D840",
 ]
 COLORS = CyclicContainer(COLORSCHEME)
 LINESTYLES = CyclicContainer(["-", ":", "--", "-."])
