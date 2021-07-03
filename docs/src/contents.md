@@ -15,8 +15,8 @@ The _module_ `DynamicalSystems` re-exports all following functionality.
 
 ## Entropies
 * An interface to estimate [Entropies & Probabilities](@ref) from trajectories or state space sets.
-* Fast and cheap (memory-wise) method for computing histograms of large datasets: [`binhist`](@ref).
 * Dozens of [Probabilities Estimators](@ref) for doing so, including standard binning, counting, permutations, nearest neighbor based, time-scale based, among others.
+* Fast and cheap (memory-wise) method for computing histograms of large datasets: [`binhist`](@ref).
 
 
 ## [Delay Coordinates Embedding](@ref)
@@ -82,9 +82,9 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 3. Return and transit time statistics for a subset of the state space: [`mean_return_times`](@ref), [`exit_entry_times`](@ref).
 
 ### [Attractor Basins, Tipping Points](@ref)
-* Efficient algorithms for calculating basins of attraction on a planar projection: [`basins_map2D`](@ref), [`basins_general`](@ref)
+* Efficient algorithms for calculating basins of attraction of an arbitrary dynamical system: [`basins_of_attraction`](@ref).
 * Final state sensitivity: [`uncertainty_exponent`](@ref).
-* Tipping probabilities: [`tipping_probabilities`](@ref).
+* Tipping points related functionality: [`basins_fractions`](@ref), [`tipping_probabilities`](@ref).
 
 ## Recurrence Analysis
 [RecurrenceAnalysis.jl](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl) offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).

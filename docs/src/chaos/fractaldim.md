@@ -95,7 +95,6 @@ boxed_correlationsum
 data_boxing
 correlationsum_fixedmass
 takens_best_estimate
-kernelprob
 ```
 
 ## Kaplan-Yorke Dimension

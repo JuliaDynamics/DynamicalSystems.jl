@@ -5,10 +5,10 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
-!!! tip "Latest news"
+!!! info "Latest news"
     [Attractor Basins, Tipping Points](@ref)!
 
-!!! info "Star us on GitHub!"
+!!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
     This gives us an accurate lower bound of the (satisfied) user count.
 
@@ -18,6 +18,19 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 using Pkg; Pkg.add("DynamicalSystems")
 ```
 
+For transparency, the packages and versions used to build the documentation you are reading now are:
+
+```@example MAIN
+using Pkg
+Pkg.status([
+    "DynamicalSystems",
+    "DelayEmbeddings", "RecurrenceAnalysis",
+    "DynamicalSystemsBase", "ChaosTools",
+    "Entropies",];
+    mode = PKGMODE_MANIFEST, io=stdout
+)
+```
+
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
 
 1. The [`DynamicalSystem`](@ref) represents a dynamical system with known dynamic rule ``f``. The system can be in discrete time (often called a map), ``\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)``, or in continuous time (often called an ordinary differential equation) ``\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)``. In both cases ``u`` is the _state_ of the dynamical system and ``p`` a parameter container. You should have a look at the page [Dynamical System Definition](@ref) for how to create this object. A list of several pre-defined systems exists in the [Predefined Dynamical Systems](@ref) page.
@@ -25,7 +38,7 @@ The individual packages that compose `DynamicalSystems` interact flawlessly with
 
 These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
 For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
-Alternatively, by using [`numericallyapunov`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory.
+Alternatively, by using [`numericallyapunov`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
 
 All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
 
