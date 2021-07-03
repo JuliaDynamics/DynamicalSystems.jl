@@ -52,7 +52,7 @@ Now let's plot this as a heatmap
 function scatter_attractors(attractors)
     for k ∈ keys(attractors)
         x, y = columns(attractors[k])
-        scatter(x, y; color = "C$(k-1)", alpha = 0.75, edgecolor = "white")
+        scatter(x, y; color = "C$(k-1)", edgecolor = "white")
     end
 end
 LC =  matplotlib.colors.ListedColormap
@@ -159,16 +159,17 @@ To compute the basins we define a three-dimensional grid and call on it [`basins
 
 ```julia
 # This computation takes about an hour
-xg = yg = zg = range(-6.0, 6.0; length = 250)
+xg = yg = zg = range(-6.0, 6.0; length = 251)
 basins, attractors = basins_of_attraction((xg, yg, zg), ds)
 attractors
 ```
 ```
 Dict{Int16, Dataset{3, Float64}} with 5 entries:
   5 => 3-dimensional Dataset{Float64} with 1 points
-  4 => 3-dimensional Dataset{Float64} with 362 points
-  2 => 3-dimensional Dataset{Float64} with 364 points
-  3 => 3-dimensional Dataset{Float64} with 362 points
+  4 => 3-dimensional Dataset{Float64} with 379 points
+  6 => 3-dimensional Dataset{Float64} with 1 points
+  2 => 3-dimensional Dataset{Float64} with 538 points
+  3 => 3-dimensional Dataset{Float64} with 537 points
   1 => 3-dimensional Dataset{Float64} with 1 points
 ```
 
@@ -196,7 +197,7 @@ using GLMakie
 fig = Figure()
 display(fig)
 ax = fig[1,1] = Axis3(fig; title = "found attractors")
-cmap = cgrad(COLORSCHEME[1:5], 5; categorical = true)
+cmap = cgrad(:dense, 6; categorical = true)
 
 for i in keys(attractors)
     tr = attractors[i]
@@ -217,3 +218,27 @@ record(fig, "cyclical_attractors.mp4", 1:length(a)) do i
     ax.azimuth = a[i]
 end
 ```
+
+## Poincaré map example
+In the previous example we saw that this system has periodic attractors. In the Poincaré map these periodic attractors become points. We can use the functionality of [`basins_of_attraction`](@ref) and [`poincaremap`](@ref) to find basins of attraction on the Poincaré surface of section.
+
+```@example MAIN
+ds = Systems.thomas_cyclical(b = 0.1665)
+xg = yg = range(-6.0, 6.0; length = 100)
+pmap = poincaremap(ds, (3, 0.0), 1e6; 
+    rootkw = (xrtol = 1e-8, atol = 1e-8), reltol=1e-9
+)
+basins, attractors = basins_of_attraction((xg,yg), pmap; show_progress = false)
+attractors
+```
+```@example MAIN
+attractors[1]
+```
+Looks good so far, but let's plot it as well:
+```@example MAIN
+fig = figure()
+pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
+scatter_attractors(attractors)
+fig.tight_layout(pad=0.3); fig
+```
+This aligns perfectly with the video we produced above.
