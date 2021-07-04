@@ -15,8 +15,8 @@ end
 Base.iterate(c::CyclicContainer, i = 1) = iterate(c.c, i)
 
 COLORSCHEME = [
-    "#2F2F2F",
-    "#6847B9",
+    "#1F1F1F",
+    "#6F4AC7",
     "#33CBD8",
     "#E22411",
     "#968A8A",
