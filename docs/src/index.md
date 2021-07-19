@@ -23,7 +23,6 @@ For transparency, the packages and versions used to build the documentation you 
 ```@example MAIN
 using Pkg
 Pkg.status([
-    "DynamicalSystems",
     "DelayEmbeddings", "RecurrenceAnalysis",
     "DynamicalSystemsBase", "ChaosTools",
     "Entropies",];

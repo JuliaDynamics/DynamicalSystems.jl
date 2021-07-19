@@ -9,8 +9,11 @@ basins_of_attraction
 match_attractors!
 ```
 
-## Final state sensitivity
+## Final state sensitivity / fractal boundaries
 ```@docs
+basins_fractal_dimension
+basin_entropy
+basins_fractal_test
 uncertainty_exponent
 ```
 
