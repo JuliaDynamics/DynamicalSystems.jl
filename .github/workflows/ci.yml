@@ -75,6 +75,7 @@ jobs:
           julia --project=docs -e '
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.update()
             Pkg.instantiate()
             ENV["PYTHON"] = ""
             Pkg.build("PyCall")'
