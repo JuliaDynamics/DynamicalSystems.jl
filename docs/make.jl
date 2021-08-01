@@ -1,6 +1,7 @@
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
 Pkg.activate(@__DIR__)
+CI && Pkg.update()
 CI && Pkg.instantiate()
 
 using DynamicalSystems
