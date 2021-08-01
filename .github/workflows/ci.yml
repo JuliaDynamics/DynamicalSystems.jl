@@ -74,8 +74,11 @@ jobs:
         run: |
           julia --project=docs -e '
             using Pkg
-            Pkg.develop(PackageSpec(path=pwd()))
+            using Pkg
+            Pkg.Registry.rm("General")
+            ENV["JULIA_PKG_SERVER"] = ""
             Pkg.update()
+            Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()
             ENV["PYTHON"] = ""
             Pkg.build("PyCall")'
