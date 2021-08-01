@@ -121,12 +121,12 @@ g, e, b  = 0.8, 0.04, 0.0
 p0 = [e, b, g]
 
 fhn = ContinuousDynamicalSystem(FHN, SVector(-2, -0.6667), p0)
-T, dt = 1000.0, 0.1
-v = trajectory(fhn, T; dt = dt)[:, 1]
-t = 0:dt:T
+T, Δt = 1000.0, 0.1
+v = trajectory(fhn, T; Δt)[:, 1]
+t = 0:Δt:T
 
 fig = figure()
-plot(0:dt:T, v)
+plot(0:Δt:T, v)
 fig.tight_layout(pad=0.3); fig
 ```
 

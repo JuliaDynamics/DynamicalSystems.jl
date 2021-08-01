@@ -1,1 +1,2 @@
-The notable changes to the module `DynamicalSystems` are noted in the "News" section of the documentation.
+The package DynamicalSystems.jl does not have any actual code.
+It re-exports other packages (see [docs](https://juliadynamics.github.io/DynamicalSystems.jl/dev/#Getting-started). As a result it has no real changelog and one should see the individual packages' changelogs.

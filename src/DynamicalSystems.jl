@@ -32,12 +32,11 @@ if display_update
             Welcome to this new (and breaking) release of DynamicalSystems.jl! 
             All features, old and new, can be found in the online docs.
             The *breaking* changes in this release are:
-            1. Keyword propagation to DifferentialEquations.jl does not happen anymore.
-               E.g.: `trajectory(ds, 100; reltol = 1e-9, alg = Tsit5())` is invalid.
-               Now keyword propagation to DiffEq happens always via the keyword
-               `diffeq`, whose value is a `NamedTuple/Dict` (the keyword-value pairs).
-               E.g.: `trajectory(ds, 100; diffeq = (reltol = 1e-9, alg = Tsit5())`.
-               Notice that this change affects a large list of fuctions of DynamicalSystems.jl!
+            1. The keyword `dt` of `trajectory` has been renamed to `Δt`. 
+               This keyword had conflicts with the options of DifferentialEquations.jl.
+               No warning can be thrown for this change, and users still using `dt` will
+               have it silently propagated as keyword to the diffeq solvers.
+               Functions affected: `trajectory, lyapunov, lyapunovspectrum, gali, expansionentropy, orbitdiagram`
             2. If `A` is a `Dataset` then `A[range_of_integers]` now returns a `Dataset`.
                Before it used to return `Vector{SVector}`.
             """;

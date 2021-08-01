@@ -256,28 +256,11 @@ Identical syntax is used for continuous systems
 ds = Systems.lorenz()
 ```
 ```@example MAIN
-tr = trajectory(ds, 10.0; dt = 0.01)
+tr = trajectory(ds, 10.0; Δt = 0.01)
 ```
 
 And a final example controlling the integrator accuracy:
 ```@example MAIN
 ds = Systems.lorenz()
-tr = trajectory(ds, 10.0; dt = 0.1, abstol = 1e-9, reltol = 1e-9)
+tr = trajectory(ds, 10.0; Δt = 0.1, abstol = 1e-9, reltol = 1e-9)
 ```
-
-### Solution precision for continuous systems
-A numerical solution of an ODE is not the "true" solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.
-
-DifferentialEquations.jl offers a tool, called [Uncertainty Quantification](https://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification/),
-which allows users to asses up to what time-scales the numerical solution is close
-to the "true" solution. For example, using the default solving parameters of
-**DynamicalSystems.jl**, the Lorenz system is accurate up to time `t = 50.0`.
-
-However, fortunately for us, there is not too much worry about the numerical solution diverging from the true solution. That is because of the [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) (or
-[shadowing lemma](http://www.scholarpedia.org/article/Shadowing_lemma_for_flows)):
-
-!!! quote "Shadowing Theorem"
-    Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.
-
-This simply means that one can always numerically study chaos not only qualitatively but also quantitatively. For more information, see the book *Chaos in Dynamical Systems* by E. Ott, or the
-[scholarpedia](http://www.scholarpedia.org/article/Shadowing_lemma_for_flows) entry.

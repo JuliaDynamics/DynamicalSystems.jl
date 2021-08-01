@@ -4,9 +4,11 @@ There are numerous methods that one can use to calculate a so-called "dimension"
 Several variants of a computationally feasible fractal dimension exist and a simple usage example is shown in the [Fractal dimension example](@ref) subsection.
 
 ## Generalized dimension
-Based on the definition of the [Generalized entropy](#ChaosTools.genentropy), one can calculate an appropriate dimension, called *generalized dimension*:
+Based on the definition of the Generalized entropy ([`genentropy`](@ref)), one can calculate an appropriate dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
+molteno_dim
+molteno_boxing
 ```
 
 !!! danger "Be wary when using `generalized_dim`"
@@ -90,7 +92,7 @@ estimate_boxsizes
 ## Correlation dimension
 ```@docs
 correlationsum
-grassberger
+grassberger_dim
 boxed_correlationsum
 data_boxing
 correlationsum_fixedmass

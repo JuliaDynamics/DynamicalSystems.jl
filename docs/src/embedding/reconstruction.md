@@ -16,7 +16,7 @@ Here are some examples of embedding a 3D continuous chaotic system:
 using DynamicalSystems, PyPlot
 
 ds = Systems.gissinger(ones(3))
-data = trajectory(ds, 1000.0, dt = 0.05)
+data = trajectory(ds, 1000.0, Δt = 0.05)
 
 xyz = columns(data)
 
@@ -39,9 +39,9 @@ savefig("simple_reconstruction.png"); nothing # hide
 ```
 ![](simple_reconstruction.png)
 
-!!! note "`τ` and `dt`"
-    Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `dt`. In the above example the value `τ=30` is good, *only* for the case
-    of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
+!!! note "`τ` and `Δt`"
+    Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `Δt`. In the above example the value `τ=30` is good, *only* for the case
+    of using `Δt = 0.05`. For shorter/longer `Δt` one has to adjust properly `τ` so that their product `τ*Δt` is the same.
 
 ### Embedding Functors
 The high level function [`embed`](@ref) utilize a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface. The low level interface is composed of the following two structures:

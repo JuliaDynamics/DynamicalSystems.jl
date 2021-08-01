@@ -79,7 +79,7 @@ ds = Systems.towel()
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
-λλ = lyapunovspectrum(lor, 10000, dt = 0.1)
+λλ = lyapunovspectrum(lor, 10000, Δt = 0.1)
 ```
 
 `lyapunovspectrum` is also very fast:
@@ -127,7 +127,7 @@ henon = Systems.henon()
 The same is done for continuous systems:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32)
-λ = lyapunov(lor, 10000.0, dt = 10.0, Ttr = 100.0)
+λ = lyapunov(lor, 10000.0, Δt = 10.0, Ttr = 100.0)
 ```
 
 ## Local Growth Rates

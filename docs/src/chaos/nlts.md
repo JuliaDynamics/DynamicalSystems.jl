@@ -83,8 +83,8 @@ using DynamicalSystems, PyPlot
 
 ds = Systems.lorenz()
 # create a timeseries of 1 dimension
-dt = 0.05
-x = trajectory(ds, 1000.0; dt = dt)[:, 1]
+Δt = 0.05
+x = trajectory(ds, 1000.0; Δt)[:, 1]
 ```
 
 We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `numericallyapunovspectrum`)
@@ -104,11 +104,11 @@ for d in [4, 8], τ in [7, 15]
     r = embed(x, d, τ)
 
     # E1 = numericallyapunov(r, ks1; ntype)
-    # λ1 = linear_region(ks1 .* dt, E1)[2]
+    # λ1 = linear_region(ks1 .* Δt, E1)[2]
     # plot(ks1,E1.-E1[1], label = "dense, d=$(d), τ=$(τ), λ=$(round(λ1, 3))")
 
     E2 = numericallyapunov(r, ks2; ntype)
-    λ2 = linear_region(ks2 .* dt, E2)[2]
+    λ2 = linear_region(ks2 .* Δt, E2)[2]
     plot(ks2,E2.-E2[1], label = "d=$(d), τ=$(τ), λ=$(round(λ2, digits = 3))")
 end
 
@@ -138,7 +138,7 @@ Broomhead-King coordinates as an alternative to "vanilla" delay coordinates:
 using DynamicalSystems, PyPlot
 
 ds = Systems.gissinger()
-data = trajectory(ds, 1000.0, dt = 0.05)
+data = trajectory(ds, 1000.0, Δt = 0.05)
 x = data[:, 1]
 
 L = length(x)
@@ -163,7 +163,7 @@ fig.tight_layout(pad=0.3)
 ```
 
 we have used the same system as in the [Delay Coordinates Embedding](@ref) example, and picked the optimal
-delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.
+delay time of `τ = 30` (for same `Δt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.
 
 ## Nearest Neighbor Prediction
 Nearest neighbor timeseries prediction is a method commonly listed under nonlinear timeseries analysis.
