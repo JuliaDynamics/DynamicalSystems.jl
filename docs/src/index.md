@@ -6,7 +6,14 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    [Attractor Basins, Tipping Points](@ref)!
+    DynamicalSystems.jl v2.0!!! Here are some breaking changes:
+    1. The keyword `dt` of `trajectory` has been renamed to `Δt`. 
+       This keyword had conflicts with the options of DifferentialEquations.jl.
+       No warning can be thrown for this change, and users still using `dt` will
+       have it silently propagated as keyword to the diffeq solvers.
+       Functions affected: `trajectory, lyapunov, lyapunovspectrum, gali, expansionentropy, orbitdiagram`
+    2. If `A` is a `Dataset` then `A[range_of_integers]` now returns a `Dataset`.
+       Before it used to return `Vector{SVector}`.
 
 !!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
@@ -37,7 +44,7 @@ The individual packages that compose `DynamicalSystems` interact flawlessly with
 
 These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
 For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
-Alternatively, by using [`numericallyapunov`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
+Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
 
 All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
 
@@ -127,4 +134,4 @@ Finally, you can donate for the development of **DynamicalSystems.jl**. You can 
 ## Maintainers and Contributors
 The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation page.
 
-The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit the GitHub's contributor list for the sub-packages of DynamicalSystems.jl, e.g. [ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl/graphs/contributors).
+The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).

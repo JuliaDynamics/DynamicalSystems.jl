@@ -88,7 +88,6 @@ end
 ylim(1e-12, 2)
 fig.tight_layout(pad=0.3); fig
 ```
-![gali_cont_quasi](gali_cont_quasi.png)
 
 Finally, here is GALI of a continuous system with a chaotic orbit
 ```@example MAIN
@@ -110,7 +109,6 @@ end
 ylim(1e-16, 1)
 fig.tight_layout(pad=0.3); fig
 ```
-![gali_cont_chaos](gali_cont_chaos.png)
 
 As you can see, the results of both discrete and continuous systems match very well the theory described in [`gali`](@ref).
 
@@ -168,14 +166,12 @@ at different energies. At each energy [`gali`](@ref) is used to color-code
 each initial condition according to how chaotic/regular it is, i.e. how much time
 does it need to exceed the `threshold` of [`gali`](@ref).
 
-<video width="100%" height="auto" controls>
+
+```@raw html
+<video width="100%" height="auto" controls loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
-
-You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true).
-
-You can find the script that produced this animation in
-`DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
+```
 
 ## Predictability of a chaotic system
 Even if a system is "formally" chaotic, it can still be in phases where it is very predictable, because the correlation coefficient between nearby trajectories vanishes very slowly with time.

@@ -1,8 +1,7 @@
-cd(@__DIR__)
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
-Pkg.activate(@__DIR__)
-CI && Pkg.instantiate()
+# Pkg.activate(@__DIR__)
+# CI && Pkg.instantiate()
 
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
@@ -13,9 +12,9 @@ import Downloads
 
 # %%
 # download the themes
-for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
-    Downloads.download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
-end
+# for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
+#     Downloads.download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
+# end
 # create the themes
 for w in ("light", "dark")
     header = read(joinpath(@__DIR__, "juliadynamics-style.scss"), String)

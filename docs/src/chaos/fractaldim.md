@@ -81,7 +81,7 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
 
 ## Linear scaling regions
-And other utilities, especially [`linreg`](@ref), used in both [`generalized_dim`] and [`grassberger`](@ref).
+And other utilities, especially [`linreg`](@ref), used in both [`generalized_dim`] and [`grassberger_dim`](@ref).
 ```@docs
 linear_regions
 linear_region
@@ -95,6 +95,7 @@ correlationsum
 grassberger_dim
 boxed_correlationsum
 data_boxing
+estimate_r0_buenoorovio
 correlationsum_fixedmass
 takens_best_estimate
 ```

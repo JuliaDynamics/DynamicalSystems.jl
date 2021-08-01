@@ -96,7 +96,7 @@ fig.tight_layout(pad=0.3); fig
 ```
 
 ## 2D basins of higher dimensional system
-In this section we will calculate the basins of attraction of the four-dimensional magnetic pendulum. We know that the attractors of this system are all individual fixed points on the (x, y) plane so we will only compute the basins there. See the [Three dimensional basins](@ref) section for something even more complex.
+In this section we will calculate the basins of attraction of the four-dimensional magnetic pendulum. We know that the attractors of this system are all individual fixed points on the (x, y) plane so we will only compute the basins there. See the [3D basins](@ref) section for something even more complex.
 
 ### Computing the basins
 
@@ -120,7 +120,7 @@ fig.tight_layout(pad=0.3); fig
 Let's now calculate the [`uncertainty_exponent`](@ref) for this system as well.
 The calculation is straightforward:
 ```@example MAIN
-ε, f_ε, α = uncertainty_exponent(xg, yg, basins)
+ε, f_ε, α = uncertainty_exponent(basins)
 fig = figure()
 plot(log.(ε), log.(f_ε))
 plot(log.(ε), log.(ε) .* α; label = "α = $(round(α; digits=3))")
