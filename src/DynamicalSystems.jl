@@ -18,7 +18,7 @@ using Reexport
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.0"
+version_number = "2.0.1"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -28,11 +28,14 @@ if display_update
         printstyled(
             stdout,
             """
-            \nUpdate message: DynamicalSystems v$(version_number)
-            Welcome to this new (and breaking) release of DynamicalSystems.jl! 
-            All features, old and new, can be found in the online docs.
+            \nUpdate message: DynamicalSystems v$(version_number)\n
+            Welcome to this new (and slightly breaking) release of DynamicalSystems.jl!
+            You can find an announcement of the new version on the Julia discourse:
+
+            https://discourse.julialang.org/t/nonlinear-dynamics-textbook-dynamicalsystems-jl-2-0/65665
+
             The *breaking* changes in this release are:
-            1. The keyword `dt` of `trajectory` has been renamed to `Δt`. 
+            1. The keyword `dt` of many functions has been renamed to `Δt`.
                This keyword had conflicts with the options of DifferentialEquations.jl.
                No warning can be thrown for this change, and users still using `dt` will
                have it silently propagated as keyword to the diffeq solvers.
