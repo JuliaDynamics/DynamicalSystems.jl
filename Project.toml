@@ -14,7 +14,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
 ChaosTools = "1.31.5"
-DelayEmbeddings = "1.13"
+DelayEmbeddings = "1.13, 2"
 DynamicalSystemsBase = "1.6"
 Entropies = "0.12"
 RecurrenceAnalysis = "1.5.0"
