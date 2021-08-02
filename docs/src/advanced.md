@@ -44,7 +44,7 @@ ics = [rand(3) for i in 1:100]
 for ic in ics
   reinit!(tinteg, ic, orthonormal(3, 2))
   λ = lyapunovspectrum(tinteg, 1000, 0.1, 10.0)
-  # reminder: lyapunovspectrum(tinteg, N, dt::Real, Ttr::Real = 0.0)
+  # reminder: lyapunovspectrum(tinteg, N, Δt::Real, Ttr::Real = 0.0)
 end
 ```
 
@@ -60,7 +60,7 @@ for p in ps
   set_parameter!(ds, 1, p)
   reinit!(pinteg, [u0, u0 + 1e-9rand(SVector{2})])
   λ = lyapunov(pinteg, 1000, 10, 1, 1e-9, 1e-6, 1e-12)
-  # reminder: lyapunov(pinteg, T, Ttr, dt, d0, ut, lt)
+  # reminder: lyapunov(pinteg, T, Ttr, Δt, d0, ut, lt)
 end
 ```
 
@@ -149,7 +149,7 @@ lyapunovspectrum(ds, 2000; Ttr = 100.0, tols...)
 
 The above uses the default solver. Let's now benchmark using two different solvers, `SimpleATsit5` and `Vern9`. Since the `SimpleATsit5` case is of lower order, naively one might think it is faster because it makes less function calls. This argument is not necessarily true though.
 
-It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*dt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
+It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you want the system (and the tangent space) to be evolved so that it reaches a total time of `2000*Δt`, which by default is `2000.0` units of time. Even though `SimpleATsit5` requires less function calls per step, `Vern9` can cover larger timespans per step.
 
 Here are the numbers:
 ```julia

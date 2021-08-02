@@ -3,7 +3,7 @@ Lyapunov exponents measure exponential rates of separation of nearby trajectorie
 of a dynamical system. The [Wikipedia](https://en.wikipedia.org/wiki/Lyapunov_exponent) and the [Scholarpedia](http://www.scholarpedia.org/article/Lyapunov_exponent) entries have a lot of valuable information about the history and usage of these quantities.
 
 This page treats systems where the equations of motion are known. If instead
-you have numerical data, see [`numericallyapunov`](@ref).
+you have numerical data, see [`lyapunov_from_data`](@ref).
 
 !!! info "Performance depends on the solver"
     Notice that the performance of functions that use `ContinuousDynamicalSystem`s depend crucially on the chosen solver. Please see the documentation page on [Choosing a solver](@ref) for an in-depth discussion.
@@ -79,7 +79,7 @@ ds = Systems.towel()
 Similarly, for a continuous system, e.g. the Lorenz system, you would do:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32.0) #this is not the original parameter!
-λλ = lyapunovspectrum(lor, 10000, dt = 0.1)
+λλ = lyapunovspectrum(lor, 10000, Δt = 0.1)
 ```
 
 `lyapunovspectrum` is also very fast:
@@ -127,7 +127,7 @@ henon = Systems.henon()
 The same is done for continuous systems:
 ```@example MAIN
 lor = Systems.lorenz(ρ = 32)
-λ = lyapunov(lor, 10000.0, dt = 10.0, Ttr = 100.0)
+λ = lyapunov(lor, 10000.0, Δt = 10.0, Ttr = 100.0)
 ```
 
 ## Local Growth Rates

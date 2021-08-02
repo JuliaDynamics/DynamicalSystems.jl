@@ -59,7 +59,7 @@ As an example of a continuous system, let's see the Henon-Heiles:
 ```@example MAIN
 using DynamicalSystems
 using PyPlot, OrdinaryDiffEq
-dt = 1.0
+Δt = 1.0
 diffeq = (abstol=1e-9, retol=1e-9, alg = Vern9(), maxiters = typemax(Int))
 sp = [0, .295456, .407308431, 0] # stable periodic orbit: 1D torus
 qp = [0, .483000, .278980390, 0] # quasiperiodic orbit: 2D torus
@@ -70,14 +70,14 @@ Let's see what happens with a quasi-periodic orbit:
 ```@example MAIN
 fig = figure(figsize = (9,5))
 subplot(1,2,1)
-tr = trajectory(ds, 10000.0, qp; dt, diffeq...)
+tr = trajectory(ds, 10000.0, qp; Δt, diffeq...)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="qp",marker="o",markersize=2, linewidth=0)
 legend()
 
 subplot(1,2,2)
 for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; u0 = qp, dt, diffeq...)
+    g, t = gali(ds, 10000.0, k; u0 = qp, Δt, diffeq...)
     loglog(t, g, label="GALI_$(k)")
     if k == 2
         loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
@@ -88,29 +88,27 @@ end
 ylim(1e-12, 2)
 fig.tight_layout(pad=0.3); fig
 ```
-![gali_cont_quasi](gali_cont_quasi.png)
 
 Finally, here is GALI of a continuous system with a chaotic orbit
 ```@example MAIN
 fig = figure(figsize = (9,5))
-tr = trajectory(ds, 10000.0, ch; dt, diffeq...)
+tr = trajectory(ds, 10000.0, ch; Δt, diffeq...)
 subplot(1,2,1)
 plot(tr[:,1], tr[:,3], alpha = 0.5,
 label="ch",marker="o",markersize=2, linewidth=0)
 legend()
 
 subplot(1,2,2)
-ls = lyapunovspectrum(ds, 5000.0; dt, u0 = ch, diffeq...)
+ls = lyapunovspectrum(ds, 5000.0; Δt, u0 = ch, diffeq...)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k; u0 = ch, dt = dt, diffeq...)
+    g, t = gali(ds, 1000, k; u0 = ch, Δt = Δt, diffeq...)
     semilogy(t, exp.(-ex.*t), label="exp. k=$k")
     semilogy(t, g, label="GALI_$(k)")
 end
 ylim(1e-16, 1)
 fig.tight_layout(pad=0.3); fig
 ```
-![gali_cont_chaos](gali_cont_chaos.png)
 
 As you can see, the results of both discrete and continuous systems match very well the theory described in [`gali`](@ref).
 
@@ -144,7 +142,7 @@ for (i, θ) ∈ enumerate(θs[1:dens])
         reinit!(tinteg, u0, orthonormal(2,2))
 
         # Low-level call signature of gali:
-        #  gali(tinteg, tmax, dt, threshold)
+        #  gali(tinteg, tmax, Δt, threshold)
         chaoticity[i, j] = gali(tinteg, 500, 1, 1e-12)[2][end]
     end
 end
@@ -168,14 +166,12 @@ at different energies. At each energy [`gali`](@ref) is used to color-code
 each initial condition according to how chaotic/regular it is, i.e. how much time
 does it need to exceed the `threshold` of [`gali`](@ref).
 
-<video width="100%" height="auto" controls>
+
+```@raw html
+<video width="100%" height="auto" controls loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
-
-You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true).
-
-You can find the script that produced this animation in
-`DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
+```
 
 ## Predictability of a chaotic system
 Even if a system is "formally" chaotic, it can still be in phases where it is very predictable, because the correlation coefficient between nearby trajectories vanishes very slowly with time.

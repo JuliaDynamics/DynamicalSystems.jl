@@ -1,4 +1,3 @@
-cd(@__DIR__)
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
 Pkg.activate(@__DIR__)

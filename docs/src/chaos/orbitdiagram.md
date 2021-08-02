@@ -116,7 +116,7 @@ using DynamicalSystems, Plots
 ds = Systems.duffing(β = -1, ω = 1, f = 0.3) # non-autonomous chaotic system
 
 frames=120
-a = trajectory(ds, 100000.0, dt = 2π/frames, Ttr=20π) # every period T = 2π/ω
+a = trajectory(ds, 100000.0, Δt = 2π/frames, Ttr=20π) # every period T = 2π/ω
 
 orbit_length = div(size(a)[1], frames)
 a = Matrix(a)

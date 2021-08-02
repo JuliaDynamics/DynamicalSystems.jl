@@ -27,8 +27,8 @@ Here is an example recurrence plot/matrix of a full trajectory of the Roessler s
 ```@example MAIN
 using DynamicalSystems
 ro = Systems.roessler(ones(3), a=0.15, b=0.20, c=10.0)
-N = 2000; dt = 0.05
-tr = trajectory(ro, N*dt; dt = dt, Ttr = 10.0)
+N = 2000; Δt = 0.05
+tr = trajectory(ro, N*Δt; Δt, Ttr = 10.0)
 
 R = RecurrenceMatrix(tr, 5.0; metric = "euclidean")
 recurrenceplot(R; ascii = true)
@@ -124,9 +124,9 @@ fig = figure(figsize = (10,10))
 
 for (i, ρ) in enumerate((69.75, 28.0))
     set_parameter!(lor, 2, ρ)
-    t, dt = 20.0, 0.01
-    tr = trajectory(lor, t; dt = dt, Ttr = 2000.0)
-    tvec = 0:dt:t
+    t, Δt = 20.0, 0.01
+    tr = trajectory(lor, t; Δt, Ttr = 2000.0)
+    tvec = 0:Δt:t
 
     subplot(2,2, i)
     plot(tr[:, 1], tr[:, 3], color = "C$(i+1)", label = "X vs Z")

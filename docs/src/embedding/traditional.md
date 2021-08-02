@@ -47,7 +47,7 @@ using DynamicalSystems, PyPlot
 ds = Systems.roessler()
 # This trajectory is a chaotic attractor with fractal dim ≈ 2
 # therefore the set needs at least embedding dimension of 3
-tr = trajectory(ds, 1000.0; dt = 0.05)
+tr = trajectory(ds, 1000.0; Δt = 0.05)
 x = tr[:, 1]
 
 dmax = 7

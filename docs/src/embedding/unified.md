@@ -14,7 +14,7 @@ here the x-component of the Lorenz system.
 using DynamicalSystems
 
 lo = Systems.lorenz([1.0, 1.0, 50.0])
-tr = trajectory(lo, 100; dt = 0.01, Ttr = 10)
+tr = trajectory(lo, 100; Δt = 0.01, Ttr = 10)
 
 s = vec(tr[:, 1]) # input timeseries = x component of Lorenz
 theiler = estimate_delay(s, "mi_min") # estimate a Theiler window

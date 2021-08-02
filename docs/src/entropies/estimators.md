@@ -59,9 +59,9 @@ This example reproduces Figure in Charzyńska & Gambin (2016)[^Charzyńska2016].
 estimators nicely converge to the true entropy with increasing time series length.
 For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0` (red line).
 
-```@example
+```@example MAIN
 using DynamicalSystems, PyPlot, Statistics
-import Distributions: Uniform, Normal
+using Distributions: Uniform, Normal
 
 Ns = [100:100:500; 1000:1000:10000]
 Ekl = Vector{Vector{Float64}}(undef, 0)
@@ -110,6 +110,8 @@ f.tight_layout(pad=0.3); f
 
 ```@docs
 SymbolicPermutation
+SymbolicWeightedPermutation
+SymbolicAmplitudeAwarePermutation
 ```
 
 ### Example

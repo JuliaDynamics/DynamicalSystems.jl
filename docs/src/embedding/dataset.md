@@ -1,21 +1,19 @@
 # Numerical Data
 
-!!! info "Trajectory and Timeseries"
-    The word "timeseries" can be confusing, because it can mean a univariate (also called scalar or one-dimensional)
-    timeseries or a multivariate (also called multi-dimensional) timeseries. To resolve this confusion, in
-    **DynamicalSystems.jl** we have the following convention: **"timeseries"** always
-    refers to a one-dimensional vector of numbers, which exists with respect to
-    some other one-dimensional vector of numbers that corresponds to a time-vector.
-    On the other hand,
-    the word **"trajectory"** is used to refer to a *multi-dimensional* timeseries,
-    which is of course simply a group/set of one-dimensional timeseries.
+!!! info "Timeseries and datasets"
+    The word "timeseries" can be confusing, because it can mean a univariate (also called scalar or one-dimensional) timeseries or a multivariate (also called multi-dimensional) timeseries. 
+    To resolve this confusion, in **DynamicalSystems.jl** we have the following convention: **"timeseries"** is always univariate! it refers to a one-dimensional vector of numbers, which exists with respect to some other one-dimensional vector of numbers that corresponds to a time vector.
+    On the other hand, we use the word **"dataset"** is used to refer to a *multi-dimensional* timeseries, which is of course simply a group/set of one-dimensional timeseries represented as a [`Dataset`](@ref).
+    In some documentation strings we use the word "trajectory" instead of "dataset",
+    which means an ordered multivariate timeseries.
+    This is typically the output of the function [`trajectory`](@ref), or the delay embedding of a timeseries via [`embed`](@ref), both of which are also represented as a [`Dataset`](@ref).
 
 
 ## Datasets
 
-Trajectories (and in general sets in state space) in **DynamicalSystems.jl** are represented by a structure called `Dataset`
-(while timeseries are standard Julia `Vector`s).
-It is recommended to always [`standardize`](@ref) input data.
+Trajectories, and in general sets in state space, are represented by a structure called `Dataset` in **DynamicalSystems.jl**
+(while timeseries are always standard Julia `Vector`s).
+It is recommended to always [`standardize`](@ref) datasets.
 ```@docs
 Dataset
 standardize

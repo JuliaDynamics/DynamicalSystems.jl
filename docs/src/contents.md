@@ -72,7 +72,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 ### [Nonlinear Timeseries Analysis](@ref)
 
 1. Broomhead-King coordinates: [`broomhead_king`](@ref).
-3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`numericallyapunov`](@ref).
+3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`lyapunov_from_data`](@ref).
 
 ### [Periodicity & Ergodicity](@ref)
 
@@ -84,7 +84,7 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 ### [Attractor Basins, Tipping Points](@ref)
 * Efficient algorithms for calculating basins of attraction of an arbitrary dynamical system: [`basins_of_attraction`](@ref).
 * Final state sensitivity: [`uncertainty_exponent`](@ref).
-* Tipping points related functionality: [`basins_fractions`](@ref), [`tipping_probabilities`](@ref).
+* Tipping points related functionality: [`basin_fractions`](@ref), [`tipping_probabilities`](@ref).
 
 ## Recurrence Analysis
 [RecurrenceAnalysis.jl](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl) offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).

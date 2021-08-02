@@ -6,10 +6,10 @@ delay coordinates, and then calculate a maximum
 Lyapunov exponent for it. This is done
 with
 ```@docs
-numericallyapunov
+lyapunov_from_data
 ```
 ---
-The function `numericallyapunov` has a total of 4 different approaches for the algorithmic process, by
+The function `lyapunov_from_data` has a total of 4 different approaches for the algorithmic process, by
 combining 2 types of distances with 2 types of neighborhoods.
 
 ### Example of Numerical Lyapunov computation
@@ -30,7 +30,7 @@ for (i, di) in enumerate([Euclidean(), Cityblock()])
     title("Distance: $(di)", size = 18)
     for D in [2, 4, 7]
         R = embed(x, D, 1)
-        E = numericallyapunov(R, ks;
+        E = lyapunov_from_data(R, ks;
         refstates = ℜ, distance = di, ntype = ntype)
         Δt = 1
         λ = linear_region(ks.*Δt, E)[2]
@@ -61,7 +61,7 @@ very small. Yet it turns out it is way too big! The following
 ```@example MAIN
 ks = 1:100
 R = embed(x, 2, 1)
-E = numericallyapunov(R, ks, ntype = NeighborNumber(2))
+E = lyapunov_from_data(R, ks, ntype = NeighborNumber(2))
 fig = figure()
 plot(ks .- 1, E .- E[1])
 title("Lyapunov: $(linear_region(ks, E)[2])")
@@ -83,11 +83,11 @@ using DynamicalSystems, PyPlot
 
 ds = Systems.lorenz()
 # create a timeseries of 1 dimension
-dt = 0.05
-x = trajectory(ds, 1000.0; dt = dt)[:, 1]
+Δt = 0.05
+x = trajectory(ds, 1000.0; Δt)[:, 1]
 ```
 
-We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `numericallyapunovspectrum`)
+We know that we have to use much bigger `ks` than `1:20`, because this is a continuous case! (See reference given in `lyapunov_from_dataspectrum`)
 ```@example MAIN
 ks1 = 0:200
 ```
@@ -103,12 +103,12 @@ ntype = NeighborNumber(5) #5 nearest neighbors of each state
 for d in [4, 8], τ in [7, 15]
     r = embed(x, d, τ)
 
-    # E1 = numericallyapunov(r, ks1; ntype)
-    # λ1 = linear_region(ks1 .* dt, E1)[2]
+    # E1 = lyapunov_from_data(r, ks1; ntype)
+    # λ1 = linear_region(ks1 .* Δt, E1)[2]
     # plot(ks1,E1.-E1[1], label = "dense, d=$(d), τ=$(τ), λ=$(round(λ1, 3))")
 
-    E2 = numericallyapunov(r, ks2; ntype)
-    λ2 = linear_region(ks2 .* dt, E2)[2]
+    E2 = lyapunov_from_data(r, ks2; ntype)
+    λ2 = linear_region(ks2 .* Δt, E2)[2]
     plot(ks2,E2.-E2[1], label = "d=$(d), τ=$(τ), λ=$(round(λ2, digits = 3))")
 end
 
@@ -138,7 +138,7 @@ Broomhead-King coordinates as an alternative to "vanilla" delay coordinates:
 using DynamicalSystems, PyPlot
 
 ds = Systems.gissinger()
-data = trajectory(ds, 1000.0, dt = 0.05)
+data = trajectory(ds, 1000.0, Δt = 0.05)
 x = data[:, 1]
 
 L = length(x)
@@ -163,7 +163,7 @@ fig.tight_layout(pad=0.3)
 ```
 
 we have used the same system as in the [Delay Coordinates Embedding](@ref) example, and picked the optimal
-delay time of `τ = 30` (for same `dt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.
+delay time of `τ = 30` (for same `Δt = 0.05`). Regardless, the vanilla delay coordinates is much worse than the Broomhead-King coordinates.
 
 ## Nearest Neighbor Prediction
 Nearest neighbor timeseries prediction is a method commonly listed under nonlinear timeseries analysis.

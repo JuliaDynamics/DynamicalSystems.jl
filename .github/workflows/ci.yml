@@ -45,7 +45,6 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
-      - uses: julia-actions/julia-processcoverage@v1
   docs:
     name: Documentation
     runs-on: ubuntu-latest

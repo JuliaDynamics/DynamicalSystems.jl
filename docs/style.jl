@@ -15,13 +15,14 @@ end
 Base.iterate(c::CyclicContainer, i = 1) = iterate(c.c, i)
 
 COLORSCHEME = [
-    "#1F1F1F",
     "#6F4AC7",
     "#33CBD8",
-    "#E22411",
-    "#968A8A",
-    "#B6D840",
+    "#1B1B1B",
+    "#E82727",
+    "#535D7F",
+    "#A6D210",
 ]
+
 COLORS = CyclicContainer(COLORSCHEME)
 LINESTYLES = CyclicContainer(["-", ":", "--", "-."])
 
