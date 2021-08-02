@@ -45,7 +45,6 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
-      - uses: julia-actions/julia-processcoverage@v1
   docs:
     name: Documentation
     runs-on: ubuntu-latest
@@ -74,10 +73,6 @@ jobs:
         run: |
           julia --project=docs -e '
             using Pkg
-            using Pkg
-            Pkg.Registry.rm("General")
-            ENV["JULIA_PKG_SERVER"] = ""
-            Pkg.update()
             Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()
             ENV["PYTHON"] = ""
