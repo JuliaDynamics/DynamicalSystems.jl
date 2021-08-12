@@ -121,10 +121,13 @@ Money that **DynamicalSystems.jl** obtains from awards, sponsors or donators are
 
 By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)
 
-## Contacting
+## Asking questions
 
-Feel free to open issues on GitHub if you have questions and/or suggestions.
-You can also [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions and/or questions about the packages of the JuliaDynamics organization! If you are using the Julia Slack workplace, please join the channel `#dynamics-bridged`.
+There are three options for asking questions:
+
+1. Join the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations.
+2. Join our chatroom on [gitter](https://gitter.im/JuliaDynamics/Lobby) or the channel `#dynamics-bridged` in the Julia Slack workplace.
+3. Open an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example.
 
 ## Contributing & Donating
 
