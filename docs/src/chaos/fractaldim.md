@@ -89,14 +89,19 @@ linreg
 estimate_boxsizes
 ```
 
-## Correlation dimension
+## Correlation sum based dimension
 ```@docs
 correlationsum
 grassberger_dim
 boxed_correlationsum
 data_boxing
 estimate_r0_buenoorovio
+estimate_r0_theiler
 correlationsum_fixedmass
+```
+
+## Takens' best estimate
+```@docs 
 takens_best_estimate
 ```
 
