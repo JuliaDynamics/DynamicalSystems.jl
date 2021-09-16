@@ -37,8 +37,6 @@ genentropy
 ```
 
 ## Permutation entropy
-There is no special function for permutation entropy, as it can be easily created via the existing estimators and `genentropy` as
-```julia
-h = genentropy(x, SymbolicPermutation(m = m, τ = τ); base = base)
+```@docs
+permentropy
 ```
-for order `m` and delay `τ`.
