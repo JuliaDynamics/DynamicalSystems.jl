@@ -140,9 +140,3 @@ estimate_period(v, :periodogram, t)
 ```@example MAIN
 estimate_period(v, :zerocrossing, t)
 ```
-
-## Return time statistics
-```@docs
-mean_return_times
-exit_entry_times
-```
