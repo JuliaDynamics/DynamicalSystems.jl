@@ -1,5 +1,9 @@
-# Periodicity & Ergodicity
-In this page we describe methods related to the periodic behavior of dynamical systems or univariate timeseries, *or* related to the ergodic property of chaotic sets.
+# Fixed points & Periodicity
+
+## Fixed points
+```@docs
+fixedpoints
+```
 
 ## Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
@@ -85,7 +89,7 @@ ylabel("\$p\$")
 fig.tight_layout(pad=0.3); fig
 ```
 
-You can confirm for yourself that this is correct, for many reasons:
+Okay, this output is great, and we can easily tell that it is correct for many reasons:
 
 1. It is the same [fig. 12 of this publication](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.92.012914).
 2. Fixed points of order $n$ are also fixed points of order $2n, 3n, 4n, ...$
@@ -95,7 +99,7 @@ You can confirm for yourself that this is correct, for many reasons:
 
 ## Estimating the Period
 
-The function [`estimate_period`](@ref) from `ChaosTools` offers ways for estimating the period (either exact for periodic timeseries, or approximate for near-periodic ones) of a given timeseries.
+The function [`estimate_period`](@ref) offers ways for estimating the period (either exact for periodic timeseries, or approximate for near-periodic ones) of a given timeseries.
 We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.
 The figure below summarizes this:
 ![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/periodestimationmethods.png?raw=true)
