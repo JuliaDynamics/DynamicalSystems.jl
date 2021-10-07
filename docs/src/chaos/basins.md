@@ -6,6 +6,7 @@ In this page we list several functions related with basins of attraction and tip
 
 ```@docs
 basins_of_attraction
+automatic_Δt_basins
 match_attractors!
 ```
 
