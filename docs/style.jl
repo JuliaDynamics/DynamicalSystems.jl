@@ -19,8 +19,8 @@ COLORSCHEME = [
     "#2CB3BF",
     "#1B1B1B",
     "#DA5210",
-    "#866373",
     "#03502A",
+    "#866373",
 ]
 
 COLORS = CyclicContainer(COLORSCHEME)
