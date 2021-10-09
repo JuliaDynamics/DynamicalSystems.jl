@@ -30,7 +30,16 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 using Pkg; Pkg.add("DynamicalSystems")
 ```
 
-For transparency, the packages and versions used to build the documentation you are reading now are:
+The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
+
+1. The [`DynamicalSystem`](@ref) represents a dynamical system with known dynamic rule ``f``. The system can be in discrete time (often called a map), ``\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)``, or in continuous time (often called an ordinary differential equation) ``\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)``. In both cases ``u`` is the _state_ of the dynamical system and ``p`` a parameter container. You should have a look at the page [Dynamical System Definition](@ref) for how to create this object. A list of several pre-defined systems exists in the [Predefined Dynamical Systems](@ref) page.
+2. Numerical data, that can represent measured experiments, sampled trajectories of dynamical systems, or just sets in the state space, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
+
+These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
+For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
+Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
+
+All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page. For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@example MAIN
 using Pkg
@@ -41,17 +50,6 @@ Pkg.status([
     mode = PKGMODE_MANIFEST, io=stdout
 )
 ```
-
-The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
-
-1. The [`DynamicalSystem`](@ref) represents a dynamical system with known dynamic rule ``f``. The system can be in discrete time (often called a map), ``\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)``, or in continuous time (often called an ordinary differential equation) ``\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)``. In both cases ``u`` is the _state_ of the dynamical system and ``p`` a parameter container. You should have a look at the page [Dynamical System Definition](@ref) for how to create this object. A list of several pre-defined systems exists in the [Predefined Dynamical Systems](@ref) page.
-2. Numerical data, that can represent measured experiments, sampled trajectories of dynamical systems, or just sets in the state space, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
-
-These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
-For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
-Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
-
-All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
 
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
