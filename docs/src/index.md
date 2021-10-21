@@ -6,19 +6,10 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    Welcome to this new (and slightly breaking) release of DynamicalSystems.jl!
-    You can find an announcement of the new version on the Julia discourse:
+    A new short-length tutorial video is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library!
 
-    https://discourse.julialang.org/t/nonlinear-dynamics-textbook-dynamicalsystems-jl-2-0/65665
+    https://www.youtube.com/watch?v=TJqOGsKQti8
 
-    The *breaking* changes in this release are:
-    1. The keyword `dt` of many functions has been renamed to `Δt`.
-       This keyword had conflicts with the options of DifferentialEquations.jl.
-       No warning can be thrown for this change, and users still using `dt` will
-       have it silently propagated as keyword to the diffeq solvers.
-       Functions affected: `trajectory, lyapunov, lyapunovspectrum, gali, expansionentropy, orbitdiagram`
-    2. If `A` is a `Dataset` then `A[range_of_integers]` now returns a `Dataset`.
-       Before it used to return `Vector{SVector}`.
 
 !!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
@@ -29,6 +20,8 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 ```julia
 using Pkg; Pkg.add("DynamicalSystems")
 ```
+
+This "Getting started" section is also available as an introductory [video tutorial](https://www.youtube.com/watch?v=TJqOGsKQti8) for those that prefer videos over text!
 
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
 
@@ -54,7 +47,11 @@ Pkg.status([
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
 
-In addition, a full 2-hours YouTube tutorial is available below:
+In addition, there are two video tutorials hosted on YouTube:
+
+```@raw html
+<iframe width="560" height="400" src="https://www.youtube.com/embed/TJqOGsKQti8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+```
 
 ```@raw html
 <iframe width="560" height="400" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
