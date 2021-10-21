@@ -6,9 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    A new short-length tutorial video is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library!
-
-    https://www.youtube.com/watch?v=TJqOGsKQti8
+    A new [short-length tutorial video](https://www.youtube.com/watch?v=TJqOGsKQti8) is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library! 
 
 
 !!! tip "Star us on GitHub!"
@@ -47,14 +45,16 @@ Pkg.status([
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
 
-In addition, there are two video tutorials hosted on YouTube:
+In addition, there are two video tutorials hosted on YouTube. The first one is short, gives you the basic idea, and is intended for people already familiar with nonlinear dynamics:
 
 ```@raw html
-<iframe width="560" height="400" src="https://www.youtube.com/embed/TJqOGsKQti8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="500" src="https://www.youtube.com/embed/TJqOGsKQti8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
+The second is much longer and also explains concepts of nonlinear dynamics:
+
 ```@raw html
-<iframe width="560" height="400" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="500" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
 !!! info "Introductory textbooks"
