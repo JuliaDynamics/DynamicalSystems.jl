@@ -6,7 +6,7 @@ CI && Pkg.instantiate()
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using Neighborhood
-using Documenter, Cairomakie
+using Documenter, CairoMakie
 using DocumenterTools: Themes
 import Downloads
 
