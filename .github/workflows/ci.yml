@@ -74,9 +74,7 @@ jobs:
           julia --project=docs -e '
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.instantiate()
-            ENV["PYTHON"] = ""
-            Pkg.build("PyCall")'
+            Pkg.instantiate()'
       - name: Generate documentation and deploy
         env: # needed for pushing to gh-pages branch
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

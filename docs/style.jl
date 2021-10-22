@@ -1,3 +1,4 @@
+# %% Main color definitions
 struct CyclicContainer <: AbstractVector{String}
     c::Vector{String}
     n::Int
@@ -26,32 +27,10 @@ COLORSCHEME = [
 COLORS = CyclicContainer(COLORSCHEME)
 LINESTYLES = CyclicContainer(["-", ":", "--", "-."])
 
-using PyPlot
-using3D()
-
-PyPlot.rc("lines", lw = 2)
-PyPlot.rc("axes", grid = true)
-PyPlot.rc("grid", color = "0.75", alpha = 0.75)
-
-PyPlot.rc("font", size = 22) # set default fontsize
-PyPlot.rc("xtick", labelsize = 20)
-PyPlot.rc("ytick", labelsize = 20)
-PyPlot.rc("axes", labelsize = 24)
-PyPlot.rc("legend", fontsize = 20)
-# PyPlot.rc("font", family = "Times New Roman") # Serif main font
-PyPlot.rc("font", family = "DejaVu Sans") # sans main font
-# PyPlot.rc("mathtext", rm = "sanserif", fontset="dejavusans") # sans math font
-PyPlot.rc("mathtext", rm = "serif", fontset="cm") # serif math font
-
-for z in ("x", "y")
-    PyPlot.rc("$(z)tick.major", size = 6, width = 1.2)
-    PyPlot.rc("$(z)tick.minor", size = 3, visible = false)
-end
-
-figx = 9
-figy = 7
-PyPlot.rc("figure", figsize = (figx, figy))
-PyPlot.rc("savefig", dpi = 300, transparent = false, format = "png")
-
-# set default color cycle
-PyPlot.rc("axes", prop_cycle = matplotlib.cycler(color=COLORS.c))
+# %% Makie styling
+# other styling elements for Makie
+set_theme!(;
+        palette = (color = COLORSCHEME,), 
+        fontsize = 26,
+        resolution=(600, 400),
+)
