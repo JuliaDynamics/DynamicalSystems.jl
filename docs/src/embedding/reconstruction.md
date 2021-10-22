@@ -9,35 +9,29 @@ Delay embeddings are done through `embed`:
 embed
 ```
 
----
-
 Here are some examples of embedding a 3D continuous chaotic system:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.gissinger(ones(3))
 data = trajectory(ds, 1000.0, Δt = 0.05)
-
 xyz = columns(data)
 
-figure(figsize = (12,10))
+fig = Figure(resolution = (1000, 800))
 k = 1
 for i in 1:3
-    for τ in [5, 30, 100]
+    for (j,τ) in enumerate([5, 30, 100])
         R = embed(xyz[i], 2, τ)
-        ax = subplot(3,3,k)
-        plot(R[:, 1], R[:, 2], color = "C$(k-1)", lw = 0.8)
-        title("var = $i, τ = $τ")
+        ax = Axis(fig[i,j])
+        lines!(ax, R[:, 1], R[:, 2])
+        ax.title = "var = $i, τ = $τ"
         global k+=1
     end
 end
 
-tight_layout()
-suptitle("2D reconstructed space")
-subplots_adjust(top=0.9)
-savefig("simple_reconstruction.png"); nothing # hide
+fig[:, 0] = Label("2D reconstructed space")
+fig
 ```
-![](simple_reconstruction.png)
 
 !!! note "`τ` and `Δt`"
     Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `Δt`. In the above example the value `τ=30` is good, *only* for the case
