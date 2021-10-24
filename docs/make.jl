@@ -29,7 +29,6 @@ Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__,
 # Style for plots inside documentation
 include("style.jl")
 
-PyPlot.ioff()
 cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
 
@@ -84,9 +83,6 @@ pages = [
 ],
 expandfirst = ["index.md"],
 )
-
-PyPlot.close("all")
-PyPlot.ion()
 
 if CI
     deploydocs(
