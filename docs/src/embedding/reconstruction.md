@@ -14,7 +14,7 @@ Here are some examples of embedding a 3D continuous chaotic system:
 using DynamicalSystems, CairoMakie
 
 ds = Systems.gissinger(ones(3))
-data = trajectory(ds, 1000.0, Δt = 0.05)
+data = trajectory(ds, 1000.0; Ttr = 100, Δt = 0.05)
 xyz = columns(data)
 
 fig = Figure(resolution = (1000, 800))
@@ -23,13 +23,13 @@ for i in 1:3
     for (j,τ) in enumerate([5, 30, 100])
         R = embed(xyz[i], 2, τ)
         ax = Axis(fig[i,j])
-        lines!(ax, R[:, 1], R[:, 2])
+        lines!(ax, R[:, 1], R[:, 2], color = COLORS[k])
         ax.title = "var = $i, τ = $τ"
         global k+=1
     end
 end
 
-fig[:, 0] = Label("2D reconstructed space")
+Label(fig[0, :], "2D reconstructed space")
 fig
 ```
 

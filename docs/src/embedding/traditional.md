@@ -59,7 +59,7 @@ for (i, method) in enumerate(["afnn", "fnn", "f1nn", "ifnn"])
     𝒟, τ, E = optimal_traditional_de(x, method; dmax)
     lines!(1:dmax, E; label = method, marker = :circle, color = COLORS[i])
     optimal_d = size(𝒟, 2)
-    scatter!(optimal_d, E[optimal_d]; marker = :rect, color = COLORS[i])
+    scatter!([optimal_d], [E[optimal_d]]; marker = :rect, color = COLORS[i])
 end
 axislegend(ax)
 ax.xlabel = "embedding dimension"
