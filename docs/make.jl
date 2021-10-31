@@ -81,7 +81,7 @@ pages = [
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
-expandfirst = ["index.md"],
+expandfirst = ["index.md", ], #  this is the first script that loads colorscheme
 )
 
 if CI

@@ -18,14 +18,13 @@ data = trajectory(ds, 1000.0; Ttr = 100, Δt = 0.05)
 xyz = columns(data)
 
 fig = Figure(resolution = (1000, 800))
-k = 1
+kk = 1
 for i in 1:3
     for (j,τ) in enumerate([5, 30, 100])
         R = embed(xyz[i], 2, τ)
-        ax = Axis(fig[i,j])
-        lines!(ax, R[:, 1], R[:, 2], color = COLORS[k])
-        ax.title = "var = $i, τ = $τ"
-        global k+=1
+        ax = Axis(fig[i,j]; title = "var = $i, τ = $τ")
+        lines!(ax, R[:, 1], R[:, 2], color = COLORS[kk])
+        global kk+=1
     end
 end
 
@@ -38,7 +37,7 @@ fig
     of using `Δt = 0.05`. For shorter/longer `Δt` one has to adjust properly `τ` so that their product `τ*Δt` is the same.
 
 ### Embedding Structs
-The high level function [`embed`](@ref) utilize a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface.
+The high level function [`embed`](@ref) utilizes a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface.
 ```@docs
 DelayEmbedding
 τrange

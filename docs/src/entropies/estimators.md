@@ -55,10 +55,10 @@ KozachenkoLeonenko
 
 This example reproduces Figure in Charzyńska & Gambin (2016)[^Charzyńska2016]. Both
 estimators nicely converge to the true entropy with increasing time series length.
-For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0` (red line).
+For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0`.
 
 ```@example MAIN
-using DynamicalSystems, PyPlot, Statistics
+using DynamicalSystems, CairoMakie, Statistics
 using Distributions: Uniform, Normal
 
 Ns = [100:100:500; 1000:1000:10000]
@@ -84,20 +84,16 @@ for N in Ns
     push!(Ekr, kr)
 end
 
-f = figure()
-ax = subplot(211)
-px = PyPlot.plot(Ns, mean.(Ekl); color = "C1", label = "KozachenkoLeonenko");
-PyPlot.plot(Ns, mean.(Ekl) .+ std.(Ekl); color = "C1", label = "");
-PyPlot.plot(Ns, mean.(Ekl) .- std.(Ekl); color = "C1", label = "");
+fig = Figure()
+ax = Axis(fig[1,1]; ylabel = "entropy (nats)", title = "KozachenkoLeonenko")
+lines!(ax, Ns, mean.(Ekl); color = COLORS[1])
+band!(ax, Ns, mean.(Ekl) .+ std.(Ekl), mean.(Ekl) .- std.(Ekl); color = COLORS[1])
 
-xlabel("Time step"); ylabel("Entropy (nats)"); legend()
-ay = subplot(212)
-py = PyPlot.plot(Ns, mean.(Ekr); color = "C2", label = "Kraskov");
-PyPlot.plot(Ns, mean.(Ekr) .+ std.(Ekr); color = "C2", label = "");
-PyPlot.plot(Ns, mean.(Ekr) .- std.(Ekr); color = "C2", label = "");
+ay = Axis(fig[1,2]; xlabel = "time step", ylabel = "entropy (nats)", title = "Kraskov")
+lines!(ay, Ns, mean.(Ekr); color = COLORS[2])
+band!(ay, Ns, mean.(Ekr) .+ std.(Ekr), mean.(Ekr) .- std.(Ekr); color = COLORS[2])
 
-xlabel("Time step"); ylabel("Entropy (nats)"); legend()
-f.tight_layout(pad=0.3); f
+fig
 ```
 
 ![](nn_entropy_example.png)
@@ -146,24 +142,21 @@ for r in rs
     push!(hs_perm, hperm); push!(hs_wtperm, hwtperm); push!(hs_ampperm, hampperm)
 end
 
-f = figure()
-a1 = subplot(411)
-plot(rs, lyaps); ylim(-2, log(2)); ylabel("\$\\lambda\$")
-a1.axes.get_xaxis().set_ticklabels([])
-xlim(rs[1], rs[end]);
+fig = Figure()
+a1 = Axis(fig[1,1]; ylabel = L"\lambda")
+lines!(a1, rs, lyaps); a1.ylim = (-2, log(2))
+a2 = Axis(fig[2,1]; ylabel = L"h_6 (SP)")
+lines!(a2, rs, hs_perm; color = COLORS[2])
+a3 = Axis(fig[3,1]; ylabel = L"h_6 (WT)")
+lines!(a3, rs, hs_wtperm; color = COLORS[3])
+a4 = Axis(fig[4,1]; ylabel = L"h_6 (SAAP)")
+lines!(a4, rs, hs_ampperm; color = COLORS[4])
+a4.xlabel = L"r"
 
-a2 = subplot(412)
-plot(rs, hs_perm; color = "C2"); xlim(rs[1], rs[end]);
-xlabel(""); ylabel("\$h_6 (SP)\$")
-
-a3 = subplot(413)
-plot(rs, hs_wtperm; color = "C3"); xlim(rs[1], rs[end]);
-xlabel(""); ylabel("\$h_6 (SWP)\$")
-
-a4 = subplot(414)
-plot(rs, hs_ampperm; color = "C4"); xlim(rs[1], rs[end]);
-xlabel("\$r\$"); ylabel("\$h_6 (SAAP)\$")
-f.tight_layout(pad=0.3); f
+for a in (a1,a2,a3)
+    hidexdecorations!(a, grid = false)
+end
+fig
 ```
 
 ## Time-scale (wavelet)

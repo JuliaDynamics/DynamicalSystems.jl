@@ -115,6 +115,7 @@ ax2.xlabel = "x(t)"
 ax2.ylabel = "y(t)"
 ax2.zlabel = "z(t)"
 ax2.azimuth = π/2 + π/4
+fig
 ```
 
 Finally we show what PECUZAL does with a non-deterministic source:

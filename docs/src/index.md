@@ -140,3 +140,8 @@ By solving these issues you not only contribute to open source, but you also get
 The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
 
 The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
+
+```@example MAIN
+using CairoMakie # hide
+include("../style.jl") # hide
+```
