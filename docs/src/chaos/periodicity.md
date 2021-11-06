@@ -106,6 +106,7 @@ The figure below summarizes this:
 
 ```@docs
 estimate_period
+yin
 ```
 
 ### Example
