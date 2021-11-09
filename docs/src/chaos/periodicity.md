@@ -145,3 +145,6 @@ estimate_period(v, :periodogram, t)
 ```@example MAIN
 estimate_period(v, :zerocrossing, t)
 ```
+```@example MAIN
+estimate_period(v, :yin, t, sr=Int64(1/Δt), f0_min=0.01, f0_max=0.2, f_step=500, w_len=2000, harmonic_threshold=0.1)
+```
