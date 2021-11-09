@@ -146,5 +146,5 @@ estimate_period(v, :periodogram, t)
 estimate_period(v, :zerocrossing, t)
 ```
 ```@example MAIN
-estimate_period(v, :yin, t, sr=Int64(1/Δt), f0_min=0.01)
+estimate_period(v, :yin, t; sr=Int64(1/Δt), f0_min=0.01)
 ```
