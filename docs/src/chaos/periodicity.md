@@ -145,3 +145,6 @@ estimate_period(v, :periodogram, t)
 ```@example MAIN
 estimate_period(v, :zerocrossing, t)
 ```
+```@example MAIN
+estimate_period(v, :yin, t; sr=round(Int, (1/Δt)), f0_min=0.01)
+```
