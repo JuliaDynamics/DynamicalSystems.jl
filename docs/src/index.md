@@ -32,6 +32,12 @@ Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you c
 
 All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page. For transparency, the packages and versions used to build the documentation you are reading now are:
 
+```@setup MAIN
+# Load the plotting theme
+using CairoMakie # hide
+include("../style.jl") # hide
+```
+
 ```@example MAIN
 using Pkg
 Pkg.status([
@@ -84,13 +90,13 @@ This makes reproducing these papers difficult, while some times straight-out imp
 
 To achieve these goals we made **DynamicalSystems.jl** so that it is:
 
-1. Transparent: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
-2. Intuitive: a software simple to use and understand makes experimentation easier.
-3. Easy to extend: This makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
-4. Reliable: the algorithm implementations are tested extensively.
-5. Well-documented: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
-6. General: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
-7. Performant: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
+1. **Transparent**: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
+2. **Intuitive**: a software simple to use and understand makes experimentation easier.
+3. **Easy to extend**: this makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
+4. **Reliable**: the algorithm implementations are tested extensively.
+5. **Well-documented**: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
+6. **General**: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
+7. **Performant**: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Citing
 There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
@@ -140,8 +146,3 @@ By solving these issues you not only contribute to open source, but you also get
 The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
 
 The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
-
-```@example MAIN
-using CairoMakie # hide
-include("../style.jl") # hide
-```
