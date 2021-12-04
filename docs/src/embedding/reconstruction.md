@@ -23,7 +23,7 @@ for i in 1:3
     for (j,τ) in enumerate([5, 30, 100])
         R = embed(xyz[i], 2, τ)
         ax = Axis(fig[i,j]; title = "var = $i, τ = $τ")
-        lines!(ax, R[:, 1], R[:, 2], color = COLORS[kk])
+        lines!(ax, R[:, 1], R[:, 2], color = Cycled(kk))
         global kk+=1
     end
 end

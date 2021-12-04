@@ -110,7 +110,7 @@ ax1.ylabel = "$(ts_str[ts_vals_mt[2]])(t+$(τ_vals_mt[2]))"
 ax1.zlabel = "$(ts_str[ts_vals_mt[3]])(t+$(τ_vals_mt[3]))"
 
 ax2 = Axis3(fig[1,2], title = "original")
-lines!(ax2, tr[:,1], tr[:,2], tr[:,3]; linewidth = 1.0, color = COLORS[2])
+lines!(ax2, tr[:,1], tr[:,2], tr[:,3]; linewidth = 1.0, color = Cycled(2))
 ax2.xlabel = "x(t)"
 ax2.ylabel = "y(t)"
 ax2.zlabel = "z(t)"

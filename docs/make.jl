@@ -33,10 +33,12 @@ cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
 
 makedocs(
-modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-         DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood],
-doctest=false,
-sitename= "DynamicalSystems.jl",
+modules = [
+    DynamicalSystems, ChaosTools, DynamicalSystemsBase,
+    DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood,
+],
+doctest = false,
+sitename = "DynamicalSystems.jl",
 root = @__DIR__,
 format = Documenter.HTML(
     prettyurls = CI,
@@ -81,7 +83,7 @@ pages = [
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
-expandfirst = ["index.md", "traditional.md"], #  this is the first script that loads colorscheme
+expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )
 
 if CI

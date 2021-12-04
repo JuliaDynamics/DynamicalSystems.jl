@@ -57,9 +57,9 @@ for (i, method) in enumerate(["afnn", "fnn", "f1nn", "ifnn"])
     # Plot statistic used to estimate optimal embedding
     # as well as the automated output embedding
     𝒟, τ, E = optimal_traditional_de(x, method; dmax)
-    lines!(1:dmax, E; label = method, marker = :circle, color = COLORS[i])
+    lines!(1:dmax, E; label = method, marker = :circle, color = Cycled(i))
     optimal_d = size(𝒟, 2)
-    scatter!([optimal_d], [E[optimal_d]]; marker = :rect, color = COLORS[i])
+    scatter!([optimal_d], [E[optimal_d]]; marker = :rect, color = Cycled(i))
 end
 axislegend(ax)
 ax.xlabel = "embedding dimension"
