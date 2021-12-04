@@ -63,15 +63,15 @@ pages = [
         "Entropies & Probabilities" => "entropies/api.md",
         "Probabilities Estimators" => "entropies/estimators.md",
     ],
-    "ChaosTools" => [
-       "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
-       "Lyapunov Exponents" => "chaos/lyapunovs.md",
-       "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
-       "Fractal Dimension" => "chaos/fractaldim.md",
-       "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       "Fixed points & Periodicity" => "chaos/periodicity.md",
-       "Attractor Basins, Tipping Points" => "chaos/basins.md",
-    ],
+    # "ChaosTools" => [
+    #    "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
+    #    "Lyapunov Exponents" => "chaos/lyapunovs.md",
+    #    "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
+    #    "Fractal Dimension" => "chaos/fractaldim.md",
+    #    "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
+    #    "Fixed points & Periodicity" => "chaos/periodicity.md",
+    #    "Attractor Basins, Tipping Points" => "chaos/basins.md",
+    # ],
     "RecurrenceAnalysis" => [
         "Recurrence Plots" => "rqa/rplots.md",
         "Recurrence Quantification Analysis" => "rqa/quantification.md",
@@ -81,7 +81,7 @@ pages = [
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
-expandfirst = ["index.md", ], #  this is the first script that loads colorscheme
+expandfirst = ["index.md", "traditional.md"], #  this is the first script that loads colorscheme
 )
 
 if CI
