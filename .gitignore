@@ -3,6 +3,6 @@
 *.jl.mem
 docs/build
 update*
-# Manifest.toml
+Manifest.toml
 *.scss
 *.css
