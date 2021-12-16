@@ -116,6 +116,50 @@ which justifies why recurrence plots are so fitting to be used in embedded times
 
     N. Marwan, *How to avoid potential pitfalls in recurrence plot based data analysis*, Int. J. of Bifurcations and Chaos ([arXiv](http://arxiv.org/abs/1007.2215)).
 
+## Skeletonized Recurrence Plots
+
+The finite size of a recurrence plot can cause border effects in the recurrence quantification-measures [`rqa`](@ref).
+Also the samplingrate of the data and the chosen recurrence threshold selection method (`fixed`, `fixedrate`, `FAN`)
+plays a crucial role. They can cause the thickening of diagonal lines in the recurrence matrix.
+Both problems lead to biased line-based RQA-quantifiers and is discussed in:
+
+K.H. Kraemer & N. Marwan, *Border effect corrections for diagonal line based recurrence quantification analysis measures*,
+[Phys. Lett. A 2019](https://publications.pik-potsdam.de/rest/items/item_23376_6/component/file_24222/content).
+
+```@docs
+skeletonize
+```
+
+Consider, e.g. a skeletonized version of a simple sinusodial:
+```@example MAIN
+using DynamicalSystems #hide
+using PyPlot #hide
+
+data = sin.(2*π .* (0:400)./ 60)
+Y = embed(data, 3, 15)
+
+R = RecurrenceMatrix(Y, 0.25; fixedrate=true)
+R_skel = skeletonize(R)
+
+
+fig = figure(figsize = (10,5))
+
+ax = subplot(121)
+Rg = grayscale(R)
+imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
+title("RP of monochromatic signal")
+
+subplot(122)
+Rg = grayscale(R_skel)
+imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
+title("skeletonized RP")
+fig.tight_layout(pad=0.3); fig
+savefig("skeleton1.png"); nothing # hide
+```
+![](skeleton1.png)
+
+This way spurious diagonal lines get removed from the recurrence matrix, which
+would otherwise effect the quantification based on these lines.
 
 ## Example
 
