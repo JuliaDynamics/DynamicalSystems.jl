@@ -154,7 +154,7 @@ Rg = grayscale(R_skel)
 imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
 title("skeletonized RP")
 fig.tight_layout(pad=0.3); fig
-fig # hide
+fig
 ```
 
 This way spurious diagonal lines get removed from the recurrence matrix, which
