@@ -18,7 +18,7 @@ using Reexport
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.0.1"
+version_number = "2.2.0"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -29,19 +29,19 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            Welcome to this new (and slightly breaking) release of DynamicalSystems.jl!
-            You can find an announcement of the new version on the Julia discourse:
+            Direct keyword acceptance of DifferentialEquations.jl related keywords is
+            no longer supported in DynamicalSystems.jl. This means that this is deprecated:
+            ```
+            lyapunov(ds, T; alg = Tsit5(), abstol = 1e-9)
+            ```
+            Instead, use the explicit keyword `diffeq`, and give it a named tuple with
+            the keyword arguments, i.e.:
+            ```
+            lyapunov(ds, T; diffeq = (alg = Tsit5(), abstol = 1e-9))
+            ```
 
-            https://discourse.julialang.org/t/nonlinear-dynamics-textbook-dynamicalsystems-jl-2-0/65665
-
-            The *breaking* changes in this release are:
-            1. The keyword `dt` of many functions has been renamed to `Δt`.
-               This keyword had conflicts with the options of DifferentialEquations.jl.
-               No warning can be thrown for this change, and users still using `dt` will
-               have it silently propagated as keyword to the diffeq solvers.
-               Functions affected: `trajectory, lyapunov, lyapunovspectrum, gali, expansionentropy, orbitdiagram`
-            2. If `A` is a `Dataset` then `A[range_of_integers]` now returns a `Dataset`.
-               Before it used to return `Vector{SVector}`.
+            Also, the online documentation now uses Makie.jl,
+            references InteractiveDynamics.jl and showcases some of its functions.
             """;
             color = :light_magenta,
         )
