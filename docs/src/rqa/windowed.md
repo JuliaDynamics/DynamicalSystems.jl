@@ -13,9 +13,9 @@ The general syntax of that macro is:
 ```
 where:
 
- * `expr` is an expression used to calculate RQA parameters
- * `w` is the width of the window for relevant data around each point.
- * `s` is the step or distance between points where the calculations are done (starting in the first point).
+* `expr` is an expression used to calculate RQA parameters
+* `w` is the width of the window for relevant data around each point.
+* `s` is the step or distance between points where the calculations are done (starting in the first point).
 
 To prevent syntax failures in the expansion of the macro, identify the RQA function (`rqa`, `recurrencerate`, `determinism`,...) directly by its name (avoid aliases), and use simple variable names (not complex expressions) for the arguments. On the other hand, the windowing options `width` and `step` can be given in any order. If `step` is ommitted, the calculations are done at every point, and the keyword `width` may be ommitted. (However, using `step=1` may be computationally very expensive, and that will provide just overly redundant results around each point, so it is advisable to set `step` a relatively big fraction of the window `width`.)
 

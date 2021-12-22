@@ -73,7 +73,6 @@ In this example we use a simple `SavingCallback` to save the distance between th
 using DynamicalSystems, DiffEqCallbacks
 using LinearAlgebra: norm
 
-kwargs = (abstol=1e-14, reltol=1e-14, maxiters=1e9)
 ds = Systems.lorenz()
 d0 = 1e-9
 T = 100.0
@@ -82,9 +81,10 @@ save_func(u, t, integrator) = norm(u[1] - u[2])
 saved_values = SavedValues(eltype(ds.t0), eltype(get_state(ds)))
 cb = SavingCallback(save_func, saved_values)
 
+diffeq = (abstol=1e-14, reltol=1e-14, maxiters=1e9, callback = cb)
+
 u0 = get_state(ds)
-pinteg = parallel_integrator(ds, [u0, u0 + rand(SVector{3})*d0*√3];
-kwargs..., callback = cb)
+pinteg = parallel_integrator(ds, [u0, u0 + rand(SVector{3})*d0*√3]; diffeq)
 step!(pinteg, T)
 t = saved_values.t
 n = saved_values.saveval
@@ -144,7 +144,7 @@ Here is a simple case: let's compute the Lyapunov spectrum of the Lorenz system 
 ```@example MAIN
 ds = Systems.lorenz()
 tols = (abstol = 1e-6, reltol = 1e-6)
-lyapunovspectrum(ds, 2000; Ttr = 100.0, tols...)
+lyapunovspectrum(ds, 2000; Ttr = 100.0, diffeq = tols)
 ```
 
 The above uses the default solver. Let's now benchmark using two different solvers, `SimpleATsit5` and `Vern9`. Since the `SimpleATsit5` case is of lower order, naively one might think it is faster because it makes less function calls. This argument is not necessarily true though.
@@ -154,8 +154,8 @@ It is important to understand that when calling `lyapunovspectrum(ds, 2000)` you
 Here are the numbers:
 ```julia
 using BenchmarkTools, OrdinaryDiffEq, SimpleDiffEq, Statistics
-b1 = @benchmark lyapunovspectrum(ds, 2000; alg = SimpleATsit5(), Ttr = 100.0, tols...);
-b2 = @benchmark lyapunovspectrum(ds, 2000; alg = Vern9(),        Ttr = 100.0, tols...);
+b1 = @benchmark lyapunovspectrum(ds, 2000; diffeq = (alg = SimpleATsit5(), tols...), Ttr = 100.0);
+b2 = @benchmark lyapunovspectrum(ds, 2000; diffeq = (alg = Vern9(), tols...), Ttr = 100.0);
 println("Timing for SimpleATsit5:")
 println(mean(b1))
 println("Timing for Vern9:")
