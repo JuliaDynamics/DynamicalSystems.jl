@@ -96,8 +96,6 @@ band!(ay, Ns, mean.(Ekr) .+ std.(Ekr), mean.(Ekr) .- std.(Ekr); color = Cycled(2
 fig
 ```
 
-![](nn_entropy_example.png)
-
 [^Charzyńska2016]: Charzyńska, A., & Gambin, A. (2016). Improvement of the k-NN entropy estimator with applications in systems biology. Entropy, 18(1), 13.
 
 ## Permutation (symbolic)
@@ -116,7 +114,7 @@ logistic map. Entropy estimates using [`SymbolicWeightedPermutation`](@ref)
 and [`SymbolicAmplitudeAwarePermutation`](@ref) are added here for comparison.
 
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.logistic()
 rs = 3.4:0.001:4
@@ -172,12 +170,12 @@ energy is contained at one scale) and higher for very irregular signals (energy 
 more out across scales).
 
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 N, a = 1000, 10
 t = LinRange(0, 2*a*π, N)
 
 x = sin.(t);
-y = sin.(t .+  cos.(t/0.5));
+y = sin.(t .+ cos.(t/0.5));
 z = sin.(rand(1:15, N) ./ rand(1:10, N))
 
 est = TimeScaleMODWT()
