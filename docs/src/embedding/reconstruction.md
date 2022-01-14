@@ -9,6 +9,9 @@ Delay embeddings are done through `embed`:
 embed
 ```
 
+!!! note "Embedding discretized data values"
+    If the data values are very strongly discretized (e.g., integers or floating-point numbers with very small bits), this can result to distances between points in the embedded space being 0. This is problematic for several library functions. Best practice here is to add noise to your original timeseries _before_ embedding, e.g., `s = s .+ 1e-15randn(length(s))`.
+
 ---
 
 Here are some examples of embedding a 3D continuous chaotic system:
