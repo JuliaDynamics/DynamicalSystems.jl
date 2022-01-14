@@ -10,7 +10,7 @@ embed
 ```
 
 !!! note "Embedding discretized data values"
-    If the data values are very strongly discretized (e.g., integers or floating-point numbers with very small bits), the obtained results could be inappropriate. For example, coarse quantization might lead to a zero distance between two points at different time points. Zero distance significantly distorts the results of some functions (e.g., if there is at least one pair of points with zero distance, the return value of [`lyapunov_from_data`](@ref) will be `-Inf`). If you want to avoid the artifact due to discretization, you can add noise to your data as follows: `data = data .+ 1e-15randn(length(data))`.
+    If the data values are very strongly discretized (e.g., integers or floating-point numbers with very small bits), this can result to distances between points in the embedded space being 0. This is problematic for several library functions. Best practice here is to add noise to your original timeseries _before_ embedding, e.g., `s = s .+ 1e-15randn(length(s))`.
 
 ---
 
