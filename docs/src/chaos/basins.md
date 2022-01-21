@@ -133,7 +133,7 @@ The actual uncertainty exponent is the slope of the curve.
 ### Computing the tipping probabilities
 We will compute the tipping probabilities using the magnetic pendulum's example
 as the "before" state. For the "after" state we will change the `γ` parameter of the
-third magnet to be so small, it's basin of attraction will virtually disappear.
+third magnet to be so small, its basin of attraction will virtually disappear.
 ```@example MAIN
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1])
 basins_after, attractors_after = basins_of_attraction(
