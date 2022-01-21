@@ -172,7 +172,7 @@ space, so the final position is already enough to distinguish between them.
 ```@example MAIN
 feature_extraction(t, y) = y[end][1:2] #3 and 4 are the velocities, which go to 0
 fs, class_labels = basin_fractions_clustering(
-    ds, feature_extraction, ics; T=500, Ttr=1998, show_progress=true)
+    ds, feature_extraction, ics; T=2000, Ttr=1998, show_progress=true)
 fs
 ```
 
@@ -204,7 +204,7 @@ initial condition, identifying to which attractor they were classified.
 ```@example MAIN
 ics = Dataset([s() for i=1:30000])
 fs, class_labels = basin_fractions_clustering(
-    ds, feature_extraction, ics, attractors_ic; T=2000, Ttr=498, show_progress=true)
+    ds, feature_extraction, ics, attractors_ic; T=2000, Ttr=1998, show_progress=true)
 cmap2 = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
 fig = figure()
 scatter(ics[:,1], ics[:,2], c=class_labels, cmap=cmap2, s=80)
