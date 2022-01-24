@@ -154,57 +154,53 @@ Also, the first row of `P` is 50% probability to each other magnet, as it should
 
 ### Computing the fractions of initial conditions going to each attractor
 We can also compute the fraction of initial conditions that go to each of the three
-attractors. First, we need to define the initial conditions to be analyzed. Using the
-`sampler` function, we can simply provide the bounds of the region we're interested in. With
-the uniform sampling method, the fractions we'll compute can also be interpreted as the
-volume of the basins of attraction.
+attractors for the magnetic pendulum. In this approach, we don't need to know the
+attractors, or how many they are, as the algorithm can identify them. First, we need to
+define the initial conditions to be analyzed. 
 ```@example MAIN
-s = ChaosTools.sampler(min_bounds=[-4, -4, -1, -1], max_bounds=[4, 4, 1, 1], method="uniform")
-ics = Dataset([s() for i=1:500])
+s, _ = statespace_sampler(min_bounds=[-4, -4, -1, -1], max_bounds=[4, 4, 1, 1], method="uniform")
+ics = Dataset([s() for i=1:1000])
 ```
 
-Next, we need to provide the function that extracts features from each trajectory. These
-features should be similar for trajectories belonging to the same attractor because then the
-algorithm will identify clusters of features, and consider each cluster to be a unique
-attractor. This is the key step for this method, and unfortunately requires some knowledge
-of the system. For the magnetic pendulum, we know the attractors are in different regions in
-space, so the final position is already enough to distinguish between them.
+Next, the key step for this method: we need to provide the function that extracts features
+from each trajectory. These features must be similar for trajectories belonging to the same
+attractor, which unfortunately requires some knowledge of the system. For the magnetic
+pendulum, we know the attractors are in different regions in space, so the final position is
+already enough to distinguish between them.
 ```@example MAIN
-feature_extraction(t, y) = y[end][1:2] #3 and 4 are the velocities, which go to 0
+featurizer(y,t) = y[end][1:2] #3 and 4 are the velocities, which go to 0
 fs, class_labels = basin_fractions_clustering(
-    ds, feature_extraction, ics; T=2000, Ttr=1998, show_progress=true)
+    ds, featurizer, ics; T=2000, Ttr=1999, show_progress=true)
 fs
 ```
 
 Due to the rotational symmetry in this system, the attractors are also symmetric, and should
 attract the same amount of initial conditions. We can see this in the results, in which the
-fractions of initial conditions are roughly the same. As the number of initial conditions is
-increased, the numbers get even closer to the theoretical `1/3`.
+fractions of initial conditions are roughly the same.
 
 In this first example, we assumed we didn't know where the attractors were, so we identified
-them (and the size of their basins of attraction) simply from the features via the
-unsupervised classification mode of `basin_fractions_clustering`. But we happen to know the
-positions of the attractors for this specific system, so we can also use the supervised
-classification mode. For it, we define where points where the attractors are, and the
-algorithm simply classifies the trajectory according to its closest attractor. In this
-system, the attractors are fixed points uniformly distributed in the unit circle (as also
-shown in the results found via `basins_of_attraction`):
+them simply from the features via the unsupervised classification mode of
+`basin_fractions_clustering`. But we happen to know the positions of the attractors for this
+specific system, so we can also use the supervised classification mode. For it, we define
+where points where the attractors are, and the algorithm simply classifies the trajectory
+according to its closest attractor. 
 ```@example MAIN
 attractors_ic = Dataset([[cos(2π*i/3) sin(2π*i/3) 0 0] for i=1:3])
 fs, class_labels = basin_fractions_clustering(
-    ds, feature_extraction, ics, attractors_ic; T=2000, Ttr=1998, show_progress=true)
+    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
 fs
 ```
 
-The results are similar to before, with the fractions close to `1/3`. This supervised mode
-is much quicker than the unsupervised one, but of course requires additional information.
-Let's use this improved speed to increase the number of initial conditions and then plot the
-basins of attraction. We can do this because the method also returns the labels for each
-initial condition, identifying to which attractor they were classified.
+This supervised mode is much quicker than the unsupervised one, but of course requires
+additional information. Let's use this improved speed to increase the number of initial
+conditions and then plot the basins of attraction. We can do this because the method also
+returns the labels for each initial condition, identifying to which attractor they were
+classified.
 ```@example MAIN
 ics = Dataset([s() for i=1:30000])
 fs, class_labels = basin_fractions_clustering(
-    ds, feature_extraction, ics, attractors_ic; T=2000, Ttr=1998, show_progress=true)
+    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1998, show_progress=true)
+LC =  matplotlib.colors.ListedColormap
 cmap2 = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
 fig = figure()
 scatter(ics[:,1], ics[:,2], c=class_labels, cmap=cmap2, s=80)
@@ -212,7 +208,7 @@ fig.tight_layout(pad=0.3); fig
 ```
 
 The integration of the 30000 trajectories can be performed much faster if it is parallelized.
-You can read more about this in `basin_fractions_clustering`'s documentation.
+You can read more about this in [`basins_fractions_clustering`](@ref). 
 
 
 ## 3D basins
