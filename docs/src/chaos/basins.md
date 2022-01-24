@@ -182,7 +182,7 @@ In this first example, we assumed we didn't know where the attractors were, so w
 them simply from the features via the unsupervised classification mode of
 `basin_fractions_clustering`. But we happen to know the positions of the attractors for this
 specific system, so we can also use the supervised classification mode. For it, we define
-where points where the attractors are, and the algorithm simply classifies the trajectory
+the points where the attractors are, and the algorithm simply classifies the trajectory
 according to its closest attractor. 
 ```@example MAIN
 attractors_ic = Dataset([[cos(2π*i/3) sin(2π*i/3) 0 0] for i=1:3])
@@ -199,7 +199,7 @@ classified.
 ```@example MAIN
 ics = Dataset([s() for i=1:30000])
 fs, class_labels = basin_fractions_clustering(
-    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1998, show_progress=true)
+    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
 LC =  matplotlib.colors.ListedColormap
 cmap2 = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
 fig = figure()
