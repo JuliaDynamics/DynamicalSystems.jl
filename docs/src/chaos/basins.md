@@ -2,7 +2,7 @@
 
 In this page we list several functions related with basins of attraction and tipping points. In the example [2D basins of higher dimensional system](@ref) we try to apply every single function listed below, so check this for an example application of everything listed here!
 
-## Computing basins of attraction
+## Computing basins of attraction via recurrences
 
 ```@docs
 basins_of_attraction
@@ -23,6 +23,13 @@ uncertainty_exponent
 basin_fractions
 tipping_probabilities
 ```
+
+## Basin fractions via featurizing
+```@docs
+basin_fractions_clustering
+statespace_sampler
+```
+
 
 ## Discrete system example
 ```@example MAIN
@@ -152,14 +159,14 @@ P = tipping_probabilities(basins, basins_after)
 As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our state space discretization isn't accurate enough to find the 3rd because it has such a small basin).
 Also, the first row of `P` is 50% probability to each other magnet, as it should be due to the system's symmetry.
 
-### Computing the fractions of initial conditions going to each attractor
+### Computing the fractions of initial conditions via featurizing
 We can also compute the fraction of initial conditions that go to each of the three
 attractors for the magnetic pendulum. In this approach, we don't need to know the
-attractors, or how many they are, as the algorithm can identify them. First, we need to
+attractors, or how many they are, as the algorithm [`basin_fractions_clustering`](@ref) can identify them. First, we need to
 define the initial conditions to be analyzed. 
 ```@example MAIN
 s, _ = statespace_sampler(min_bounds=[-4, -4, -1, -1], max_bounds=[4, 4, 1, 1], method="uniform")
-ics = Dataset([s() for i=1:1000])
+ics = Dataset([s() for i=1:1000]) # define a specific set of initial conditions
 ```
 
 Next, the key step for this method: we need to provide the function that extracts features
@@ -168,7 +175,7 @@ attractor, which unfortunately requires some knowledge of the system. For the ma
 pendulum, we know the attractors are in different regions in space, so the final position is
 already enough to distinguish between them.
 ```@example MAIN
-featurizer(y,t) = y[end][1:2] #3 and 4 are the velocities, which go to 0
+featurizer(y,t) = y[end][1:2] # 3 and 4 are the velocities, which go to 0
 fs, class_labels = basin_fractions_clustering(
     ds, featurizer, ics; T=2000, Ttr=1999, show_progress=true)
 fs
