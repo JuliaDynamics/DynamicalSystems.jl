@@ -27,21 +27,16 @@ tipping_probabilities
 ## Discrete system example
 ```@example MAIN
 using DynamicalSystems, PyPlot
-function newton_map(dz, z, p, n)
+function newton_map(z, p, n)
     z1 = z[1] + im*z[2]
     dz1 = newton_f(z1, p[1])/newton_df(z1, p[1])
     z1 = z1 - dz1
-    dz[1]=real(z1)
-    dz[2]=imag(z1)
-    return
+    return SVector(real(z1), imag(z1))
 end
 newton_f(x, p) = x^p - 1
 newton_df(x, p)= p*x^(p-1)
 
-# dummy Jacobian function due to https://github.com/JuliaDiff/ForwardDiff.jl/issues/520
-function newton_map_J(J,z0, p, n) end
-
-ds = DiscreteDynamicalSystem(newton_map, [0.1, 0.2], [3.0], newton_map_J)
+ds = DiscreteDynamicalSystem(newton_map, [0.1, 0.2], [3.0])
 xg = yg = range(-1.5,1.5,length=400)
 basins, attractors = basins_of_attraction((xg, yg), ds; show_progress = false)
 basins
@@ -53,22 +48,26 @@ attractors
 Now let's plot this as a heatmap
 ```@example MAIN
 # Set up some code for plotting attractors
-function scatter_attractors(attractors)
+function scatter_attractors!(ax, attractors)
     for k ∈ keys(attractors)
         x, y = columns(attractors[k])
-        scatter(x, y; color = "C$(k-1)", edgecolor = "white")
+        scatter!(ax, attractors[k].data; 
+            color = Cycled(k), 
+            strokewidth = 3, strokecolor = :white
+        )
     end
 end
-LC =  matplotlib.colors.ListedColormap
-cmap = LC([matplotlib.colors.to_rgb("C$k") for k in 0:3])
-vmin = 1; vmax = 4
 
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+generate_cmap(n) = cgrad(Main.COLORS[1:n], n; categorical = true)
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
-
 
 ## Stroboscopic map example
 This example targets periodically driven 2D continuous dynamical systems, like the Duffing oscillator:
@@ -90,10 +89,13 @@ basins
 And visualize the result as a heatmap, scattering the found attractors via scatter.
 
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
 
 ## 2D basins of higher dimensional system
@@ -111,10 +113,13 @@ Alright, so far so good, we found 3 attractors (the 3 magnets).
 Let's visualize this beauty now
 
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
 
 ### Computing the uncertainty exponent
@@ -122,13 +127,12 @@ Let's now calculate the [`uncertainty_exponent`](@ref) for this system as well.
 The calculation is straightforward:
 ```@example MAIN
 ε, f_ε, α = uncertainty_exponent(basins)
-fig = figure()
-plot(log.(ε), log.(f_ε))
-plot(log.(ε), log.(ε) .* α; label = "α = $(round(α; digits=3))")
-legend()
-fig.tight_layout(pad=0.3); fig
+fig, ax = lines(log.(ε), log.(f_ε))
+lines!(ax, log.(ε), log.(ε) .* α)
+ax.title = "α = $(round(α; digits=3))"
+fig
 ```
-The actual uncertainty exponent is the slope of the curve.
+The actual uncertainty exponent is the slope of the curve (α).
 
 ### Computing the tipping probabilities
 We will compute the tipping probabilities using the magnetic pendulum's example
@@ -139,11 +143,17 @@ ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1]
 basins_after, attractors_after = basins_of_attraction(
     (xg, yg), ds; diffeq = (reltol = 1e-9,), show_progress = false
 )
+# matching attractors is important!
 match_attractors!(basins, attractors, basins_after, attractors_after)
-fig = figure()
-pcolormesh(xg, yg, basins_after'; vmin, vmax, cmap)
-scatter_attractors(attractors_after)
-fig.tight_layout(pad=0.3); fig
+
+# now plot
+ids = sort!(unique(basins_after))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins_after; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors_after)
+fig
 ```
 
 ```@example MAIN
@@ -240,9 +250,12 @@ attractors[1]
 ```
 Looks good so far, but let's plot it as well:
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+ids = sort!(unique(basins_after))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins_after; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors_after)
+fig
 ```
 This aligns perfectly with the video we produced above.
