@@ -75,10 +75,10 @@ fig = Figure(resolution = (1000,500))
 ax = Axis(fig[1,1])
 xs, ys = coordinates(R)
 scatter!(ax, xs, ys; color = :black, markersize = 1)
-ax.limits = ((1, size(R, 1)), (1, size(R, 2));
-ax.aspect = "equal"
+ax.limits = ((1, size(R, 1)), (1, size(R, 2)));
+ax.aspect = 1
 
-ax2 = Axis(fig[1,2])
+ax2 = Axis(fig[1,2]; aspect = 1)
 Rg = grayscale(R)
 heatmap!(ax2, Rg; colormap = :grays)
 fig
@@ -93,7 +93,7 @@ R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 
 xs, ys = coordinates(R)
 fig, ax = scatter(xs, ys; markersize = 1)
-xlim(1, size(R)[1]); ylim(1, size(R)[2]);
+ax.aspect = 1
 fig
 ```
 
@@ -130,11 +130,12 @@ for (i, ρ) in enumerate((69.75, 28.0))
     R = RecurrenceMatrix(tr, ε)
 
     ax = Axis(fig[2, i])
-    ax.xlabel = "t"; i == 1 && ax.ylabel = "t"
+    ax.xlabel = "t"
+    i == 1 && (ax.ylabel = "t")
     x, y = coordinates(R)
     scatter!(ax, tvec[x], tvec[y]; markersize = 1, color = Cycled(i))
     ax.limits = ((0, t), (0, t)) 
-    ax.aspect = :equal
+    ax.aspect = 1
 end
 fig
 ```
@@ -144,7 +145,7 @@ On the left we see long (infinite) diagonals repeated over and over for differen
 On the right we see a structure typical of chaotic motion on a strange attractor such as the one of the Lorenz system: the orbit visits neighborhoods of previous points but then quickly diverges again. This results in many small diagonal lines.
 
 ## Distances
-The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as a string or as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
+The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
 ```@docs
 distancematrix
 ```

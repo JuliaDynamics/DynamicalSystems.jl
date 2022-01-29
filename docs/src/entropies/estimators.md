@@ -87,11 +87,13 @@ end
 fig = Figure()
 ax = Axis(fig[1,1]; ylabel = "entropy (nats)", title = "KozachenkoLeonenko")
 lines!(ax, Ns, mean.(Ekl); color = Cycled(1))
-band!(ax, Ns, mean.(Ekl) .+ std.(Ekl), mean.(Ekl) .- std.(Ekl); color = Cycled(1))
+band!(ax, Ns, mean.(Ekl) .+ std.(Ekl), mean.(Ekl) .- std.(Ekl);
+color = (Main.COLORS[1], 0.5))
 
-ay = Axis(fig[1,2]; xlabel = "time step", ylabel = "entropy (nats)", title = "Kraskov")
+ay = Axis(fig[2,1]; xlabel = "time step", ylabel = "entropy (nats)", title = "Kraskov")
 lines!(ay, Ns, mean.(Ekr); color = Cycled(2))
-band!(ay, Ns, mean.(Ekr) .+ std.(Ekr), mean.(Ekr) .- std.(Ekr); color = Cycled(2))
+band!(ay, Ns, mean.(Ekr) .+ std.(Ekr), mean.(Ekr) .- std.(Ekr); 
+color = (Main.COLORS[2], 0.5))
 
 fig
 ```
@@ -142,7 +144,7 @@ end
 
 fig = Figure()
 a1 = Axis(fig[1,1]; ylabel = L"\lambda")
-lines!(a1, rs, lyaps); a1.ylim = (-2, log(2))
+lines!(a1, rs, lyaps); ylims!(a1, (-2, log(2)))
 a2 = Axis(fig[2,1]; ylabel = L"h_6 (SP)")
 lines!(a2, rs, hs_perm; color = Cycled(2))
 a3 = Axis(fig[3,1]; ylabel = L"h_6 (WT)")
@@ -186,11 +188,12 @@ h_z = genentropy(z, est)
 fig = Figure()
 ax = Axis(fig[1,1]; ylabel = "x")
 lines!(ax, t, x; color = Cycled(1), label = "h=$(h=round(h_x, sigdigits = 5))");
-ay = Axis(fig[1,2]; ylabel = "y")
+ay = Axis(fig[2,1]; ylabel = "y")
 lines!(ay, t, y; color = Cycled(2), label = "h=$(h=round(h_y, sigdigits = 5))");
-az = Axis(fig[1,3]; ylabel = "z", xlabel = "time")
+az = Axis(fig[3,1]; ylabel = "z", xlabel = "time")
 lines!(az, t, z; color = Cycled(3), label = "h=$(h=round(h_z, sigdigits = 5))");
 for a in (ax, ay, az); axislegend(a); end
+for a in (ax, ay); hidexdecorations!(a; grid=false); end
 fig
 ```
 

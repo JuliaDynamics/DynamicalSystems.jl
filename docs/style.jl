@@ -9,6 +9,7 @@ Base.length(c::CyclicContainer) = length(c.c)
 Base.size(c::CyclicContainer) = size(c.c)
 Base.iterate(c::CyclicContainer, state=1) = Base.iterate(c.c, state)
 Base.getindex(c::CyclicContainer, i) = c.c[(i-1)%length(c.c) + 1]
+Base.getindex(c::CyclicContainer, i::AbstractArray) = c.c[i]
 function Base.getindex(c::CyclicContainer)
     c.n += 1
     c[c.n]
