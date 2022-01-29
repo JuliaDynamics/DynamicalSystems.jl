@@ -66,12 +66,12 @@ pages = [
         "Probabilities Estimators" => "entropies/estimators.md",
     ],
     "ChaosTools" => [
-    #    "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
-    #    "Lyapunov Exponents" => "chaos/lyapunovs.md",
-    #    "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
-    #    "Fractal Dimension" => "chaos/fractaldim.md",
-    #    "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-    #    "Fixed points & Periodicity" => "chaos/periodicity.md",
+       "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
+       "Lyapunov Exponents" => "chaos/lyapunovs.md",
+       "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
+       "Fractal Dimension" => "chaos/fractaldim.md",
+       "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
+       "Fixed points & Periodicity" => "chaos/periodicity.md",
        "Attractor Basins, Tipping Points" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [

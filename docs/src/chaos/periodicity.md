@@ -140,6 +140,7 @@ The figure below summarizes this:
 ```@docs
 estimate_period
 yin
+ChaosTools.difference_function_original
 ```
 
 ### Example

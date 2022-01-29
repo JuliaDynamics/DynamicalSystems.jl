@@ -156,11 +156,12 @@ p_index = 1
 output = produce_orbitdiagram(ds, plane, i, p_index, pvalues;
                               tfinal = tf, Ttr = 200.0)
 
-fig = figure()
+fig = Figure()
+ax = Axis(fig[1,1]; xlabel = L"R_1", ylabel = L"V_1")
 for (j, p) in enumerate(pvalues)
-    plot(fill(p, length(output[j])), output[j], lw = 0,
-    marker = "o", ms = 0.2, color = "black")
+    scatter!(ax, fill(p, length(output[j])), output[j]; 
+        color = ("black", 0.5), markersize = 1
+    )
 end
-xlabel("\$R_1\$"); ylabel("\$V_1\$")
-fig.tight_layout(pad=0.3); fig
+fig
 ```

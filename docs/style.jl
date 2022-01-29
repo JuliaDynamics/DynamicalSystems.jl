@@ -32,7 +32,7 @@ LINESTYLES = CyclicContainer(["-", ":", "--", "-."])
 # other styling elements for Makie
 set_theme!(;
     palette = (color = COLORSCHEME,), 
-    fontsize = 26,
-    resolution = (900, 500),
-    linewidth = 2.5,
+    fontsize = 22,
+    resolution = (1000, 500),
+    linewidth = 3.0,
 )

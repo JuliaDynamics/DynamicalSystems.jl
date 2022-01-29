@@ -201,7 +201,6 @@ end
 ax.title = "predictability of Hénon map"
 fig
 ```
-![partial_henon](partial_henon.png)
 
 ## The 0-1 test for chaos
 The methods mentioned in this page so far require a `DynamicalSystem` instance.

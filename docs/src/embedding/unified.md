@@ -108,6 +108,7 @@ lines!(ax1, Y_mt[:,1], Y_mt[:,2], Y_mt[:,3]; linewidth = 1.0)
 ax1.xlabel = "$(ts_str[ts_vals_mt[1]])(t+$(τ_vals_mt[1]))"
 ax1.ylabel = "$(ts_str[ts_vals_mt[2]])(t+$(τ_vals_mt[2]))"
 ax1.zlabel = "$(ts_str[ts_vals_mt[3]])(t+$(τ_vals_mt[3]))"
+ax1.azimuth = π/2 + π/4
 
 ax2 = Axis3(fig[1,2], title = "original")
 lines!(ax2, tr[:,1], tr[:,2], tr[:,3]; linewidth = 1.0, color = Cycled(2))
