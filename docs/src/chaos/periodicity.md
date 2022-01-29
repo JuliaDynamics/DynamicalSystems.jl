@@ -4,6 +4,39 @@
 ```@docs
 fixedpoints
 ```
+A rather simple example of the fixed points can be demonstrated using E.g., the Lorenz-63 system, whose fixed points can be easily calculated analytically to be
+the following three
+```math
+(0,0,0) \\
+\left( \sqrt{\beta(\rho-1)}, \sqrt{\beta(\rho-1)}, \rho-1 \right) \\
+\left( -\sqrt{\beta(\rho-1)}, -\sqrt{\beta(\rho-1)}, \rho-1 \right) \\ 
+```
+
+So, let's calculate
+```@example MAIN
+using DynamicalSystems
+ρ, β = 30.0, 10/3
+ds = Systems.lorenz(; ρ, β)
+# Define the box within which to find fixed points:
+x = -20..20
+y = -20..20
+z = 0.0..40
+box = x × y × z
+
+fp, eigs, stable = fixedpoints(ds, box)
+fp
+```
+and compare this with the analytic ones:
+
+```@example MAIN
+lorenzfp(ρ, β) = [
+    SVector(0, 0, 0.0),
+    SVector(sqrt(β*(ρ-1)), sqrt(β*(ρ-1)), ρ-1),
+    SVector(-sqrt(β*(ρ-1)), -sqrt(β*(ρ-1)), ρ-1),
+]
+
+lorenzfp(ρ, β)
+```
 
 ## Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
@@ -29,17 +62,17 @@ We will also only use one `λ` value, and a 21×21 density of initial conditions
 
 First, initialize everything
 ```@example MAIN
-using DynamicalSystems, PyPlot, StaticArrays
+using DynamicalSystems
 
 ds = Systems.standardmap()
-xs = range(0, stop = 2π, length = 21); ys = copy(xs)
+xs = range(0, stop = 2π, length = 11); ys = copy(xs)
 ics = [SVector{2}(x,y) for x in xs for y in ys]
 
 # All permutations of [±1, ±1]:
 singss = lambdaperms(2)[2] # second entry are the signs
 
 # I know from personal research I only need this `inds`:
-indss = [[1,2]] # <- must be container of vectors!!!
+indss = [[1,2]] # <- must be container of vectors!
 
 λs = 0.005 # <- only this allowed to not be vector (could also be vector)
 
@@ -57,6 +90,7 @@ end
 
 Plot the phase space of the standard map
 ```@example MAIN
+using CairoMakie
 iters = 1000
 dataset = trajectory(ds, iters)
 for x in xs
@@ -64,29 +98,28 @@ for x in xs
         append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
-fig = figure()
-m = Matrix(dataset)
-PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
-PyPlot.xlim(xs[1], xs[end])
-PyPlot.ylim(ys[1], ys[end]);
+
+fig = Figure()
+ax = Axis(fig[1,1]; xlabel = L"\theta", ylabel = L"p",
+    limits = ((xs[1],xs[end]), (xs[1],xs[end]))
+)
+scatter!(ax, dataset[:, 1], dataset[:, 2]; markersize = 1, color = "black")
+fig
 ```
 
 and finally, plot the fixed points
 ```@example MAIN
-markers = ["D", "^", "s", "p", "h", "8"]
-colors = ["b", "g", "r", "c", "m", "grey"]
+markers = [:diamond, :utriangle, :rect, :pentagon, :hexagon, :circle]
 
 for i in 1:6
     FP = ALLFP[i]
     o = orders[i]
-    PyPlot.plot(columns(FP)...,
-    marker=markers[i], color = colors[i], markersize=10.0 + (8-o), linewidth=0.0,
-    label = "order $o", markeredgecolor = "yellow", markeredgewidth = 0.5)
+    scatter!(ax, columns(FP)...; marker=markers[i], color = Cycled(i),
+        markersize = 30 - 2i, strokecolor = "grey", strokewidth = 1, label = "order $o"
+    )
 end
-legend(loc="upper right", framealpha=0.9)
-xlabel("\$\\theta\$")
-ylabel("\$p\$")
-fig.tight_layout(pad=0.3); fig
+axislegend(ax)
+fig
 ```
 
 Okay, this output is great, and we can easily tell that it is correct for many reasons:
@@ -112,7 +145,7 @@ yin
 ### Example
 Here we will use a modified FitzHugh-Nagumo system that results in periodic behavior, and then try to estimate its period. First, let's see the trajectory:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 function FHN(u, p, t)
     e, b, g = p
@@ -130,9 +163,8 @@ T, Δt = 1000.0, 0.1
 v = trajectory(fhn, T; Δt)[:, 1]
 t = 0:Δt:T
 
-fig = figure()
-plot(0:Δt:T, v)
-fig.tight_layout(pad=0.3); fig
+fig, ax = lines(0:Δt:T, v)
+fig
 ```
 
 Examining the figure, one can see that the period of the system is around `91` time units. To estimate it numerically let's use some of the methods:
