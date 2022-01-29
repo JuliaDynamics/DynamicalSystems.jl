@@ -2,7 +2,7 @@
 
 In this page we list several functions related with basins of attraction and tipping points. In the example [2D basins of higher dimensional system](@ref) we try to apply every single function listed below, so check this for an example application of everything listed here!
 
-## Computing basins of attraction
+## Computing basins of attraction via recurrences
 
 ```@docs
 basins_of_attraction
@@ -23,6 +23,13 @@ uncertainty_exponent
 basin_fractions
 tipping_probabilities
 ```
+
+## Basin fractions via featurizing
+```@docs
+basin_fractions_clustering
+statespace_sampler
+```
+
 
 ## Discrete system example
 ```@example MAIN
@@ -137,7 +144,7 @@ The actual uncertainty exponent is the slope of the curve (α).
 ### Computing the tipping probabilities
 We will compute the tipping probabilities using the magnetic pendulum's example
 as the "before" state. For the "after" state we will change the `γ` parameter of the
-third magnet to be so small, it's basin of attraction will virtually disappear.
+third magnet to be so small, its basin of attraction will virtually disappear.
 ```@example MAIN
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1])
 basins_after, attractors_after = basins_of_attraction(
@@ -161,6 +168,65 @@ P = tipping_probabilities(basins, basins_after)
 ```
 As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our state space discretization isn't accurate enough to find the 3rd because it has such a small basin).
 Also, the first row of `P` is 50% probability to each other magnet, as it should be due to the system's symmetry.
+
+### Computing the fractions of initial conditions via featurizing
+We can also compute the fraction of initial conditions that go to each of the three
+attractors for the magnetic pendulum. In this approach, we don't need to know the
+attractors, or how many they are, as the algorithm [`basin_fractions_clustering`](@ref) can identify them. First, we need to
+define the initial conditions to be analyzed. 
+```@example MAIN
+s, _ = statespace_sampler(min_bounds=[-4, -4, -1, -1], max_bounds=[4, 4, 1, 1], method="uniform")
+ics = Dataset([s() for i=1:1000]) # define a specific set of initial conditions
+```
+
+Next, the key step for this method: we need to provide the function that extracts features
+from each trajectory. These features must be similar for trajectories belonging to the same
+attractor, which unfortunately requires some knowledge of the system. For the magnetic
+pendulum, we know the attractors are in different regions in space, so the final position is
+already enough to distinguish between them.
+```@example MAIN
+featurizer(y,t) = y[end][1:2] # 3 and 4 are the velocities, which go to 0
+fs, class_labels = basin_fractions_clustering(
+    ds, featurizer, ics; T=2000, Ttr=1999, show_progress=true)
+fs
+```
+
+Due to the rotational symmetry in this system, the attractors are also symmetric, and should
+attract the same amount of initial conditions. We can see this in the results, in which the
+fractions of initial conditions are roughly the same.
+
+In this first example, we assumed we didn't know where the attractors were, so we identified
+them simply from the features via the unsupervised classification mode of
+`basin_fractions_clustering`. But we happen to know the positions of the attractors for this
+specific system, so we can also use the supervised classification mode. For it, we define
+the points where the attractors are, and the algorithm simply classifies the trajectory
+according to its closest attractor. 
+```@example MAIN
+attractors_ic = Dataset([[cos(2π*i/3) sin(2π*i/3) 0 0] for i=1:3])
+fs, class_labels = basin_fractions_clustering(
+    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
+fs
+```
+
+This supervised mode is much quicker than the unsupervised one, but of course requires
+additional information. Let's use this improved speed to increase the number of initial
+conditions and then plot the basins of attraction. We can do this because the method also
+returns the labels for each initial condition, identifying to which attractor they were
+classified.
+```@example MAIN
+ics = Dataset([s() for i=1:30000])
+fs, class_labels = basin_fractions_clustering(
+    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
+LC =  matplotlib.colors.ListedColormap
+cmap2 = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
+fig = figure()
+scatter(ics[:,1], ics[:,2], c=class_labels, cmap=cmap2, s=80)
+fig.tight_layout(pad=0.3); fig
+```
+
+The integration of the 30000 trajectories can be performed much faster if it is parallelized.
+You can read more about this in [`basins_fractions_clustering`](@ref). 
+
 
 ## 3D basins
 To showcase the true power of [`basins_of_attraction`](@ref) we need to use a system whose attractors span higher-dimensional space. An example is 

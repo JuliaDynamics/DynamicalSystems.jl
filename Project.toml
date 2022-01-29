@@ -1,7 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "2.2.0"
+version = "2.1.6"
 
 [deps]
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
@@ -14,7 +14,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 
 [compat]
-ChaosTools = "2.6.3"
+ChaosTools = "2.7.0"
 DelayEmbeddings = "2"
 DynamicalSystemsBase = "2.3.4"
 Entropies = "1.1"
