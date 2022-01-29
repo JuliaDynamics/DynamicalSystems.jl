@@ -20,7 +20,7 @@ molteno_boxing
 ## Fractal dimension example
 For an example of using entropies to compute the dimension of an attractor let's use everyone's favorite system:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 lor = Systems.lorenz()
 ```
 
@@ -34,11 +34,10 @@ Hs = genentropy.(Ref(tr), ες; q = 1)
 
 ```@example MAIN
 xs = @. -log(ες)
-fig = figure()
-plot(xs, Hs)
-ylabel("\$H_1\$")
-xlabel("\$-\\log (\\epsilon)\$");
-fig.tight_layout(pad=0.3); fig
+fig = Figure(resolution = (500,500))
+ax = Axis(fig[1,1]; ylabel = L"H_1", xlabel = L"-\log (\epsilon)")
+lines!(ax, xs, Hs)
+fig
 ```
 
 The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 1) for the attractor of the Lorenz system.
@@ -48,16 +47,16 @@ Given that we _see_ the plot, we can estimate where the linear scaling region st
 ```@example MAIN
 lrs, slopes = linear_regions(xs, Hs, tol = 0.25)
 
-fig = figure()
+fig = Figure(resolution = (500,500))
+ax = Axis(fig[1,1]; ylabel = L"H_1", xlabel = L"-\log (\epsilon)")
+
 for i in 1:length(lrs)-1
-    plot(xs[lrs[i]:lrs[i+1]], Hs[lrs[i]:lrs[i+1]], marker = "o")
+    scatterlines!(ax, xs[lrs[i]:lrs[i+1]], Hs[lrs[i]:lrs[i+1]])
 end
-ylabel("\$H_1\$")
-xlabel("\$-\\log (\\epsilon)\$");
-fig.tight_layout(pad=0.3); fig
+fig
 ```
 
-The [`linear_region`](@ref) function  computes the slope of the largest region:
+The [`linear_region`](@ref) function computes the slope of the largest region:
 
 ```@example MAIN
 Δ = linear_region(xs, Hs)[2]
