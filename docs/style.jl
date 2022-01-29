@@ -33,6 +33,7 @@ LINESTYLES = CyclicContainer(["-", ":", "--", "-."])
 set_theme!(;
     palette = (color = COLORSCHEME,), 
     fontsize = 22,
+    figure_padding = 1,
     resolution = (1000, 500),
     linewidth = 3.0,
 )
