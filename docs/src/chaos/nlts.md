@@ -13,7 +13,7 @@ Take the following example where we produce noisy data from a system and then us
 Broomhead-King coordinates as an alternative to "vanilla" delay coordinates:
 
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.gissinger()
 data = trajectory(ds, 1000.0, Δt = 0.05)
@@ -28,16 +28,14 @@ summary(U)
 
 Now let's simply compare the above result with the one you get from doing a "standard" call to [`embed`](@ref):
 ```@example MAIN
-fig=figure(figsize= (10,6))
-subplot(1,2,1)
-plot(U[:, 1], U[:, 2])
-title("Broomhead-King of s")
+fig = Figure()
+ax, = lines(fig[1,1], U[:, 1], U[:, 2])
+ax.title = "Broomhead-King of s"
 
-subplot(1,2,2)
 R = embed(s, 2, 30)
-plot(columns(R)...; color = "C3")
-title("2D embedding of s")
-fig.tight_layout(pad=0.3)
+ax2, = lines(fig[1,2], columns(R)...)
+ax2.title = "2D embedding of s"
+fig
 ```
 
 we have used the same system as in the [Delay Coordinates Embedding](@ref) example, and picked the optimal
