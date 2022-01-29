@@ -6,7 +6,7 @@ CI && Pkg.instantiate()
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using Neighborhood
-using Documenter, PyPlot
+using Documenter, CairoMakie
 using DocumenterTools: Themes
 import Downloads
 
@@ -29,15 +29,16 @@ Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__,
 # Style for plots inside documentation
 include("style.jl")
 
-PyPlot.ioff()
 cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
 
 makedocs(
-modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-         DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood],
-doctest=false,
-sitename= "DynamicalSystems.jl",
+modules = [
+    DynamicalSystems, ChaosTools, DynamicalSystemsBase,
+    DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood,
+],
+doctest = false,
+sitename = "DynamicalSystems.jl",
 root = @__DIR__,
 format = Documenter.HTML(
     prettyurls = CI,
@@ -55,14 +56,14 @@ pages = [
         "Predefined Dynamical Systems" => "ds/predefined.md",
         "Numerical Data" => "embedding/dataset.md",
     ],
-    "Entropies" => [
-        "Entropies & Probabilities" => "entropies/api.md",
-        "Probabilities Estimators" => "entropies/estimators.md",
-    ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Traditional Optimal Embedding" => "embedding/traditional.md",
         "Unified Optimal Embedding" => "embedding/unified.md",
+        ],
+    "Entropies" => [
+        "Entropies & Probabilities" => "entropies/api.md",
+        "Probabilities Estimators" => "entropies/estimators.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
@@ -82,11 +83,8 @@ pages = [
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
-expandfirst = ["index.md"],
+expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )
-
-PyPlot.close("all")
-PyPlot.ion()
 
 if CI
     deploydocs(

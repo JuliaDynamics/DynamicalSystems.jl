@@ -40,21 +40,19 @@ typeof(R)
 summary(R)
 ```
 
----
 
 The above simple plotting functionality is possible through the package [`UnicodePlots`](https://github.com/Evizero/UnicodePlots.jl). The following function creates the plot:
 ```@docs
 recurrenceplot
 ```
 
----
 
 Here is the same plot but using Unicode Braille characters
 ```@example MAIN
 recurrenceplot(R; ascii = false)
 ```
 
-As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. Juno, which is where it is the default printing type. Here is how it looks like in a dark background:
+As you can see, the Unicode based plotting doesn't display nicely everywhere. It does display perfectly in e.g. VSCode, which is where it is the default printing type. Here is how it looks like in a dark background:
 
 ![](rqaplot in Juno.PNG)
 
@@ -68,24 +66,22 @@ coordinates
 grayscale
 ```
 
----
-
 For example, here is the representation of the above `R` from the Roessler system using both plotting approaches:
 
 ```@example MAIN
-using PyPlot
-fig = figure(figsize = (10,5))
+using CairoMakie
+fig = Figure(resolution = (1000,500))
 
-ax = subplot(121)
+ax = Axis(fig[1,1])
 xs, ys = coordinates(R)
-scatter(xs, ys, color = "k", s = 1)
-xlim(1, size(R)[1]); ylim(1, size(R)[2]);
-ax.set_aspect("equal")
+scatter!(ax, xs, ys; color = :black, markersize = 1)
+ax.limits = ((1, size(R, 1)), (1, size(R, 2)));
+ax.aspect = 1
 
-subplot(122)
+ax2 = Axis(fig[1,2]; aspect = 1)
 Rg = grayscale(R)
-imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
-fig.tight_layout(pad=0.3); fig
+heatmap!(ax2, Rg; colormap = :grays)
+fig
 ```
 
 and here is exactly the same process, but using the embedded trajectory instead
@@ -95,18 +91,16 @@ y = tr[:, 2]
 m = embed(y, 3, τ)
 R = RecurrenceMatrix(m, 5.0; metric = "euclidean")
 
-fig = figure()
-
 xs, ys = coordinates(R)
-scatter(xs, ys, color = "k", s = 1)
-xlim(1, size(R)[1]); ylim(1, size(R)[2]);
-fig.tight_layout(pad=0.3); fig
+fig, ax = scatter(xs, ys; markersize = 1)
+ax.aspect = 1
+fig
 ```
 
 which justifies why recurrence plots are so fitting to be used in embedded timeseries.
 
 !!! warning "Careful when using Recurrence Plots"
-    It is easy when using `grayscale` to not change the width/height parameters. These are however very important when the matrix size exceeds the display size! Most plotting libraries may resample arbitrarily or simply limit the displayed pixels, so one needs to be extra careful.
+    It is easy when using `grayscale` to not change the width/height parameters. The width and height are important when in `grayscale` when the matrix size exceeds the display size! Most plotting libraries may resample arbitrarily or simply limit the displayed pixels, so one needs to be extra careful.
 
     Besides graphical problems there are also other potential pitfalls dealing with the conceptual understanding and use of recurrence plots. All of these are summarized in the following paper which we suggest users to take a look at:
 
@@ -118,9 +112,9 @@ which justifies why recurrence plots are so fitting to be used in embedded times
 In the following we will plot recurrence plots of the Lorenz system for a periodic and chaotic regime (using scatter plot).
 
 ```@example MAIN
-using PyPlot # hide
+using DynamicalSystems, CairoMakie
 lor = Systems.lorenz()
-fig = figure(figsize = (10,10))
+fig = Figure(resolution = (1000,600))
 
 for (i, ρ) in enumerate((69.75, 28.0))
     set_parameter!(lor, 2, ρ)
@@ -128,20 +122,22 @@ for (i, ρ) in enumerate((69.75, 28.0))
     tr = trajectory(lor, t; Δt, Ttr = 2000.0)
     tvec = 0:Δt:t
 
-    subplot(2,2, i)
-    plot(tr[:, 1], tr[:, 3], color = "C$(i+1)", label = "X vs Z")
-    title("ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic")); legend()
+    ax = Axis(fig[1, i]; title = "ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic")) 
+    lines!(ax, tr[:, 1], tr[:, 3]; color = Cycled(i), label = "X vs Z")
+    axislegend(ax)
 
     ε = i == 1 ? 5.0 : 3.0
     R = RecurrenceMatrix(tr, ε)
 
-    subplot(2,2,i+2)
+    ax = Axis(fig[2, i])
+    ax.xlabel = "t"
+    i == 1 && (ax.ylabel = "t")
     x, y = coordinates(R)
-    scatter(tvec[x], tvec[y], s = 1, alpha = 0.2, color = "C$(i+1)")
-    xlim(0, t); ylim(0, t); gca().set_aspect("equal")
-    xlabel("t"); i == 1 && ylabel("t");
+    scatter!(ax, tvec[x], tvec[y]; markersize = 1, color = Cycled(i))
+    ax.limits = ((0, t), (0, t)) 
+    ax.aspect = 1
 end
-fig.tight_layout(pad=0.3); fig
+fig
 ```
 
 On the left we see long (infinite) diagonals repeated over and over for different times. This is the case for periodic systems as they visit exactly the same area on the phase space again and again. The distance between the offset diagonals also coincides with the periodicity of the system, which is around `t ≈ 4`.
@@ -149,7 +145,7 @@ On the left we see long (infinite) diagonals repeated over and over for differen
 On the right we see a structure typical of chaotic motion on a strange attractor such as the one of the Lorenz system: the orbit visits neighborhoods of previous points but then quickly diverges again. This results in many small diagonal lines.
 
 ## Distances
-The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as a string or as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
+The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
 ```@docs
 distancematrix
 ```

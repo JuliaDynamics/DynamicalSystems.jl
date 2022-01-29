@@ -1,17 +1,14 @@
 # Contributor Guide
 
-*TL;DR: See ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
+*TL;DR: To contribute via Pull Requests see ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
 
 ---
 
 The ultimate goal for **DynamicalSystems.jl** is
-to be a useful *library* for scientists working on chaos, nonlinear dynamics and
-in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
+to be a useful *library* for scientists working on nonlinear dynamics and to make nonlinear dynamics accessible and reproducible.
 
-For this to be achieved, many of us should try to
-work together to improve the library!
-
-If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
+Of course, for such an ambitious goal to be achieved, many of us should try to
+work together to improve the library! If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
 
 1. Just *use it*. If you encountered unexpected behavior simply report it either on
    our [gitter chatroom](https://gitter.im/JuliaDynamics/Lobby) or using the

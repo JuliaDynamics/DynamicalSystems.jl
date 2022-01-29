@@ -5,16 +5,14 @@ behavior of a map, when a parameter of the system is changed
 ```@docs
 orbitdiagram
 ```
----
 
 For example, let's compute the famous orbit diagram of the logistic map:
 ```@example MAIN
-using DynamicalSystems
-using PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.logistic()
 i = 1
-pvalues = 3:0.01:4
+pvalues = 3:0.005:4
 ics = [rand() for m in 1:10]
 n = 2000
 Ttr = 2000
@@ -29,13 +27,12 @@ for j in 1:L
     y[(1 + (j-1)*n):j*n] .= output[j]
 end
 
-fig = figure()
-plot(x, y, ls = "None", ms = 0.5, color = "black", marker = "o", alpha = 0.05)
-PyPlot.title("total points: $(L*n)")
-xlim(pvalues[1], pvalues[end]); ylim(0,1)
-xlabel("\$r\$"); ylabel("\$x\$")
-tight_layout()
-fig.tight_layout(pad=0.3); fig
+fig, ax = scatter(x, y; axis = (xlabel = L"r", ylabel = L"x"),
+    markersize = 0.8, color = ("black", 0.05),
+)
+ax.title = "total points: $(L*n)"
+xlims!(ax, pvalues[1], pvalues[end]); ylims!(ax,0,1)
+fig
 ```
 
 Notice that if you are using `PyPlot`, the plotting process will be slow, since it is slow at plotting big numbers of points.
@@ -54,7 +51,7 @@ poincaremap
 
 Here is an example of the [Henon-Heiles](https://en.wikipedia.org/wiki/H%C3%A9non%E2%80%93Heiles_system) system showing the mixed nature of the phase space
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 hh = Systems.henonheiles()
 
@@ -65,18 +62,18 @@ u0s = [[0.0, -0.25, 0.42081, 0.0],
 [0.0, -0.0910355, 0.459522, -0.173339],
 [0.0, -0.205144, 0.449328, -0.0162098]]
 
-fig = figure()
+fig = Figure(resolution = (500,500))
+ax = Axis(fig[1,1]; xlabel = L"q_2", ylabel = L"p_2")
 for u0 in u0s
     psos = poincaresos(hh, plane, 20000.0; u0 = u0)
-    scatter(psos[:, 2], psos[:, 4], s = 2.0)
+    scatter!(ax, psos[:, 2], psos[:, 4]; markersize = 2.0)
 end
-xlabel("\$q_2\$"); ylabel("\$p_2\$")
-fig.tight_layout(pad=0.3); fig
+fig
 ```
 
 Here the surface of section was the (hyper-) plane that $q_1 = 0$. Some chaotic and regular orbits can be seen in the plot. You can tell the regular orbits apart because they look like a single connected curve. This is the result of cutting a 2-torus by a plane!
 
----
+### Advanced hyperplane
 Finally here is one more example with a more complex hyperplane:
 ```@example MAIN
 gis = Systems.gissinger([2.32865, 2.02514, 1.98312])
@@ -95,11 +92,11 @@ gis_plane(μ) = [cross(Np(μ), Nm(μ))..., 0]
 
 μ = 0.119
 set_parameter!(gis, 1, μ)
-fig = figure()
-psos = poincaresos(gis, gis_plane(μ), 10000.0, Ttr = 200.0,)
-plot3D(columns(psos)..., marker = "o", ls = "None", ms = 2.0);
-xlabel("Q"); ylabel("D"); zlabel("V");
-fig.tight_layout(pad=0.3); fig
+fig = Figure()
+ax = Axis3(fig[1,1]; xlabel="Q", ylabel="D", zlabel="V")
+psos = poincaresos(gis, gis_plane(μ), 10000.0, Ttr = 200.0)
+scatter!(ax, columns(psos)...)
+fig
 ```
 
 ### Stroboscopic Map
@@ -159,11 +156,12 @@ p_index = 1
 output = produce_orbitdiagram(ds, plane, i, p_index, pvalues;
                               tfinal = tf, Ttr = 200.0)
 
-fig = figure()
+fig = Figure()
+ax = Axis(fig[1,1]; xlabel = L"R_1", ylabel = L"V_1")
 for (j, p) in enumerate(pvalues)
-    plot(fill(p, length(output[j])), output[j], lw = 0,
-    marker = "o", ms = 0.2, color = "black")
+    scatter!(ax, fill(p, length(output[j])), output[j]; 
+        color = ("black", 0.5), markersize = 1
+    )
 end
-xlabel("\$R_1\$"); ylabel("\$V_1\$")
-fig.tight_layout(pad=0.3); fig
+fig
 ```

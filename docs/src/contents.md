@@ -42,11 +42,11 @@ All algorithms are independent of each other but they are also not expansive eno
 
 ### [Lyapunov Exponents](@ref)
 
-The following treat systems where the equations of motion are known:
+1. Maximum Lyapunov exponent: [`lyapunov`](@ref).
+2. Lyapunov spectrum: [`lyapunovspectrum`](@ref).
+3. Finite-time, finite-size Lyapunov exponent (a.k.a. nonlinear Lyapunov exponent): [`local_growth_rates`](@ref).
+4. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries or dataset: [`lyapunov_from_data`](@ref).
 
-1. Maximum Lyapunov exponent for both discrete and continuous systems: [`lyapunov`](@ref).
-2. Lyapunov *spectrum* for both discrete and continuous systems: [`lyapunovspectrum`](@ref).
-3. Finite-time, finite-size lyapunov exponent (a.k.a. nonlinear Lyapunov exponent): [`local_growth_rates`](@ref).
 
 ### [Detecting & Categorizing Chaos](@ref)
 
@@ -72,7 +72,9 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 ### [Nonlinear Timeseries Analysis](@ref)
 
 1. Broomhead-King coordinates: [`broomhead_king`](@ref).
-3. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries: [`lyapunov_from_data`](@ref).
+4. DyCA coordinates: [`dyca`](@ref).
+5. [Nearest Neighbor Prediction](@ref).
+6. [Timeseries Surrogates](@ref).
 
 ### [Periodicity & Ergodicity](@ref)
 

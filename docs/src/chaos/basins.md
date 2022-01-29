@@ -33,22 +33,17 @@ statespace_sampler
 
 ## Discrete system example
 ```@example MAIN
-using DynamicalSystems, PyPlot
-function newton_map(dz, z, p, n)
+using DynamicalSystems
+function newton_map(z, p, n)
     z1 = z[1] + im*z[2]
     dz1 = newton_f(z1, p[1])/newton_df(z1, p[1])
     z1 = z1 - dz1
-    dz[1]=real(z1)
-    dz[2]=imag(z1)
-    return
+    return SVector(real(z1), imag(z1))
 end
 newton_f(x, p) = x^p - 1
 newton_df(x, p)= p*x^(p-1)
 
-# dummy Jacobian function due to https://github.com/JuliaDiff/ForwardDiff.jl/issues/520
-function newton_map_J(J,z0, p, n) end
-
-ds = DiscreteDynamicalSystem(newton_map, [0.1, 0.2], [3.0], newton_map_J)
+ds = DiscreteDynamicalSystem(newton_map, [0.1, 0.2], [3.0])
 xg = yg = range(-1.5,1.5,length=400)
 basins, attractors = basins_of_attraction((xg, yg), ds; show_progress = false)
 basins
@@ -59,28 +54,33 @@ attractors
 
 Now let's plot this as a heatmap
 ```@example MAIN
+using CairoMakie
 # Set up some code for plotting attractors
-function scatter_attractors(attractors)
+function scatter_attractors!(ax, attractors)
     for k ∈ keys(attractors)
         x, y = columns(attractors[k])
-        scatter(x, y; color = "C$(k-1)", edgecolor = "white")
+        scatter!(ax, attractors[k].data; 
+            color = Cycled(k), 
+            strokewidth = 3, strokecolor = :white
+        )
     end
 end
-LC =  matplotlib.colors.ListedColormap
-cmap = LC([matplotlib.colors.to_rgb("C$k") for k in 0:3])
-vmin = 1; vmax = 4
 
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+generate_cmap(n) = cgrad(Main.COLORS[1:n], n; categorical = true)
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
-
 
 ## Stroboscopic map example
 This example targets periodically driven 2D continuous dynamical systems, like the Duffing oscillator:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems
 ω=1.0; f = 0.2
 ds = Systems.duffing([0.1, 0.25]; ω, f, d = 0.15, β = -1)
 ```
@@ -97,10 +97,14 @@ basins
 And visualize the result as a heatmap, scattering the found attractors via scatter.
 
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+using CairoMakie
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
 
 ## 2D basins of higher dimensional system
@@ -118,10 +122,13 @@ Alright, so far so good, we found 3 attractors (the 3 magnets).
 Let's visualize this beauty now
 
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+ids = sort!(unique(basins))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors)
+fig
 ```
 
 ### Computing the uncertainty exponent
@@ -129,13 +136,11 @@ Let's now calculate the [`uncertainty_exponent`](@ref) for this system as well.
 The calculation is straightforward:
 ```@example MAIN
 ε, f_ε, α = uncertainty_exponent(basins)
-fig = figure()
-plot(log.(ε), log.(f_ε))
-plot(log.(ε), log.(ε) .* α; label = "α = $(round(α; digits=3))")
-legend()
-fig.tight_layout(pad=0.3); fig
+fig, ax = lines(log.(ε), log.(f_ε))
+ax.title = "α = $(round(α; digits=3))"
+fig
 ```
-The actual uncertainty exponent is the slope of the curve.
+The actual uncertainty exponent is the slope of the curve (α).
 
 ### Computing the tipping probabilities
 We will compute the tipping probabilities using the magnetic pendulum's example
@@ -146,86 +151,90 @@ ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1]
 basins_after, attractors_after = basins_of_attraction(
     (xg, yg), ds; diffeq = (reltol = 1e-9,), show_progress = false
 )
+# matching attractors is important!
 match_attractors!(basins, attractors, basins_after, attractors_after)
-fig = figure()
-pcolormesh(xg, yg, basins_after'; vmin, vmax, cmap)
-scatter_attractors(attractors_after)
-fig.tight_layout(pad=0.3); fig
+
+# now plot
+ids = sort!(unique(basins_after))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins_after; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors_after)
+fig
 ```
 
 ```@example MAIN
 P = tipping_probabilities(basins, basins_after)
 ```
-As you can see `P` has size 3×2, as after the change only 2 attractors have been identified in the system (3 still exist but our state space discretization isn't accurate enough to find the 3rd because it has such a small basin).
-Also, the first row of `P` is 50% probability to each other magnet, as it should be due to the system's symmetry.
+As you can see `P` has size 3×2, as after the change only 2 attractors have been identified
+in the system (3 still exist but our state space discretization isn't accurate enough to
+find the 3rd because it has such a small basin).
+Also, the first row of `P` is 50% probability to each other magnet, as it should be due to
+the system's symmetry.
 
 ### Computing the fractions of initial conditions via featurizing
 We can also compute the fraction of initial conditions that go to each of the three
-attractors for the magnetic pendulum. In this approach, we don't need to know the
-attractors, or how many they are, as the algorithm [`basin_fractions_clustering`](@ref) can identify them. First, we need to
-define the initial conditions to be analyzed. 
+attractors for the magnetic pendulum via featurizing using 
+[`basin_fractions_clustering`](@ref).
+First, we need to define the initial conditions to be analyzed. 
 ```@example MAIN
-s, _ = statespace_sampler(min_bounds=[-4, -4, -1, -1], max_bounds=[4, 4, 1, 1], method="uniform")
+using Random
+rng = Random.MersenneTwister(1234)
+s, _ = statespace_sampler(rng; 
+    min_bounds=[-4, -4, 0, 0], max_bounds=[4, 4, 0, 0], method="uniform"
+)
 ics = Dataset([s() for i=1:1000]) # define a specific set of initial conditions
 ```
 
 Next, the key step for this method: we need to provide the function that extracts features
 from each trajectory. These features must be similar for trajectories belonging to the same
 attractor, which unfortunately requires some knowledge of the system. For the magnetic
-pendulum, we know the attractors are in different regions in space, so the final position is
-already enough to distinguish between them.
+pendulum, we know that the x-y location of attractors can distinguish them,
+so we can rather straightforwardly define:
 ```@example MAIN
 featurizer(y,t) = y[end][1:2] # 3 and 4 are the velocities, which go to 0
+```
+
+which gives
+```@example MAIN
+ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3)
 fs, class_labels = basin_fractions_clustering(
     ds, featurizer, ics; T=2000, Ttr=1999, show_progress=true)
 fs
 ```
 
-Due to the rotational symmetry in this system, the attractors are also symmetric, and should
-attract the same amount of initial conditions. We can see this in the results, in which the
-fractions of initial conditions are roughly the same.
-
-In this first example, we assumed we didn't know where the attractors were, so we identified
-them simply from the features via the unsupervised classification mode of
-`basin_fractions_clustering`. But we happen to know the positions of the attractors for this
-specific system, so we can also use the supervised classification mode. For it, we define
-the points where the attractors are, and the algorithm simply classifies the trajectory
+Given that we know the attractors for this specific system, so we can also use the 
+supervised classification mode. For it, we define initial conditions that
+each leads to each attractor and the algorithm simply classifies the trajectory
 according to its closest attractor. 
 ```@example MAIN
-attractors_ic = Dataset([[cos(2π*i/3) sin(2π*i/3) 0 0] for i=1:3])
+attractors_ic = Dataset([[cos(2π*i/3), sin(2π*i/3), 0, 0] for i=1:3])
 fs, class_labels = basin_fractions_clustering(
     ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
 fs
 ```
 
-This supervised mode is much quicker than the unsupervised one, but of course requires
-additional information. Let's use this improved speed to increase the number of initial
-conditions and then plot the basins of attraction. We can do this because the method also
+We can also plot the basins because the method also
 returns the labels for each initial condition, identifying to which attractor they were
-classified.
+classified (only when `ics` is _not_ a function).
 ```@example MAIN
-ics = Dataset([s() for i=1:30000])
-fs, class_labels = basin_fractions_clustering(
-    ds, featurizer, ics, attractors_ic; T=2000, Ttr=1999, show_progress=true)
-LC =  matplotlib.colors.ListedColormap
-cmap2 = LC([matplotlib.colors.to_rgb("C$k") for k in 0:2])
-fig = figure()
-scatter(ics[:,1], ics[:,2], c=class_labels, cmap=cmap2, s=80)
-fig.tight_layout(pad=0.3); fig
+colors = [Main.COLORSCHEME[i] for i in class_labels]
+fig, ax = scatter(ics[:,1], ics[:,2]; color = colors)
+fig
 ```
 
-The integration of the 30000 trajectories can be performed much faster if it is parallelized.
-You can read more about this in [`basins_fractions_clustering`](@ref). 
-
-
 ## 3D basins
-To showcase the true power of [`basins_of_attraction`](@ref) we need to use a system whose attractors span higher-dimensional space. An example is 
+To showcase the true power of [`basins_of_attraction`](@ref) we need to use a system whose
+attractors span higher-dimensional space. An example is 
 ```@example MAIN
 ds = Systems.thomas_cyclical(b = 0.1665)
 ```
-which, for this parameter, contains 5 coexisting attractors. 3 of them are entangled periodic orbits that span across all three dimensions, and the remaining 2 are fixed points.
+which, for this parameter, contains 5 coexisting attractors. 3 of them are entangled
+periodic orbits that span across all three dimensions, and the remaining 2 are fixed points.
 
-To compute the basins we define a three-dimensional grid and call on it [`basins_of_attraction`](@ref).
+To compute the basins we define a three-dimensional grid and call on it
+[`basins_of_attraction`](@ref).
 
 ```julia
 # This computation takes about an hour
@@ -306,9 +315,12 @@ attractors[1]
 ```
 Looks good so far, but let's plot it as well:
 ```@example MAIN
-fig = figure()
-pcolormesh(xg, yg, basins'; cmap, vmin, vmax)
-scatter_attractors(attractors)
-fig.tight_layout(pad=0.3); fig
+ids = sort!(unique(basins_after))
+cmap = generate_cmap(length(ids))
+fig, ax = heatmap(xg, yg, basins_after; 
+    colormap = cmap, colorrange = (ids[1] - 0.5, ids[end]+0.5),
+)
+scatter_attractors!(ax, attractors_after)
+fig
 ```
 This aligns perfectly with the video we produced above.

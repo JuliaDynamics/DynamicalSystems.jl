@@ -37,19 +37,20 @@ The total obtained decrease of *ΔL* throughout all encountered embedding cycles
 
 We can also look at *continuity statistic*
 ```@example MAIN
-using PyPlot
+using CairoMakie
 
-fig = figure()
-plot(εs[:,1], label="1st embedding cycle")
-scatter([τ_vals[2]], [εs[τ_vals[2],1]])
-plot(εs[:,2], label="2nd embedding cycle")
-scatter([τ_vals[3]], [εs[τ_vals[3],2]])
-plot(εs[:,3], label="3rd embedding cycle")
-title("Continuity statistics PECUZAL Lorenz")
-xlabel("delay τ")
-ylabel("⟨ε⋆⟩")
-legend(loc="center right"; fontsize = 20)
-fig.tight_layout(pad=0.3); fig
+fig = Figure()
+ax = Axis(fig[1,1])
+lines!(εs[:,1], label="1st emb. cycle")
+scatter!([τ_vals[2]], [εs[τ_vals[2],1]])
+lines!(εs[:,2], label="2nd emb. cycle")
+scatter!([τ_vals[3]], [εs[τ_vals[3],2]])
+lines!(εs[:,3], label="3rd emb. cycle")
+ax.title = "Continuity statistics PECUZAL Lorenz"
+ax.xlabel = "delay τ"
+ax.ylabel = "⟨ε⋆⟩"
+axislegend(ax)
+fig
 ```
 
 The picked delay values are marked with filled circles. As already mentioned, the
@@ -101,24 +102,21 @@ Let's plot these three components:
 ```@example MAIN
 ts_str = ["x", "y", "z"]
 
-fig = figure(figsize = (12, 6))
-subplot(1,2,1, projection="3d")
-plot3D(Y_mt[:,1], Y_mt[:,2], Y_mt[:,3]; lw = 1.0, c = "C0")
-title("PECUZAL reconstructed")
-xlabel("$(ts_str[ts_vals_mt[1]])(t+$(τ_vals_mt[1]))")
-ylabel("$(ts_str[ts_vals_mt[2]])(t+$(τ_vals_mt[2]))")
-zlabel("$(ts_str[ts_vals_mt[3]])(t+$(τ_vals_mt[3]))")
-xticks([]); yticks([]); zticks([]);
+fig = Figure(resolution = (1000,500) )
+ax1 = Axis3(fig[1,1], title = "PECUZAL reconstructed")
+lines!(ax1, Y_mt[:,1], Y_mt[:,2], Y_mt[:,3]; linewidth = 1.0)
+ax1.xlabel = "$(ts_str[ts_vals_mt[1]])(t+$(τ_vals_mt[1]))"
+ax1.ylabel = "$(ts_str[ts_vals_mt[2]])(t+$(τ_vals_mt[2]))"
+ax1.zlabel = "$(ts_str[ts_vals_mt[3]])(t+$(τ_vals_mt[3]))"
+ax1.azimuth = π/2 + π/4
 
-subplot(1,2,2, projection="3d")
-plot3D(tr[:,1], tr[:,2], tr[:,3]; lw = 1.0, c = "C1")
-title("Original")
-xlabel("x(t)")
-ylabel("y(t)")
-zlabel("z(t)")
-xticks([]); yticks([]); zticks([]);
-
-tight_layout(pad = 0.3); fig
+ax2 = Axis3(fig[1,2], title = "original")
+lines!(ax2, tr[:,1], tr[:,2], tr[:,3]; linewidth = 1.0, color = Cycled(2))
+ax2.xlabel = "x(t)"
+ax2.ylabel = "y(t)"
+ax2.zlabel = "z(t)"
+ax2.azimuth = π/2 + π/4
+fig
 ```
 
 Finally we show what PECUZAL does with a non-deterministic source:

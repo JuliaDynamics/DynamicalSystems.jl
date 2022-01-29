@@ -32,19 +32,17 @@ Here, we draw some random points from a 2D normal distribution. Then, we use ker
 density estimation to associate a probability to each point `p`, measured by how many points are within radius `1.5` of `p`. Plotting the actual points, along with their associated probabilities estimated by the KDE procedure, we get the following surface plot.
 
 ```@example MAIN
-using Distributions, PyPlot, DelayEmbeddings, Entropies
+using DynamicalSystems, CairoMakie, Distributions
 𝒩 = MvNormal([1, -4], 2)
 N = 500
 D = Dataset(sort([rand(𝒩) for i = 1:N]))
 x, y = columns(D)
 p = probabilities(D, NaiveKernel(1.5))
-fig = figure()
-surf(x, y, p.p)
-xlabel("x"); ylabel("y")
+fig, ax = surface(x, y, p.p; axis=(type=Axis3,))
+ax.zlabel = "P"
+ax.zticklabelsvisible = false
 fig
 ```
-
-![](kernel_surface.png)
 
 ## Nearest neighbor estimators
 
@@ -57,10 +55,10 @@ KozachenkoLeonenko
 
 This example reproduces Figure in Charzyńska & Gambin (2016)[^Charzyńska2016]. Both
 estimators nicely converge to the true entropy with increasing time series length.
-For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0` (red line).
+For a uniform 1D distribution ``U(0, 1)``, the true entropy is `0`.
 
 ```@example MAIN
-using DynamicalSystems, PyPlot, Statistics
+using DynamicalSystems, CairoMakie, Statistics
 using Distributions: Uniform, Normal
 
 Ns = [100:100:500; 1000:1000:10000]
@@ -86,23 +84,19 @@ for N in Ns
     push!(Ekr, kr)
 end
 
-f = figure()
-ax = subplot(211)
-px = PyPlot.plot(Ns, mean.(Ekl); color = "C1", label = "KozachenkoLeonenko");
-PyPlot.plot(Ns, mean.(Ekl) .+ std.(Ekl); color = "C1", label = "");
-PyPlot.plot(Ns, mean.(Ekl) .- std.(Ekl); color = "C1", label = "");
+fig = Figure()
+ax = Axis(fig[1,1]; ylabel = "entropy (nats)", title = "KozachenkoLeonenko")
+lines!(ax, Ns, mean.(Ekl); color = Cycled(1))
+band!(ax, Ns, mean.(Ekl) .+ std.(Ekl), mean.(Ekl) .- std.(Ekl);
+color = (Main.COLORS[1], 0.5))
 
-xlabel("Time step"); ylabel("Entropy (nats)"); legend()
-ay = subplot(212)
-py = PyPlot.plot(Ns, mean.(Ekr); color = "C2", label = "Kraskov");
-PyPlot.plot(Ns, mean.(Ekr) .+ std.(Ekr); color = "C2", label = "");
-PyPlot.plot(Ns, mean.(Ekr) .- std.(Ekr); color = "C2", label = "");
+ay = Axis(fig[2,1]; xlabel = "time step", ylabel = "entropy (nats)", title = "Kraskov")
+lines!(ay, Ns, mean.(Ekr); color = Cycled(2))
+band!(ay, Ns, mean.(Ekr) .+ std.(Ekr), mean.(Ekr) .- std.(Ekr); 
+color = (Main.COLORS[2], 0.5))
 
-xlabel("Time step"); ylabel("Entropy (nats)"); legend()
-f.tight_layout(pad=0.3); f
+fig
 ```
-
-![](nn_entropy_example.png)
 
 [^Charzyńska2016]: Charzyńska, A., & Gambin, A. (2016). Improvement of the k-NN entropy estimator with applications in systems biology. Entropy, 18(1), 13.
 
@@ -122,7 +116,7 @@ logistic map. Entropy estimates using [`SymbolicWeightedPermutation`](@ref)
 and [`SymbolicAmplitudeAwarePermutation`](@ref) are added here for comparison.
 
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.logistic()
 rs = 3.4:0.001:4
@@ -148,24 +142,21 @@ for r in rs
     push!(hs_perm, hperm); push!(hs_wtperm, hwtperm); push!(hs_ampperm, hampperm)
 end
 
-f = figure()
-a1 = subplot(411)
-plot(rs, lyaps); ylim(-2, log(2)); ylabel("\$\\lambda\$")
-a1.axes.get_xaxis().set_ticklabels([])
-xlim(rs[1], rs[end]);
+fig = Figure()
+a1 = Axis(fig[1,1]; ylabel = L"\lambda")
+lines!(a1, rs, lyaps); ylims!(a1, (-2, log(2)))
+a2 = Axis(fig[2,1]; ylabel = L"h_6 (SP)")
+lines!(a2, rs, hs_perm; color = Cycled(2))
+a3 = Axis(fig[3,1]; ylabel = L"h_6 (WT)")
+lines!(a3, rs, hs_wtperm; color = Cycled(3))
+a4 = Axis(fig[4,1]; ylabel = L"h_6 (SAAP)")
+lines!(a4, rs, hs_ampperm; color = Cycled(4))
+a4.xlabel = L"r"
 
-a2 = subplot(412)
-plot(rs, hs_perm; color = "C2"); xlim(rs[1], rs[end]);
-xlabel(""); ylabel("\$h_6 (SP)\$")
-
-a3 = subplot(413)
-plot(rs, hs_wtperm; color = "C3"); xlim(rs[1], rs[end]);
-xlabel(""); ylabel("\$h_6 (SWP)\$")
-
-a4 = subplot(414)
-plot(rs, hs_ampperm; color = "C4"); xlim(rs[1], rs[end]);
-xlabel("\$r\$"); ylabel("\$h_6 (SAAP)\$")
-f.tight_layout(pad=0.3); f
+for a in (a1,a2,a3)
+    hidexdecorations!(a, grid = false)
+end
+fig
 ```
 
 ## Time-scale (wavelet)
@@ -181,12 +172,12 @@ energy is contained at one scale) and higher for very irregular signals (energy 
 more out across scales).
 
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 N, a = 1000, 10
 t = LinRange(0, 2*a*π, N)
 
 x = sin.(t);
-y = sin.(t .+  cos.(t/0.5));
+y = sin.(t .+ cos.(t/0.5));
 z = sin.(rand(1:15, N) ./ rand(1:10, N))
 
 est = TimeScaleMODWT()
@@ -194,17 +185,16 @@ h_x = genentropy(x, est)
 h_y = genentropy(y, est)
 h_z = genentropy(z, est)
 
-fig = figure()
-ax = subplot(311)
-px = plot(t, x; color = "C1", label = "h=$(h=round(h_x, sigdigits = 5))");
-ylabel("x"); legend()
-ay = subplot(312)
-py = plot(t, y; color = "C2", label = "h=$(h=round(h_y, sigdigits = 5))");
-ylabel("y"); legend()
-az = subplot(313)
-pz = plot(t, z; color = "C3", label = "h=$(h=round(h_z, sigdigits = 5))");
-ylabel("z"); xlabel("Time"); legend()
-fig.tight_layout(pad=0.3); fig
+fig = Figure()
+ax = Axis(fig[1,1]; ylabel = "x")
+lines!(ax, t, x; color = Cycled(1), label = "h=$(h=round(h_x, sigdigits = 5))");
+ay = Axis(fig[2,1]; ylabel = "y")
+lines!(ay, t, y; color = Cycled(2), label = "h=$(h=round(h_y, sigdigits = 5))");
+az = Axis(fig[3,1]; ylabel = "z", xlabel = "time")
+lines!(az, t, z; color = Cycled(3), label = "h=$(h=round(h_z, sigdigits = 5))");
+for a in (ax, ay, az); axislegend(a); end
+for a in (ax, ay); hidexdecorations!(a; grid=false); end
+fig
 ```
 
 ## Utility methods
