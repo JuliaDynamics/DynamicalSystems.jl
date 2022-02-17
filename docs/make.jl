@@ -79,6 +79,7 @@ pages = [
         "Recurrence Quantification Analysis" => "rqa/quantification.md",
         "Windowed RQA" => "rqa/windowed.md",
         "Recurrence Networks" => "rqa/networks.md",
+        "Comparison of RQA software" => "rqa/comparison.md",
     ],
     "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
