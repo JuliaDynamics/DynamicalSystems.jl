@@ -1,4 +1,7 @@
-# Advanced documentation
+# Integrators and other systems
+When writing algorithms for nonlinear dynamics in code, it is almost always more convenient to work with integrators. DynamicalSystems.jl provides various integrators out of the box.
+
+
 This section overviews the various integrators available from `DynamicalSystemsBase`, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.
 
 ## Integrators
