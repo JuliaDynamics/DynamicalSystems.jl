@@ -1,17 +1,24 @@
 # Integrators and other systems
-When writing algorithms for nonlinear dynamics in code, it is almost always more convenient to work with integrators. DynamicalSystems.jl provides various integrators out of the box.
+When writing algorithms for nonlinear dynamics in code, it is almost always more convenient to work with integrators. DynamicalSystems.jl provides several different integrators of dynamical systems and a unified API to treat all of them.
+The API of course is based on the same API that DifferentialEquations.jl uses.
 
+## Available integrators
 
-This section overviews the various integrators available from `DynamicalSystemsBase`, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.
+* [`integrator`](@ref)
+* [`parallel_integrator`](@ref)
+* [`tangent_integrator`](@ref)
+* [`projected_integrator`](@ref)
+* [`stroboscopicmap`](@ref)
+* [`poincaremap`](@ref)
 
-## Integrators
 ```@docs
 integrator
 parallel_integrator
 tangent_integrator
+projected_integrator
+stroboscopicmap
+poincaremap
 ```
----
-Notice that the state type `integrator.u` of each integrator is quite different and *does change* between the possible versions of a [`DynamicalSystem`](@ref)!
 
 ## Integrator state functions
 There are four functions associated with the integrators that we export:
