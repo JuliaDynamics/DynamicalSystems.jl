@@ -6,7 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    A new [short-length tutorial video](https://www.youtube.com/watch?v=TJqOGsKQti8) is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library! 
+    A new [short-length tutorial video](https://www.youtube.com/watch?v=TJqOGsKQti8) is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library!
 
 
 !!! tip "Star us on GitHub!"
@@ -30,22 +30,7 @@ These core structures `DynamicalSystem, Dataset` are used throughout the package
 For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
 Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
 
-All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page. For transparency, the packages and versions used to build the documentation you are reading now are:
-
-```@setup MAIN
-using CairoMakie
-include("../style.jl")
-```
-
-```@example MAIN
-using Pkg
-Pkg.status([
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",];
-    mode = PKGMODE_MANIFEST, io=stdout
-)
-```
+All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
 
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
@@ -145,3 +130,25 @@ By solving these issues you not only contribute to open source, but you also get
 The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
 
 The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
+
+## Version numbers
+The version of DynamicalSystems.jl is a bit meaningless. The registered package has almost no source code. It only re-exports existing packages such as `ChaosTools`.
+For transparency, the packages and versions used to build the documentation you are reading now are:
+
+```@setup MAIN
+using CairoMakie
+include("../style.jl")
+```
+
+```@example MAIN
+using Pkg
+Pkg.status([
+    "DelayEmbeddings", "RecurrenceAnalysis",
+    "DynamicalSystemsBase", "ChaosTools",
+    "Entropies",];
+    mode = PKGMODE_MANIFEST, io=stdout
+)
+```
+
+!!! warn "Version numbers do not strictly follow SymVer2.0"
+    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are entirely independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.

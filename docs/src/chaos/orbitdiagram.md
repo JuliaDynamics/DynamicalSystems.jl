@@ -40,13 +40,12 @@ Notice that if you are using `PyPlot`, the plotting process will be slow, since 
 The function is not limited to 1D maps, and can be applied just as well to any
 discrete system.
 
-## Poincaré Surface of Section and Map
+## Poincaré Surface of Section
 Also called [Poincaré map](https://en.wikipedia.org/wiki/Poincar%C3%A9_map) is a
 technique to reduce a continuous system into a discrete map with 1 less dimension.
 We are doing this using the function:
 ```@docs
 poincaresos
-poincaremap
 ```
 
 Here is an example of the [Henon-Heiles](https://en.wikipedia.org/wiki/H%C3%A9non%E2%80%93Heiles_system) system showing the mixed nature of the phase space
