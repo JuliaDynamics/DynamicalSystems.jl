@@ -55,6 +55,7 @@ pages = [
         "Dynamical System Definition" => "ds/general.md",
         "Predefined Dynamical Systems" => "ds/predefined.md",
         "Numerical Data" => "embedding/dataset.md",
+        "Integrators" => "ds/integrators.md",
     ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
@@ -80,7 +81,6 @@ pages = [
         "Windowed RQA" => "rqa/windowed.md",
         "Recurrence Networks" => "rqa/networks.md",
     ],
-    "Advanced Documentation" => "advanced.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
 expandfirst = ["index.md"], #  this is the first script that loads colorscheme
