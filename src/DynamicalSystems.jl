@@ -3,10 +3,6 @@ A Julia suite for chaos and nonlinear dynamics
 """
 module DynamicalSystems
 
-using StaticArrays
-
-export SVector, SMatrix, @SVector, @SMatrix, Size
-
 using Reexport
 
 @reexport using DelayEmbeddings
@@ -14,6 +10,10 @@ using Reexport
 @reexport using Entropies
 @reexport using ChaosTools
 @reexport using RecurrenceAnalysis
+
+# Also export some static array stuff
+using DelayEmbeddings.StaticArrays
+export SVector, SMatrix, @SVector, @SMatrix, Size
 
 # Update messages:
 using Scratch
