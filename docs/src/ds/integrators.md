@@ -26,7 +26,7 @@ After you have initialized any integrator, you can use the same functions to han
 Especially for the [`tangent_integrator`](@ref), there are also two more functions: [`get_deviations`](@ref), [`set_deviations`](@ref).
 
 ```@docs
-step!
+step!(ds::DynamicalSystem)
 get_state
 reinit!(ds::DynamicalSystem)
 get_deviations
