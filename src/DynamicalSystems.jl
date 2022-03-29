@@ -18,7 +18,7 @@ export SVector, SMatrix, @SVector, @SMatrix, Size
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.2.0"
+version_number = "2.2.1"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -29,19 +29,9 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            Direct keyword acceptance of DifferentialEquations.jl related keywords is
-            no longer supported in DynamicalSystems.jl. This means that this is deprecated:
-            ```
-            lyapunov(ds, T; alg = Tsit5(), abstol = 1e-9)
-            ```
-            Instead, use the explicit keyword `diffeq`, and give it a named tuple with
-            the keyword arguments, i.e.:
-            ```
-            lyapunov(ds, T; diffeq = (alg = Tsit5(), abstol = 1e-9))
-            ```
-
-            Also, the online documentation now uses Makie.jl,
-            references InteractiveDynamics.jl and showcases some of its functions.
+            Brand new `AttractorMapper` infastructure that provides a generic framework
+            for mapping initial conditions to attractors, and hence calculating basins of
+            attraction. See documentation online for more!
             """;
             color = :light_magenta,
         )
