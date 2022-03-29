@@ -17,7 +17,7 @@ AttractorsViaFeaturizing
 ## Basins of attraction
 
 ```@docs
-basin_fractions
+basins_fractions
 basins_of_attraction
 statespace_sampler
 match_attractors!
@@ -51,7 +51,7 @@ newton_df(x, p)= p*x^(p-1)
 ds = DiscreteDynamicalSystem(newton_map, [0.1, 0.2], [3.0])
 xg = yg = range(-1.5, 1.5; length = 400)
 mapper = AttractorsViaRecurrences(ds, (xg, yg))
-basins, attractors = basins_of_attraction(mapper, (xg, yg); show_progress = false)
+basins, attractors = basins_of_attraction(mapper; show_progress = false)
 basins
 ```
 ```@example MAIN
@@ -98,7 +98,7 @@ For stroboscopic maps, we strongly recommend using a higher precision integrator
 ```@example MAIN
 xg = yg = range(-2.2, 2.2; length = 200)
 mapper = AttractorsViaRecurrences(smap, (xg, yg); diffeq)
-basins, attractors = basins_of_attraction(mapper, (xg, yg); show_progress = false)
+basins, attractors = basins_of_attraction(mapper; show_progress = false)
 basins
 ```
 
@@ -166,7 +166,7 @@ ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3, γs = [1.0, 1.0, 0.1]
 psys = projected_integrator(ds, [1, 2], [0.0, 0.0]; diffeq = (reltol = 1e-9,))
 mapper = AttractorsViaRecurrences(psys, (xg, yg); Δt = 1)
 basins_after, attractors_after = basins_of_attraction(
-    mapper, (xg, yg); show_progress = false
+    mapper; show_progress = false
 )
 # matching attractors is important!
 match_attractors!(basins, attractors, basins_after, attractors_after)
@@ -196,9 +196,7 @@ We can also compute the fraction of initial conditions that go to each of the th
 attractors for the magnetic pendulum via featurizing using
 [`AttractorsViaFeaturizing`](@ref) because here it is trivial to find the appropriate features that distinguish the attractors: simply the final value of the x and y coordinates of the trajectory.
 
-Let's also just use [`basin_fractions`](@ref) with random sampling instead of computing a full array of basins of attractions, just for some variety.
-
-# TODO: REDO THINGS HERE THEY ARE SIMPLER
+Let's also just use [`basins_fractions`](@ref) with random sampling instead of computing a full array of basins of attractions, just for some variety.
 
 So let's define a random sampler and the featurizing function
 ```@example MAIN
@@ -213,7 +211,7 @@ which gives
 ds = Systems.magnetic_pendulum(d=0.2, α=0.2, ω=0.8, N=3)
 psys = projected_integrator(ds, [1, 2], [0.0, 0.0]; diffeq = (reltol = 1e-9,))
 mapper = AttractorsViaFeaturizing(psys, featurizer)
-fs = basin_fractions(mapper, sampler; N = 1000, show_progress = false)
+fs = basins_fractions(mapper, sampler; N = 1000, show_progress = false)
 ```
 
 As it should, we get about 33% fraction for each attractor.
@@ -233,7 +231,7 @@ To compute the basins we define a three-dimensional grid and call on it
 # This computation takes about an hour
 xg = yg = zg = range(-6.0, 6.0; length = 251)
 mapper = AttractorsViaRecurrences(ds, (xg, yg, zg))
-basins, attractors = basins_of_attraction(mapper, (xg, yg, zg))
+basins, attractors = basins_of_attraction(mapper)
 attractors
 ```
 ```
@@ -298,11 +296,11 @@ In the previous example we saw that this system has periodic attractors. In the 
 ```@example MAIN
 ds = Systems.thomas_cyclical(b = 0.1665)
 xg = yg = range(-6.0, 6.0; length = 100)
-pmap = poincaremap(ds, (3, 0.0), 1e6;
+pmap = poincaremap(ds, (3, 0.0);
     rootkw = (xrtol = 1e-8, atol = 1e-8), diffeq = (reltol=1e-9,)
 )
 mapper = AttractorsViaRecurrences(pmap, (xg, yg))
-basins, attractors = basins_of_attraction(mapper, (xg, yg); show_progress = false)
+basins, attractors = basins_of_attraction(mapper; show_progress = false)
 attractors
 ```
 ```@example MAIN

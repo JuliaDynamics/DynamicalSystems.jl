@@ -88,9 +88,9 @@ And, in order to automatically deduce dimensions, we also offer methods for:
     * Via proximity: [`AttractorsViaProximity`](@ref).
     * Via recurrences: [`AttractorsViaRecurrences`](@ref).
     * Via featurizing and clustering: [`AttractorsViaFeaturizing`](@ref).
-* Calculating basins of attraction: [`basins_of_attraction`](@ref), [`basin_fractions`](@ref).
+* Calculating basins of attraction: [`basins_of_attraction`](@ref), [`basins_fractions`](@ref).
 * Final state sensitivity: [`uncertainty_exponent`](@ref).
-* Tipping points related functionality: [`basin_fractions`](@ref), [`tipping_probabilities`](@ref).
+* Tipping points related functionality: [`basins_fractions`](@ref), [`tipping_probabilities`](@ref).
 
 ## Recurrence Analysis
 [RecurrenceAnalysis.jl](https://github.com/JuliaDynamics/RecurrenceAnalysis.jl) offers tools to compute and analyze [Recurrence Plots](https://en.wikipedia.org/wiki/Recurrence_plot), a field called [Recurrence Quantification Analysis](https://en.wikipedia.org/wiki/Recurrence_quantification_analysis).
