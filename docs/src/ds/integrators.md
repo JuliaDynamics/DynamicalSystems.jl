@@ -18,6 +18,7 @@ tangent_integrator
 projected_integrator
 stroboscopicmap
 poincaremap
+GeneralizedDynamicalSystem
 ```
 
 ## Integrator API

@@ -73,7 +73,7 @@ pages = [
        "Fractal Dimension" => "chaos/fractaldim.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
        "Fixed points & Periodicity" => "chaos/periodicity.md",
-       "Attractor Basins, Tipping Points" => "chaos/basins.md",
+       "Attractors, Basins, Tipping Points" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [
         "Recurrence Plots" => "rqa/rplots.md",
