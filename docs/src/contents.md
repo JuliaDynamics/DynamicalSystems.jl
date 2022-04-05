@@ -29,18 +29,13 @@ Performing delay coordinate embeddings and finding optimal parameters for doing 
 * Fast calculation of mutual information: [`selfmutualinfo`](@ref).
 * Unified neighborhood interface.
 
-## ChaosTools
-[ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl) is a collection of many algorithms for (chaotic or not) dynamical systems.
-All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
-
-
-### [Orbit Diagrams & PSOS](@ref)
+## [Orbit Diagrams & PSOS](@ref)
 
 1. Orbit diagrams (aka bifurcation diagrams) of maps: [`orbitdiagram`](@ref).
 2. Poincaré surfaces of section for continuous systems: [`poincaresos`](@ref).
 3. Automated production of orbit diagrams for continuous systems: [`produce_orbitdiagram`](@ref).
 
-### [Lyapunov Exponents](@ref)
+## [Lyapunov Exponents](@ref)
 
 1. Maximum Lyapunov exponent: [`lyapunov`](@ref).
 2. Lyapunov spectrum: [`lyapunovspectrum`](@ref).
@@ -48,7 +43,7 @@ All algorithms are independent of each other but they are also not expansive eno
 4. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries or dataset: [`lyapunov_from_data`](@ref).
 
 
-### [Detecting & Categorizing Chaos](@ref)
+## [Detecting & Categorizing Chaos](@ref)
 
 1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
     * Implemented for both discrete and continuous systems.
@@ -57,7 +52,7 @@ All algorithms are independent of each other but they are also not expansive eno
 1. The 0-1 test for chaos: [`testchaos01`](@ref)
 1. The expansion entropy: [`expansionentropy`](@ref).
 
-### [Fractal Dimension](@ref)
+## [Fractal Dimension](@ref)
 
 1. Dozens of methods to calculate a fractal dimension
 1. Entropy-based
@@ -69,21 +64,21 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 * Partitioning a function $y(x)$ vs. $x$ into regions where it is approximated by a straight line, using a flexible algorithm with a lot of control over the outcome. See [`linear_regions`](@ref).
 * Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region.
 
-### [Nonlinear Timeseries Analysis](@ref)
+## [Nonlinear Timeseries Analysis](@ref)
 
 1. Broomhead-King coordinates: [`broomhead_king`](@ref).
 4. DyCA coordinates: [`dyca`](@ref).
 5. [Nearest Neighbor Prediction](@ref).
 6. [Timeseries Surrogates](@ref).
 
-### [Periodicity & Ergodicity](@ref)
+## [Periodicity & Ergodicity](@ref)
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
 2. Estimating the period of a timeseries: [`estimate_period`](@ref).
 3. Return and transit time statistics for a subset of the state space: [`mean_return_times`](@ref), [`exit_entry_times`](@ref).
 
-### [Attractor Basins, Tipping Points](@ref)
+## [Attractor Basins, Tipping Points](@ref)
 * Efficient algorithms for calculating basins of attraction of an arbitrary dynamical system: [`basins_of_attraction`](@ref).
 * Final state sensitivity: [`uncertainty_exponent`](@ref).
 * Tipping points related functionality: [`basin_fractions`](@ref), [`tipping_probabilities`](@ref).
