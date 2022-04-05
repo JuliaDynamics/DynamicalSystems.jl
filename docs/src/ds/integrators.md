@@ -22,6 +22,7 @@ poincaremap
 
 ## Integrator API
 After you have initialized any integrator, you can use the same functions to handle them. The most important function is [`step!`](@ref), that will simply progress the integrator. [`get_state`](@ref) will return its current state. [`reinit!`](@ref) can be used to re-start the integrator at a possibly different new state.
+[`current_time`](@ref) returns the time the integrator is currently at.
 
 Especially for the [`tangent_integrator`](@ref), there are also two more functions: [`get_deviations`](@ref), [`set_deviations`](@ref).
 
@@ -29,6 +30,7 @@ Especially for the [`tangent_integrator`](@ref), there are also two more functio
 step!(ds::DynamicalSystem)
 get_state
 reinit!(ds::DynamicalSystem)
+current_time
 get_deviations
 set_deviations!
 ```
