@@ -102,3 +102,5 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 ## Other NLD-relevant packages
 Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
 
+* [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (same infastructure used for DynamicalSystens.jl), it also has much more things like SDE solvers or uncertainty quantification.
+* [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for _automated_ bifurcation analysis.
