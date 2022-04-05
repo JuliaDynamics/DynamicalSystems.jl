@@ -97,3 +97,8 @@ And, in order to automatically deduce dimensions, we also offer methods for:
     * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
     * [Windowed RQA](@ref) of the above
 * [Recurrence Networks](@ref)
+
+
+## Other NLD-relevant packages
+Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
+
