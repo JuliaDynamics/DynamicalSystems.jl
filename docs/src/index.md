@@ -6,7 +6,7 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    A new [short-length tutorial video](https://www.youtube.com/watch?v=TJqOGsKQti8) is available for DynamicalSystems.jl. It gets you up to speed with the basic things you need to know to use the library!
+    A Springer-Nature textbook on nonlinear dynamics, written using DynamicalSystems.jl, is now out! <https://link.springer.com/book/10.1007/978-3-030-91032-7>
 
 
 !!! tip "Star us on GitHub!"
@@ -47,19 +47,16 @@ The second is much longer and also explains concepts of nonlinear dynamics:
 <iframe width="560" height="500" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
-!!! info "Introductory textbooks"
-    Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
 
-    If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
-    * Chaos in Dynamical Systems - E. Ott
-    * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+## Textbook with DynamicalSystems.jl
+We have written an undergraduate level textbook as an introduction to nonlinear dynamics. The text is written in an applied, hands-on manner, while still covering all fundamentals. The book pages are interlaced with real Julia code that uses DynamicalSystems.jl and is published in the Undergraduate Lecture Notes in Physics by Springer Nature:
+* [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
 
 
-### Advanced Installation
-Notice that for targeted usage of `DynamicalSystems` (e.g. you only need a specific function like [`lyapunovspectrum`](@ref) or [`rqa`](@ref)),
-you don't have to install the entire `DynamicalSystems` suite. You can leave with only installing the necessary package that exports
-the function you need. You see this information prefacing the function. E.g. for `rqa` you will see `RecurrenceAnalysis.rqa`, which
-means that you need to install `RecurrenceAnalysis` to use it.
+Additional textbooks on nonlinear dynamics worth having a look are:
+* Chaos in Dynamical Systems - E. Ott
+* Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+
 
 ## Our Goals
 **DynamicalSystems.jl** was created with three goals in mind.
@@ -107,7 +104,7 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 There are three options for asking questions:
 
 1. Join the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations.
-2. Join our chatroom on [gitter](https://gitter.im/JuliaDynamics/Lobby) or the channel `#dynamics-bridged` in the Julia Slack workplace.
+2. Join our chatroom on [gitter](https://gitter.im/JuliaDynamics/Lobby) or the channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
 3. Open an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example.
 
 ## Contributing & Donating
@@ -132,7 +129,7 @@ The DynamicalSystems.jl software is maintained by [George Datseris](https://gith
 The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
 
 ## Version numbers
-The version of DynamicalSystems.jl is a bit meaningless. The registered package has almost no source code. It only re-exports existing packages such as `ChaosTools`.
+The version of `DynamicalSystems` is a bit meaningless. The registered package has almost no source code. It only re-exports existing packages such as `ChaosTools`.
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
