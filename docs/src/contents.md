@@ -102,5 +102,6 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
 
 * [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (same infastructure used for DynamicalSystens.jl), it also has much more things like SDE solvers or uncertainty quantification.
-* [DiffEqSensitivity.jl](https://github.com/SciML/DiffEqSensitivity.jl) - Sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters.
+* [DiffEqSensitivity.jl](https://github.com/SciML/DiffEqSensitivity.jl) - Discrete and continuous local sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters, hosting [various forward and adjoint methods as well as methods tailored to chaotic systems](https://diffeq.sciml.ai/stable/analysis/sensitivity/).
+* [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
 * [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for _automated_ bifurcation analysis.
