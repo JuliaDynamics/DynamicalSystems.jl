@@ -10,6 +10,12 @@ using Documenter, CairoMakie
 using DocumenterTools: Themes
 import Downloads
 
+# Also bring in visualizations from interactive dynamics docs:
+using InteractiveDynamics
+infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
+outdir = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
+cp(infile, outdir)
+
 # %%
 # download the themes
 for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
@@ -81,6 +87,7 @@ pages = [
         "Windowed RQA" => "rqa/windowed.md",
         "Recurrence Networks" => "rqa/networks.md",
     ],
+    "Interactive GUIs" => "dynamicalsystems_interactive.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
 expandfirst = ["index.md"], #  this is the first script that loads colorscheme
