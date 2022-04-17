@@ -18,7 +18,7 @@ export SVector, SMatrix, @SVector, @SMatrix, Size
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.2.1"
+version_number = "2.3.0"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -29,9 +29,8 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            Brand new `AttractorMapper` infastructure that provides a generic framework
-            for mapping initial conditions to attractors, and hence calculating basins of
-            attraction. See documentation online for more!
+            Interactive GUI for exploring dynamical systems are now in the documentation.
+            Made with Makie.jl + InteractiveDynamics.jl!
             """;
             color = :light_magenta,
         )

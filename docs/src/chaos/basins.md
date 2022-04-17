@@ -15,7 +15,7 @@ AttractorsViaFeaturizing
 
 
 ## Basins of attraction
-Calculating basins of attraction, or their state space fractions, can be done with the functions [`basins_fractions`](@ref) and [`basins_of_attraction`](@ref). See also the convenience [`statespace_sampler`](@ref) and [`matcj_attractors`](@ref).
+Calculating basins of attraction, or their state space fractions, can be done with the functions [`basins_fractions`](@ref) and [`basins_of_attraction`](@ref). See also the convenience [`statespace_sampler`](@ref) and [`match_attractors`](@ref).
 
 ```@docs
 basins_fractions
