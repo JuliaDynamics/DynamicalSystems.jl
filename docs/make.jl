@@ -13,8 +13,8 @@ import Downloads
 # Also bring in visualizations from interactive dynamics docs:
 using InteractiveDynamics
 infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
-outdir = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
-cp(infile, outdir)
+outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
+cp(infile, outfile)
 
 # %%
 # download the themes
@@ -42,6 +42,7 @@ makedocs(
 modules = [
     DynamicalSystems, ChaosTools, DynamicalSystemsBase,
     DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood,
+    InteractiveDynamics,
 ],
 doctest = false,
 sitename = "DynamicalSystems.jl",
