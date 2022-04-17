@@ -9,7 +9,7 @@ The _module_ `DynamicalSystems` re-exports all following functionality.
 
 
 * Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.
-* Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the [Advanced documentation](@ref) for this.
+* Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors: [Available integrators](@ref).
 * Library of [Predefined Dynamical Systems](@ref) that have been used extensively in scientific research.
 * Unified & dedicated interface for numerical data: [`Dataset`](@ref).
 

@@ -133,7 +133,7 @@ The version of `DynamicalSystems` is a bit meaningless. The registered package h
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
-using CairoMakie
+using CairoMakie, InteractiveDynamics
 include("../style.jl")
 ```
 
