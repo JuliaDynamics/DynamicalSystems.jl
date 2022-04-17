@@ -29,18 +29,13 @@ Performing delay coordinate embeddings and finding optimal parameters for doing 
 * Fast calculation of mutual information: [`selfmutualinfo`](@ref).
 * Unified neighborhood interface.
 
-## ChaosTools
-[ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl) is a collection of many algorithms for (chaotic or not) dynamical systems.
-All algorithms are independent of each other but they are also not expansive enough to be a standalone package.
-
-
-### [Orbit Diagrams & PSOS](@ref)
+## [Orbit Diagrams & PSOS](@ref)
 
 1. Orbit diagrams (aka bifurcation diagrams) of maps: [`orbitdiagram`](@ref).
 2. Poincaré surfaces of section for continuous systems: [`poincaresos`](@ref).
 3. Automated production of orbit diagrams for continuous systems: [`produce_orbitdiagram`](@ref).
 
-### [Lyapunov Exponents](@ref)
+## [Lyapunov Exponents](@ref)
 
 1. Maximum Lyapunov exponent: [`lyapunov`](@ref).
 2. Lyapunov spectrum: [`lyapunovspectrum`](@ref).
@@ -48,7 +43,7 @@ All algorithms are independent of each other but they are also not expansive eno
 4. Numerically determining the maximum Lyapunov exponent of a (e.g. experimentally) measured timeseries or dataset: [`lyapunov_from_data`](@ref).
 
 
-### [Detecting & Categorizing Chaos](@ref)
+## [Detecting & Categorizing Chaos](@ref)
 
 1. The Generalized Alignment Index: $\text{GALI}_k$ : [`gali`](@ref).
     * Implemented for both discrete and continuous systems.
@@ -57,7 +52,7 @@ All algorithms are independent of each other but they are also not expansive eno
 1. The 0-1 test for chaos: [`testchaos01`](@ref)
 1. The expansion entropy: [`expansionentropy`](@ref).
 
-### [Fractal Dimension](@ref)
+## [Fractal Dimension](@ref)
 
 1. Dozens of methods to calculate a fractal dimension
 1. Entropy-based
@@ -69,14 +64,14 @@ And, in order to automatically deduce dimensions, we also offer methods for:
 * Partitioning a function $y(x)$ vs. $x$ into regions where it is approximated by a straight line, using a flexible algorithm with a lot of control over the outcome. See [`linear_regions`](@ref).
 * Detection of largest linear region of a function $y(x)$ vs. $x$ and extraction of the slope of this region.
 
-### [Nonlinear Timeseries Analysis](@ref)
+## [Nonlinear Timeseries Analysis](@ref)
 
 1. Broomhead-King coordinates: [`broomhead_king`](@ref).
 4. DyCA coordinates: [`dyca`](@ref).
 5. [Nearest Neighbor Prediction](@ref).
 6. [Timeseries Surrogates](@ref).
 
-### [Periodicity & Ergodicity](@ref)
+## [Periodicity & Ergodicity](@ref)
 
 1. Numerical method to find unstable and stable fixed points of *any order* $n$ of a discrete map (of any dimensionality): [`periodicorbits`](@ref).
     * Convenience functions for defining and realizing all possible combinations of $\mathbf{\Lambda}_k$ matrices required in the above method.
@@ -101,3 +96,13 @@ And, in order to automatically deduce dimensions, we also offer methods for:
     * Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)
     * [Windowed RQA](@ref) of the above
 * [Recurrence Networks](@ref)
+
+
+## Other NLD-relevant packages
+Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
+
+* [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (same infastructure used for DynamicalSystens.jl), it also has much more things like SDE solvers or uncertainty quantification.
+* [DiffEqSensitivity.jl](https://github.com/SciML/DiffEqSensitivity.jl) - Discrete and continuous local sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters, hosting [various forward and adjoint methods as well as methods tailored to chaotic systems](https://diffeq.sciml.ai/stable/analysis/sensitivity/).
+* [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
+* [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for _automated_ bifurcation analysis.
+* [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Package for easily simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
