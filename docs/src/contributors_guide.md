@@ -1,17 +1,14 @@
 # Contributor Guide
 
-*TL;DR: See ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
+*TL;DR: To contribute via Pull Requests see ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
 
 ---
 
 The ultimate goal for **DynamicalSystems.jl** is
-to be a useful *library* for scientists working on chaos, nonlinear dynamics and
-in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.
+to be a useful *library* for scientists working on nonlinear dynamics and to make nonlinear dynamics accessible and reproducible.
 
-For this to be achieved, many of us should try to
-work together to improve the library!
-
-If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
+Of course, for such an ambitious goal to be achieved, many of us should try to
+work together to improve the library! If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
 
 1. Just *use it*. If you encountered unexpected behavior simply report it either on
    our [gitter chatroom](https://gitter.im/JuliaDynamics/Lobby) or using the
@@ -33,9 +30,5 @@ When contributing code, you should keep these things in mind:
   **DynamicalSystems.jl** is to have clear and readable source code. Fortunately,
   Julia allows you to have perfectly readable code but also super fast ;)
   If necessary add comments to the code, so that somebody that knows the method, can also understand the code immediately.
-* For the documentation strings of new methods and systems please follow the convention of the documentation strings of DynamicalSystems.jl. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be.
-* Always have a reference to the original work that introduces the method
-  or the system that you are using. You should put this reference
-  to the main function's documentation string.
-  See the existing documentation strings and do
-  it in a similar manner.
+* Try to design general, extendable functions instead of unnecessarily specialized to the case at hand.
+* For the documentation strings of new methods and systems please follow the convention of the documentation strings of DynamicalSystems.jl. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be. Lastly, papers that are relevant to the method must be cited. Have a look at the documentation strings of `lyapunov` and `lyapunovspectrum` to get an idea.

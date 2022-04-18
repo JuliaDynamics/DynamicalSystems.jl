@@ -1,14 +1,15 @@
 ![DynamicalSystems.jl logo: The Double Pendulum](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true)
 
-**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for the exploration of chaos and nonlinear dynamics.
+**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for dynamical systems, nonlinear dynamics, deterministic chaos, and nonlinear timeseries analysis.
 It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
 
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
-!!! tip "Latest news"
-    Rework and improvement of optimal embedding dimension: [`optimal_traditional_de`](@ref)!
+!!! info "Latest news"
+    A Springer-Nature textbook on nonlinear dynamics, written using DynamicalSystems.jl, is now out! <https://link.springer.com/book/10.1007/978-3-030-91032-7>
 
-!!! info "Star us on GitHub!"
+
+!!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
     This gives us an accurate lower bound of the (satisfied) user count.
 
@@ -17,15 +18,8 @@ To learn how to use this library please see [Getting started](@ref) below, and s
 ```julia
 using Pkg; Pkg.add("DynamicalSystems")
 ```
-The documentation you are reading now was built with the following stable versions:
-```@example versions
-using Pkg
-Pkg.status([
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",
-])
-```
+
+This "Getting started" section is also available as an introductory [video tutorial](https://www.youtube.com/watch?v=TJqOGsKQti8) for those that prefer videos over text!
 
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
 
@@ -34,53 +28,56 @@ The individual packages that compose `DynamicalSystems` interact flawlessly with
 
 These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
 For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
-Alternatively, by using [`numericallyapunov`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory.
+Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
 
 All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
 
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
 
-In addition, a full 2-hours YouTube tutorial is available below:
+In addition, there are two video tutorials hosted on YouTube. The first one is short, gives you the basic idea, and is intended for people already familiar with nonlinear dynamics:
 
 ```@raw html
-<iframe width="560" height="400" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="500" src="https://www.youtube.com/embed/TJqOGsKQti8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
-!!! info "Introductory textbooks"
-    Our library assumes some basic knowledge of nonlinear dynamics and complex systems.
+The second is much longer and also explains concepts of nonlinear dynamics:
 
-    If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:
-    * Chaos in Dynamical Systems - E. Ott
-    * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+```@raw html
+<iframe width="560" height="500" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+```
 
 
-### Advanced Installation
-Notice that for targeted usage of `DynamicalSystems` (e.g. you only need a specific function like [`lyapunovspectrum`](@ref) or [`rqa`](@ref)),
-you don't have to install the entire `DynamicalSystems` suite. You can leave with only installing the necessary package that exports
-the function you need. You see this information prefacing the function. E.g. for `rqa` you will see `RecurrenceAnalysis.rqa`, which
-means that you need to install `RecurrenceAnalysis` to use it. 
+## Textbook with DynamicalSystems.jl
+We have written an undergraduate level textbook as an introduction to nonlinear dynamics. The text is written in an applied, hands-on manner, while still covering all fundamentals. The book pages are interlaced with real Julia code that uses DynamicalSystems.jl and is published in the Undergraduate Lecture Notes in Physics by Springer Nature:
+* [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
+
+
+Additional textbooks on nonlinear dynamics worth having a look are:
+* Chaos in Dynamical Systems - E. Ott
+* Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+
 
 ## Our Goals
 **DynamicalSystems.jl** was created with three goals in mind.
-The first was to fill the missing gap of a software for nonlinear dynamics and chaos of the highest quality (none exist in any programming language).
-The second was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics and chaos.
+The first was to fill the missing gap of a high quality and general purpose software for nonlinear dynamics, which can make the field of nonlinear dynamics accessible and reproducible.
+The second goal was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics.
 
-The third was to fundamentally change the perception of the role of code in both scientific education as well as research.
+The third goal was to fundamentally change the perception of the role of code in both scientific education as well as research.
 It is rarely the case that real, _runnable_ code is shown in the classroom, because it is often long and messy.
 This is especially hurtful for nonlinear dynamics, a field where computer-assisted exploration is critical.
-But published work in this field fares even worse, with the overwhelming majority of published research not sharing the code used to create the paper.
+And published work in this field fares even worse, with the overwhelming majority of published research not sharing the code used to create the paper.
 This makes reproducing these papers difficult, while some times straight-out impossible.
 
 To achieve these goals we made **DynamicalSystems.jl** so that it is:
 
-1. Transparent: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
-1. Intuitive: a software simple to use and understand makes experimentation easier.
-1. Easy to install, easy to extend: This makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
-1. Reliable: the algorithm implementations are tested extensively.
-1. Well-documented: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
-1. General: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
-1. Performant: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
+1. **Transparent**: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
+2. **Intuitive**: a software simple to use and understand makes experimentation easier.
+3. **Easy to extend**: this makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
+4. **Reliable**: the algorithm implementations are tested extensively.
+5. **Well-documented**: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
+6. **General**: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
+7. **Performant**: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Citing
 There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
@@ -101,15 +98,14 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 }
 ```
 
-## Issues with Bounties
-Money that **DynamicalSystems.jl** obtains from awards, sponsors or donators are converted into bounties for GitHub issues. The full list of issues that have a bounty is [available here](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+org%3AJuliaDynamics+label%3Abounty).
 
-By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)
+## Asking questions
 
-## Contacting
+There are three options for asking questions:
 
-Feel free to open issues on GitHub if you have questions and/or suggestions.
-You can also [join our chatroom](https://gitter.im/JuliaDynamics/Lobby) for discussions and/or questions about the packages of the JuliaDynamics organization! If you are using the Julia Slack workplace, please join the channel `#dynamics-bridged`.
+1. Join the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations.
+2. Join our chatroom on [gitter](https://gitter.im/JuliaDynamics/Lobby) or the channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
+3. Open an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example.
 
 ## Contributing & Donating
 
@@ -121,7 +117,35 @@ Be sure to visit the [Contributor Guide](@ref) page, because you can help make t
 
 Finally, you can donate for the development of **DynamicalSystems.jl**. You can do that by adding bounties to existing issues on the GitHub repositories (you can open new issues as well). Every issue has an automatic way to create a bounty using [Bountysource](https://www.bountysource.com/), see the first comment of each issue.
 
-## Maintainers and Contributors
-The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation page.
+### Issues with Bounties
+Money that **DynamicalSystems.jl** obtains from awards, sponsors, or donators are converted into bounties for GitHub issues. The full list of issues that have a bounty is [available here](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+org%3AJuliaDynamics+label%3Abounty).
 
-The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit the GitHub's contributor list for the sub-packages of DynamicalSystems.jl, e.g. [ChaosTools.jl](https://github.com/JuliaDynamics/ChaosTools.jl/graphs/contributors).
+By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)
+
+
+## Maintainers and Contributors
+The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
+
+The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
+
+## Version numbers
+The version of `DynamicalSystems` is a bit meaningless. The registered package has almost no source code. It only re-exports existing packages such as `ChaosTools`.
+For transparency, the packages and versions used to build the documentation you are reading now are:
+
+```@setup MAIN
+using CairoMakie, InteractiveDynamics, DynamicalSystems
+include("../style.jl")
+```
+
+```@example MAIN
+using Pkg
+Pkg.status([
+    "DelayEmbeddings", "RecurrenceAnalysis",
+    "DynamicalSystemsBase", "ChaosTools",
+    "Entropies",];
+    mode = PKGMODE_MANIFEST, io=stdout
+)
+```
+
+!!! warn "Version numbers do not strictly follow SymVer2.0"
+    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are entirely independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.

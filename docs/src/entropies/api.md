@@ -34,5 +34,9 @@ All of the entropy-related quantities boil down to one thing: first extracting p
 
 ```@docs
 genentropy
+```
+
+## Permutation entropy
+```@docs
 permentropy
 ```

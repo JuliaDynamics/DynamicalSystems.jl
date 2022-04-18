@@ -23,7 +23,7 @@ The [JuliaGraphs](https://github.com/JuliaGraphs) organization provides multiple
 
 ```@example MAIN
 using DynamicalSystems
-using LightGraphs
+using LightGraphs: SimpleGraph
 
 he = Systems.henon([0.75, 0.15])
 tr = trajectory(he, 200)

@@ -1,5 +1,42 @@
-# Periodicity & Ergodicity
-In this page we describe methods related to the periodic behavior of dynamical systems or univariate timeseries, *or* related to the ergodic property of chaotic sets.
+# Fixed points & Periodicity
+
+## Fixed points
+```@docs
+fixedpoints
+```
+A rather simple example of the fixed points can be demonstrated using E.g., the Lorenz-63 system, whose fixed points can be easily calculated analytically to be
+the following three
+```math
+(0,0,0) \\
+\left( \sqrt{\beta(\rho-1)}, \sqrt{\beta(\rho-1)}, \rho-1 \right) \\
+\left( -\sqrt{\beta(\rho-1)}, -\sqrt{\beta(\rho-1)}, \rho-1 \right) \\ 
+```
+
+So, let's calculate
+```@example MAIN
+using DynamicalSystems
+ρ, β = 30.0, 10/3
+ds = Systems.lorenz(; ρ, β)
+# Define the box within which to find fixed points:
+x = -20..20
+y = -20..20
+z = 0.0..40
+box = x × y × z
+
+fp, eigs, stable = fixedpoints(ds, box)
+fp
+```
+and compare this with the analytic ones:
+
+```@example MAIN
+lorenzfp(ρ, β) = [
+    SVector(0, 0, 0.0),
+    SVector(sqrt(β*(ρ-1)), sqrt(β*(ρ-1)), ρ-1),
+    SVector(-sqrt(β*(ρ-1)), -sqrt(β*(ρ-1)), ρ-1),
+]
+
+lorenzfp(ρ, β)
+```
 
 ## Stable and Unstable Periodic Orbits of Maps
 Chaotic behavior
@@ -17,7 +54,7 @@ periodicorbits
 lambdamatrix
 lambdaperms
 ```
----
+
 ### Standard Map example
 For example, let's find the fixed points of the [`Systems.standardmap`](@ref) of order 2, 3, 4, 5, 6
 and 8. We will use all permutations for the `signs` but only one for the `inds`.
@@ -25,17 +62,17 @@ We will also only use one `λ` value, and a 21×21 density of initial conditions
 
 First, initialize everything
 ```@example MAIN
-using DynamicalSystems, PyPlot, StaticArrays
+using DynamicalSystems
 
 ds = Systems.standardmap()
-xs = range(0, stop = 2π, length = 21); ys = copy(xs)
+xs = range(0, stop = 2π, length = 11); ys = copy(xs)
 ics = [SVector{2}(x,y) for x in xs for y in ys]
 
 # All permutations of [±1, ±1]:
 singss = lambdaperms(2)[2] # second entry are the signs
 
 # I know from personal research I only need this `inds`:
-indss = [[1,2]] # <- must be container of vectors!!!
+indss = [[1,2]] # <- must be container of vectors!
 
 λs = 0.005 # <- only this allowed to not be vector (could also be vector)
 
@@ -53,6 +90,7 @@ end
 
 Plot the phase space of the standard map
 ```@example MAIN
+using CairoMakie
 iters = 1000
 dataset = trajectory(ds, iters)
 for x in xs
@@ -60,33 +98,31 @@ for x in xs
         append!(dataset, trajectory(ds, iters, SVector{2}(x, y)))
     end
 end
-figure(figsize = (12,12))
-m = Matrix(dataset)
-PyPlot.scatter(view(m, :, 1), view(m, :, 2), s= 1, color = "black")
-PyPlot.xlim(xs[1], xs[end])
-PyPlot.ylim(ys[1], ys[end]);
+
+fig = Figure()
+ax = Axis(fig[1,1]; xlabel = L"\theta", ylabel = L"p",
+    limits = ((xs[1],xs[end]), (xs[1],xs[end]))
+)
+scatter!(ax, dataset[:, 1], dataset[:, 2]; markersize = 1, color = "black")
+fig
 ```
 
 and finally, plot the fixed points
 ```@example MAIN
-markers = ["D", "^", "s", "p", "h", "8"]
-colors = ["b", "g", "r", "c", "m", "grey"]
+markers = [:diamond, :utriangle, :rect, :pentagon, :hexagon, :circle]
 
 for i in 1:6
     FP = ALLFP[i]
     o = orders[i]
-    PyPlot.plot(columns(FP)...,
-    marker=markers[i], color = colors[i], markersize=10.0 + (8-o), linewidth=0.0,
-    label = "order $o", markeredgecolor = "yellow", markeredgewidth = 0.5)
+    scatter!(ax, columns(FP)...; marker=markers[i], color = Cycled(i),
+        markersize = 30 - 2i, strokecolor = "grey", strokewidth = 1, label = "order $o"
+    )
 end
-legend(loc="upper right", framealpha=0.9)
-xlabel("\$\\theta\$")
-ylabel("\$p\$")
-savefig("fixedpoints.png"); nothing # hide
+axislegend(ax)
+fig
 ```
-![Fixed points of the standard map](fixedpoints.png)
 
-You can confirm for yourself that this is correct, for many reasons:
+Okay, this output is great, and we can easily tell that it is correct for many reasons:
 
 1. It is the same [fig. 12 of this publication](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.92.012914).
 2. Fixed points of order $n$ are also fixed points of order $2n, 3n, 4n, ...$
@@ -96,19 +132,21 @@ You can confirm for yourself that this is correct, for many reasons:
 
 ## Estimating the Period
 
-The function [`estimate_period`](@ref) from `ChaosTools` offers ways for estimating the period (either exact for periodic timeseries, or approximate for near-periodic ones) of a given timeseries.
+The function [`estimate_period`](@ref) offers ways for estimating the period (either exact for periodic timeseries, or approximate for near-periodic ones) of a given timeseries.
 We offer five methods to estimate periods, some of which work on evenly sampled data only, and others which accept any data.
 The figure below summarizes this:
 ![](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/periodestimationmethods.png?raw=true)
 
 ```@docs
 estimate_period
+yin
+ChaosTools.difference_function_original
 ```
 
 ### Example
 Here we will use a modified FitzHugh-Nagumo system that results in periodic behavior, and then try to estimate its period. First, let's see the trajectory:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 function FHN(u, p, t)
     e, b, g = p
@@ -122,15 +160,13 @@ g, e, b  = 0.8, 0.04, 0.0
 p0 = [e, b, g]
 
 fhn = ContinuousDynamicalSystem(FHN, SVector(-2, -0.6667), p0)
-T, dt = 1000.0, 0.1
-v = trajectory(fhn, T; dt = dt)[:, 1]
-t = 0:dt:T
+T, Δt = 1000.0, 0.1
+v = trajectory(fhn, T; Δt)[:, 1]
+t = 0:Δt:T
 
-figure()
-plot(0:dt:T, v)
-savefig("fhn_trajectory.png"); nothing # hide
+fig, ax = lines(0:Δt:T, v)
+fig
 ```
-![A periodic trajectory](fhn_trajectory.png)
 
 Examining the figure, one can see that the period of the system is around `91` time units. To estimate it numerically let's use some of the methods:
 ```@example MAIN
@@ -142,10 +178,6 @@ estimate_period(v, :periodogram, t)
 ```@example MAIN
 estimate_period(v, :zerocrossing, t)
 ```
-
-## Return time statistics
-
-```@docs
-mean_return_times
-exit_entry_times
+```@example MAIN
+estimate_period(v, :yin, t; sr=round(Int, (1/Δt)), f0_min=0.01)
 ```

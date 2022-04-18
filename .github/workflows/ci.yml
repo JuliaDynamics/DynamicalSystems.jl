@@ -15,16 +15,50 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1' # Replace this with the minimum Julia version that your package supports. E.g. if your package requires Julia 1.5 or higher, change this to '1.5'.
+          - '1'
         os:  [ubuntu-latest]
         arch:
           - x64
     steps:
+      # Cancel ongoing CI test runs if pushing to branch again before the previous tests
+      # have finished
+      - name: Cancel ongoing test runs for previous commits
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      # Do tests
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+      - uses: actions/cache@v2
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+      - uses: julia-actions/julia-buildpkg@latest
+      - uses: julia-actions/julia-runtest@latest
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      # Cancel ongoing documentation build if pushing to branch again before the previous
+      # build is finished.
+      - name: Cancel ongoing builds and checkout
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
@@ -35,27 +69,14 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
-  docs:
-    name: Documentation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: julia-actions/setup-julia@v1
-        with:
-          version: '1'
       - name: Instantiate and install dependencies
         run: |
           julia --project=docs -e '
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.instantiate()
-            ENV["PYTHON"] = ""
-            Pkg.build("PyCall")'
+            Pkg.instantiate()'
       - name: Generate documentation and deploy
         env: # needed for pushing to gh-pages branch
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
-        run:
-          julia --project=docs docs/make.jl
+        run: julia --project=docs --color=yes docs/make.jl

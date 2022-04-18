@@ -1,12 +1,14 @@
 # Fractal Dimension
 
 There are numerous methods that one can use to calculate a so-called "dimension" of a dataset which in the context of dynamical systems is called the [Fractal dimension](https://en.wikipedia.org/wiki/Fractal_dimension).
-Several variants of a computationally feasible fractal dimension exist.
+Several variants of a computationally feasible fractal dimension exist and a simple usage example is shown in the [Fractal dimension example](@ref) subsection.
 
 ## Generalized dimension
-Based on the definition of the [Generalized entropy](#ChaosTools.genentropy), one can calculate an appropriate dimension, called *generalized dimension*:
+Based on the definition of the Generalized entropy ([`genentropy`](@ref)), one can calculate an appropriate dimension, called *generalized dimension*:
 ```@docs
 generalized_dim
+molteno_dim
+molteno_boxing
 ```
 
 !!! danger "Be wary when using `generalized_dim`"
@@ -15,10 +17,10 @@ generalized_dim
     an actual function and therefore you should be careful
     when considering the validity of the returned number.
 
-### Example
+## Fractal dimension example
 For an example of using entropies to compute the dimension of an attractor let's use everyone's favorite system:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 lor = Systems.lorenz()
 ```
 
@@ -32,35 +34,32 @@ Hs = genentropy.(Ref(tr), ες; q = 1)
 
 ```@example MAIN
 xs = @. -log(ες)
-figure()
-plot(xs, Hs)
-ylabel("\$H_1\$")
-xlabel("\$-\\log (\\epsilon)\$");
-savefig("genentropy1.png"); nothing # hide
+fig = Figure(resolution = (500,500))
+ax = Axis(fig[1,1]; ylabel = L"H_1", xlabel = L"-\log (\epsilon)")
+lines!(ax, xs, Hs)
+fig
 ```
-![](genentropy1.png)
 
-The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 2) for the attractor of the Lorenz system.
+The slope of the linear scaling region of the above plot is the generalized dimension (of order q = 1) for the attractor of the Lorenz system.
 
 Given that we _see_ the plot, we can estimate where the linear scaling region starts and ends. However, we can use the function [`linear_region`](@ref) to get an estimate of the result as well. First let's visualize what it does:
 
 ```@example MAIN
 lrs, slopes = linear_regions(xs, Hs, tol = 0.25)
 
-figure()
-for i in 1:length(lrs)-1
-    plot(xs[lrs[i]:lrs[i+1]], Hs[lrs[i]:lrs[i+1]], marker = "o")
-end
-ylabel("\$H_1\$")
-xlabel("\$-\\log (\\epsilon)\$");
-savefig("genentropy2.png"); nothing # hide
-```
-![](genentropy2.png)
+fig = Figure(resolution = (500,500))
+ax = Axis(fig[1,1]; ylabel = L"H_1", xlabel = L"-\log (\epsilon)")
 
-The [`linear_region`](@ref) function  computes the slope of the largest region:
+for i in 1:length(lrs)-1
+    scatterlines!(ax, xs[lrs[i]:lrs[i+1]], Hs[lrs[i]:lrs[i+1]])
+end
+fig
+```
+
+The [`linear_region`](@ref) function computes the slope of the largest region:
 
 ```@example MAIN
-linear_region(xs, Hs)[2]
+Δ = linear_region(xs, Hs)[2]
 ```
 This result is an approximation of the information dimension (because we used `q = 1`) of the Lorenz attractor.
 
@@ -81,7 +80,7 @@ J.-P. Eckmann and D. Ruelle (see Physica D **56**, pp 185-187 (1992)).
 
 
 ## Linear scaling regions
-And other utilities, especially [`linreg`](@ref), used in both [`generalized_dim`] and [`grassberger`](@ref).
+And other utilities, especially [`linreg`](@ref), used in both [`generalized_dim`] and [`grassberger_dim`](@ref).
 ```@docs
 linear_regions
 linear_region
@@ -89,11 +88,19 @@ linreg
 estimate_boxsizes
 ```
 
-## Correlation dimension
+## Correlation sum based dimension
 ```@docs
-kernelprob
 correlationsum
-grassberger
+grassberger_dim
+boxed_correlationsum
+data_boxing
+estimate_r0_buenoorovio
+estimate_r0_theiler
+correlationsum_fixedmass
+```
+
+## Takens' best estimate
+```@docs 
 takens_best_estimate
 ```
 

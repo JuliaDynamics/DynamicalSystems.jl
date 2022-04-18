@@ -1,0 +1,36 @@
+name: Pkg.update
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          # Keep in sync with the ci.yml and the Dockerfile
+          version: "1"
+      - name: 'Pkg.update'
+        run: |
+          julia --project=. -e 'using Pkg; Pkg.update()'
+          echo 'PKG_DIFF<<EOF' >> $GITHUB_ENV
+          echo 'pkg> status --project --diff' >> $GITHUB_ENV
+          julia --project=. -e 'using Pkg; Pkg.status(; mode=PKGMODE_PROJECT, diff=true)' >> $GITHUB_ENV
+          echo '' >> $GITHUB_ENV
+          echo 'pkg> status --manifest --diff' >> $GITHUB_ENV
+          julia --project=. -e 'using Pkg; Pkg.status(; mode=PKGMODE_MANIFEST, diff=true)' >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: 'Create pull request'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: 'Automatic Pkg.update()'
+          author: 'GitHub <noreply@github.com>'
+          body: |
+            Automatic `Pkg.update()` with the following changes:
+            ```
+            ${{ env.PKG_DIFF }}
+            ```
+          commit-message: |
+            Automatic Pkg.update() with the following changes:
+            ${{ env.PKG_DIFF }}

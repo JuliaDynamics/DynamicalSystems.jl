@@ -15,162 +15,92 @@ It is one of the most recent and cheapest methods for distinguishing chaotic and
 ```@docs
 gali
 ```
----
+
+
 ### Discrete Example
 We will use 3 coupled standard maps as an example for a discrete system:
 ```@example MAIN
 using DynamicalSystems
-using PyPlot
 M = 3; ks = 3ones(M); Γ = 0.1;
 stable = [π, π, π, 0.01, 0, 0] .+ 0.1
 chaotic = rand(2M)
 
-ds = Systems.coupledstandardmaps(M, stable; ks=ks, Γ = Γ)
+ds = Systems.coupledstandardmaps(M, stable; ks, Γ)
 ```
 
-First, let's see the behavior of GALI for a stable orbit
+For this example we will see the behavior of GALI for a stable orbit
 ```@example MAIN
-figure(figsize = (8,4))
+using CairoMakie
 tr = trajectory(ds, 100000)
 
-subplot(1,2,1)
-plot(tr[:,1], tr[:,1+M], alpha = 0.5,
-label="stable",marker="o", ms=1, linewidth=0)
-legend()
+fig, ax = scatter(tr[:,1], tr[:,1+M]; label="stable", markersize=4)
+axislegend(ax)
 
-subplot(1,2,2)
+ax = Axis(fig[1,2])
 for k in [4, 5, 6]
     g, t = gali(ds, 1e5, k; threshold=1e-12)
-    lt = log10.(t); lg = log10.(g)
-    plot(lt, lg, label="GALI_$(k)")
+    lines!(ax, log10.(t), log10.(g); label="GALI_$(k)")
 end
 lt = 2:0.5:5.5
-plot(lt, -2(lt .- 3), label="slope -2")
-plot(lt, -4(lt .- 3), label="slope -4")
-plot(lt, -6(lt .- 3), label="slope -6")
+lines!(ax, lt, -2(lt .- 3), label="slope -2")
+lines!(ax, lt, -4(lt .- 3), label="slope -4")
+lines!(ax, lt, -6(lt .- 3), label="slope -6")
 
-xlim(2, 5.5)
-ylim(-12, 2)
-legend()
-tight_layout()
-savefig("gali_discrete_stable.png"); nothing # hide
+xlims!(ax, 2, 5.5)
+ylims!(ax, -12, 2)
+fig
 ```
-![gali_discrete_stable](gali_discrete_stable.png)
-
-Now do the same for a chaotic orbit
-
-```@example MAIN
-figure(figsize = (8,4))
-tr = trajectory(ds, 100000, chaotic)
-subplot(1,2,1)
-plot(tr[:,1], tr[:,1+M], alpha = 0.5,
-label="chaotic",marker="o", ms=1, linewidth=0)
-legend()
-
-subplot(1,2,2)
-ls = lyapunovspectrum(ds, 100000; u0 = chaotic)
-for k in [2,3,6]
-    ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k; u0 = chaotic)
-    semilogy(t, exp.(-ex.*t), label="exp. k=$k")
-    semilogy(t, g, label="GALI_$(k)")
-end
-legend()
-xlim(0,100)
-ylim(1e-12, 1)
-savefig("gali_discrete_chaos.png"); nothing # hide
-```
-![gali_discrete_chaos](gali_discrete_chaos.png)
-
 
 ### Continuous Example
 As an example of a continuous system, let's see the Henon-Heiles:
 ```@example MAIN
 using DynamicalSystems
-using PyPlot, OrdinaryDiffEq
+using CairoMakie, OrdinaryDiffEq
+Δt = 1.0
+diffeq = (abstol=1e-9, retol=1e-9, alg = Vern9(), maxiters = typemax(Int))
 sp = [0, .295456, .407308431, 0] # stable periodic orbit: 1D torus
 qp = [0, .483000, .278980390, 0] # quasiperiodic orbit: 2D torus
 ch = [0, -0.25, 0.42081, 0]      # chaotic orbit
 ds = Systems.henonheiles(sp)
 ```
-First, we see the behavior with a stable periodic orbit
+Let's see what happens with a quasi-periodic orbit:
 ```@example MAIN
-figure(figsize = (8,4))
-subplot(1,2,1)
-dt = 1.0
+tr = trajectory(ds, 10000.0, qp; Δt, diffeq)
+fig, ax = scatter(tr[:,1], tr[:,3]; label="qp", markersize=2)
+axislegend(ax)
 
-diffeq = (abstol=1e-9, reltol=1e-9, alg = Tsit5(), maxiters = typemax(Int))
-tr = trajectory(ds, 10000.0; dt=dt, diffeq...)
-plot(tr[:,1], tr[:,3], alpha = 0.5,
-label="sp",marker="o",markersize=2, linewidth=0)
-legend()
-
-subplot(1,2,2)
+ax = Axis(fig[1,2]; yscale = log)
 for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; dt = dt, diffeq...)
-    loglog(t, g, label="GALI_$(k)")
-    if k < 4
-        loglog(t, 100 ./ t.^(k-1), label="slope -$(k-1)")
-    else
-        loglog(t, 10000 ./ t.^(2k-4), label="slope -$(2k-4)")
-    end
-end
-ylim(1e-12, 2)
-legend();
-savefig("gali_cont_stable.png"); nothing # hide
-```
-![gali_cont_stable](gali_cont_stable.png)
-
-Next, let's see what happens with a quasi-periodic orbit.
-Don't forget to change the `u0` arguments!
-```@example MAIN
-figure(figsize = (8,4))
-subplot(1,2,1)
-tr = trajectory(ds, 10000.0, qp; dt=dt, diffeq...)
-plot(tr[:,1], tr[:,3], alpha = 0.5,
-label="qp",marker="o",markersize=2, linewidth=0)
-legend()
-
-subplot(1,2,2)
-for k in [2,3,4]
-    g, t = gali(ds, 10000.0, k; u0 = qp, dt = dt, diffeq...)
-    loglog(t, g, label="GALI_$(k)")
+    g, t = gali(ds, 10000.0, k; u0 = qp, Δt, diffeq)
+    logt = log.(t)
+    lines!(ax, logt, g; label="GALI_$(k)")
     if k == 2
-        loglog(t, 1 ./ t.^(2k-4), label="slope -$(2k-4)")
+        lines!(ax, logt, 1 ./ t.^(2k-4); label="slope -$(2k-4)")
     else
-        loglog(t, 100 ./ t.^(2k-4), label="slope -$(2k-4)")
+        lines!(ax, logt, 100 ./ t.^(2k-4); label="slope -$(2k-4)")
     end
 end
-ylim(1e-12, 2)
-legend()
-tight_layout()
-savefig("gali_cont_quasi.png"); nothing # hide
+ylims!(ax, 1e-12, 2)
+fig
 ```
-![gali_cont_quasi](gali_cont_quasi.png)
 
 Finally, here is GALI of a continuous system with a chaotic orbit
 ```@example MAIN
-figure(figsize = (8,4))
-tr = trajectory(ds, 10000.0, ch; dt=dt, diffeq...)
-subplot(1,2,1)
-plot(tr[:,1], tr[:,3], alpha = 0.5,
-label="ch",marker="o",markersize=2, linewidth=0)
-legend()
+tr = trajectory(ds, 10000.0, ch; Δt, diffeq)
+fig, ax = scatter(tr[:,1], tr[:,3]; label="ch", markersize=2, color = (Main.COLORS[1], 0.5))
+axislegend(ax)
 
-subplot(1,2,2)
-ls = lyapunovspectrum(ds, 5000.0; dt=dt, u0 = ch, diffeq...)
+ax = Axis(fig[1,2]; yscale = log)
+ls = lyapunovspectrum(ds, 5000.0; Δt, u0 = ch, diffeq)
 for k in [2,3,4]
     ex = sum(ls[1] - ls[j] for j in 2:k)
-    g, t = gali(ds, 1000, k; u0 = ch, dt = dt, diffeq...)
-    semilogy(t, exp.(-ex.*t), label="exp. k=$k")
-    semilogy(t, g, label="GALI_$(k)")
+    g, t = gali(ds, 1000, k; u0 = ch, Δt = Δt, diffeq)
+    lines!(t, exp.(-ex.*t); label="exp. k=$k")
+    lines!(t, g; label="GALI_$(k)")
 end
-legend()
-ylim(1e-16, 1)
-tight_layout()
-savefig("gali_cont_chaos.png"); nothing # hide
+ylims!(ax, 1e-16, 1)
+fig
 ```
-![gali_cont_chaos](gali_cont_chaos.png)
 
 As you can see, the results of both discrete and continuous systems match very well the theory described in [`gali`](@ref).
 
@@ -204,7 +134,7 @@ for (i, θ) ∈ enumerate(θs[1:dens])
         reinit!(tinteg, u0, orthonormal(2,2))
 
         # Low-level call signature of gali:
-        #  gali(tinteg, tmax, dt, threshold)
+        #  gali(tinteg, tmax, Δt, threshold)
         chaoticity[i, j] = gali(tinteg, 500, 1, 1e-12)[2][end]
     end
 end
@@ -228,20 +158,25 @@ at different energies. At each energy [`gali`](@ref) is used to color-code
 each initial condition according to how chaotic/regular it is, i.e. how much time
 does it need to exceed the `threshold` of [`gali`](@ref).
 
-<video width="100%" height="auto" controls>
+
+```@raw html
+<video width="100%" height="auto" controls loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true" type="video/mp4">
 </video>
-
-You can download the video using [this link](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/gali_psos_henonhelies.mp4?raw=true).
-
-You can find the script that produced this animation in
-`DynamicalSystems/docs/coolanimations/gali_psos_henonhelies.jl`.
+```
 
 ## Predictability of a chaotic system
-Even if a system is "formally" chaotic, it can still be in phases where it is very predictable, because the correlation coefficient between nearby trajectories vanishes very slowly with time.
-[Wernecke, Sándor & Gros](https://www.nature.com/articles/s41598-017-01083-x) have developed an algorithm that allows one to classify a dynamical system to one of three categories: strongly chaotic, partially predictable chaos or regular (called *laminar* in their paper).
+Even if a system is "formally" chaotic, it can still be in phases where it is partially
+predictable, because the correlation coefficient between nearby trajectories vanishes
+very slowly with time.
+[Wernecke, Sándor & Gros](https://www.nature.com/articles/s41598-017-01083-x) have
+developed an algorithm that allows one to classify a dynamical system to one of three
+categories: strongly chaotic, partially predictable chaos or regular 
+(called *laminar* in their paper).
 
-We have implemented their algorithm in the function [`predictability`](@ref). **Note** that we set up the implementation to always return regular behavior for negative Lyapunov exponent. You may want to override this for research purposes.
+We have implemented their algorithm in the function [`predictability`](@ref).
+Note that we set up the implementation to always return regular behavior for negative
+Lyapunov exponent. You may want to override this for research purposes.
 
 ```@docs
 predictability
@@ -251,35 +186,39 @@ predictability
 We will create something similar to figure 2 of the paper, but for the Hénon map.
 
 ```@example MAIN
-figure()
+fig = Figure()
+ax = Axis(fig[1,1]; xlabel = L"a", ylabel = L"x")
 he = Systems.henon()
 as = 0.8:0.01:1.225
 od = orbitdiagram(he, 1, 1, as; n = 2000, Ttr = 2000)
-colors = Dict(:REG => "b", :PPC => "g", :SC => "r")
+colors = Dict(:REG => "blue", :PPC => "green", :SC => "red")
 for (i, a) in enumerate(as)
     set_parameter!(he, 1, a)
     chaos_type, ν, C = predictability(he; T_max = 400000, Ttr = 2000)
-    scatter(a .* ones(length(od[i])), od[i], c = colors[chaos_type], s = 2,
-    alpha = 0.05)
+    scatter!(ax, a .* ones(length(od[i])), od[i]; 
+    color = (colors[chaos_type], 0.05), markersize = 2)
 end
-xlabel("\$a\$"); ylabel("\$x\$")
-title("predictability of Hénon map"); tight_layout()
-savefig("partial_henon.png"); nothing # hide
+ax.title = "predictability of Hénon map"
+fig
 ```
-![partial_henon](partial_henon.png)
 
 ## The 0-1 test for chaos
 The methods mentioned in this page so far require a `DynamicalSystem` instance.
-But of course this is not always the case. The so-called "0 to 1" test for chaos, by Gottwald & Melbourne, takes as an input a timeseries and outputs a boolean `true` if the timeseries is chaotic or `false` if it is not.
+But of course this is not always the case. The so-called "0 to 1" test for chaos, by 
+Gottwald & Melbourne, takes as an input a timeseries and outputs a boolean `true` if 
+the timeseries is chaotic or `false` if it is not.
 
-Notice that the method does have a lot of caveats, so you should read the review paper before using.
+Notice that the method does have a lot of caveats, so you should read the review paper 
+before using. Also, it doesn't work for noisy data.
 
 ```@docs
 testchaos01
 ```
 
 ## Expansion entropy
-The expansion entropy is a quantity that is suggested by B. Hunt and E. Ott as a measure that can define chaos (so far no widely accepted definition of chaos exists). Positive expansion entropy means chaos.
+The expansion entropy is a quantity that is suggested by B. Hunt and E. Ott as a measure 
+that can define chaos (so far no widely accepted definition of chaos exists). 
+Positive expansion entropy means chaos.
 
 ```@docs
 expansionentropy

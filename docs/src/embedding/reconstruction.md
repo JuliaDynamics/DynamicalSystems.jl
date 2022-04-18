@@ -9,42 +9,40 @@ Delay embeddings are done through `embed`:
 embed
 ```
 
+!!! note "Embedding discretized data values"
+    If the data values are very strongly discretized (e.g., integers or floating-point numbers with very small bits), this can result to distances between points in the embedded space being 0. This is problematic for several library functions. Best practice here is to add noise to your original timeseries _before_ embedding, e.g., `s = s .+ 1e-15randn(length(s))`.
+
 ---
 
 Here are some examples of embedding a 3D continuous chaotic system:
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.gissinger(ones(3))
-data = trajectory(ds, 1000.0, dt = 0.05)
-
+data = trajectory(ds, 1000.0; Ttr = 100, Δt = 0.05)
 xyz = columns(data)
 
-figure(figsize = (12,10))
-k = 1
+fig = Figure(resolution = (1000, 800))
+kk = 1
 for i in 1:3
-    for τ in [5, 30, 100]
+    for (j,τ) in enumerate([5, 30, 100])
         R = embed(xyz[i], 2, τ)
-        ax = subplot(3,3,k)
-        plot(R[:, 1], R[:, 2], color = "C$(k-1)", lw = 0.8)
-        title("var = $i, τ = $τ")
-        global k+=1
+        ax = Axis(fig[i,j]; title = "var = $i, τ = $τ")
+        lines!(ax, R[:, 1], R[:, 2], color = Cycled(kk), linewidth=1.5)
+        global kk+=1
     end
 end
 
-tight_layout()
-suptitle("2D reconstructed space")
-subplots_adjust(top=0.9)
-savefig("simple_reconstruction.png"); nothing # hide
+Label(fig[0, :], "2D reconstructed space")
+fig
 ```
-![](simple_reconstruction.png)
 
-!!! note "`τ` and `dt`"
-    Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `dt`. In the above example the value `τ=30` is good, *only* for the case
-    of using `dt = 0.05`. For shorter/longer `dt` one has to adjust properly `τ` so that their product `τ*dt` is the same.
+!!! note "`τ` and `Δt`"
+    Keep in mind that whether a value of `τ` is "reasonable" for continuous systems depends on `Δt`. In the above example the value `τ=30` is good, *only* for the case
+    of using `Δt = 0.05`. For shorter/longer `Δt` one has to adjust properly `τ` so that their product `τ*Δt` is the same.
 
-### Embedding Functors
-The high level function [`embed`](@ref) utilize a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface. The low level interface is composed of the following two structures:
+### Embedding Structs
+The high level function [`embed`](@ref) utilizes a low-level interface for creating embedded vectors on-the-fly. The high level interface simply loops over the low level interface.
 ```@docs
 DelayEmbedding
 τrange

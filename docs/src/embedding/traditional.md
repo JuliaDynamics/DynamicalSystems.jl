@@ -23,9 +23,9 @@ It is also trivial to define it yourself using [`genentropy`](@ref) by doing
 
 ```julia
 function mutualinfo(x, y, est; base = 2, α = 1)
-    X = genentropy(Dataset(x), est; base = base, α = α)
-    Y = genentropy(Dataset(y), est; base = base, α = α)
-    XY = genentropy(Dataset(x, y), est; base = base, α = α)
+    X = genentropy(Dataset(x), est; base, α)
+    Y = genentropy(Dataset(y), est; base, α)
+    XY = genentropy(Dataset(x, y), est; base, α)
     return X + Y - XY
 end
 ```
@@ -42,27 +42,27 @@ DelayEmbeddings.stochastic_indicator
 
 ## Example
 ```@example MAIN
-using DynamicalSystems, PyPlot
+using DynamicalSystems, CairoMakie
 
 ds = Systems.roessler()
 # This trajectory is a chaotic attractor with fractal dim ≈ 2
 # therefore the set needs at least embedding dimension of 3
-tr = trajectory(ds, 1000.0; dt = 0.05)
+tr = trajectory(ds, 1000.0; Δt = 0.05)
 x = tr[:, 1]
 
 dmax = 7
-fig = figure()
+fig = Figure()
+ax = Axis(fig[1,1])
 for (i, method) in enumerate(["afnn", "fnn", "f1nn", "ifnn"])
     # Plot statistic used to estimate optimal embedding
     # as well as the automated output embedding
     𝒟, τ, E = optimal_traditional_de(x, method; dmax)
-    plot(1:dmax, E; label = method, marker = "o", ms = 5, color = "C$(i-1)")
+    lines!(ax, 1:dmax, E; label = method, marker = :circle, color = Cycled(i))
     optimal_d = size(𝒟, 2)
-    scatter(optimal_d, E[optimal_d]; marker = "s", s = 100, color = "C$(i-1)")
+    scatter!(ax, [optimal_d], [E[optimal_d]]; marker = :rect, color = Cycled(i))
 end
-legend(); xlabel("embedding dimension")
-ylabel("estimator")
-tight_layout()
-fig.savefig("estimateD.png"); nothing # hide
+axislegend(ax)
+ax.xlabel = "embedding dimension"
+ax.ylabel = "estimator"
+fig
 ```
-![](estimateD.png)

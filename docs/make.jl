@@ -1,4 +1,3 @@
-cd(@__DIR__)
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 using Pkg
 Pkg.activate(@__DIR__)
@@ -7,13 +6,20 @@ CI && Pkg.instantiate()
 using DynamicalSystems
 using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
 using Neighborhood
-using Documenter, PyPlot
+using Documenter, CairoMakie
 using DocumenterTools: Themes
+import Downloads
+
+# Also bring in visualizations from interactive dynamics docs:
+using InteractiveDynamics
+infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
+outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
+cp(infile, outfile)
 
 # %%
 # download the themes
 for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
-    download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
+    Downloads.download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
 end
 # create the themes
 for w in ("light", "dark")
@@ -25,20 +31,21 @@ end
 Themes.compile(joinpath(@__DIR__, "juliadynamics-light.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-light.css"))
 Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-dark.css"))
 
-# %% Style for plots inside documentation
+# %% Build docs
+# Style for plots inside documentation
 include("style.jl")
 
-# %% Build docs
-PyPlot.ioff()
 cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
 
-
 makedocs(
-modules=[DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-         DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood],
-doctest=false,
-sitename= "DynamicalSystems.jl",
+modules = [
+    DynamicalSystems, ChaosTools, DynamicalSystemsBase,
+    DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood,
+    InteractiveDynamics,
+],
+doctest = false,
+sitename = "DynamicalSystems.jl",
 root = @__DIR__,
 format = Documenter.HTML(
     prettyurls = CI,
@@ -55,15 +62,16 @@ pages = [
         "Dynamical System Definition" => "ds/general.md",
         "Predefined Dynamical Systems" => "ds/predefined.md",
         "Numerical Data" => "embedding/dataset.md",
-    ],
-    "Entropies" => [
-        "Entropies & Probabilities" => "entropies/api.md",
-        "Probabilities Estimators" => "entropies/estimators.md",
+        "Integrators" => "ds/integrators.md",
     ],
     "DelayEmbeddings" => [
         "Delay Coordinates Embedding" => "embedding/reconstruction.md",
         "Traditional Optimal Embedding" => "embedding/traditional.md",
         "Unified Optimal Embedding" => "embedding/unified.md",
+        ],
+    "Entropies" => [
+        "Entropies & Probabilities" => "entropies/api.md",
+        "Probabilities Estimators" => "entropies/estimators.md",
     ],
     "ChaosTools" => [
        "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
@@ -71,19 +79,19 @@ pages = [
        "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
        "Fractal Dimension" => "chaos/fractaldim.md",
        "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       "Periodicity & Ergodicity" => "chaos/periodicity.md",
-       "Choosing a solver" => "chaos/choosing.md",
+       "Fixed points & Periodicity" => "chaos/periodicity.md",
+       "Attractors, Basins, Tipping Points" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [
         "Recurrence Plots" => "rqa/rplots.md",
         "Recurrence Quantification Analysis" => "rqa/quantification.md",
         "Windowed RQA" => "rqa/windowed.md",
-        "Recurrence Network Analysis" => "rqa/networks.md",
+        "Recurrence Networks" => "rqa/networks.md",
     ],
-    "Advanced Documentation" => "advanced.md",
+    "Interactive GUIs" => "dynamicalsystems_interactive.md",
     "Contributor Guide" => "contributors_guide.md",
 ],
-expandfirst = ["index.md"],
+expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )
 
 if CI
@@ -93,6 +101,3 @@ if CI
         push_preview = true
     )
 end
-
-PyPlot.close("all")
-PyPlot.ion()

@@ -3,10 +3,6 @@ A Julia suite for chaos and nonlinear dynamics
 """
 module DynamicalSystems
 
-using StaticArrays
-
-export SVector, SMatrix, @SVector, @SMatrix, Size
-
 using Reexport
 
 @reexport using DelayEmbeddings
@@ -15,25 +11,32 @@ using Reexport
 @reexport using ChaosTools
 @reexport using RecurrenceAnalysis
 
-display_update = false
-update_name = "update_v1.4.0"
+# Also export some static array stuff
+using DelayEmbeddings.StaticArrays
+export SVector, SMatrix, @SVector, @SMatrix, Size
+
+# Update messages:
+using Scratch
+display_update = true
+version_number = "2.3.0"
+update_name = "update_v$(version_number)"
 
 if display_update
-if !isfile(joinpath(@__DIR__, update_name))
-printstyled(stdout,
-"""
-\nUpdate message: DynamicalSystems v1.3
-
-A method that estimates the predictability properties of a
-dynamical system has been implemented, following the work of:
-
-Wernecke, H., Sándor, B. & Gros, C.
-*How to test for partially predictable chaos*.
-
-See the function `predictability`.\n
-"""; color = :light_magenta)
-touch(joinpath(@__DIR__, update_name))
+    # Get scratch space for this package
+    versions_dir = @get_scratch!("versions")
+    if !isfile(joinpath(versions_dir, update_name))
+        printstyled(
+            stdout,
+            """
+            \nUpdate message: DynamicalSystems v$(version_number)\n
+            Interactive GUI for exploring dynamical systems are now in the documentation.
+            Made with Makie.jl + InteractiveDynamics.jl!
+            """;
+            color = :light_magenta,
+        )
+        touch(joinpath(versions_dir, update_name))
+    end
 end
-end
+
 
 end # module
