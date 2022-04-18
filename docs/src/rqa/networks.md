@@ -23,7 +23,7 @@ The [JuliaGraphs](https://github.com/JuliaGraphs) organization provides multiple
 
 ```@example MAIN
 using DynamicalSystems
-using LightGraphs: SimpleGraph
+using Graphs: SimpleGraph
 
 he = Systems.henon([0.75, 0.15])
 tr = trajectory(he, 200)
@@ -31,13 +31,12 @@ R = RecurrenceMatrix(tr, 0.25; metric = Chebyshev())
 network = SimpleGraph(R)
 ```
 
-There are various [plotting tools](https://juliagraphs.org/LightGraphs.jl/stable/plotting/) that can be used to visualize such graphs. For instance, the following plot made with the package [GraphPlot](https://github.com/JuliaGraphs/GraphPlot.jl) displays the links between the nodes of the network, which are positioned in the corresponding X-Y coordinates of the original time series for clarity:
+There are various plotting tools that can be used to visualize such graphs. For instance, the following plot made with the package [GraphMakie.jl](https://github.com/JuliaPlots/GraphMakie.jl).
 
-```julia
-using GraphPlot
-gplot(network, tr[:,1], tr[:,2])
+```@example MAIN
+using GraphMakie, CairoMakie
+graphplot(network)
 ```
-![](henon_network.svg)
 
 ## Recurrence Network measures
 
