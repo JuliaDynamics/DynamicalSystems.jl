@@ -122,8 +122,7 @@ skeletonize
 
 Consider, e.g. a skeletonized version of a simple sinusodial:
 ```@example MAIN
-using DynamicalSystems #hide
-using PyPlot #hide
+using DynamicalSystems, CairoMakie
 
 data = sin.(2*π .* (0:400)./ 60)
 Y = embed(data, 3, 15)
@@ -131,19 +130,14 @@ Y = embed(data, 3, 15)
 R = RecurrenceMatrix(Y, 0.25; fixedrate=true)
 R_skel = skeletonize(R)
 
-
-fig = figure(figsize = (10,5))
-
-ax = subplot(121)
+fig = Figure(resolution = (1000,600))
+ax = Axis(fig[1,1]; title = "RP of monochromatic signal")
 Rg = grayscale(R)
-imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
-title("RP of monochromatic signal")
+heatmap!(ax, Rg; colormap = "binary_r")
 
-subplot(122)
+ax = Axis(fig[1,2]; title = "skeletonized RP")
 Rg = grayscale(R_skel)
-imshow(Rg, cmap = "binary_r", extent = (1, size(R)[1], 1, size(R)[2]))
-title("skeletonized RP")
-fig.tight_layout(pad=0.3); fig
+heatmap!(ax, Rg; colormap = "binary_r")
 fig
 ```
 
@@ -165,7 +159,7 @@ for (i, ρ) in enumerate((69.75, 28.0))
     tr = trajectory(lor, t; Δt, Ttr = 2000.0)
     tvec = 0:Δt:t
 
-    ax = Axis(fig[1, i]; title = "ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic")) 
+    ax = Axis(fig[1, i]; title = "ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic"))
     lines!(ax, tr[:, 1], tr[:, 3]; color = Cycled(i), label = "X vs Z")
     axislegend(ax)
 
@@ -177,7 +171,7 @@ for (i, ρ) in enumerate((69.75, 28.0))
     i == 1 && (ax.ylabel = "t")
     x, y = coordinates(R)
     scatter!(ax, tvec[x], tvec[y]; markersize = 1, color = Cycled(i))
-    ax.limits = ((0, t), (0, t)) 
+    ax.limits = ((0, t), (0, t))
     ax.aspect = 1
 end
 fig
