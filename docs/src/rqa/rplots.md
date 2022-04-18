@@ -132,12 +132,10 @@ R_skel = skeletonize(R)
 
 fig = Figure(resolution = (1000,600))
 ax = Axis(fig[1,1]; title = "RP of monochromatic signal")
-Rg = grayscale(R)
-heatmap!(ax, Rg; colormap = "binary_r")
+heatmap!(ax, grayscale(R); colormap = :grays)
 
 ax = Axis(fig[1,2]; title = "skeletonized RP")
-Rg = grayscale(R_skel)
-heatmap!(ax, Rg; colormap = "binary_r")
+heatmap!(ax, grayscale(R_skel); colormap = :grays)
 fig
 ```
 
