@@ -106,6 +106,41 @@ which justifies why recurrence plots are so fitting to be used in embedded times
 
     N. Marwan, *How to avoid potential pitfalls in recurrence plot based data analysis*, Int. J. of Bifurcations and Chaos ([arXiv](http://arxiv.org/abs/1007.2215)).
 
+## Skeletonized Recurrence Plots
+
+The finite size of a recurrence plot can cause border effects in the recurrence quantification-measures [`rqa`](@ref).
+Also the samplingrate of the data and the chosen recurrence threshold selection method (`fixed`, `fixedrate`, `FAN`)
+plays a crucial role. They can cause the thickening of diagonal lines in the recurrence matrix.
+Both problems lead to biased line-based RQA-quantifiers and is discussed in:
+
+K.H. Kraemer & N. Marwan, *Border effect corrections for diagonal line based recurrence quantification analysis measures*,
+[Phys. Lett. A 2019](https://publications.pik-potsdam.de/rest/items/item_23376_6/component/file_24222/content).
+
+```@docs
+skeletonize
+```
+
+Consider, e.g. a skeletonized version of a simple sinusodial:
+```@example MAIN
+using DynamicalSystems, CairoMakie
+
+data = sin.(2*π .* (0:400)./ 60)
+Y = embed(data, 3, 15)
+
+R = RecurrenceMatrix(Y, 0.25; fixedrate=true)
+R_skel = skeletonize(R)
+
+fig = Figure(resolution = (1000,600))
+ax = Axis(fig[1,1]; title = "RP of monochromatic signal")
+heatmap!(ax, grayscale(R); colormap = :grays)
+
+ax = Axis(fig[1,2]; title = "skeletonized RP")
+heatmap!(ax, grayscale(R_skel); colormap = :grays)
+fig
+```
+
+This way spurious diagonal lines get removed from the recurrence matrix, which
+would otherwise effect the quantification based on these lines.
 
 ## Example
 
@@ -122,7 +157,7 @@ for (i, ρ) in enumerate((69.75, 28.0))
     tr = trajectory(lor, t; Δt, Ttr = 2000.0)
     tvec = 0:Δt:t
 
-    ax = Axis(fig[1, i]; title = "ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic")) 
+    ax = Axis(fig[1, i]; title = "ρ = $ρ, " * (i != 1 ? "not periodic" : "periodic"))
     lines!(ax, tr[:, 1], tr[:, 3]; color = Cycled(i), label = "X vs Z")
     axislegend(ax)
 
@@ -134,7 +169,7 @@ for (i, ρ) in enumerate((69.75, 28.0))
     i == 1 && (ax.ylabel = "t")
     x, y = coordinates(R)
     scatter!(ax, tvec[x], tvec[y]; markersize = 1, color = Cycled(i))
-    ax.limits = ((0, t), (0, t)) 
+    ax.limits = ((0, t), (0, t))
     ax.aspect = 1
 end
 fig
