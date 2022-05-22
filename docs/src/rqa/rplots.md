@@ -1,19 +1,5 @@
-# Recurrence Plots
+# Recurrence Matrices & Plots
 ## Recurrence Matrices
-
-A [Recurrence plot](https://en.wikipedia.org/wiki/Recurrence_plot) (which refers to the plot of a matrix) is a way to quantify *recurrences* that occur in a trajectory. A recurrence happens when a trajectory visits the same neighborhood on the phase space that it was at some previous time.
-
-The central structure used in these recurrences is the (cross-) recurrence matrix:
-```math
-R[i, j] = \begin{cases}
-1 \quad \text{if}\quad d(x[i], y[j]) \le \varepsilon\\
-0 \quad \text{else}
-\end{cases}
-```
-where $d(x[i], y[j])$ stands for the _distance_ between trajectory $x$ at point $i$ and trajectory $y$ at point $j$. Both $x, y$ can be single timeseries, full trajectories or embedded timeseries (which are also trajectories).
-
-If $x\equiv y$ then $R$ is called recurrence matrix, otherwise it is called cross-recurrence matrix. There is also the joint-recurrence variant, see below.
-With `RecurrenceAnalysis` you can use the following functions to access these matrices
 ```@docs
 RecurrenceMatrix
 CrossRecurrenceMatrix
@@ -179,8 +165,7 @@ On the left we see long (infinite) diagonals repeated over and over for differen
 
 On the right we see a structure typical of chaotic motion on a strange attractor such as the one of the Lorenz system: the orbit visits neighborhoods of previous points but then quickly diverges again. This results in many small diagonal lines.
 
-## Distances
-The distance function used in [`RecurrenceMatrix`](@ref) and co. can be specified either as any `Metric` instance from [`Distances`](https://github.com/JuliaStats/Distances.jl). In addition, the following function returns a matrix with the cross-distances across all points in one or two trajectories:
+## Distance matrix
 ```@docs
 distancematrix
 ```

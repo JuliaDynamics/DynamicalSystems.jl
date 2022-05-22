@@ -83,7 +83,7 @@ pages = [
        "Attractors, Basins, Tipping Points" => "chaos/basins.md",
     ],
     "RecurrenceAnalysis" => [
-        "Recurrence Plots" => "rqa/rplots.md",
+        "Recurrence Matrices & Plots" => "rqa/rplots.md",
         "Recurrence Quantification Analysis" => "rqa/quantification.md",
         "Windowed RQA" => "rqa/windowed.md",
         "Recurrence Networks" => "rqa/networks.md",
