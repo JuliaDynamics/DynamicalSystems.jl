@@ -17,7 +17,7 @@ where:
 * `w` is the width of the window for relevant data around each point.
 * `s` is the step or distance between points where the calculations are done (starting in the first point).
 
-To prevent syntax failures in the expansion of the macro, identify the RQA function (`rqa`, `recurrencerate`, `determinism`,...) directly by its name (avoid aliases), and use simple variable names (not complex expressions) for the arguments. On the other hand, the windowing options `width` and `step` can be given in any order. If `step` is ommitted, the calculations are done at every point, and the keyword `width` may be ommitted. (However, using `step=1` may be computationally very expensive, and that will provide just overly redundant results around each point, so it is advisable to set `step` a relatively big fraction of the window `width`.)
+To prevent syntax failures in the expansion of the macro, identify the RQA function (`rqa`, `recurrencerate`, `determinism`,...) directly by its name (avoid aliases), and use simple variable names (not complex expressions) for the arguments. On the other hand, the windowing options `width` and `step` can be given in any order. If `step` is omitted, the calculations are done at every point, and the keyword `width` may be omitted. (However, using `step=1` may be computationally very expensive, and that will provide just overly redundant results around each point, so it is advisable to set `step` a relatively big fraction of the window `width`.)
 
 The value returned by the macro will normally be a vector with the same type of numbers as expected by `expr`. In the case of `@windowed rqa(...) ...`, it will return a NamedTuple with a similar structure as in the default `rqa` function, but replacing scalar values by vectors.
 

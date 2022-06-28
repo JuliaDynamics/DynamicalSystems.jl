@@ -109,7 +109,7 @@ which justifies why recurrence plots are so fitting to be used in embedded times
 ## Skeletonized Recurrence Plots
 
 The finite size of a recurrence plot can cause border effects in the recurrence quantification-measures [`rqa`](@ref).
-Also the samplingrate of the data and the chosen recurrence threshold selection method (`fixed`, `fixedrate`, `FAN`)
+Also the sampling rate of the data and the chosen recurrence threshold selection method (`fixed`, `fixedrate`, `FAN`)
 plays a crucial role. They can cause the thickening of diagonal lines in the recurrence matrix.
 Both problems lead to biased line-based RQA-quantifiers and is discussed in:
 
@@ -120,7 +120,7 @@ K.H. Kraemer & N. Marwan, *Border effect corrections for diagonal line based rec
 skeletonize
 ```
 
-Consider, e.g. a skeletonized version of a simple sinusodial:
+Consider, e.g. a skeletonized version of a simple sinusoidal:
 ```@example MAIN
 using DynamicalSystems, CairoMakie
 
