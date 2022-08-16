@@ -283,7 +283,7 @@ for i in keys(attractors)
     markersize = length(attractors[i]) > 10 ? 2000 : 6000
     marker = length(attractors[i]) > 10 ? :circle : :rect
     scatter!(ax, columns(tr)...; markersize, marker, transparency = true, color = cmap[i])
-    j = findfirst(isequal(i), bsn)
+    j = findfirst(isequal(i), basins)
     x = xg[j[1]]
     y = yg[j[2]]
     z = zg[j[3]]
