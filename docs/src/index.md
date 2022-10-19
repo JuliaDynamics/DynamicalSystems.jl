@@ -6,7 +6,15 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    A Springer-Nature textbook on nonlinear dynamics, written using DynamicalSystems.jl, is now out! <https://link.springer.com/book/10.1007/978-3-030-91032-7>
+    DynamicalSystems.jl is now feature-frozen to:
+    ```
+    ChaosTools = "~2.9.0"
+    DelayEmbeddings = "~2.4"
+    DynamicalSystemsBase = "~2.8"
+    Entropies = "~1.1"
+    ```
+    in preparation of DynamicalSystems.jl v3.0 that will arrive by the end of the year.
+
 
 
 !!! tip "Star us on GitHub!"
