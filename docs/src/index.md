@@ -11,6 +11,7 @@ To learn how to use this library please see [Getting started](@ref) below, and s
     ChaosTools = "~2.9.0"
     DelayEmbeddings = "~2.4"
     DynamicalSystemsBase = "~2.8"
+    Entropies = "~1.1"
     ```
     in preparation of DynamicalSystems.jl v3.0 that will arrive by the end of the year.
 
