@@ -14,7 +14,7 @@ Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 
 [compat]
 ChaosTools = "~2.9.0"
-DelayEmbeddings = "~2.4"
+DelayEmbeddings = "~2.4, 2"
 DynamicalSystemsBase = "~2.8"
 Entropies = "~1.1"
 RecurrenceAnalysis = "1.8"
