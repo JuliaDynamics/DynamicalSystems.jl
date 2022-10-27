@@ -32,3 +32,16 @@ When contributing code, you should keep these things in mind:
   If necessary add comments to the code, so that somebody that knows the method, can also understand the code immediately.
 * Try to design general, extendable functions instead of unnecessarily specialized to the case at hand.
 * For the documentation strings of new methods and systems please follow the convention of the documentation strings of DynamicalSystems.jl. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be. Lastly, papers that are relevant to the method must be cited. Have a look at the documentation strings of `lyapunov` and `lyapunovspectrum` to get an idea.
+
+## Documentation string style
+Documentation strings are the most important thing in your pull request/code. The number 1 priority of DynamicalSystems.jl is highest possible quality of documentation and utmost transparency, and the best way to achieve this is with good documentation strings. In DynamicalSystems.jl we recommend that documentation strings are structured in the following way (and this is also the recommendation we give in the [Good Scientific Code Workshop](https://youtu.be/x3swaMSCcYk?t=11087)). 
+
+1. Clear call signature in code syntax, including expected input types if necessary. The call signature should ONLY include only the most important information, not list out in detail every keyword!
+1. Brief summary of the function
+1. [Optional] Return value and type if not obvious
+1. [Optional] References to related functions if sensible
+1. [Optional] Keyword arguments list if the function has some
+1. [Optional] Detailed discussion of functionality if function behavior is scientifically involved
+1. [Optional] Citations to relevant scientific papers![image](https://user-images.githubusercontent.com/19669089/198302937-6d5553d7-03cc-4e60-83ce-57d7dc3bbd9b.png)
+
+The syntax of the documentation strings follows Documenter.jl protocol. Please see the documentation string of the [lyapunov](https://github.com/JuliaDynamics/ChaosTools.jl/blob/main/src/chaosdetection/lyapunovs/lyapunov.jl#L4-L65) function and use the same structure.
