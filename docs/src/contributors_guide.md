@@ -42,6 +42,6 @@ Documentation strings are the most important thing in your pull request/code. Th
 1. [Optional] References to related functions if sensible
 1. [Optional] Keyword arguments list if the function has some
 1. [Optional] Detailed discussion of functionality if function behavior is scientifically involved
-1. [Optional] Citations to relevant scientific papers![image](https://user-images.githubusercontent.com/19669089/198302937-6d5553d7-03cc-4e60-83ce-57d7dc3bbd9b.png)
+1. [Optional] Citations to relevant scientific papers!
 
 The syntax of the documentation strings follows Documenter.jl protocol. Please see the documentation string of the [lyapunov](https://github.com/JuliaDynamics/ChaosTools.jl/blob/main/src/chaosdetection/lyapunovs/lyapunov.jl#L4-L65) function and use the same structure.
