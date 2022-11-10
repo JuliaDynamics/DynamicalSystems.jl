@@ -6,14 +6,15 @@ It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a
 To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
 
 !!! info "Latest news"
-    DynamicalSystems.jl is now feature-frozen to:
+    DynamicalSystems.jl is now feature-frozen in version 2.3.2 with package versions:
     ```
     ChaosTools = "~2.9.0"
     DelayEmbeddings = "~2.4"
     DynamicalSystemsBase = "~2.8"
     Entropies = "~1.1"
+    RecurrenceAnalysis = "~1.8"
     ```
-    in preparation of DynamicalSystems.jl v3.0 that will arrive by the end of the year.
+    in preparation of DynamicalSystems.jl v3.0 that will be an absolutely epic release!
 
 
 
