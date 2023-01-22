@@ -156,5 +156,5 @@ Pkg.status([
 )
 ```
 
-!!! warn "Version numbers do not strictly follow SymVer2.0"
+!!! warn "Version numbers do not strictly follow SemVer2.0"
     Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are entirely independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
