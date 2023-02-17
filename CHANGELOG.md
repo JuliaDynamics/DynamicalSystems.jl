@@ -6,20 +6,29 @@ It re-exports other packages. The changelog here only lists major changes to the
 Super duper major update.
 
 1. [Modularization](#modularization)
-2. [New documentation](#new-documentation)
-3. [Re-write of `DynamicalSystem`](#re-write-of-dynamicalsystem)
-4. [Continuous time systems changes](#continuous-time-systems-changes)
-5. [New package StateSpaceSets.jl](#new-package-statespacesetsjl)
-6. [New package FractalDimensions.jl](#new-package-fractaldimensionsjl)
-7. [New amazing package ComplexityMeasures.jl](#new-amazing-package-complexitymeasuresjl)
+2. [Overhauling](#overhauling)
+3. [New documentation](#new-documentation)
+4. [Re-write of `DynamicalSystem`](#re-write-of-dynamicalsystem)
+5. [Continuous time systems changes](#continuous-time-systems-changes)
+6. [Package split: StateSpaceSets.jl](#package-split-statespacesetsjl)
+7. [Package split: FractalDimensions.jl](#package-split-fractaldimensionsjl)
+8. [Partial overhaul: RecurrenceAnalysis.jl](#partial-overhaul-recurrenceanalysisjl)
+9. [New amazing package ComplexityMeasures.jl](#new-amazing-package-complexitymeasuresjl)
+10. [New amazing package Attractors.jl](#new-amazing-package-attractorsjl)
 
 ## Modularization
 
 The packages that compose DynamicalSystems.jl have been split up into more packages, making a more modular library, and also allowing a much smaller dependency tree for users that want only a specific part of the functionality.
 
+## Overhauling
+
+Practically all packages that are part of DynamicalSystems.jl have been overhauled in some way or another. Some, have been completely overhauled, like `DynamicalSystemsBase` and `ComplexityMeasures`. Some others have been partially overhauled like `RecurrenceAnalysis` and `ChaosTools`.
+
+DynamicalSystems.jl was the first library I've written and after progressing as a software developer I have learned so much more about good design. I've put all this knowledge to good use and decided it was a good point to just do a mass-overhaul on the package.
+
 ## New documentation
 
-This modularization also lead to a documentation overhaul: now every package of the library builds and hosts its own documentation. The main documentation of DynamicalSystems.jl now follows an approach similar to [DiffEqDocs](https://docs.sciml.ai/DiffEqDocs/stable/) which "dispatches" to documentations of other packages.
+This modularization also lead to a documentation overhaul: now every package of the library builds and hosts its own documentation. The main documentation of DynamicalSystems.jl now follows an approach similar to [DiffEqDocs](https://docs.sciml.ai/DiffEqDocs/stable/) which includes an overarching tutorial and overview, and then "dispatches" to documentations of other packages.
 
 ## Re-write of `DynamicalSystem`
 
@@ -44,16 +53,22 @@ saving the user the effort of transforming a 1-dimensional static vector to a nu
 
 - The default integrator used in continuous time Ordinary Differential Equations (what was before called `ContinuousDynamicalSystem` and now called `CoupledODEs`) is now `Tsit5()`. This means that OrdinaryDiffEq.jl is a dependency of DynamicalSystemsBase.jl. It is a better option than the previous `SimpleATsit5()`. Additional, the insane compile and first-use time improvements in latest Julia versions had made the impact of loading OrdinaryDiffEq.jl much smaller.
 
-## New package StateSpaceSets.jl
+## Package split: StateSpaceSets.jl
 
 It has all functionality surrounding `StateSpaceSet` (what was previously known as `Dataset`). It therefore detaches the infastructure for handing numeric data from delay embeddings, and now DelayEmbeddings.jl is a package dedicated to creating and optimizing delay coordinates embeddings.
 
 https://juliadynamics.github.io/StateSpaceSets.jl/dev/
 
-## New package FractalDimensions.jl
+## Package split: FractalDimensions.jl
 
 All functionality related to computing fractal dimensions has been detached from ChaosTools.jl into a new package: https://juliadynamics.github.io/FractalDimensions.jl/dev/
+
+## Partial overhaul: RecurrenceAnalysis.jl
+
+RecurrenceAnalysis.jl, now in v2.0, has had its core type (`RecurrenceMatrix`) overhauled for better design, more clarity, and extendability. Now a type....
 
 ## New amazing package ComplexityMeasures.jl
 
 This is a complete overhaul and massive enhancement of the previous Entropies.jl and deserves its own announcement post:
+
+## New amazing package Attractors.jl
