@@ -13,7 +13,7 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 
 [compat]
-ChaosTools = "~2.9.0"
+ChaosTools = "~2.9.0, 3"
 DelayEmbeddings = "~2.4"
 DynamicalSystemsBase = "~2.8"
 Entropies = "~1.1"
