@@ -1,14 +1,25 @@
-CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
-using Pkg
-Pkg.activate(@__DIR__)
-CI && Pkg.instantiate()
+cd(@__DIR__)
 
 using DynamicalSystems
-using Entropies, RecurrenceAnalysis, DelayEmbeddings, ChaosTools, DynamicalSystemsBase
-using Neighborhood
-using Documenter, CairoMakie
-using DocumenterTools: Themes
+
+# Reexported
+using ComplexityMeasures,
+    RecurrenceAnalysis,
+    DelayEmbeddings,
+    ChaosTools,
+    DynamicalSystemsBase,
+    StateSpaceSets,
+    Attractors,
+    FractalDimensions,
+    TimeseriesSurrogates
+
 import Downloads
+Downloads.download(
+    "https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/build_docs_with_style.jl",
+    joinpath(@__DIR__, "build_docs_with_style.jl")
+)
+include("build_docs_with_style.jl")
+
 
 # Also bring in visualizations from interactive dynamics docs:
 using InteractiveDynamics
@@ -16,46 +27,7 @@ infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.
 outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
 cp(infile, outfile)
 
-# %%
-# download the themes
-for file in ("juliadynamics-lightdefs.scss", "juliadynamics-darkdefs.scss", "juliadynamics-style.scss")
-    Downloads.download("https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/$file", joinpath(@__DIR__, file))
-end
-# create the themes
-for w in ("light", "dark")
-    header = read(joinpath(@__DIR__, "juliadynamics-style.scss"), String)
-    theme = read(joinpath(@__DIR__, "juliadynamics-$(w)defs.scss"), String)
-    write(joinpath(@__DIR__, "juliadynamics-$(w).scss"), header*"\n"*theme)
-end
-# compile the themes
-Themes.compile(joinpath(@__DIR__, "juliadynamics-light.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-light.css"))
-Themes.compile(joinpath(@__DIR__, "juliadynamics-dark.scss"), joinpath(@__DIR__, "src/assets/themes/documenter-dark.css"))
-
-# %% Build docs
-# Style for plots inside documentation
-include("style.jl")
-
-cd(@__DIR__)
-ENV["JULIA_DEBUG"] = "Documenter"
-
-makedocs(
-modules = [
-    DynamicalSystems, ChaosTools, DynamicalSystemsBase,
-    DelayEmbeddings, RecurrenceAnalysis, Entropies, Neighborhood,
-    InteractiveDynamics,
-],
-doctest = false,
-sitename = "DynamicalSystems.jl",
-root = @__DIR__,
-format = Documenter.HTML(
-    prettyurls = CI,
-    assets = [
-        "assets/logo.ico",
-        asset("https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap", class=:css),
-        ],
-    collapselevel = 1,
-    ),
-pages = [
+pages =  [
     "Introduction" => "index.md",
     "Contents" => "contents.md",
     "Dynamical systems" => [
@@ -90,14 +62,9 @@ pages = [
     ],
     "Interactive GUIs" => "dynamicalsystems_interactive.md",
     "Contributor Guide" => "contributors_guide.md",
-],
-expandfirst = ["index.md"], #  this is the first script that loads colorscheme
-)
+]
 
-if CI
-    deploydocs(
-        repo = "github.com/JuliaDynamics/DynamicalSystems.jl.git",
-        target = "build",
-        push_preview = true
-    )
-end
+build_docs_with_style(pages, TransitionIndicators;
+    authors = "George Datseris <datseris.george@gmail.com>",
+    expandfirst = ["index.md"], #  this is the first script that loads colorscheme
+)
