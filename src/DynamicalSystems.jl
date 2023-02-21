@@ -5,20 +5,22 @@ module DynamicalSystems
 
 using Reexport
 
-@reexport using DelayEmbeddings
+# Core
+@reexport using StateSpaceSets
 @reexport using DynamicalSystemsBase
-@reexport using Entropies
-@reexport using ChaosTools
+# observed/measured data
+@reexport using DelayEmbeddings
+@reexport using ComplexityMeasures
 @reexport using RecurrenceAnalysis
-
-# Also export some static array stuff
-using DelayEmbeddings.StaticArrays
-export SVector, SMatrix, @SVector, @SMatrix, Size
+@reexport using FractalDimensions
+# dynamical systems
+@reexport using Attractors
+@reexport using ChaosTools
 
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.3.0"
+version_number = "3.0.0"
 update_name = "update_v$(version_number)"
 
 if display_update

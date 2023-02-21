@@ -15,6 +15,7 @@ Super duper major update.
 8. [Partial overhaul: RecurrenceAnalysis.jl](#partial-overhaul-recurrenceanalysisjl)
 9. [New amazing package ComplexityMeasures.jl](#new-amazing-package-complexitymeasuresjl)
 10. [New amazing package Attractors.jl](#new-amazing-package-attractorsjl)
+11. [Co-maintainer(s) needed](#co-maintainers-needed)
 
 ## Modularization
 
@@ -51,7 +52,7 @@ saving the user the effort of transforming a 1-dimensional static vector to a nu
 
 - **Majorly breaking: There are no longer `diffeq` keyword arguments to downstream functions**. All functions such as `lyapunovspectrum, basins_of_attraction`, etc. no longer accept the `diffeq` keyword, that used to specify arguments for DifferentialEquations.jl. Instead, **the DiffEq solver options are decided during the creation of `CoupledODEs`** (what was before `ContinuousDynamicalSystem`).
 
-- The default integrator used in continuous time Ordinary Differential Equations (what was before called `ContinuousDynamicalSystem` and now called `CoupledODEs`) is now `Tsit5()`. This means that OrdinaryDiffEq.jl is a dependency of DynamicalSystemsBase.jl. It is a better option than the previous `SimpleATsit5()`. Additional, the insane compile and first-use time improvements in latest Julia versions had made the impact of loading OrdinaryDiffEq.jl much smaller.
+- The default integrator used in continuous time Ordinary Differential Equations (what was before called `ContinuousDynamicalSystem` and now called `CoupledODEs`) is now `Tsit5()`. This means that OrdinaryDiffEq.jl is a dependency of DynamicalSystemsBase.jl. It is a better option than the previous `SimpleATsit5()`. Additionally, the insane compile and first-use time improvements in latest Julia versions had made the impact of loading OrdinaryDiffEq.jl much smaller.
 
 ## Package split: StateSpaceSets.jl
 
@@ -65,10 +66,16 @@ All functionality related to computing fractal dimensions has been detached from
 
 ## Partial overhaul: RecurrenceAnalysis.jl
 
-RecurrenceAnalysis.jl, now in v2.0, has had its core type (`RecurrenceMatrix`) overhauled for better design, more clarity, and extendability. Now a type....
+RecurrenceAnalysis.jl, now in v2.0, has had its core type (`RecurrenceMatrix`) overhauled for better design, more clarity, extendibility, and overall more Julian programming utilizing multiple dispatch and dedicated types to specify options.
+
+Now a subtype of `AbstractRecurrenceType` is used to specify how to create a recurrence matrix. More details in the docpage of the package:
 
 ## New amazing package ComplexityMeasures.jl
 
 This is a complete overhaul and massive enhancement of the previous Entropies.jl and deserves its own announcement post:
 
 ## New amazing package Attractors.jl
+
+## Co-maintainer(s) needed
+
+Some parts have co-maintainers (Attractors.jl have , complexityeasures have ..) but this whole ecosystem has become too large and I don't have the energy to maintain it alone, so I am kindly asking for people with expertise in both NLD and programming to consider coming on board and helping with answering questions, addressing issues, fixing bugs, and testing out the ecosystem.
