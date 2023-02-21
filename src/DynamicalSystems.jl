@@ -17,10 +17,10 @@ using Reexport
 @reexport using StateSpaceSets
 @reexport using DynamicalSystemsBase
 # observed/measured data
-@reexport using DelayEmbeddings
-@reexport using ComplexityMeasures
 @reexport using RecurrenceAnalysis
 @reexport using FractalDimensions
+@reexport using DelayEmbeddings
+@reexport using ComplexityMeasures
 # dynamical systems
 @reexport using Attractors
 @reexport using ChaosTools
