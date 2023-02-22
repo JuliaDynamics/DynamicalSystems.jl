@@ -29,42 +29,21 @@ cp(infile, outfile)
 
 pages =  [
     "Introduction" => "index.md",
-    "Contents" => "contents.md",
-    "Dynamical systems" => [
-        "Dynamical System Definition" => "ds/general.md",
-        "Predefined Dynamical Systems" => "ds/predefined.md",
-        "Numerical Data" => "embedding/dataset.md",
-        "Integrators" => "ds/integrators.md",
-    ],
-    "DelayEmbeddings" => [
-        "Delay Coordinates Embedding" => "embedding/reconstruction.md",
-        "Traditional Optimal Embedding" => "embedding/traditional.md",
-        "Unified Optimal Embedding" => "embedding/unified.md",
-        ],
-    "Entropies" => [
-        "Entropies & Probabilities" => "entropies/api.md",
-        "Probabilities Estimators" => "entropies/estimators.md",
-    ],
-    "ChaosTools" => [
-       "Orbit Diagrams & PSOS" => "chaos/orbitdiagram.md",
-       "Lyapunov Exponents" => "chaos/lyapunovs.md",
-       "Detecting & Categorizing Chaos" => "chaos/chaos_detection.md",
-       "Fractal Dimension" => "chaos/fractaldim.md",
-       "Nonlinear Timeseries Analysis" => "chaos/nlts.md",
-       "Fixed points & Periodicity" => "chaos/periodicity.md",
-       "Attractors, Basins, Tipping Points" => "chaos/basins.md",
-    ],
-    "RecurrenceAnalysis" => [
-        "Recurrence Plots" => "rqa/rplots.md",
-        "Recurrence Quantification Analysis" => "rqa/quantification.md",
-        "Windowed RQA" => "rqa/windowed.md",
-        "Recurrence Networks" => "rqa/networks.md",
-    ],
+    "Overarching tutorial" => "tutorial.md",
     "Interactive GUIs" => "dynamicalsystems_interactive.md",
     "Contributor Guide" => "contributors_guide.md",
 ]
 
-build_docs_with_style(pages, TransitionIndicators;
+build_docs_with_style(pages, DynamicalSystems,
+    ComplexityMeasures,
+    RecurrenceAnalysis,
+    DelayEmbeddings,
+    ChaosTools,
+    DynamicalSystemsBase,
+    StateSpaceSets,
+    Attractors,
+    FractalDimensions,
+    TimeseriesSurrogates;
     authors = "George Datseris <datseris.george@gmail.com>",
     expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )
