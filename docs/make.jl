@@ -25,7 +25,7 @@ include("build_docs_with_style.jl")
 using InteractiveDynamics
 infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
 outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
-cp(infile, outfile)
+cp(infile, outfile; force = true)
 
 pages =  [
     "Introduction" => "index.md",
@@ -43,7 +43,8 @@ build_docs_with_style(pages, DynamicalSystems,
     StateSpaceSets,
     Attractors,
     FractalDimensions,
-    TimeseriesSurrogates;
+    TimeseriesSurrogates,
+    InteractiveDynamics;
     authors = "George Datseris <datseris.george@gmail.com>",
     expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )

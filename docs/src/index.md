@@ -1,3 +1,13 @@
+```@docs
+DynamicalSystems
+```
+
+## Introduction
+
+Welcome!
+
+
+
 ![DynamicalSystems.jl logo: The Double Pendulum](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true)
 
 **DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for dynamical systems, nonlinear dynamics, deterministic chaos, and nonlinear timeseries analysis.
@@ -158,3 +168,15 @@ Pkg.status([
 
 !!! warn "Version numbers do not strictly follow SemVer2.0"
     Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are entirely independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
+
+
+
+## Other NLD-relevant packages
+Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
+
+* [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (infastructure already used in DynamicalSystems.jl), it also has much more features like SDE solvers or uncertainty quantification.
+* [DiffEqSensitivity.jl](https://github.com/SciML/DiffEqSensitivity.jl) - Discrete and continuous local sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters, hosting [various forward and adjoint methods as well as methods tailored to chaotic systems](https://diffeq.sciml.ai/stable/analysis/sensitivity/).
+* [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
+* [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for automated bifurcation analysis.
+* [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Package for easily simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
+* [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) for agent based modelling.

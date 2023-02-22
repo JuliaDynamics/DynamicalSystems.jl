@@ -14,7 +14,7 @@ RecurrenceAnalysis = "639c3291-70d9-5ea2-8c5b-839eba1ee399"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 StateSpaceSets = "40b095a5-5852-4c12-98c7-d43bf788e795"
-
+TimeseriesSurrogates = "c804724b-8c18-5caa-8579-6025a0767c70"
 
 [compat]
 ChaosTools = "3"
@@ -26,5 +26,6 @@ FractalDimensions = "1"
 Reexport = "1"
 Scratch = "1"
 StateSpaceSets = "1"
-Attractors = "0.1, 1"
+Attractors = "0.1, 0.2, 1"
+TimeseriesSurrogates = "2"
 julia = "1.5"

@@ -1,15 +1,11 @@
-"""
-**DynamicalSystems.jl** is an award-winning Julia software library for nonlinear
-dynamics and nonlinear timeseries analysis. The _module_ `DynamicalSystems`
-builds the documentation and exports all packages composing DynamicalSystems.jl.
-
-To install it, run `import Pkg; Pkg.add("DynamicalSystems")`.
-
-All further information is provided in the documentation,
-which you can either find [online](https://juliadynamics.github.io/DynamicalSystems.jl/dev/)
-or build locally by running the `docs/make.jl` file.
-"""
 module DynamicalSystems
+
+# Use the README as the module docs
+@doc let
+    path = joinpath(dirname(@__DIR__), "README.md")
+    include_dependency(path)
+    read(path, String)
+end DynamicalSystems
 
 using Reexport
 
@@ -21,6 +17,7 @@ using Reexport
 @reexport using FractalDimensions
 @reexport using DelayEmbeddings
 @reexport using ComplexityMeasures
+@reexport using TimeseriesSurrogates
 # dynamical systems
 @reexport using Attractors
 @reexport using ChaosTools
