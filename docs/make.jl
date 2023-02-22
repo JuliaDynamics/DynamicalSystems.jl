@@ -30,6 +30,7 @@ cp(infile, outfile; force = true)
 pages =  [
     "Introduction" => "index.md",
     "Overarching tutorial" => "tutorial.md",
+    "Contents" => "contents.md",
     "Interactive GUIs" => "dynamicalsystems_interactive.md",
     "Contributor Guide" => "contributors_guide.md",
 ]
