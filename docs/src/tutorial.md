@@ -15,6 +15,8 @@ using DynamicalSystems
 ```
 in your Julia session.
 
+
+
 ## Core components
 
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two components:
