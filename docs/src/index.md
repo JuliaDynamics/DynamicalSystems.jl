@@ -11,9 +11,9 @@ DynamicalSystems
 Welcome to the documentation of **DynamicalSystems.jl**!
 
 - The [contents](@ref contents) page gives a summary of all packages that are part of the library.
-- If you have not used the library before, and would like to get to get started it, then please read the [overarching tutorial](@ref tutorial) for the library.
+- If you have not used the library before, and would like to get started, then please read the [overarching tutorial](@ref tutorial) for the library.
 - See the [learning resources](@ref learning) below to find out more resources about learning the library and using it in scientific research and/or education.
--
+- The remaining of this introduction page discusses our goals with the library, how to participate as a user or developer, how to cite, and other relevant information (see the sections of the sidebar on the left).
 
 
 ## Latest news
@@ -22,21 +22,6 @@ The new major version, v3, of **DynamicalSystems.jl** has been released! This is
 
 The full details of this release are too long to describe here, so please read more about it in our [changelog]([xx](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md))!
 
-
-### Tutorials
-Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
-
-In addition, there are two video tutorials hosted on YouTube. The first one is short, gives you the basic idea, and is intended for people already familiar with nonlinear dynamics:
-
-```@raw html
-<iframe width="560" height="500" src="https://www.youtube.com/embed/TJqOGsKQti8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-```
-
-The second is much longer and also explains concepts of nonlinear dynamics:
-
-```@raw html
-<iframe width="560" height="500" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-```
 
 ## [Learning resources](@id learning)
 
@@ -78,6 +63,7 @@ To achieve these goals we made **DynamicalSystems.jl** so that it is:
 7. **Performant**: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Citing
+
 There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
 you in research that led to a publication, please be kind enough to cite it, using
 the DOI `10.21105/joss.00598` or the following BiBTeX entry:
@@ -96,13 +82,28 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 }
 ```
 
+however, we would really appreciate it if you also cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
+
+```
+@book{DatserisParlitz2022,
+  doi = {10.1007/978-3-030-91032-7},
+  url = {https://doi.org/10.1007/978-3-030-91032-7},
+  year = {2022},
+  publisher = {Springer Nature},
+  author = {George Datseris and Ulrich Parlitz},
+  title     = "Nonlinear dynamics: A concise introduction interlaced with code",
+  address   = "Cham, Switzerland",
+  language  = "en",
+}
+```
+
 
 ## Asking questions
 
 There are three options for asking questions:
 
 1. Join the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations.
-2. Join our chatroom on [gitter](https://gitter.im/JuliaDynamics/Lobby) or the channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
+2. Join our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
 3. Open an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example.
 
 ## Contributing & Donating
@@ -122,12 +123,14 @@ By solving these issues you not only contribute to open source, but you also get
 
 
 ## Maintainers and Contributors
+
 The DynamicalSystems.jl software is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
 
 The software code however is built from the contributions of several individuals. For an accurate list of the names as well as contributions of each one, please visit [our webpage](https://juliadynamics.github.io/JuliaDynamics/people).
 
 ## Version numbers
-The version of `DynamicalSystems` is a bit meaningless. The registered package has almost no source code. It only re-exports existing packages such as `ChaosTools`.
+
+The version of `DynamicalSystems` by itself is a bit meaningless, because the module does not have any source code, besides re-exporting other modules.
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
@@ -138,16 +141,15 @@ include("../style.jl")
 ```@example MAIN
 using Pkg
 Pkg.status([
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",];
-    mode = PKGMODE_MANIFEST, io=stdout
+    "DynamicalSystems",
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools"
+    ];
+    mode = PKGMODE_MANIFEST
 )
 ```
 
 !!! warn "Version numbers do not strictly follow SemVer2.0"
-    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are entirely independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
-
+    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations or better default keyword arguments) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
 
 
 ## Other NLD-relevant packages
