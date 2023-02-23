@@ -2,17 +2,6 @@ cd(@__DIR__)
 
 using DynamicalSystems
 
-# Reexported
-using ComplexityMeasures,
-    RecurrenceAnalysis,
-    DelayEmbeddings,
-    ChaosTools,
-    DynamicalSystemsBase,
-    StateSpaceSets,
-    Attractors,
-    FractalDimensions,
-    TimeseriesSurrogates
-
 import Downloads
 Downloads.download(
     "https://raw.githubusercontent.com/JuliaDynamics/doctheme/master/build_docs_with_style.jl",
@@ -45,6 +34,7 @@ build_docs_with_style(pages, DynamicalSystems,
     Attractors,
     FractalDimensions,
     TimeseriesSurrogates,
+    PredefinedDynamicalSystems,
     InteractiveDynamics;
     authors = "George Datseris <datseris.george@gmail.com>",
     expandfirst = ["index.md"], #  this is the first script that loads colorscheme
