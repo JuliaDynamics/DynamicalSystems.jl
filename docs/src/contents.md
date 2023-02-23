@@ -1,4 +1,4 @@
-# Contents
+# [Contents](@id contents)
 
 When you do `using DynamicalSystems` in your Julia session, the module
 re-exports and brings into scope all packages listed in this session.

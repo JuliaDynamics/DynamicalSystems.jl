@@ -7,8 +7,10 @@
 [![CI](https://github.com/JuliaDynamics/DynamicalSystems.jl/workflows/CI/badge.svg)](https://github.com/JuliaDynamics/DynamicalSystems.jl/actions?query=workflow%3ACI)
 [![Package Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/DynamicalSystems)](https://pkgs.genieframework.com?packages=DynamicalSystems)
 
-**DynamicalSystems.jl** is an award-winning Julia software library for nonlinear dynamics and nonlinear timeseries analysis. The current repository holds the documentation and exports all packages composing DynamicalSystems.jl.
+**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for nonlinear dynamics and nonlinear timeseries analysis. The current repository holds the documentation and exports all packages composing DynamicalSystems.jl.
 
 To install it, run `import Pkg; Pkg.add("DynamicalSystems")`.
+
+**DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
 
 All further information is provided in the documentation, which you can either find [online](https://juliadynamics.github.io/DynamicalSystems.jl/dev/) or build locally by running the `docs/make.jl` file.

@@ -2,54 +2,26 @@
 DynamicalSystems
 ```
 
-## Introduction
-
-Welcome!
-
-
-
-![DynamicalSystems.jl logo: The Double Pendulum](https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true)
-
-**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for dynamical systems, nonlinear dynamics, deterministic chaos, and nonlinear timeseries analysis.
-It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
-
-To learn how to use this library please see [Getting started](@ref) below, and subsequently, the [Contents](@ref) page to get an overview of all offered functionality of **DynamicalSystems.jl**.
-
-!!! info "Latest news"
-    DynamicalSystems.jl is now feature-frozen in version 2.3.2 with package versions:
-    ```
-    ChaosTools = "~2.9.0"
-    DelayEmbeddings = "~2.4"
-    DynamicalSystemsBase = "~2.8"
-    Entropies = "~1.1"
-    RecurrenceAnalysis = "~1.8"
-    ```
-    in preparation of DynamicalSystems.jl v3.0 that will be an absolutely epic release!
-
-
-
 !!! tip "Star us on GitHub!"
     If you have found this library useful, please consider starring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl).
     This gives us an accurate lower bound of the (satisfied) user count.
 
-## Getting started
-**DynamicalSystems.jl** is a collection of Julia packages bundled together under a single package `DynamicalSystems`. To install this bundle you can do:
-```julia
-using Pkg; Pkg.add("DynamicalSystems")
-```
+## Introduction
 
-This "Getting started" section is also available as an introductory [video tutorial](https://www.youtube.com/watch?v=TJqOGsKQti8) for those that prefer videos over text!
+Welcome to the documentation of **DynamicalSystems.jl**!
 
-The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two structures:
+- The [contents](@ref contents) page gives a summary of all packages that are part of the library.
+- If you have not used the library before, and would like to get to get started it, then please read the [overarching tutorial](@ref tutorial) for the library.
+- See the [learning resources](@ref learning) below to find out more resources about learning the library and using it in scientific research and/or education.
+-
 
-1. The [`DynamicalSystem`](@ref) represents a dynamical system with known dynamic rule ``f``. The system can be in discrete time (often called a map), ``\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)``, or in continuous time (often called an ordinary differential equation) ``\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)``. In both cases ``u`` is the _state_ of the dynamical system and ``p`` a parameter container. You should have a look at the page [Dynamical System Definition](@ref) for how to create this object. A list of several pre-defined systems exists in the [Predefined Dynamical Systems](@ref) page.
-2. Numerical data, that can represent measured experiments, sampled trajectories of dynamical systems, or just sets in the state space, are represented by [`Dataset`](@ref), which is a container of equally-sized data points. Timeseries in **DynamicalSystems.jl** are represented by the already existing `Vector` type of the Julia language.
 
-These core structures `DynamicalSystem, Dataset` are used throughout the package to do useful calculations often used in the field of nonlinear dynamics and chaos.
-For example, using [`lyapunovspectrum`](@ref) and [`DynamicalSystem`](@ref) gives you the Lyapunov exponents of a dynamical system with known equations of motion.
-Alternatively, by using [`lyapunov_from_data`](@ref) and [`Dataset`](@ref) you can approximate the maximum Lyapunov exponent of a measured trajectory or a reconstructed set resulting from [`embed`](@ref).
+## Latest news
 
-All things possible in **DynamicalSystems.jl** are listed in the [Contents](@ref) page.
+The new major version, v3, of **DynamicalSystems.jl** has been released! This is a massive release, with a huge amount of new content, and a re-write of many of the fundamentals of the library!
+
+The full details of this release are too long to describe here, so please read more about it in our [changelog]([xx](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md))!
+
 
 ### Tutorials
 Tutorials for **DynamicalSystems.jl** exist in the form of [Jupyter notebooks](https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials).
@@ -66,8 +38,10 @@ The second is much longer and also explains concepts of nonlinear dynamics:
 <iframe width="560" height="500" src="https://www.youtube.com/embed/A8g9rdEfdNg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
+## [Learning resources](@id learning)
 
-## Textbook with DynamicalSystems.jl
+### Textbook with DynamicalSystems.jl
+
 We have written an undergraduate level textbook as an introduction to nonlinear dynamics. The text is written in an applied, hands-on manner, while still covering all fundamentals. The book pages are interlaced with real Julia code that uses DynamicalSystems.jl and is published in the Undergraduate Lecture Notes in Physics by Springer Nature:
 * [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
 
@@ -76,8 +50,13 @@ Additional textbooks on nonlinear dynamics worth having a look are:
 * Chaos in Dynamical Systems - E. Ott
 * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
 
+### Course on applied nonlinear dynamics and complex systems
 
-## Our Goals
+We are developing a full course (targeting a graduate or undergraduate semester long course) on applied nonlinear dynamics, nonlinear timeseries analysis, and complex systems, using the packages of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/). **DynamicalSystems.jl** is part of this course.
+
+
+## [Our Goals](@id goals)
+
 **DynamicalSystems.jl** was created with three goals in mind.
 The first was to fill the missing gap of a high quality and general purpose software for nonlinear dynamics, which can make the field of nonlinear dynamics accessible and reproducible.
 The second goal was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics.
