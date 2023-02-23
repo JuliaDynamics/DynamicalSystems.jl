@@ -143,7 +143,7 @@ lorenz96 = CoupledODEs(lorenz96_rule, u0, p0)
 and, again like before, we may obtain a trajectory the same way
 
 ```@example MAIN
-total_time = 7.5
+total_time = 12.5
 sampling_time = 0.02
 Y, t = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
 Y
@@ -172,8 +172,8 @@ lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule, u0, p0; diffeq)
 ```
 
 ```@example MAIN
-X, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
-X[end]
+Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
+Y[end]
 ```
 
 
@@ -191,7 +191,7 @@ Alternatively, you may want to estimate the basins of attraction of a multistabl
 
 ```@example MAIN
 # define a state space grid to compute the basins on:
-xg = yg = range(-3, 3; length = 400)
+xg = yg = range(-2, 2; length = 201)
 # find attractors using recurrences in state space:
 mapper = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
 # compute the full basins of attraction:
@@ -199,7 +199,10 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 ```
 
 ```@example MAIN
-heatmap(xg, yg, basins)
+fig, ax = heatmap(xg, yg, basins)
+x, y = columns(X) # attractor of Henon map
+scatter!(ax, x, y; color = "black")
+fig
 ```
 
 ## State space sets
@@ -221,7 +224,7 @@ X[2:5]
 When indexed with two indices, it behaves like a matrix.
 
 ```@example MAIN
-A[2:5, 2]
+X[2:5, 2]
 ```
 
 When iterated, it iterates over the contained points
@@ -244,11 +247,35 @@ x, y = columns(X)
 
 ## Using state space sets
 
+Several packages of the library deal with `StateSpaceSets`.
+
+You could use `ComplexityMeasures` to obtain the entropy, or other complexity measures, of a given dataset. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
+```@example MAIN
+prob_est = ValueHistogram(50)
+e = entropy(prob_est, X)
+```
+
+Alternatively, you could use `FractalDimensions` to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
+```@example MAIN
+Δ_C = grassberger_proccacia_dim(X)
+```
+
+Or, you can obtain a recurrence matrix of a state space set with `RecurrenceAnalysis`
+```@example MAIN
+R = RecurrenceMatrix(Y, 8.0)
+Rg = grayscale(R)
+rr = recurrencerate(R)
+heatmap(Rg; colormap = :grays,
+    axis = (title = "recurrence rate = $(rr)", aspect = 1,)
+)
+```
 
 
 ## More nonlinear timeseries analysis
 
 - DelayEmbeddings.jl
+- TimeseriesSurrogates.jl
+
 
 
 ## Core components reference

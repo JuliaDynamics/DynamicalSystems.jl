@@ -33,8 +33,8 @@ build_docs_with_style(pages, DynamicalSystems,
     Attractors,
     FractalDimensions,
     TimeseriesSurrogates,
-    PredefinedDynamicalSystems,
-    InteractiveDynamics;
+    # InteractiveDynamics,
+    PredefinedDynamicalSystems;
     authors = "George Datseris <datseris.george@gmail.com>",
     expandfirst = ["index.md"], #  this is the first script that loads colorscheme
 )
