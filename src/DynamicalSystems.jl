@@ -19,6 +19,7 @@ using Reexport
 @reexport using ComplexityMeasures
 @reexport using TimeseriesSurrogates
 # dynamical systems
+@reexport using PredefinedDynamicalSystems
 @reexport using Attractors
 @reexport using ChaosTools
 
