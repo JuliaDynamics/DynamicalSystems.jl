@@ -1,6 +1,6 @@
 # [Overarching tutorial for DynamicalSystems.jl](@id tutorial)
 
-This page serves as a short, but to-the-point, introduction in the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
+This page serves as a short, but to-the-point, introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
 
 Going through this tutorial should take you about 20 minutes.
 
@@ -179,7 +179,7 @@ Y[end]
 
 ## Using dynamical systems
 
-You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that utilize dynamical systems with a known evolution rule. The two main packages of the library that do this are `ChaosTools` and `Attractors`. For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above. This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
+You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that utilize dynamical systems with a known evolution rule. The two main packages of the library that do this are [`ChaosTools`](@ref) and [`Attractors`](@ref). For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above. This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
 
 ```@example MAIN
 steps = 10_000
@@ -187,7 +187,7 @@ lyapunovspectrum(lorenz96, steps)
 ```
 As expected, there is at least one positive Lyapunov exponent (before the system is chaotic) and at least one zero Lyapunov exponent, because the system is continuous time.
 
-Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is "multistable" in the sense that some initial conditions go to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with `Attractors`, and would work as follows:
+Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is "multistable" in the sense that some initial conditions diverge to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with [`Attractors`](@ref), and would work as follows:
 
 ```@example MAIN
 # define a state space grid to compute the basins on:
@@ -212,7 +212,7 @@ Let's recall that the output of the `trajectory` function is a `StateSpaceSet`:
 X
 ```
 
-It is printed like a matrix where each column is the timeseries of each dynamic variable. In reality, it is a vector of statically sized vectors (for performance reasons). When iterated or indexed with 1 index, it behaves like a vector of vectors.
+It is printed like a matrix where each column is the timeseries of each dynamic variable. In reality, it is a vector of statically sized vectors (for performance reasons). When indexed with 1 index, it behaves like a vector of vectors
 ```@example MAIN
 X[1]
 ```
@@ -221,7 +221,7 @@ X[1]
 X[2:5]
 ```
 
-When indexed with two indices, it behaves like a matrix.
+When indexed with two indices, it behaves like a matrix
 
 ```@example MAIN
 X[2:5, 2]
@@ -243,24 +243,25 @@ The columns of the set are obtained with the convenience `columns` function
 
 ```@example MAIN
 x, y = columns(X)
+summary.((x, y))
 ```
 
 ## Using state space sets
 
 Several packages of the library deal with `StateSpaceSets`.
 
-You could use `ComplexityMeasures` to obtain the entropy, or other complexity measures, of a given dataset. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
+You could use [`ComplexityMeasures`](@ref) to obtain the entropy, or other complexity measures, of a given set. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
 ```@example MAIN
 prob_est = ValueHistogram(50)
-e = entropy(prob_est, X)
+entropy(prob_est, X)
 ```
 
-Alternatively, you could use `FractalDimensions` to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
+Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
 ```@example MAIN
-Δ_C = grassberger_proccacia_dim(X)
+grassberger_proccacia_dim(X)
 ```
 
-Or, you can obtain a recurrence matrix of a state space set with `RecurrenceAnalysis`
+Or, you could obtain a recurrence matrix of a state space set with [`RecurrenceAnalysis`](@ref)
 ```@example MAIN
 R = RecurrenceMatrix(Y, 8.0)
 Rg = grayscale(R)
@@ -273,9 +274,58 @@ heatmap(Rg; colormap = :grays,
 
 ## More nonlinear timeseries analysis
 
-- DelayEmbeddings.jl
-- TimeseriesSurrogates.jl
+A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_traditional_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
 
+```@example MAIN
+w = Y[:, 1] # first variable of Lorenz96
+𝒟, τ, e = optimal_traditional_de(w)
+𝒟
+```
+
+and compare
+
+```@example MAIN
+fig = Figure()
+axs = [Axis3(fig[1,i]) for i in 1:2]
+for (S, ax) in zip((Y, 𝒟), axs)
+    lines!(ax, S[:, 1], S[:, 2], S[:, 3])
+end
+fig
+```
+
+Since `𝒟` is just another state space set, we could be using any of the above analysis pipelines on it just as easily.
+
+The last package to mention here is [`TimeseriesSurrogates`](@ref), which ties with all other observed/measured data analysis by providing a framework for confidence/hypothesis testing. For example, if we had a measured timeseries but we were not sure whether it represents a deterministic system with structure in the state space, or mostly noise, we could do a surrogate test. For this, we use `surrogenerator` and `RandomFourier` from [`TimeseriesSurrogates`](@ref), and the `generalized_dim` from [`FractalDimensions`](@ref) (because it performs better in noisy sets)
+
+```@example MAIN
+x = X[:, 1] # Henon map timeseries
+# contaminate with noise
+using Random: Xoshiro
+rng = Xoshiro(1234)
+x .+= randn(rng, length(x))/100
+# compute noise-contaminated fractal dim.
+Δ_orig = generalized_dim(embed(x, 2, 1))
+```
+
+And we do the surrogate test
+```@example MAIN
+surrogate_method = RandomFourier()
+sgen = surrogenerator(x, surrogate_method, rng)
+
+Δ_surr = map(1:1000) do i
+    s = sgen()
+    generalized_dim(embed(s, 2, 1))
+end
+```
+
+and visualize the test result
+
+```@example MAIN
+fig, ax = hist(Δ_surr)
+vlines!(ax, Δ_orig)
+fig
+```
+since the real value is outside the distribution we have confidence the data are not pure noise.
 
 
 ## Core components reference
