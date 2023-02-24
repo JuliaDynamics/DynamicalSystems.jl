@@ -37,8 +37,11 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            Interactive GUI for exploring dynamical systems are now in the documentation.
-            Made with Makie.jl + InteractiveDynamics.jl!
+            This is an exciting new MAJOR release with a plethora of improvements,
+            a near-completely rewrite of many library internals,
+            and some unfortunate breaking changes!
+
+            Please see online changelog for more!
             """;
             color = :light_magenta,
         )
