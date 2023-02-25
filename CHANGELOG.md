@@ -89,11 +89,11 @@ https://juliadynamics.github.io/RecurrenceAnalysis.jl/dev/
 
 ## New amazing package ComplexityMeasures.jl
 
-This is a complete overhaul and massive enhancement of the previous Entropies.jl and deserves its own announcement post:
+This is a complete overhaul and massive enhancement of the previous Entropies.jl and deserves its own announcement post: https://discourse.julialang.org/t/complexitymeasures-jl/95198
 
 ## New amazing package Attractors.jl
 
-Incredibly exciting stuff that we (@Datseris @awage @kalelr) have been working on for the last year. It features an interface for finding attractors and their basin fractions, _as well as a new approach to "continuation"_. We are currently writing a paper for this, so the package doesn't have an announcement yet. Once we have the preprint though, we will write an announcement post for the package and share the pre-print!
+Incredibly exciting stuff that we (@awage @kalelr @Datseris) have been working on for the last year. It features an interface for finding attractors and their basin fractions, _as well as a new approach to "continuation"_. We are currently writing a paper for this, so the package doesn't have an announcement yet. Once we have the preprint though, we will write an announcement post for the package and share the pre-print!
 
 For now, feel free to see the docs and give us feedback!!!
 
