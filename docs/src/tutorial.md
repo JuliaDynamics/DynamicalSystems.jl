@@ -50,12 +50,12 @@ on a case-by-case basis as it depends on the complexity of `f`.
 
 ### Example: Henon map
 Let's make the Henon map, defined as
-$$
+```math
 \begin{aligned}
 x_{n+1} &= 1 - ax^2_n+y_n \\
 y_{n+1} & = bx_n
 \end{aligned}
-$$
+```
 with parameters $a = 1.4, b = 0.3$.
 
 First, we define the dynamic rule as a standard Julia function. Since the dynamical system is only two-dimensional, we should use the _out-of-place_ form that returns an `SVector` with the next state:
@@ -107,9 +107,9 @@ scatter(X[:, 1], X[:, 2])
 ### Example: Lorenz96
 
 Let's also make another dynamical system, the Lorenz96 model:
-$$
+```math
 \frac{dx_i}{dt} = (x_{i+1}-x_{i-2})x_{i-1} - x_i + F
-$$
+```
 for $i \in \{1, \ldots, N\}$ and $N+j=j$.
 
 Here, instead of a discrete time map we have $N$ coupled ordinary differential equations. However, creating the dynamical system works out just like above, but using `CoupledODEs` instead of `DeterministicIteratedMap`.
