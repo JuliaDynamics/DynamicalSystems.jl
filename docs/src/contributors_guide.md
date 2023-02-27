@@ -1,6 +1,6 @@
 # Contributor Guide
 
-*TL;DR: To contribute via Pull Requests see ["good first issues"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+) or ["wanted features"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FEntropies.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+). *
+_TL;DR: To contribute via pull requests you can check issues that have labels "wanted feature" or "good first issue" in the GitHub repositories of the subpackages of DynamicalSystems.jl_
 
 ---
 
@@ -34,7 +34,7 @@ When contributing code, you should keep these things in mind:
 * For the documentation strings of new methods and systems please follow the convention of the documentation strings of DynamicalSystems.jl. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be. Lastly, papers that are relevant to the method must be cited. Have a look at the documentation strings of `lyapunov` and `lyapunovspectrum` to get an idea.
 
 ## Documentation string style
-Documentation strings are the most important thing in your pull request/code. The number 1 priority of DynamicalSystems.jl is highest possible quality of documentation and utmost transparency, and the best way to achieve this is with good documentation strings. In DynamicalSystems.jl we recommend that documentation strings are structured in the following way (and this is also the recommendation we give in the [Good Scientific Code Workshop](https://youtu.be/x3swaMSCcYk?t=11087)). 
+Documentation strings are the most important thing in your pull request/code. The number 1 priority of DynamicalSystems.jl is highest possible quality of documentation and utmost transparency, and the best way to achieve this is with good documentation strings. In DynamicalSystems.jl we recommend that documentation strings are structured in the following way (and this is also the recommendation we give in the [Good Scientific Code Workshop](https://youtu.be/x3swaMSCcYk?t=11087)).
 
 1. Clear call signature in code syntax, including expected input types if necessary. The call signature should ONLY include only the most important information, not list out in detail every keyword!
 1. Brief summary of the function

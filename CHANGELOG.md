@@ -65,6 +65,8 @@ The core library DynamicalSystemsBase.jl has had a complete re-write. This has t
 3. Now **_all concrete implementations of `DynamicalSystem` can be iteratively evolved in time via the `step!` function_**. For example, `ContinuousDynamicalSystem` is now a light wrapper around `ODEIntegrator`. After working with this library for years I realized that the "middle man" of representing a dynamical system (like an ode problem) was not really necessary in downstream functions, since all of them exclusively use an integrator.
 4. Dynamical systems are completely detached from a Jacobian creation, which now is the exclusive task of `TangentDynamicalSystem`. As a result all predefined dynamical systems do not include a hand-coded Jacobian; rather the Jacobian needs to be given from `Systems` submodule to the `TangentDynamicalSystem`.
 
+Also, the `Systems` submodule has been removed from the DynamicalSystemsBase.jl package and became a new package PredefinedDynamicalSystems.jl. It is untested and it is not recommended to use in any other setting other a demonstrational example. (this was always the case, it's just that so far we weren't transparent that nothing there was tested...)
+
 Read more here: https://juliadynamics.github.io/DynamicalSystemsBase.jl/dev/
 
 ## ODE solver change
