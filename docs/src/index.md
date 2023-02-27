@@ -39,6 +39,8 @@ Additional textbooks on nonlinear dynamics worth having a look are:
 
 We are developing a full course (targeting a graduate or undergraduate semester long course) on applied nonlinear dynamics, nonlinear timeseries analysis, and complex systems, using the packages of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/). **DynamicalSystems.jl** is part of this course.
 
+The materials of the course are on GitHub: https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses
+
 
 ## [Our Goals](@id goals)
 
