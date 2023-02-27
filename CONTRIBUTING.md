@@ -1,1 +1,1 @@
-See https://juliadynamics.github.io/DynamicalSystems.jl/latest/contributors_guide/.
+See https://juliadynamics.github.io/DynamicalSystems.jl/dev/contributors_guide/.
