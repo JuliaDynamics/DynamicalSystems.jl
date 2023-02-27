@@ -1,24 +1,32 @@
-"""
-A Julia suite for chaos and nonlinear dynamics
-"""
 module DynamicalSystems
+
+# Use the README as the module docs
+@doc let
+    path = joinpath(dirname(@__DIR__), "README.md")
+    include_dependency(path)
+    read(path, String)
+end DynamicalSystems
 
 using Reexport
 
-@reexport using DelayEmbeddings
+# Core
+@reexport using StateSpaceSets
 @reexport using DynamicalSystemsBase
-@reexport using Entropies
-@reexport using ChaosTools
+# observed/measured data
 @reexport using RecurrenceAnalysis
-
-# Also export some static array stuff
-using DelayEmbeddings.StaticArrays
-export SVector, SMatrix, @SVector, @SMatrix, Size
+@reexport using FractalDimensions
+@reexport using DelayEmbeddings
+@reexport using ComplexityMeasures
+@reexport using TimeseriesSurrogates
+# dynamical systems
+@reexport using PredefinedDynamicalSystems
+@reexport using Attractors
+@reexport using ChaosTools
 
 # Update messages:
 using Scratch
 display_update = true
-version_number = "2.3.0"
+version_number = "3.0.0"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -29,8 +37,11 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            Interactive GUI for exploring dynamical systems are now in the documentation.
-            Made with Makie.jl + InteractiveDynamics.jl!
+            This is an exciting new MAJOR release with a plethora of improvements,
+            a near-completely rewrite of many library internals,
+            and some unfortunate breaking changes!
+
+            Please see online changelog for more!
             """;
             color = :light_magenta,
         )

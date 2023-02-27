@@ -6,3 +6,4 @@ update*
 Manifest.toml
 *.scss
 *.css
+*style.jl

@@ -22,9 +22,8 @@ Please provide the versions you use. To do this, run the code:
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "DelayEmbeddings", "RecurrenceAnalysis",
-    "DynamicalSystemsBase", "ChaosTools",
-    "Entropies",];
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools"
+    ];
     mode = PKGMODE_MANIFEST
 )
 ```
