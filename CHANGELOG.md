@@ -44,6 +44,7 @@ In the near future the documentation will be in the style similar to [DiffEqDocs
 - The `trajectory` function now returns both the state space set and the time vector. In sort, all code that did `A = trajectory(...)` is now broken and should be replaced by `A, tvec = trajectory(...)`.
 - There are no longer `diffeq` keyword arguments to downstream functions. All functions such as `lyapunovspectrum, basins_of_attraction`, etc. no longer accept the `diffeq` keyword, that used to specify arguments for DifferentialEquations.jl. Instead, the DiffEq solver options are decided during the creation of `CoupledODEs` (what was before `ContinuousDynamicalSystem`).
 - The basic dynamical system constructors do not accept a Jacobian. Giving a fourth argument will error. The dedicated `TangentDynamicalSystem` should be used for this.
+- The special type for 1D discrete dynamical systems has been removed. 1D systems are now represented by a 1D static vector that needs to be reshaped accordingly.
 
 ### Renames
 
@@ -52,8 +53,6 @@ Some things have been renamed to have a clearer and more specific name. These ar
 - Dataset -> StateSpaceSet
 - DiscreteDynamicalSystem -> DeterministicIteratedMap
 - ContinuousDynamicalSystem -> CoupledODEs
-- The special type for 1D discrete dynamical systems has been removed. 1D systems are now represented by a 1D static vector that needs to be reshaped accordingly.
-
 
 ## Re-write of `DynamicalSystem`
 
