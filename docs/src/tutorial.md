@@ -205,6 +205,24 @@ scatter!(ax, x, y; color = "black")
 fig
 ```
 
+You could also be using a `DynamicalSystem` instance directly to build your own algorithm if it isn't already implemented (and then later contribute it so it _is_ implemented ;) ). A dynamical system can be evolved forwards in time using `step!`:
+
+```@example MAIN
+henon
+```
+
+Notice how the time is not 0, because `henon` has already been stepped when we called the function `basins_of_attraction` with it. We can step it more:
+
+```@example MAIN
+step!(henon)
+```
+
+```@example MAIN
+step!(henon, 2)
+```
+
+For more information on how to directly use `DynamicalSystem` instances, see the documentation of [`DynamicalSystemsBase`](@ref).
+
 ## State space sets
 
 Let's recall that the output of the `trajectory` function is a `StateSpaceSet`:
