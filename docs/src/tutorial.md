@@ -85,7 +85,7 @@ Lastly, we give these three to the `DeterministicIteratedMap`:
 henon = DeterministicIteratedMap(henon_rule, u0, p0)
 ```
 
-`henon` is a `DynamicalSystem`, of the two core structures of the library.
+`henon` is a `DynamicalSystem`, one of the two core structures of the library.
 They can evolved interactively, and queried, using the interface defined by [`DynamicalSystem`](@ref). The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
 
 ```@example MAIN
