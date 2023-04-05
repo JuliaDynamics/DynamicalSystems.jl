@@ -27,17 +27,10 @@ const L1 = 1.0
 const L2 = 1.0
 p0 = (G=10.0, L1, L2, M1 = 1.0, M2 = 1.0)
 u0 = [π/3, 0, 3π/4, -2]
+
 # Solve diffeq with constant step for smoother curves
 diffeq = (alg = Vern9(), adaptive = false, dt = 0.01, abstol = 1e-9, reltol = 1e-9)
 dp = CoupledODEs(doublependulum_rule, u0, p0; diffeq)
-
-
-
-
-
-
-
-
 
 # Extract xy coordinates from state
 function xycoords(state)
