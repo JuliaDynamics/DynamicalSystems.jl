@@ -153,7 +153,7 @@ We can't scatterplot something 6-dimensional but we can visualize all timeseries
 
 ```@example MAIN
 fig = Figure()
-ax = Axis(fig[1,1]; xlabel = "time", ylabel = "variable")
+ax = Axis(fig[1, 1]; xlabel = "time", ylabel = "variable")
 for var in columns(Y)
     lines!(ax, t, var)
 end
@@ -304,7 +304,7 @@ and compare
 
 ```@example MAIN
 fig = Figure()
-axs = [Axis3(fig[1,i]) for i in 1:2]
+axs = [Axis3(fig[1, i]) for i in 1:2]
 for (S, ax) in zip((Y, 𝒟), axs)
     lines!(ax, S[:, 1], S[:, 2], S[:, 3])
 end
