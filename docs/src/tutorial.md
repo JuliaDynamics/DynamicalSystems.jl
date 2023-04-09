@@ -117,7 +117,7 @@ Here, instead of a discrete time map we have $N$ coupled ordinary differential e
 First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the _in-place_ form for `f`, overwriting in place the rate of change in a pre-allocated container.
 
 ```@example MAIN
-function lorenz96_rule(du, u, p, t)
+function lorenz96_rule!(du, u, p, t)
     F = p[1]; N = length(u)
     # 3 edge cases
     du[1] = (u[2] - u[N - 1]) * u[N] - u[1] + F
@@ -137,7 +137,7 @@ then, like before, we define an initial state and parameters, and initialize the
 N = 6
 u0 = range(0.1, 1; length = N)
 p0 = [8.0]
-lorenz96 = CoupledODEs(lorenz96_rule, u0, p0)
+lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0)
 ```
 
 and, again like before, we may obtain a trajectory the same way
@@ -168,7 +168,7 @@ When initializing a `CoupledODEs` you can tune the solver properties to your hea
 ```@example MAIN
 using OrdinaryDiffEq # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
-lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule, u0, p0; diffeq)
+lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 ```
 
 ```@example MAIN
