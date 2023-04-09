@@ -114,7 +114,7 @@ for $i \in \{1, \ldots, N\}$ and $N+j=j$.
 
 Here, instead of a discrete time map we have $N$ coupled ordinary differential equations. However, creating the dynamical system works out just like above, but using `CoupledODEs` instead of `DeterministicIteratedMap`.
 
-First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the _in-place_ form for `f`, overwriting in place the rate of change in a pre-allocated container.
+First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the _in-place_ form for `f`, overwriting in place the rate of change in a pre-allocated container. It is [customary](https://docs.julialang.org/en/v1/manual/style-guide/#bang-convention), to append the name of functions that modify their arguments in-place with a bang (`!`).
 
 ```@example MAIN
 function lorenz96_rule!(du, u, p, t)
