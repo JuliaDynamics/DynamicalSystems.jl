@@ -1,7 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "3.0.0"
+version = "3.1.0"
 
 [deps]
 Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
@@ -17,6 +17,12 @@ Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 StateSpaceSets = "40b095a5-5852-4c12-98c7-d43bf788e795"
 TimeseriesSurrogates = "c804724b-8c18-5caa-8579-6025a0767c70"
 
+[weakdeps]
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+
+[extensions]
+DynamicalSystemsVis = "Makie"
+
 [compat]
 ChaosTools = "3"
 DelayEmbeddings = "2.7"
@@ -28,6 +34,7 @@ PredefinedDynamicalSystems = "1"
 Reexport = "1"
 Scratch = "1"
 StateSpaceSets = "1"
+Makie = "≥ 0.19"
 Attractors = "0.1, 0.2, 1"
 TimeseriesSurrogates = "2.1"
 julia = "1.8"
