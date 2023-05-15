@@ -1,6 +1,14 @@
-# Unlike Agents.jl, here we don't need a wrapper struct.
-# The `DynamicalSystem` itself contains all information, and hence
-# it can be used directly as an observable
+# This is a very light struct that contains the trajectory end state
+# and the trajectory tail. Note that for convenience it always contains the state
+# as a vector of observables, each observable containing each of the
+# parallel states of the dynamical system
+struct DynamicalSystemObservable
+    pds::ParallelDynamicalSystem # reference to the dynamical system
+    state_observables::Vector{Observable}
+    tail_observables::Vector{Observable}
+end
+
+
 """
     step!(ds::Observable{<:DynamicalSystem}, args...)
 
