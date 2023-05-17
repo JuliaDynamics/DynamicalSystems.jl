@@ -1,12 +1,12 @@
-export interactive_trajectory_panel
+export interactive_trajectory
 
 """
-    interactive_trajectory_panel(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dso
+    interactive_trajectory(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dsobs
 
 Create a panel (a new Makie figure) that contains an axis showing the evolving trajectories
 of `ds` while optionally allowing for interactively starting/stopping the time evolution
 and/or changing the system parameters via sliders. Return the newly created figure `fig`
-that may include interactivity-related buttons, and a `dso::DynamicalSystemObservable`
+that may include interactivity-related buttons, and a `dsobs::DynamicalSystemObservable`
 that facilities the creation of custom animations and/or interactive
 applications, see the custom animations section below.
 
@@ -47,12 +47,13 @@ only the current state of the system is used.
   to full transparency if `true`.
 - `markersize = 15`: Size of markers of trajectory endpoints. For discrete systems
   half of that is used for the trajectory tail.
-* `plotkwargs = NamedTuple()` : A named tuple of keyword arguments propagated to
+* `plotkwargs = NamedTuple()`: A named tuple of keyword arguments propagated to
   the state space plot (`lines` for continuous, `scatter` for discrete systems).
   `plotkwargs` can also be a vector of named tuples, in which case each initial condition
   gets different arguments.
 
 ## Layouting keywords
+
 - `idxs = 1:min(length(u0s[1]), 3)`: Which variables of `ds` should be plotted.
   If three indices are given, the plot is also 3D, otherwise 2D. Note that no
   transformation of the dynamical system is done, you can use a `ProjectedDynamicalSystem`
@@ -65,19 +66,19 @@ only the current state of the system is used.
 
 ## Custom animations
 
-The second return argument `dso` is a `DynamicalSystemObservable`.
+The second return argument `dsobs` is a `DynamicalSystemObservable`.
 The trajectories plotted in the main panel are linked to observables that are fields
-of the `dso`. Specifically, the field `dso.state_obserable` is an observable containing the
+of the `dsobs`. Specifically, the field `dsobs.state_obserable` is an observable containing the
 final state of each of the trajectories, i.e., a vector of vectors like `u0s`.
-`dso.param_observable` is an observable of the system parameters. These observables
+`dsobs.param_observable` is an observable of the system parameters. These observables
 are triggered by the interactive GUI buttons (the first two when the system is stepped in
 time, the last one when the parameters are updated). However, these observables,
 and hence the corresponding plotted trajectories that are `map`ed from these observables,
 can be updated via the formal API of `DynamicalSystem`.
-`step!(dso, n::Int, [, Δt])` will step the system for `n` steps of `Δt` time,
-and only update the plot on the last step. `set_parameter!(dso, index, value)` will
+`step!(dsobs, n::Int, [, Δt])` will step the system for `n` steps of `Δt` time,
+and only update the plot on the last step. `set_parameter!(dsobs, index, value)` will
 update the system parameter and then trigger the parameter observable.
-Lastly, `set_state!(dso, new_u [, i])` will set the `i`-th system state and clear the
+Lastly, `set_state!(dsobs, new_u [, i])` will set the `i`-th system state and clear the
 trajectory plot to the new initial condition.
 
 This information can be used to create custom animations and/or interactive apps.
@@ -85,4 +86,4 @@ In principle, the only thing a user has to do is create new observables from
 the existing ones using e.g. the `on` function and plot these new observables.
 Various examples are provided in the online documentation.
 """
-function interactive_trajectory_panel end
+function interactive_trajectory end

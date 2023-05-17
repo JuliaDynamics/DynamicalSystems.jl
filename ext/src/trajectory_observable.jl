@@ -17,7 +17,7 @@ struct DynamicalSystemObservable
     Δt::Real # a default value for `step!`
 end
 
-function DynamicalSystems.interactive_trajectory_panel(
+function DynamicalSystems.interactive_trajectory(
         ds::DynamicalSystems.DynamicalSystem, u0s = [DynamicalSystems.current_state(ds)];
         # Selection of what to plot
         idxs = 1:min(length(u0s[1]), 3),
@@ -29,11 +29,10 @@ function DynamicalSystems.interactive_trajectory_panel(
         # Visualization
         colors = [COLORS[mod1(i, 6)] for i in 1:length(u0s)],
         plotkwargs = NamedTuple(), markersize = 15,
-        linekwargs = DynamicalSystems.isdiscretetime(ds)  ? () : (linewidth = 4,),
         fade = true,
         # parameters
-        ps = nothing,
-        pnames = isnothing(ps) ? nothing : Dict(keys(ps) .=> keys(ps)),
+        parameter_sliders = nothing,
+        pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> keys(parameter_sliders)),
         add_controls = true,
         # figure and axis
         figure = NamedTuple(),
@@ -86,11 +85,11 @@ function DynamicalSystems.interactive_trajectory_panel(
     end
 
     # Live parameter changing
-    # note here `ps` are parameters to have a slider; all parameters
+    # note here `parameter_sliders` are parameters to have a slider; all parameters
     # can be changed after creation of `dso` via `set_parameter!`
-    if !isnothing(ps)
+    if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
-        slidervals = _add_ds_param_controls!(paramlayout, ps, pnames)
+        slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, current_parameters(ds))
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
         paramlayout[2, 1] = update
         on(update.clicks) do clicks
@@ -215,16 +214,16 @@ function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int =
 end
 
 # Parameter handling
-function _add_ds_param_controls!(paramlayout, ps, pnames)
-    slidervals = Dict{keytype(ps), Observable}() # directly has the slider observables
+function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
+    slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
     tuples_for_slidergrid = []
-    for (i, (l, vals)) in enumerate(ps)
+    for (i, (l, vals)) in enumerate(parameter_sliders)
         startvalue = p0[l]
         label = string(pnames[l])
         push!(tuples_for_slidergrid, (;label, range = vals, startvalue))
     end
     sg = SliderGrid(paramlayout[1,1], tuples_for_slidergrid...; tellheight = true)
-    for (i, (l, vals)) in enumerate(ps)
+    for (i, (l, vals)) in enumerate(parameter_sliders)
         slidervals[l] = sg.sliders[i].value
     end
     return slidervals
