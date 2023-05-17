@@ -18,12 +18,12 @@ The keywords `linekw, scatterkw` are named tuples that are propagated as keyword
 to the line and scatter plot respectively, while the keyword `direction = -1` is propagated
 to the function `DyamicalSystems.poincaresos`.
 """
-function brainscan_poincaresos(A::DynamicalSystems.AbstractDataset, j::Int; kwargs...)
+function brainscan_poincaresos(A::AbstractDataset, j::Int; kwargs...)
     brainscan_poincaresos([A], j; kwargs...)
 end
 
 function brainscan_poincaresos(
-        As::Vector{<:DynamicalSystems.AbstractDataset}, j::Int;
+        As::Vector{<:AbstractDataset}, j::Int;
         linekw = (), scatterkw = (), direction = -1,
         colors = [CYCLIC_COLORS[i] for i in 1:length(As)]
     )
@@ -32,7 +32,7 @@ function brainscan_poincaresos(
     @assert j ∈ 1:3
     mi, ma = total_minmaxima(As)
 
-    otheridxs = DynamicalSystems.SVector(setdiff(1:3, j)...)
+    otheridxs = SVector(setdiff(1:3, j)...)
 
     figure = Figure(resolution = (1600, 800))
     display(figure)
@@ -59,7 +59,7 @@ function brainscan_poincaresos(
 
         # Poincare sos
         psos = lift(y) do y
-            DynamicalSystems.poincaresos(A, (j, y); direction, warning = false)
+            poincaresos(A, (j, y); direction, warning = false)
         end
         psos2d = lift(p -> vec(p[:, otheridxs]), psos)
         psos3d = lift(p -> vec(p), psos)
@@ -90,11 +90,11 @@ function brainscan_poincaresos(
     return figure, ax, axp
 end
 
-function total_minmaxima(As::Vector{<:DynamicalSystems.AbstractDataset})
-    mi, ma = DynamicalSystems.minmaxima(As[1])
+function total_minmaxima(As::Vector{<:AbstractDataset})
+    mi, ma = minmaxima(As[1])
     mi = Vector(mi); ma = Vector(ma)
     for j in 2:length(As)
-        mi2, ma2 = DynamicalSystems.minmaxima(As[j])
+        mi2, ma2 = minmaxima(As[j])
         for i in 1:size(As[j], 2)
             mi[i] = min(mi2[i], mi[i])
             ma[i] = max(ma2[i], ma[i])

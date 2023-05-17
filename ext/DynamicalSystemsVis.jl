@@ -15,10 +15,9 @@ COLORS = [
 
 include("src/trajectory_observable.jl")
 
-# include("src/trajanim.jl")
-# include("src/cobweb.jl")
-# include("src/orbitdiagram.jl")
-# include("src/poincareclick.jl")
-# include("src/brainscan.jl")
+include("src/cobweb.jl")
+include("src/orbitdiagram.jl")
+include("src/poincareclick.jl")
+include("src/brainscan.jl")
 
 end
