@@ -304,6 +304,13 @@ function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int, Δt = ds
     return nothing
 end
 
+function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
+    set_state!(dso.pds, u, i)
+    fill!(dso.tail_observables[i][], u[dso.idxs])
+    notify(dso.tail_obsrvables[i])
+    return nothing
+end
+
 # Parameter handling
 function _add_ds_param_controls!(paramlayout, ps, pnames)
     slidervals = Dict{keytype(ps), Observable}() # directly has the slider observables
