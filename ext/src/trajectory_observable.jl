@@ -1,8 +1,5 @@
 using DynamicalSystems.DataStructures
-# This is a very light struct that contains the trajectory end state
-# and the trajectory tail. Note that for convenience it always contains the state
-# as a vector of observables, each observable containing each of the
-# parallel states of the dynamical system
+
 """
     DynamicalSystemObservable
 
@@ -19,17 +16,6 @@ struct DynamicalSystemObservable
     idxs::AbstractVector{Int}
     Δt::Real # a default value for `step!`
 end
-
-# TODO: Somehow extract this from an online repo...?
-COLORS = [
-    "#7143E0",
-    "#191E44",
-    "#0A9A84",
-    "#AF9327",
-    "#791457",
-    "#6C768C",
-]
-
 
 function DynamicalSystems.interactive_trajectory_panel(
         ds::DynamicalSystems.DynamicalSystem, u0s = [DynamicalSystems.current_state(ds)];

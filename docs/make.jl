@@ -19,7 +19,7 @@ pages =  [
     "Introduction" => "index.md",
     "Overarching tutorial" => "tutorial.md",
     "Contents" => "contents.md",
-    # "Interactive GUIs" => "dynamicalsystems_interactive.md",
+    "Visualizations" => "visualizations.md",
     "Contributor Guide" => "contributors_guide.md",
 ]
 
