@@ -22,7 +22,7 @@ TimeseriesSurrogates = "c804724b-8c18-5caa-8579-6025a0767c70"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 
 [extensions]
-DynamicalSystemsVis = "Makie"
+DynamicalSystemsVisualizations = "Makie"
 
 [compat]
 ChaosTools = "3"

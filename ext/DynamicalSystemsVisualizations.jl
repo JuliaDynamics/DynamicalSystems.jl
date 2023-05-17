@@ -1,4 +1,4 @@
-module DynamicalSystemsVis
+module DynamicalSystemsVisualizations
 
 using DynamicalSystems, Makie
 using DynamicalSystemsBase.SciMLBase
