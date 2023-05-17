@@ -138,6 +138,11 @@ function DynamicalSystems.interactive_trajectory_panel(
         lims = nothing,
     )
 
+    if ds isa CoupledODEs && force_non_adaptive
+        newdiffeq = (ds.diffeq..., adaptive = false, dt = Δt)
+        ds = CoupledODEs(ds, newdiffeq)
+    end
+
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     fig = Figure(; figure...)
     # Set up trajectrory plot
