@@ -76,6 +76,8 @@ only the current state of the system is used.
 * `tail = 1000`: Length of plotted trajectory (in step units of the integrator).
 * `fade = true`: For continuous time system, the trajectories in state space are faded
   to full transparency if `true`.
+- `markersize = 15`: Size of markers of trajectory endpoints. For discrete systems
+  half of that is used for the trajectory tail.
 * `plotkwargs = NamedTuple()` : A named tuple of keyword arguments propagated to
   the state space plot (`lines` for continuous, `scatter` for discrete systems).
   `plotkwargs` can also be a vector of named tuples, in which case each initial condition
@@ -121,7 +123,7 @@ function DynamicalSystems.interactive_trajectory_panel(
         # Time evolution
         tail = 1000,
         Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
-        force_non_adaptive = true, # TODO:
+        force_non_adaptive = true,
         pause = nothing,
         # Visualization
         colors = [COLORS[mod1(i, 6)] for i in 1:length(u0s)],
@@ -215,17 +217,17 @@ function _init_statespace_plot!(
     # Initialize trajectories plotted element
     for (i, ob) in enumerate(tailobs)
         pk = plotkwargs isa Vector ? plotkwargs[i] : plotkwargs
+        x = to_color(colors[i])
+        if fade
+            x = [RGBAf(x.r, x.g, x.b, i/tail) for i in 1:tail]
+        end
         if !DynamicalSystems.isdiscretetime(ds)
-            x = to_color(colors[i])
-            if fade
-                x = [RGBAf(x.r, x.g, x.b, i/tail) for i in 1:tail]
-            end
             Makie.lines!(statespaceax, ob;
                 color = x, linewidth = 3.0, transparency = true, pk...
             )
         else
-            Makie.scatter!(statespaceax, ob; color = colors[i],
-                markersize = markersize/2, strokewidth = 0.0, pk...
+            Makie.scatter!(statespaceax, ob; color = x,
+                markersize = markersize/2, transparency = true, strokewidth = 0.0, pk...
             )
         end
     end
