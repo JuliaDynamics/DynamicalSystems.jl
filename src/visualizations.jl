@@ -199,7 +199,7 @@ The keywords `linekw, scatterkw` are named tuples that are propagated as keyword
 to the line and scatter plot respectively, while the keyword `direction = -1` is propagated
 to the function `DyamicalSystems.poincaresos`.
 """
-function brainscan_poincaresos end
+function interactive_poincaresos_scan end
 
 
 

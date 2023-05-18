@@ -1,6 +1,6 @@
 
 # TODO: Somehow extract this from an online repo...?
-COLORS = [
+COLORSCHEME = [
     "#7143E0",
     "#191E44",
     "#0A9A84",
@@ -8,6 +8,24 @@ COLORS = [
     "#791457",
     "#6C768C",
 ]
+
+mutable struct CyclicContainer
+    c::Vector
+    n::Int
+end
+CyclicContainer(c) = CyclicContainer(c, 0)
+
+Base.length(c::CyclicContainer) = length(c.c)
+Base.iterate(c::CyclicContainer, state=1) = Base.iterate(c.c, state)
+Base.getindex(c::CyclicContainer, i) = c.c[mod1(i, length(c))]
+Base.getindex(c::CyclicContainer, i::AbstractRange) = c.c[i]
+
+function Base.getindex(c::CyclicContainer)
+    c.n += 1
+    c[c.n]
+end
+
+const COLORS = CyclicContainer(COLORSCHEME)
 
 
 """

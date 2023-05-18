@@ -182,7 +182,7 @@ labels = ("q₂" , "p₂"),  color = λcolor, diffeq...)
 ```
 
 ```@docs
-brainscan_poincaresos
+interactive_poincaresos_scan
 ```
 
 The animation at the top of this page was done with
@@ -191,21 +191,18 @@ The animation at the top of this page was done with
 using GLMakie, DynamicalSystems
 using OrdinaryDiffEq: Vern9
 
-ds = Systems.henonheiles()
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
+ds = PredefinedDynamicalSystems.henonheiles()
+ds = CoupledODEs(ds, diffeq)
+
 u0s = [
     [0.0, -0.25, 0.42081, 0.0],
     [0.0, 0.1, 0.5, 0.0],
     [0.0, -0.31596, 0.354461, 0.0591255]
 ]
-trs = [trajectory(ds, 10000, u0; diffeq)[:, SVector(1,2,3)] for u0 ∈ u0s]
-for i in 2:length(u0s)
-    append!(trs[1], trs[i])
-end
-
-# Inputs:
+# inputs
+trs = [trajectory(ds, 10000, u0)[1][:, SVector(1,2,3)] for u0 ∈ u0s]
 j = 2 # the dimension of the plane
-tr = trs[1]
 
-brainscan_poincaresos(tr, j; linekw = (transparency = true,))
+interactive_poincaresos_scan(trs, j; linekw = (transparency = true,))
 ```

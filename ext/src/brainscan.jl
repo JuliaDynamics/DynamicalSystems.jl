@@ -1,11 +1,11 @@
 function DynamicalSystems.interactive_poincaresos_scan(A::AbstractStateSpaceSet, j::Int; kwargs...)
-    brainscan_poincaresos([A], j; kwargs...)
+    interactive_poincaresos_scan([A], j; kwargs...)
 end
 
 function DynamicalSystems.interactive_poincaresos_scan(
         As::Vector{<:AbstractStateSpaceSet}, j::Int;
         linekw = (), scatterkw = (), direction = -1,
-        colors = [CYCLIC_COLORS[i] for i in 1:length(As)]
+        colors = [COLORS[i] for i in 1:length(As)]
     )
 
     for A in As; @assert size(A, 2) == 3; end
