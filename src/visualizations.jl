@@ -33,10 +33,6 @@ only the current state of the system is used.
   Only valid if `parameter_sliders` is given.
 - `Δt`: Default time step of time evolution. 1 for discrete time,
   0.01 for continuous time systems.
-- `force_non_adaptive = true`: Because trajectories are not pre-computed and
-  interpolated, but rather calculated on the fly step by step, the integrator of continuous
-  time systems is casted into its non-adaptive version if this keyword is `true`.
-  This results to smoother plotted curves.
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
   function, which is called between each plot update. This functionality exists because
   in most cases the dynamical evolution is so fast that we need to actively pause before
@@ -80,8 +76,12 @@ final state of each of the trajectories, i.e., a vector of vectors like `u0s`.
 are triggered by the interactive GUI buttons (the first two when the system is stepped in
 time, the last one when the parameters are updated). However, these observables,
 and hence the corresponding plotted trajectories that are `map`ed from these observables,
-can be updated via the formal API of `DynamicalSystem`.
-`step!(dsobs, n::Int, [, Δt])` will step the system for `n` steps of `Δt` time,
+can be updated via the formal API of `DynamicalSystem`:
+
+```
+step!(dsobs, n::Int = 1)
+```
+will step the system for `n` steps of `Δt` time,
 and only update the plot on the last step. `set_parameter!(dsobs, index, value)` will
 update the system parameter and then trigger the parameter observable.
 Lastly, `set_state!(dsobs, new_u [, i])` will set the `i`-th system state and clear the
@@ -98,7 +98,7 @@ function interactive_trajectory end
 """
     interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
 
-An extension to [`interactive_trajectory`](@ref), which adds a new panel to the right
+An extension to [ `interactive_trajectory`](@ref), which adds a new panel to the right
 of the original trajectory panel. This new panel contains timeseries of various observed
 quantities from the state of the dynamical system. These observed timeseries are given in
 `fs`. It is a vector of integers and/or functions. Integers mean to simply observe the
@@ -107,11 +107,14 @@ that return a real number.
 
 ## Keyword arguments
 
-- `total_span`: How much the x-axis of the timeseries plots should span (in real time units)
 - `linekwargs = NamedTuple()`: Extra keywords propagated to the timeseries plots.
+  Can also be a vector of named tuples, each one for each unique initial condition.
+- `timeseries_names`: A vector of strings with length equal to `fs` giving names to
+  the y-labels of the timeseries plots.
 
 All other keywords are propagated to [`interactive_trajectory`](@ref).
 """
+function interactive_trajectory_timeseries end
 
 
 

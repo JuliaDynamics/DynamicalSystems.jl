@@ -13,6 +13,7 @@ struct DynamicalSystemObservable
     state_observable::Observable
     tail_observables::Vector{Observable}
     param_observable::Observable
+    current_step::Observable{Int}
     Δt::Real # a default value for `step!`
 end
 
@@ -23,10 +24,9 @@ function DynamicalSystems.interactive_trajectory(
         # Time evolution
         tail = 1000,
         Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
-        force_non_adaptive = true,
         pause = nothing,
         # Visualization
-        colors = [COLORS[mod1(i, 6)] for i in 1:length(u0s)],
+        colors = [COLORS[i] for i in 1:length(u0s)],
         plotkwargs = NamedTuple(), markersize = 15,
         fade = true,
         # parameters
@@ -39,7 +39,7 @@ function DynamicalSystems.interactive_trajectory(
         lims = nothing,
     )
 
-    if ds isa CoupledODEs && force_non_adaptive
+    if ds isa CoupledODEs # force time evolution into non-adaptive
         newdiffeq = (ds.diffeq..., adaptive = false, dt = Δt)
         ds = CoupledODEs(ds, newdiffeq)
     end
@@ -62,7 +62,7 @@ function DynamicalSystems.interactive_trajectory(
 
     # Create the dynamical system observable now with these linked
     po = Observable(deepcopy(current_parameters(ds)))
-    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, Δt)
+    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, Observable(0), Δt)
 
     # Functionality of live evolution. This links all observables with triggers.
     # The run button just triggers the step button perpetually
@@ -191,35 +191,6 @@ function _traj_lim_estimator(ds, u0s, idxs)
     lims = (lims...,)
 end
 
-# TODO: also add extension for set_state!
-
-# stepping code
-function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int, Δt = dso.Δt)
-    N = length(dso.tail_observables)
-    # Always store values, but only update observables after loop
-    for _ in 1:n
-        step!(dso.pds, Δt)
-        for i in 1:N
-            ob = dso.tail_observables[i]
-            last_state = current_state(dso.pds, i)
-            push!(ob[], last_state)
-        end
-    end
-    # Here the observables are updated with their current values
-    notify.(dso.tail_observables)
-    dso.state_observable[] = [x[][end] for x in dso.tail_observables]
-    return nothing
-end
-
-function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
-    set_state!(dso.pds, u, i)
-    fill!(dso.tail_observables[i][], u)
-    notify(dso.tail_obsrvables[i])
-    dso.state_observable[].val[i] = u
-    notify(dso.state_observable)
-    return nothing
-end
-
 # Parameter handling
 function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
@@ -236,6 +207,37 @@ function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     return slidervals
 end
 
+###########################################################################################
+# Extension of DynamicalSystems API
+###########################################################################################
+function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int = 1)
+    Δt = dso.Δt
+    N = length(dso.tail_observables)
+    # Always store values, but only update observables after loop
+    for _ in 1:n
+        step!(dso.pds, Δt)
+        for i in 1:N
+            ob = dso.tail_observables[i]
+            last_state = current_state(dso.pds, i)
+            push!(ob[], last_state)
+        end
+    end
+    dso.current_step.val = dso.current_step[] + n
+    # Here the observables are updated with their current values
+    notify.(dso.tail_observables)
+    dso.state_observable[] = [x[][end] for x in dso.tail_observables]
+    return nothing
+end
+
+function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
+    dso.current_step.val = 0
+    set_state!(dso.pds, u, i)
+    fill!(dso.tail_observables[i][], u)
+    notify(dso.tail_obsrvables[i])
+    dso.state_observable[].val[i] = u
+    notify(dso.state_observable)
+    return nothing
+end
 
 function DynamicalSystems.set_parameter!(dso::DynamicalSystemObservable, index, value)
     dso.param_observable[][index] = value
@@ -244,76 +246,60 @@ function DynamicalSystems.set_parameter!(dso::DynamicalSystemObservable, index, 
     return
 end
 
-
-
-
-
-
-
-
-
-
-
-
+###########################################################################################
+# Timeseries extension
 ###########################################################################################
 function DynamicalSystems.interactive_trajectory_timeseries(
-    ds::DynamicalSystem, fs::Vector, args...;
-    total_span = isdiscretetime(ds) ? 50 : 10,
+    ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
     linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
+    timeseries_names = [_timeseries_name(f) for f in fs],
+    colors = [COLORS[i] for i in 1:length(u0s)],
+    timeseries_ylims = [(0, 1) for f in fs],
     kwargs...)
 
-    fig, dsobs = interactive_trajectory(ds, args...; figure = (resolution = (1600, 800),), kwargs...)
+    fig, dsobs = interactive_trajectory(ds, u0s; colors, figure = (resolution = (1600, 800),), kwargs...)
     timeserieslayout = fig[1,2] = GridLayout()
-    allts, ts_axes = _init_timeseries_plots!(
-        timeserieslayout, dsobs, fs, colors, linekwargs
+    _init_timeseries_plots!(
+        timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names, timeseries_ylims,
     )
 
-
-    return fig
+    return fig, dsobs
 end
-
-
-
 
 function _init_timeseries_plots!(
-        layout, dsobs, fs, colors, linekwargs
+        layout, dsobs, fs, colors, linekwargs, tsnames, tslims,
     )
 
-    N = length(DynamicalSystems.current_states(pds))
-    # Initialize timeseries data:
-    allts = [] # each entry is a vector of observables; the contained observables
-    # correspond to the timeseries of a given axis. So `length(ts)` == amount of axis.
-    # However, `length(allts[i])` == amount of initial conditions.
-    for i in 1:length(idxs)
-        individual_ts = Observable[]
-        for j in 1:N
-            cb = CircularBuffer{Point2f}(tail)
-            fill!(cb, Point2f(
-                DynamicalSystems.current_time(pds), transform(DynamicalSystems.current_state(pds, j))[idxs][i])
-            )
-            push!(individual_ts, Observable(cb))
-        end
-        push!(allts, individual_ts)
-    end
-    # Initialize timeseries axis and plots:
-    ts_axes = []
-    for i in 1:length(idxs)
-        ax = Axis(layout[i, 1]; xticks = LinearTicks(5))
-        push!(ts_axes, ax)
-        individual_ts = allts[i]
-        for j in 1:N
-            lines!(ax, individual_ts[j]; color = colors[j], linekwargs...)
-            if DynamicalSystems.isdiscretetime(pds)
-                scatter!(ax, individual_ts[j]; color = colors[j])
+    # First, create axis
+    axs = [Axis(layout[i, 1]; ylabel = tsnames[i]) for i in 1:length(fs)]
+    for i in 1:length(fs); ylims!(axs[i], tslims[i]); end
+    linkxaxes!(axs...)
+    for i in 1:length(fs)-1; hidexdecorations!(axs[i]; grid = false); end
+    axs[end].xlabel = "time"
+
+    # Create and plot the observables of the timeseries
+    T = length(dsobs.tail_observables[1][])
+    for (j, f) in enumerate(fs)
+        for (i, tail) in enumerate(dsobs.tail_observables)
+            observed_data = map(tail, dsobs.current_step) do x, n
+                [Point2f(max(0, dsobs.Δt*(n - T + k)), _obtain_data(x[k], f)) for k in 1:length(x)]
             end
+            # plot them
+            lk = linekwargs isa AbstractVector ? linekwargs[i] : linekwargs
+            plotf! = isdiscretetime(dsobs.pds) ? scatterlines! : lines!
+            plotf!(axs[j], observed_data; color = colors[i], lk...)
         end
-        tight_xticklabel_spacing!(ax)
-        ax.ylabel = "x$i"
-        ylims!(ax, lims[i])
+
+        # Add a last observable trigger that changes the axis xspan
+        on(dsobs.tail_observables[end]) do x
+            n = dsobs.current_step[]
+            xlims!(axs[end], max(0, dsobs.Δt*(n - T)), max(T*dsobs.Δt, dsobs.Δt*n))
+        end
     end
-    linkxaxes!(ts_axes...)
-    for i in 1:length(idxs)-1
-        hidexdecorations!(ts_axes[i]; grid = false)
-    end
-    return allts, ts_axes
+    return
 end
+
+_obtain_data(x::AbstractVector, f::Int) = x[f]
+_obtain_data(x::AbstractVector, f::Function) = f(x)
+_timeseries_name(f::Int) = "x"*subscript(f)
+_timeseries_name(f) = string(f)

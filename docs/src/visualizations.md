@@ -123,11 +123,53 @@ fig
 
 Note that the sliders themselves did not change, as this functionality is for "offline" creation of animations where one doesn't interact with sliders. The keyword `add_controls` should be given as `false` in such scenarios.
 
-### Example 3: Adding move panels that show observables of the system trajectory
+### Example 3: Observed timeseries of the system
 
-# TODO: Copy paste example of tomas cyclical from interactive dynamics
+```@example MAIN
+using DynamicalSystems, CairoMakie
+using LinearAlgebra: norm, dot
 
-We now continue from the above visualization and we add more plot panels that once again are updated automatically as the system evolves. The code we will write is a simplified version of the convenience that [`interactive_trajectory_timeseries`](@ref).
+# Dynamical system and initial conditions
+ds = Systems.thomas_cyclical(b = 0.2)
+u0s = ([3, 1, 1.], [1, 3, 1.], [1, 1, 3.])
+
+# Observables we get timeseries of:
+f1 = 3
+f2 = function distance_from_symmetry(u)
+    v = SVector{3}(1/√3, 1/√3, 1/√3)
+    t = dot(v, u)
+    return norm(u - t*v)
+end
+fs = [f1, f2]
+
+fig, dsobs = interactive_trajectory_timeseries(ds, fs, u0s;
+    idxs = [1, 2], timeseries_names = ["x3", "dist. symm."],
+    timeseries_ylims = [(-2, 4), (0, 5)],
+    lims = ((-2, 4), (-2, 4)),
+    Δt = 0.05, tail = 500,
+    add_controls = false
+)
+
+fig
+```
+
+we can progress the simulation:
+
+```@example MAIN
+step!(dsobs, 200)
+fig
+```
+
+or we can even make a nice video out of it:
+
+```@example MAIN
+
+record(fig, "thomas_cycl.mp4", 1:100) do i
+    step!(dsobs, 10)
+end
+```
+
+
 
 
 ## Cobweb Diagrams
