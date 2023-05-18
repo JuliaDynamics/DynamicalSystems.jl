@@ -1,63 +1,10 @@
-export interactive_orbitdiagram, scaleod
 # TODO: Allow initial state to be a function of parameter (define function `get_u(f, p)`)
 
-"""
-    interactive_orbitdiagram(
-        ds::DynamicalSystem, p_index, pmin, pmax, i::Int = 1;
+function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0::Int = 1;
         u0 = nothing, parname = "p", title = ""
     )
 
-Open an interactive application for exploring orbit diagrams (ODs) of discrete
-dynamical systems. Requires `DynamicalSystems`.
-
-In essense, the function presents the output of `orbitdiagram`
-of the `i`th variable of the `ds`, and allows interactively zooming into it.
-
-Keywords control the name of the parameter, the initial state (used for _any_ parameter)
-or whether to add a title above the orbit diagram.
-
-## Interaction
-
-The application is separated in the "OD plot" (left) and the "control panel" (right).
-On the OD plot you can interactively click
-and drag with the left mouse button to select a region in the OD. This region is then
-**re-computed** at a higher resolution.
-
-The options at the control panel are straight-forward, with
-* `n` amount of steps recorded for the orbit diagram (not all are in the zoomed region!)
-* `t` transient steps before starting to record steps
-* `d` density of x-axis (the parameter axis)
-* `α` alpha value for the plotted points.
-
-Notice that at each update `n*t*d` steps are taken.
-You have to press `update` after changing these parameters.
-Press `reset` to bring the OD in the original
-state (and variable). Pressing `back` will go back through the history of your exploration
-History is stored when the "update" button is pressed or a region is zoomed in.
-
-You can even decide which variable to get the OD for
-by choosing one of the variables from the wheel!
-Because the y-axis limits can't be known when changing variable, they reset to the size
-of the selected variable.
-
-## Accessing the data
-
-What is plotted on the application window is a _true_ orbit diagram, not a plotting
-shorthand. This means that all data are obtainable and usable directly.
-Internally we always scale the orbit diagram to [0,1]² (to allow `Float64` precision
-even though plotting is `Float32`-based). This however means that it is
-necessary to transform the data in real scale. This is done through the function
-[`scaleod`](@ref) which accepts the 5 arguments returned from the current function:
-```julia
-figure, oddata = interactive_orbitdiagram(...)
-ps, us = scaleod(oddata)
-```
-"""
-function interactive_orbitdiagram(ds, p_index, p_min, p_max, i0::Int = 1;
-        u0 = nothing, parname = "p", title = ""
-    )
-
-    figure = Figure(resolution = (1200, 600), backgroundcolor = DEFAULT_BG)
+    figure = Figure(resolution = (1200, 600))
     display(figure)
     odax = figure[1,1] = Axis(figure; title)
     for z in (:xpanlock, :ypanlock, :xzoomlock, :yzoomlock)
@@ -84,7 +31,7 @@ function interactive_orbitdiagram(ds, p_index, p_min, p_max, i0::Int = 1;
     update_controls!(history[end], i, n, Ttr, d,  ⬜p₋, ⬜p₊, ⬜u₋, ⬜u₊)
 
     color = lift(a -> RGBAf(0,0,0,a), α)
-    scatter!(odax, od_obs; marker = MARKER, markersize = 1px, color = color, strokewidth = 0.0)
+    scatter!(odax, od_obs; markersize = 1px, color = color, strokewidth = 0.0)
 
     xlims!(odax, 0, 1)
     ylims!(odax, 0, 1)
@@ -252,14 +199,9 @@ function  update_controls!(h, i, n, Ttr, d, ⬜p₋, ⬜p₊, ⬜u₋, ⬜u₊)
     return
 end
 
-"""
-    scaleod(oddata) -> ps, us
-Given the return values of [`interactive_orbitdiagram`](@ref), produce
-orbit diagram data scaled correctly in data units. Return the data as a vector of
-parameter values and a vector of corresponding variable values.
-"""
-scaleod(r::Tuple) = scaleod(r...)
-function scaleod(od, p₋, p₊, u₋, u₊)
+
+DynamicalSystems.scaleod(r::Tuple) = scaleod(r...)
+function DynamicalSystems.scaleod(od, p₋, p₊, u₋, u₊)
     oddata = od[]; L = length(oddata);
     T = promote_type(typeof(u₋[]), Float32)
     ps = zeros(T, L); us = copy(ps)
