@@ -60,6 +60,7 @@ This section lists all exported names of the **DynamicalSystems.jl** library. We
 The total exported names are:
 
 ```@example MAIN
+using DynamicalSystems
 all_exported_names = names(DynamicalSystems)
 length(all_exported_names)
 ```
