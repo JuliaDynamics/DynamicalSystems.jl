@@ -4,7 +4,7 @@ Using the functionality of package extensions in Julia v1.9+, DynamicalSystems.j
 
 The main functionality is [`interactive_trajectory`](@ref) that allows building custom GUI apps for visualizing the time evolution of dynamical systems. The remaining GUI applications in this page are dedicated to more specialized scenarios.
 
-## Interactive trajectory evolution
+## Interactive- or animated trajectory evolution
 
 ```@raw html
 <video width="100%" height="auto" controls autoplay loop>
@@ -47,7 +47,12 @@ fig
 
 (if you progress the visuals via code you probably want to give `add_controls = false` as a keyword to [`interactive_trajectory`](@ref))
 
-### Example 2: Adding parameter-dependent elements to the plot
+### Example 2: Adding parameter-dependent elements to a plot
+
+In this advanced example we add plot elements to the provided figure, and also utilize the parameter observable in `dsobs` to add animated plot elements that update whenever a parameter updates. The final product of this snippet is in fact the animation at the top of the docstring of [`interactive_trajectory_panel`](@ref).
+
+We start with an interactive trajectory panel of the Lorenz63 system, in which we also add sliders for interactively changing parameter values
+
 ```@example MAIN
 using DynamicalSystems, CairoMakie
 
@@ -73,9 +78,56 @@ fig, dsobs = interactive_trajectory(
 fig
 ```
 
-If now one interactively clicked (if using GLMakie) the parameter sliders and then update, the system parameters would be updated accordingly. We do it here manually via code
+If now one interactively clicked (if using GLMakie) the parameter sliders and then update, the system parameters would be updated accordingly. We can also add new plot elements that depend on the parameter values using the `dsobs`:
 
-lalala.
+
+```@example MAIN
+# Fixed points of the lorenz system (without the origin)
+lorenz_fixedpoints(ρ,β) = [
+    Point3f(sqrt(β*(ρ-1)), sqrt(β*(ρ-1)), ρ-1),
+    Point3f(-sqrt(β*(ρ-1)), -sqrt(β*(ρ-1)), ρ-1),
+]
+
+# add an observable trigger to the system parameters
+fpobs = map(dsobs.param_observable) do params
+    σ, ρ, β = params
+    return lorenz_fixedpoints(ρ, β)
+end
+
+# If we want to plot directly on the trajectory axis, we need to
+# extract it from the figure. The first entry of the figure is a grid layout
+# containing the axis and the GUI controls. The [1,1] entry of the layout
+# is the axis containing the trajectory plot
+
+ax = content(fig[1,1][1,1])
+scatter!(ax, fpobs; markersize = 10, marker = :diamond, color = :red)
+
+fig
+```
+
+Now, after the live animation "run" button is pressed, we can interactively change the parameter ρ and click update, in which case both the dynamical system's ρ parameter will change, but also the location of the red diamonds.
+
+We can also change the parameters non-interactively using `set_parameter!`
+
+```@example
+set_parameter!(dsobs, 2, 50.0)
+
+fig
+```
+
+```@example
+set_parameter!(dsobs, 2, 10.0)
+
+fig
+```
+
+Note that the sliders themselves did not change, as this functionality is for "offline" creation of animations where one doesn't interact with sliders. The keyword `add_controls` should be given as `false` in such scenarios.
+
+### Example 3: Adding move panels that show observables of the system trajectory
+
+# TODO: Copy paste example of tomas cyclical from interactive dynamics
+
+We now continue from the above visualization and we add more plot panels that once again are updated automatically as the system evolves. The code we will write is a simplified version of the convenience that [`interactive_trajectory_timeseries`](@ref).
 
 
 ## Cobweb Diagrams

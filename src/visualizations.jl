@@ -1,5 +1,5 @@
 export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, scaleod,
-  interactive_poincaresos_scan, interactive_poincaresos
+  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries
 
 """
     interactive_trajectory(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dsobs
@@ -37,6 +37,11 @@ only the current state of the system is used.
   interpolated, but rather calculated on the fly step by step, the integrator of continuous
   time systems is casted into its non-adaptive version if this keyword is `true`.
   This results to smoother plotted curves.
+- `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
+  function, which is called between each plot update. This functionality exists because
+  in most cases the dynamical evolution is so fast that we need to actively pause before
+  each update to visually track the trajectory. For interactive applications this should
+  be `0.001` or some other small number.
 
 ## Visualization keywords
 
@@ -88,6 +93,25 @@ the existing ones using e.g. the `on` function and plot these new observables.
 Various examples are provided in the online documentation.
 """
 function interactive_trajectory end
+
+
+"""
+    interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
+
+An extension to [`interactive_trajectory`](@ref), which adds a new panel to the right
+of the original trajectory panel. This new panel contains timeseries of various observed
+quantities from the state of the dynamical system. These observed timeseries are given in
+`fs`. It is a vector of integers and/or functions. Integers mean to simply observe the
+specified variable. Functions are all functions of the full state of the dynamical system
+that return a real number.
+
+## Keyword arguments
+
+- `total_span`: How much the x-axis of the timeseries plots should span (in real time units)
+- `linekwargs = NamedTuple()`: Extra keywords propagated to the timeseries plots.
+
+All other keywords are propagated to [`interactive_trajectory`](@ref).
+"""
 
 
 

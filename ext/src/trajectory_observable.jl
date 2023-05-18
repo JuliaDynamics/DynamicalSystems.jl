@@ -35,7 +35,7 @@ function DynamicalSystems.interactive_trajectory(
         pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> keys(parameter_sliders)),
         add_controls = true,
         # figure and axis
-        figure = NamedTuple(),
+        figure = (resolution = (800, 800),),
         axis = NamedTuple(),
         lims = nothing,
     )
@@ -56,7 +56,6 @@ function DynamicalSystems.interactive_trajectory(
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
         run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
-        display(fig) # attemp to display by default in interactive scenarios
     else
         # So that we can leave the interactive UI code as is
         run = Observable(0); step = Observable(0); stepslider = Observable(1)
@@ -235,4 +234,27 @@ function DynamicalSystems.set_parameter!(dso::DynamicalSystemObservable, index, 
     set_parameter!(dso.pds, index, value)
     notify(dso.param_observable)
     return
+end
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################################################################
+function DynamicalSystems.interactive_trajectory_timeseries(
+    ds::DynamicalSystem, fs::Vector, args...;
+    total_span = isdiscretetime(ds) ? 50 : 10,
+    linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
+    kwargs...)
+
+    fig, dsobs = interactive_trajectory(ds, args...; figure = (resolution = (1600, 800),), kwargs...)
+
+    return fig
 end

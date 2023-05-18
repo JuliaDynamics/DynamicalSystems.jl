@@ -1,11 +1,13 @@
 # [Contents](@id contents)
 
 When you do `using DynamicalSystems` in your Julia session, the module
-re-exports and brings into scope all packages listed in this session.
+re-exports and brings into scope all submodules (Julia packages) that compose **DynamicalSystems.jl**. These are listed in this page.
 Of course, you could be using these packages directly instead of adding `DynamicalSystems`.
 However, doing `using DynamicalSystems` provides the environment all these packages were designed to work together in, and so we recommend to simply install `DynamicalSystems` and use that.
 
-Re-exported packages:
+## Exported submodules
+
+The submodules that compose **DynamicalSystems.jl** are the following packages, which are re-exported by `DynamicalSystems`:
 
 **Core**
 - [`StateSpaceSets`](@ref)
@@ -22,6 +24,8 @@ Re-exported packages:
 - [`PredefinedDynamicalSystems`](@ref)
 - [`ChaosTools`](@ref)
 - [`Attractors`](@ref)
+
+At the very end of this page,
 
 
 ## Core
@@ -47,4 +51,23 @@ TimeseriesSurrogates
 PredefinedDynamicalSystems
 ChaosTools
 Attractors
+```
+
+## All exported names
+
+This section lists all exported names of the **DynamicalSystems.jl** library. We do not list their documentation in any way here. This list is only meant as a quantitative listing of features, as well as perhaps helping searching via the search bar. To actually learn how to use all these exported names you need to use
+
+The total exported names are:
+
+```@example MAIN
+all_exported_names = names(DynamicalSystems)
+length(all_exported_names)
+```
+
+And they are:
+
+```@example MAIN
+for name in all_exported_names
+    println(name)
+end
 ```
