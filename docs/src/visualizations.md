@@ -4,7 +4,6 @@ Using the functionality of package extensions in Julia v1.9+, DynamicalSystems.j
 
 The main functionality is [`interactive_trajectory`](@ref) that allows building custom GUI apps for visualizing the time evolution of dynamical systems. The remaining GUI applications in this page are dedicated to more specialized scenarios.
 
-
 ## Interactive trajectory evolution
 
 ```@raw html
