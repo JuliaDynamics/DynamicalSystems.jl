@@ -13,7 +13,6 @@ struct DynamicalSystemObservable
     state_observable::Observable
     tail_observables::Vector{Observable}
     param_observable::Observable
-    idxs::AbstractVector{Int}
     Δt::Real # a default value for `step!`
 end
 
@@ -63,7 +62,7 @@ function DynamicalSystems.interactive_trajectory(
 
     # Create the dynamical system observable now with these linked
     po = Observable(deepcopy(current_parameters(ds)))
-    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, SVector(idxs...), Δt)
+    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, Δt)
 
     # Functionality of live evolution. This links all observables with triggers.
     # The run button just triggers the step button perpetually
@@ -108,13 +107,22 @@ end
 function _init_statespace_plot!(
         layout, ds, idxs, lims, pds, colors, plotkwargs, markersize, tail, axis, fade,
     )
-    tailobs, finalpoints = _init_trajectory_observables(pds, tail, idxs)
+    tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
     statespaceax = !is3D ? Axis(layout[1,1]; xlabel = "x1", ylabel = "x2", axis...) :
         Axis3(layout[1,1]; xlabel = "x1", ylabel = "x2", zlabel = "x3", axis...)
 
+    # Here we make two more observables for the plotted tails and plotted final
+    # states, so that the stored observables in `dsobs` are the full system state;
+    # This simplifies drastically making custom animations
+    T = length(idxs) == 2 ? Point2f : Point3f
+    plotted_tailobs = [
+        map(x -> T[y[idxs] for y in x], ob) for ob in tailobs
+    ]
+    plotted_finalpoints = map(x -> T[y[idxs] for y in x], finalpoints)
+
     # Initialize trajectories plotted element
-    for (i, ob) in enumerate(tailobs)
+    for (i, ob) in enumerate(plotted_tailobs)
         pk = plotkwargs isa Vector ? plotkwargs[i] : plotkwargs
         x = to_color(colors[i])
         if fade
@@ -135,19 +143,19 @@ function _init_statespace_plot!(
     else
         (marker = :diamond, )
     end
-    Makie.scatter!(statespaceax, finalpoints;
+    Makie.scatter!(statespaceax, plotted_finalpoints;
         color = colors, markersize = markersize, finalargs...)
     !isnothing(lims) && (statespaceax.limits = lims)
     is3D && (statespaceax.protrusions = 50) # removes overlap of labels
     return statespaceax, tailobs, finalpoints
 end
-function _init_trajectory_observables(pds, tail, idxs)
-    N = length(DynamicalSystems.current_states(pds))
+function _init_trajectory_observables(pds, tail)
+    N = length(current_states(pds))
     tailobs = Observable[]
-    T = length(idxs) == 2 ? Point2f : Point3f
+    T = typeof(current_state(pds))
     for i in 1:N
         cb = CircularBuffer{T}(tail)
-        fill!(cb, T(DynamicalSystems.current_state(pds, i)[idxs]))
+        fill!(cb, current_state(pds, i))
         push!(tailobs, Observable(cb))
     end
     finalpoints = Observable([x[][end] for x in tailobs])
@@ -193,7 +201,7 @@ function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int, Δt = ds
         step!(dso.pds, Δt)
         for i in 1:N
             ob = dso.tail_observables[i]
-            last_state = current_state(dso.pds, i)[dso.idxs]
+            last_state = current_state(dso.pds, i)
             push!(ob[], last_state)
         end
     end
@@ -205,9 +213,9 @@ end
 
 function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
     set_state!(dso.pds, u, i)
-    fill!(dso.tail_observables[i][], u[dso.idxs])
+    fill!(dso.tail_observables[i][], u)
     notify(dso.tail_obsrvables[i])
-    dso.state_observable[].val[i] = u[dso.idxs]
+    dso.state_observable[].val[i] = u
     notify(dso.state_observable)
     return nothing
 end
@@ -255,6 +263,57 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     kwargs...)
 
     fig, dsobs = interactive_trajectory(ds, args...; figure = (resolution = (1600, 800),), kwargs...)
+    timeserieslayout = fig[1,2] = GridLayout()
+    allts, ts_axes = _init_timeseries_plots!(
+        timeserieslayout, dsobs, fs, colors, linekwargs
+    )
+
 
     return fig
+end
+
+
+
+
+function _init_timeseries_plots!(
+        layout, dsobs, fs, colors, linekwargs
+    )
+
+    N = length(DynamicalSystems.current_states(pds))
+    # Initialize timeseries data:
+    allts = [] # each entry is a vector of observables; the contained observables
+    # correspond to the timeseries of a given axis. So `length(ts)` == amount of axis.
+    # However, `length(allts[i])` == amount of initial conditions.
+    for i in 1:length(idxs)
+        individual_ts = Observable[]
+        for j in 1:N
+            cb = CircularBuffer{Point2f}(tail)
+            fill!(cb, Point2f(
+                DynamicalSystems.current_time(pds), transform(DynamicalSystems.current_state(pds, j))[idxs][i])
+            )
+            push!(individual_ts, Observable(cb))
+        end
+        push!(allts, individual_ts)
+    end
+    # Initialize timeseries axis and plots:
+    ts_axes = []
+    for i in 1:length(idxs)
+        ax = Axis(layout[i, 1]; xticks = LinearTicks(5))
+        push!(ts_axes, ax)
+        individual_ts = allts[i]
+        for j in 1:N
+            lines!(ax, individual_ts[j]; color = colors[j], linekwargs...)
+            if DynamicalSystems.isdiscretetime(pds)
+                scatter!(ax, individual_ts[j]; color = colors[j])
+            end
+        end
+        tight_xticklabel_spacing!(ax)
+        ax.ylabel = "x$i"
+        ylims!(ax, lims[i])
+    end
+    linkxaxes!(ts_axes...)
+    for i in 1:length(idxs)-1
+        hidexdecorations!(ts_axes[i]; grid = false)
+    end
+    return allts, ts_axes
 end
