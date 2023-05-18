@@ -93,7 +93,7 @@ interactive_cobweb
 The animation at the top of this section was done with
 
 ```julia
-using InteractiveDynamics, GLMakie, DynamicalSystems
+using DynamicalSystems, GLMakie
 
 # the second range is a convenience for intermittency example of logistic
 rrange = 1:0.001:4.0
