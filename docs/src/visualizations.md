@@ -1,4 +1,4 @@
-# Interactive GUIs, animations, visualizations
+# [Interactive GUIs, animations, visualizations](@id visualizations)
 
 Using the functionality of package extensions in Julia v1.9+, DynamicalSystems.jl provides various visualization tools as soon as the [Makie](https://makie.juliaplots.org/stable/) package comes into scope (i.e., when `using Makie` or any of its backends like `GLMakie`).
 
