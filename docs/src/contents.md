@@ -25,7 +25,7 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 - [`ChaosTools`](@ref)
 - [`Attractors`](@ref)
 
-At the very end of this page,
+At the very end of this page, a full list of exported names is presented.
 
 
 ## Core
@@ -55,7 +55,7 @@ Attractors
 
 ## All exported names
 
-This section lists all exported names of the **DynamicalSystems.jl** library. We do not list their documentation in any way here. This list is only meant as a quantitative listing of features, as well as perhaps helping searching via the search bar. To actually learn how to use all these exported names you need to use
+This section lists all exported names of the **DynamicalSystems.jl** library. We do not list their documentation in any way here. This list is only meant as a quantitative listing of features, as well as perhaps helping searching via the search bar. To actually learn how to use all these exported names you need to use above-linked documentation of the respective submodules!
 
 The total exported names are:
 
@@ -67,7 +67,6 @@ length(all_exported_names)
 And they are:
 
 ```@example MAIN
-for name in all_exported_names
-    println(name)
-end
+using DisplayAs
+DisplayAs.unlimited(all_exported_names)
 ```
