@@ -20,7 +20,7 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 
 The new major version, v3, of **DynamicalSystems.jl** has been released! This is a massive release, with a huge amount of new content, and a re-write of many of the fundamentals of the library!
 
-The full details of this release are too long to describe here, so please read more about it in our [changelog]([xx](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md))!
+The full details of this release are too long to describe here, so please read more about it in our [changelog](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md)!
 
 
 ## [Learning resources](@id learning)
