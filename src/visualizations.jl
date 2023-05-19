@@ -16,6 +16,8 @@ The trajectories from the initial conditions in `u0s` (a vector of vectors)
 are all evolved and visualized in parallel. By default
 only the current state of the system is used.
 
+See also [`interactive_trajectory_timeseries`](@ref).
+
 ## Interactivity and time stepping keywords
 
 - `add_controls = true`: If `true`, below the main axis containing the trajectories
@@ -31,13 +33,10 @@ only the current state of the system is used.
   `parameter_sliders` only conserns the buttons and interactivity added to the created panel.
 - `pnames = Dict(keys(ps) .=> keys(ps))` : Dictionary mapping parameter keys to labels.
   Only valid if `parameter_sliders` is given.
-- `Δt`: Default time step of time evolution. 1 for discrete time,
+- `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
   0.01 for continuous time systems.
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
-  function, which is called between each plot update. This functionality exists because
-  in most cases the dynamical evolution is so fast that we need to actively pause before
-  each update to visually track the trajectory. For interactive applications this should
-  be `0.001` or some other small number.
+  function, which is called between each plot update.
 
 ## Visualization keywords
 
@@ -45,7 +44,7 @@ only the current state of the system is used.
 - `idxs = 1:min(length(transform(u0s[1])), 3)`: Which variables to plot
   (up to three can be chosen).
 * `tail = 1000`: Length of plotted trajectory (in step units of the integrator).
-* `fade = true`: For continuous time system, the trajectories in state space are faded
+* `fade = true`: The trajectories in state space are faded
   to full transparency if `true`.
 - `markersize = 15`: Size of markers of trajectory endpoints. For discrete systems
   half of that is used for the trajectory tail.

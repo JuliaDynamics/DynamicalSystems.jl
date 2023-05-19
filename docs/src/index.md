@@ -19,10 +19,11 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 
 ## Latest news
 
-The new major version, v3, of **DynamicalSystems.jl** has been released! This is a massive release, with a huge amount of new content, and a re-write of many of the fundamentals of the library!
+DynamicalSystems.jl moved to Julia 1.9+, and now exports visualization
+and interactive applications automatically once Makie (or Makie backends
+such as GLMakie) come into scope, using the new package extension system.
 
-The full details of this release are too long to describe here, so please read more about it in our [changelog](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md)!
-
+The package InteractiveDynamics.jl is now obsolete.
 
 ## [Learning resources](@id learning)
 
