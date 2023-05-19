@@ -169,6 +169,11 @@ record(fig, "thomas_cycl.mp4", 1:100) do i
 end
 ```
 
+```@raw html
+<video width="auto" controls autoplay loop>
+<source src="../thomas_cycl.mp4" type="video/mp4">
+</video>
+```
 
 
 
