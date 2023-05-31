@@ -10,18 +10,20 @@ DynamicalSystems
 
 Welcome to the documentation of **DynamicalSystems.jl**!
 
-- The [contents](@ref contents) page gives a summary of all packages that are part of the library.
 - If you have not used the library before, and would like to get started, then please read the [overarching tutorial](@ref tutorial) for the library.
+- The [contents](@ref contents) page gives a summary of all packages that are part of the library.
 - See the [learning resources](@ref learning) below to find out more resources about learning the library and using it in scientific research and/or education.
+- Besides the formal algorithmic/scientific content of **DynamicalSystems.jl** (those in the [contents](@ref contents)) page, the library also provides an extensive suite for interactive or offline animations and visualizations dynamical systems. These are found in the [visualizations](@ref visualization) page.
 - The remaining of this introduction page discusses our goals with the library, how to participate as a user or developer, how to cite, and other relevant information (see the sections of the sidebar on the left).
 
 
 ## Latest news
 
-The new major version, v3, of **DynamicalSystems.jl** has been released! This is a massive release, with a huge amount of new content, and a re-write of many of the fundamentals of the library!
+DynamicalSystems.jl moved to Julia 1.9+, and now exports visualization
+and interactive applications automatically once Makie (or Makie backends
+such as GLMakie) come into scope, using the new package extension system.
 
-The full details of this release are too long to describe here, so please read more about it in our [changelog](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md)!
-
+The package InteractiveDynamics.jl is now obsolete.
 
 ## [Learning resources](@id learning)
 
@@ -141,7 +143,7 @@ include("../style.jl")
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools"
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools", "CairoMakie",
     ];
     mode = PKGMODE_MANIFEST
 )
@@ -152,6 +154,7 @@ Pkg.status([
 
 
 ## Other NLD-relevant packages
+
 Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
 
 * [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (infastructure already used in DynamicalSystems.jl), it also has much more features like SDE solvers or uncertainty quantification.
