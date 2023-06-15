@@ -113,6 +113,9 @@ that return a real number.
 - `timeseries_ylims`: A vector of 2-tuples for the lower and upper limits of the
   y-axis of each timeseries plot. This can't be deduced automatically as
   arbitrary observables are allowed in the timeseries.
+- `timeunit = 1`: the units of time, if any. The actual time elapsed is divided by
+  this number.
+- `timelabel = "time"`: label of the x-axis of the timeseries plots.
 
 All other keywords are propagated to [`interactive_trajectory`](@ref).
 """

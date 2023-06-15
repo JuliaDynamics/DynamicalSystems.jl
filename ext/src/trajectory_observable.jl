@@ -259,19 +259,21 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     timeseries_names = [_timeseries_name(f) for f in fs],
     colors = [COLORS[i] for i in 1:length(u0s)],
     timeseries_ylims = [(0, 1) for f in fs],
+    timelabel = "time", timeunit = 1,
     kwargs...)
 
     fig, dsobs = interactive_trajectory(ds, u0s; colors, figure = (resolution = (1600, 800),), kwargs...)
     timeserieslayout = fig[1,2] = GridLayout()
     _init_timeseries_plots!(
-        timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names, timeseries_ylims,
+        timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names,
+        timeseries_ylims, timelabel, timeunit
     )
 
     return fig, dsobs
 end
 
 function _init_timeseries_plots!(
-        layout, dsobs, fs, colors, linekwargs, tsnames, tslims,
+        layout, dsobs, fs, colors, linekwargs, tsnames, tslims, timelabel, timeunit
     )
 
     # First, create axis
@@ -279,14 +281,14 @@ function _init_timeseries_plots!(
     for i in 1:length(fs); ylims!(axs[i], tslims[i]); end
     linkxaxes!(axs...)
     for i in 1:length(fs)-1; hidexdecorations!(axs[i]; grid = false); end
-    axs[end].xlabel = "time"
+    axs[end].xlabel = timelabel
 
     # Create and plot the observables of the timeseries
     T = length(dsobs.tail_observables[1][])
     for (j, f) in enumerate(fs)
         for (i, tail) in enumerate(dsobs.tail_observables)
             observed_data = map(tail, dsobs.current_step) do x, n
-                [Point2f(max(0, dsobs.Δt*(n - T + k)), _obtain_data(x[k], f)) for k in 1:length(x)]
+                [Point2f(max(0, dsobs.Δt*(n - T + k)/timeunit), _obtain_data(x[k], f)) for k in 1:length(x)]
             end
             # plot them
             lk = linekwargs isa AbstractVector ? linekwargs[i] : linekwargs
@@ -297,7 +299,10 @@ function _init_timeseries_plots!(
         # Add a last observable trigger that changes the axis xspan
         on(dsobs.tail_observables[end]) do x
             n = dsobs.current_step[]
-            xlims!(axs[end], max(0, dsobs.Δt*(n - T)), max(T*dsobs.Δt, dsobs.Δt*n))
+            xlims!(axs[end],
+                max(0, dsobs.Δt*(n - T)/timeunit),
+                max(T*dsobs.Δt/timeunit, dsobs.Δt*n/timeunit)
+            )
         end
     end
     return
