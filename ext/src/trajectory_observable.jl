@@ -152,7 +152,10 @@ end
 function _init_trajectory_observables(pds, tail)
     N = length(current_states(pds))
     tailobs = Observable[]
-    T = typeof(current_state(pds))
+    # Copy ensures that each state in the circular buffer is independent
+    # of the state of the `pds`, if it is inplace
+    # (copy should be free for out of place anyways)
+    T = typeof(copy(current_state(pds)))
     for i in 1:N
         cb = CircularBuffer{T}(tail)
         fill!(cb, current_state(pds, i))
@@ -219,7 +222,8 @@ function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int = 1)
         for i in 1:N
             ob = dso.tail_observables[i]
             last_state = current_state(dso.pds, i)
-            push!(ob[], last_state)
+            # Use copy to ensure each entry in the circular buffer is unique!
+            push!(ob[], copy(last_state))
         end
     end
     dso.current_step.val = dso.current_step[] + n
