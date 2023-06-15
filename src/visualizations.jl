@@ -43,7 +43,7 @@ See also [`interactive_trajectory_timeseries`](@ref).
 - `colors`: The color for each initial condition (and resulting trajectory).
 - `idxs = 1:min(length(transform(u0s[1])), 3)`: Which variables to plot
   (up to three can be chosen).
-* `tail = 1000`: Length of plotted trajectory (in step units of the integrator).
+* `tail = 1000`: Length of plotted trajectory (in units of `Δt`).
 * `fade = true`: The trajectories in state space are faded
   to full transparency if `true`.
 - `markersize = 15`: Size of markers of trajectory endpoints. For discrete systems
@@ -110,6 +110,12 @@ that return a real number.
   Can also be a vector of named tuples, each one for each unique initial condition.
 - `timeseries_names`: A vector of strings with length equal to `fs` giving names to
   the y-labels of the timeseries plots.
+- `timeseries_ylims`: A vector of 2-tuples for the lower and upper limits of the
+  y-axis of each timeseries plot. This can't be deduced automatically as
+  arbitrary observables are allowed in the timeseries.
+- `timeunit = 1`: the units of time, if any. The actual time elapsed is divided by
+  this number.
+- `timelabel = "time"`: label of the x-axis of the timeseries plots.
 
 All other keywords are propagated to [`interactive_trajectory`](@ref).
 """
