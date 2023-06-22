@@ -31,7 +31,7 @@ See also [`interactive_trajectory_timeseries`](@ref).
   a system parameter on the fly during time evolution. Note that all parameter systems
   can always be altered on the fly using the custom animation setup that we describe below;
   `parameter_sliders` only conserns the buttons and interactivity added to the created panel.
-- `pnames = Dict(keys(ps) .=> keys(ps))` : Dictionary mapping parameter keys to labels.
+- `parameter_names = Dict(keys(ps) .=> keys(ps))`: Dictionary mapping parameter keys to labels.
   Only valid if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
   0.01 for continuous time systems.
@@ -55,8 +55,8 @@ See also [`interactive_trajectory_timeseries`](@ref).
 
 ## Layouting keywords
 
-- `idxs = 1:min(length(u0s[1]), 3)`: Which variables of `ds` should be plotted.
-  If three indices are given, the plot is also 3D, otherwise 2D. Note that no
+- `idxs = 1:min(dimension(ds), 3)`: Which variables of `ds` should be plotted.
+  If three indices are given, the trajectory plot is also 3D, otherwise 2D. Note that no
   transformation of the dynamical system is done, you can use a `ProjectedDynamicalSystem`
   if you want to visualize an arbitrary transformation of `ds`.
 - `lims`: A tuple of tuples (min, max) for the axis limits. If not given, they are
@@ -154,7 +154,7 @@ function interactive_cobweb end
         u0 = nothing, parname = "p", title = ""
     )
 
-Open an interactive application for exploring orbit diagrams (ODs) of discrete
+Open an interactive application for exploring orbit diagrams (ODs) of discrete time
 dynamical systems. Requires `DynamicalSystems`.
 
 In essense, the function presents the output of `orbitdiagram`

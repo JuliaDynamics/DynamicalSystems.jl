@@ -31,7 +31,9 @@ function DynamicalSystems.interactive_trajectory(
         fade = true,
         # parameters
         parameter_sliders = nothing,
+        # `pnames` is deprecated
         pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> keys(parameter_sliders)),
+        parameter_names = pnames,
         add_controls = true,
         # figure and axis
         figure = (resolution = (800, 800),),
@@ -87,7 +89,7 @@ function DynamicalSystems.interactive_trajectory(
     # can be changed after creation of `dso` via `set_parameter!`
     if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
-        slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, current_parameters(ds))
+        slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, parameter_names, current_parameters(ds))
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
         paramlayout[2, 1] = update
         on(update.clicks) do clicks
