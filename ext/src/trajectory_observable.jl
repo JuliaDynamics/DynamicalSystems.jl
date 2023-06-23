@@ -46,6 +46,8 @@ function DynamicalSystems.interactive_trajectory(
         ds = CoupledODEs(ds, newdiffeq)
     end
 
+    u00s = deepcopy(u0s)
+
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     fig = Figure(; figure...)
     # Set up trajectrory plot
@@ -56,10 +58,10 @@ function DynamicalSystems.interactive_trajectory(
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
-        run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
+        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
     else
         # So that we can leave the interactive UI code as is
-        run = Observable(0); step = Observable(0); stepslider = Observable(1)
+        reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
     end
 
     # Create the dynamical system observable now with these linked
@@ -82,6 +84,12 @@ function DynamicalSystems.interactive_trajectory(
         n = stepslider[]
         # which of course calls the stepping function on the observable
         step!(dso, n)
+    end
+    # Resetting system to initial states
+    on(reset) do clicks
+        for j in eachindex(u00s)
+            set_state!(dso, copy(u00s[j]), j)
+        end
     end
 
     # Live parameter changing
@@ -168,13 +176,14 @@ function _init_trajectory_observables(pds, tail)
 end
 function _trajectory_plot_controls!(layout)
     layout[2, 1] = controllayout = GridLayout(tellwidth = false)
+    reset = Button(controllayout[1, 0]; label = "reset")
     run = Button(controllayout[1, 1]; label = "run")
     step = Button(controllayout[1, 2]; label = "step")
     slider_vals = vcat(1:10, 100:100:1000)
     sg = SliderGrid(controllayout[1,3],
         (label = "steps =", range = slider_vals, startvalue = 1),
     )
-    return run.clicks, step.clicks, sg.sliders[1].value
+    return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
 function _traj_lim_estimator(ds, u0s, idxs)
     ds = deepcopy(ds)
@@ -237,10 +246,10 @@ end
 
 function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
     dso.current_step.val = 0
-    set_state!(dso.pds, u, i)
+    set_state!(dso.pds, copy(u), i)
     fill!(dso.tail_observables[i][], u)
-    notify(dso.tail_obsrvables[i])
-    dso.state_observable[].val[i] = u
+    notify(dso.tail_observables[i])
+    dso.state_observable.val[i] = u
     notify(dso.state_observable)
     return nothing
 end
