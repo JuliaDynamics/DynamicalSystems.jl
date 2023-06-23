@@ -247,7 +247,8 @@ end
 function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
     dso.current_step.val = 0
     set_state!(dso.pds, copy(u), i)
-    fill!(dso.tail_observables[i][], u)
+    val = dso.tail_observables[i][]
+    for j in eachindex(val); val[j] = u; end
     notify(dso.tail_observables[i])
     dso.state_observable.val[i] = u
     notify(dso.state_observable)
