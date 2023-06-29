@@ -99,12 +99,21 @@ function DynamicalSystems.interactive_trajectory(
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
         slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, parameter_names, current_parameters(ds))
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
-        paramlayout[2, 1] = update
+        resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
+        # paramlayout[2, 1] = update
+        # paramlayout[2, 2] = resetp
+        gl = paramlayout[2, :] = GridLayout()
+        gl[1,1] = update
+        gl[1,2] = resetp
+        # [update, resetp]
         on(update.clicks) do clicks
             for l in keys(slidervals)
                 v = slidervals[l][]
                 set_parameter!(dso, l, v)
             end
+        end
+        on(resetp.clicks) do clicks
+            set_parameters!(pds)
         end
     end
 
