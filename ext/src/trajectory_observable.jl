@@ -47,7 +47,7 @@ function DynamicalSystems.interactive_trajectory(
     end
 
     u00s = deepcopy(u0s)
-
+    p0 = initial_parameters(ds)
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     fig = Figure(; figure...)
     # Set up trajectrory plot
@@ -97,7 +97,9 @@ function DynamicalSystems.interactive_trajectory(
     # can be changed after creation of `dso` via `set_parameter!`
     if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
-        slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, parameter_names, current_parameters(ds))
+        slidervals, sliders = _add_ds_param_controls!(
+            paramlayout, parameter_sliders, parameter_names, current_parameters(ds)
+        )
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
         resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
         # paramlayout[2, 1] = update
@@ -113,7 +115,12 @@ function DynamicalSystems.interactive_trajectory(
             end
         end
         on(resetp.clicks) do clicks
-            set_parameters!(pds)
+            set_parameters!(pds, p0)
+            # Also **visually** reset sliders to initial parameters
+            for k in keys(p0)
+                haskey(sliders, k) || continue
+                set_close_to!(sliders[k], p0[k])
+            end
         end
     end
 
@@ -217,6 +224,7 @@ end
 # Parameter handling
 function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
+    sliders = Dict{keytype(parameter_sliders), Any}() # for updating via reset parameters
     tuples_for_slidergrid = []
     for (i, (l, vals)) in enumerate(parameter_sliders)
         startvalue = p0[l]
@@ -226,8 +234,10 @@ function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     sg = SliderGrid(paramlayout[1,1], tuples_for_slidergrid...; tellheight = true)
     for (i, (l, vals)) in enumerate(parameter_sliders)
         slidervals[l] = sg.sliders[i].value
+        sliders[l] = sg.sliders[i]
     end
-    return slidervals
+
+    return slidervals, sliders
 end
 
 ###########################################################################################
