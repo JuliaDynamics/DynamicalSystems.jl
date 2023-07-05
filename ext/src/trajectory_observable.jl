@@ -42,7 +42,9 @@ function DynamicalSystems.interactive_trajectory(
     )
 
     if length(idxs) > dimension(ds)
-        throw(ArgumentError("More indices given than the system has dimension!"))
+        throw(ArgumentError("More indices given than the system has dimension! Change `idxs`."))
+    elseif length(idxs) > 3
+        throw(ArgumentError("State space plot can be up to 3 dimensional! Change `idxs`."))
     end
 
     if ds isa CoupledODEs # force time evolution into non-adaptive
