@@ -31,7 +31,9 @@ function DynamicalSystems.interactive_trajectory(
         fade = true,
         # parameters
         parameter_sliders = nothing,
+        # `pnames` is deprecated
         pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> keys(parameter_sliders)),
+        parameter_names = pnames,
         add_controls = true,
         # figure and axis
         figure = (resolution = (800, 800),),
@@ -39,11 +41,19 @@ function DynamicalSystems.interactive_trajectory(
         lims = nothing,
     )
 
+    if length(idxs) > dimension(ds)
+        throw(ArgumentError("More indices given than the system has dimension! Change `idxs`."))
+    elseif length(idxs) > 3
+        throw(ArgumentError("State space plot can be up to 3 dimensional! Change `idxs`."))
+    end
+
     if ds isa CoupledODEs # force time evolution into non-adaptive
         newdiffeq = (ds.diffeq..., adaptive = false, dt = Δt)
         ds = CoupledODEs(ds, newdiffeq)
     end
 
+    u00s = deepcopy(u0s)
+    p0 = initial_parameters(ds)
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     fig = Figure(; figure...)
     # Set up trajectrory plot
@@ -54,10 +64,10 @@ function DynamicalSystems.interactive_trajectory(
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
-        run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
+        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
     else
         # So that we can leave the interactive UI code as is
-        run = Observable(0); step = Observable(0); stepslider = Observable(1)
+        reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
     end
 
     # Create the dynamical system observable now with these linked
@@ -81,19 +91,41 @@ function DynamicalSystems.interactive_trajectory(
         # which of course calls the stepping function on the observable
         step!(dso, n)
     end
+    # Resetting system to initial states
+    on(reset) do clicks
+        for j in eachindex(u00s)
+            set_state!(dso, copy(u00s[j]), j)
+        end
+    end
 
     # Live parameter changing
     # note here `parameter_sliders` are parameters to have a slider; all parameters
     # can be changed after creation of `dso` via `set_parameter!`
     if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
-        slidervals = _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, current_parameters(ds))
+        slidervals, sliders = _add_ds_param_controls!(
+            paramlayout, parameter_sliders, parameter_names, current_parameters(ds)
+        )
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
-        paramlayout[2, 1] = update
+        resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
+        # paramlayout[2, 1] = update
+        # paramlayout[2, 2] = resetp
+        gl = paramlayout[2, :] = GridLayout()
+        gl[1,1] = update
+        gl[1,2] = resetp
+        # [update, resetp]
         on(update.clicks) do clicks
             for l in keys(slidervals)
                 v = slidervals[l][]
                 set_parameter!(dso, l, v)
+            end
+        end
+        on(resetp.clicks) do clicks
+            set_parameters!(pds, p0)
+            # Also **visually** reset sliders to initial parameters
+            for k in keys(p0)
+                haskey(sliders, k) || continue
+                set_close_to!(sliders[k], p0[k])
             end
         end
     end
@@ -166,13 +198,14 @@ function _init_trajectory_observables(pds, tail)
 end
 function _trajectory_plot_controls!(layout)
     layout[2, 1] = controllayout = GridLayout(tellwidth = false)
+    reset = Button(controllayout[1, 0]; label = "reset")
     run = Button(controllayout[1, 1]; label = "run")
     step = Button(controllayout[1, 2]; label = "step")
     slider_vals = vcat(1:10, 100:100:1000)
     sg = SliderGrid(controllayout[1,3],
         (label = "steps =", range = slider_vals, startvalue = 1),
     )
-    return run.clicks, step.clicks, sg.sliders[1].value
+    return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
 function _traj_lim_estimator(ds, u0s, idxs)
     ds = deepcopy(ds)
@@ -197,6 +230,7 @@ end
 # Parameter handling
 function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
+    sliders = Dict{keytype(parameter_sliders), Any}() # for updating via reset parameters
     tuples_for_slidergrid = []
     for (i, (l, vals)) in enumerate(parameter_sliders)
         startvalue = p0[l]
@@ -206,8 +240,10 @@ function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
     sg = SliderGrid(paramlayout[1,1], tuples_for_slidergrid...; tellheight = true)
     for (i, (l, vals)) in enumerate(parameter_sliders)
         slidervals[l] = sg.sliders[i].value
+        sliders[l] = sg.sliders[i]
     end
-    return slidervals
+
+    return slidervals, sliders
 end
 
 ###########################################################################################
@@ -235,10 +271,11 @@ end
 
 function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
     dso.current_step.val = 0
-    set_state!(dso.pds, u, i)
-    fill!(dso.tail_observables[i][], u)
-    notify(dso.tail_obsrvables[i])
-    dso.state_observable[].val[i] = u
+    set_state!(dso.pds, copy(u), i)
+    val = dso.tail_observables[i][]
+    for j in eachindex(val); val[j] = u; end
+    notify(dso.tail_observables[i])
+    dso.state_observable.val[i] = u
     notify(dso.state_observable)
     return nothing
 end
@@ -263,7 +300,7 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     kwargs...)
 
     fig, dsobs = interactive_trajectory(ds, u0s; colors, figure = (resolution = (1600, 800),), kwargs...)
-    timeserieslayout = fig[1,2] = GridLayout()
+    timeserieslayout = fig[:, 2] = GridLayout()
     _init_timeseries_plots!(
         timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names,
         timeseries_ylims, timelabel, timeunit
