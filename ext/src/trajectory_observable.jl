@@ -41,6 +41,10 @@ function DynamicalSystems.interactive_trajectory(
         lims = nothing,
     )
 
+    if length(idxs) > dimension(ds)
+        throw(ArgumentError("More indices given than the system has dimension!"))
+    end
+
     if ds isa CoupledODEs # force time evolution into non-adaptive
         newdiffeq = (ds.diffeq..., adaptive = false, dt = Δt)
         ds = CoupledODEs(ds, newdiffeq)
@@ -294,7 +298,7 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     kwargs...)
 
     fig, dsobs = interactive_trajectory(ds, u0s; colors, figure = (resolution = (1600, 800),), kwargs...)
-    timeserieslayout = fig[1,2] = GridLayout()
+    timeserieslayout = fig[:, 2] = GridLayout()
     _init_timeseries_plots!(
         timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names,
         timeseries_ylims, timelabel, timeunit
