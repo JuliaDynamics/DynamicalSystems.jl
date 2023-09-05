@@ -292,11 +292,11 @@ heatmap(Rg; colormap = :grays,
 
 ## More nonlinear timeseries analysis
 
-A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_traditional_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
+A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
 
 ```@example MAIN
 w = Y[:, 1] # first variable of Lorenz96
-𝒟, τ, e = optimal_traditional_de(w)
+𝒟, τ, e = optimal_separated_de(w)
 𝒟
 ```
 
