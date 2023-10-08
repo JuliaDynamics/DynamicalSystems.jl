@@ -58,6 +58,7 @@ This makes reproducing these papers difficult, while some times straight-out imp
 
 To achieve these goals we made **DynamicalSystems.jl** so that it is:
 
+0. **Open**: 100% of the development is happening openly on GitHub. The project is driven by contributions of experts or students of the field, beginners or advanced in programming. Anyone can be a developer of the library. Everyone is welcomed.
 1. **Transparent**: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
 2. **Intuitive**: a software simple to use and understand makes experimentation easier.
 3. **Easy to extend**: this makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
