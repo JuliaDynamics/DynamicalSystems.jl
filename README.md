@@ -23,7 +23,7 @@ Aspects of **DynamicalSystems.jl** that make it stand out among other codebases 
 - **Extensive content**. It aims to cover the entire field of nonlinear dynamics. It has functionality for complexity measures, delay embeddings, stability and bifurcation analysis, chaos, surrogate testing, recurrence quantification analysis, and much more. Furthermore, all algorithms are "general" and work for any dynamical system applicable. Missing functionality that falls under nonlinear dynamics is welcomed to be part of the library!
 - **Well tested**. All implemented functionality is extensively tested. Each time any change in the code base is done, the extensive test suite is run and checked before merging the change in.
 - **Extendable**. **DynamicalSystems.jl** is a living, evolving project. New contributions can become part of the library and be accessed by all users in the next release. Most importantly, all parts of the library follow professional standards in software design and implement extendable interfaces so that it is easy to contribute new functionality.
-- **Active development**. Since the start of the project (May 2017) there is activity each month: new features, bugfixes, and the developer team answers users questions on Discourse/Slack.
+- **Active development**. Since the start of the project (May 2017) there has been  activity every month: new features, bugfixes, and the developer team answers users questions on Discourse/Slack.
 - **Performant**. Written entirely in Julia, heavily optimized and parallelized, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Goals
