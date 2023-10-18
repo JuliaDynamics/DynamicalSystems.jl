@@ -13,7 +13,7 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 - If you have not used the library before, and would like to get started, then please read the [overarching tutorial](@ref tutorial) for the library.
 - The [contents](@ref contents) page gives a summary of all packages that are part of the library.
 - See the [learning resources](@ref learning) below to find out more resources about learning the library and using it in scientific research and/or education.
-- Besides the formal algorithmic/scientific content of **DynamicalSystems.jl** (those in the [contents](@ref contents)) page, the library also provides an extensive suite for interactive or offline animations and visualizations dynamical systems. These are found in the [visualizations](@ref visualization) page.
+- Besides the formal algorithmic/scientific content of **DynamicalSystems.jl** (those in the [contents](@ref contents)) page, the library also provides basic functionality for interactive or offline animations and visualizations. These are found in the [visualizations](@ref visualization) page.
 - The remaining of this introduction page discusses our goals with the library, how to participate as a user or developer, how to cite, and other relevant information (see the sections of the sidebar on the left).
 
 
@@ -33,9 +33,10 @@ We have written an undergraduate level textbook as an introduction to nonlinear 
 * [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
 
 
-Additional textbooks on nonlinear dynamics worth having a look are:
+Additional textbooks on nonlinear dynamics with practical focus are:
 * Chaos in Dynamical Systems - E. Ott
 * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+* Nonlinear Dynamics and Chaos - S. Strogatz
 
 ### Course on applied nonlinear dynamics and complex systems
 
@@ -44,33 +45,10 @@ We are developing a full course (targeting a graduate or undergraduate semester 
 The materials of the course are on GitHub: <https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses>
 
 
-## [Our Goals](@id goals)
-
-**DynamicalSystems.jl** was created with three goals in mind.
-The first was to fill the missing gap of a high quality and general purpose software for nonlinear dynamics, which can make the field of nonlinear dynamics accessible and reproducible.
-The second goal was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics.
-
-The third goal was to fundamentally change the perception of the role of code in both scientific education as well as research.
-It is rarely the case that real, _runnable_ code is shown in the classroom, because it is often long and messy.
-This is especially hurtful for nonlinear dynamics, a field where computer-assisted exploration is critical.
-And published work in this field fares even worse, with the overwhelming majority of published research not sharing the code used to create the paper.
-This makes reproducing these papers difficult, while some times straight-out impossible.
-
-To achieve these goals we made **DynamicalSystems.jl** so that it is:
-
-0. **Open**: 100% of the development is happening openly on GitHub. The project is driven by contributions of experts or students of the field, beginners or advanced in programming. Anyone can be a developer of the library. Everyone is welcomed.
-1. **Transparent**: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
-2. **Intuitive**: a software simple to use and understand makes experimentation easier.
-3. **Easy to extend**: this makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
-4. **Reliable**: the algorithm implementations are tested extensively.
-5. **Well-documented**: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
-6. **General**: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
-7. **Performant**: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
-
 ## Citing
 
 There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
-you in research that led to a publication, please be kind enough to cite it, using
+you in research that led to a publication, please cite it using
 the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 ```
 @article{Datseris2018,
@@ -87,7 +65,9 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 }
 ```
 
-however, we would really appreciate it if you also cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
+Irrespectively of **DynamicalSystems.jl**, _please also cite the specific algorithm that you used from the library_. The documentation of the function used will point you to the correct reference.
+
+Besides the library, we would also appreciate it if you cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
 
 ```
 @book{DatserisParlitz2022,
@@ -101,7 +81,6 @@ however, we would really appreciate it if you also cited the textbook we wrote t
   language  = "en",
 }
 ```
-
 
 ## Asking questions
 
