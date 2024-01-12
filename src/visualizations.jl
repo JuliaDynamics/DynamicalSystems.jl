@@ -26,17 +26,19 @@ See also [`interactive_trajectory_timeseries`](@ref).
   manually using the custom animations etup that we describe below; `add_controls` only
   concerns the buttons and interactivity added to the created panel.
 - `parameter_sliders = nothing`: If given, it must be a dictionary, mapping
-  parameter indices (of the parameter container of `ds`) into ranges. Each combination
+  parameter indices (any valid index that can be given to [`set_parameter!`](@ref))
+  to ranges of parameter values. Each combination
   of index and range becomes a slider that can be interactively controlled to alter
-  a system parameter on the fly during time evolution. Note that all parameter systems
-  can always be altered on the fly using the custom animation setup that we describe below;
+  a system parameter on the fly during time evolution. Note that all system parameters
+  can also be altered using the custom animation setup that we describe below;
   `parameter_sliders` only conserns the buttons and interactivity added to the created panel.
 - `parameter_names = Dict(keys(ps) .=> keys(ps))`: Dictionary mapping parameter keys to labels.
   Only valid if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
   0.01 for continuous time systems.
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
-  function, which is called between each plot update.
+  function, which is called between each plot update. Useful when time integration is
+  computationally inexpensive and animation proceeds too fast.
 
 ## Visualization keywords
 

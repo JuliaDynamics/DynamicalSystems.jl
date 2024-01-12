@@ -108,12 +108,9 @@ function DynamicalSystems.interactive_trajectory(
         )
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
         resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
-        # paramlayout[2, 1] = update
-        # paramlayout[2, 2] = resetp
         gl = paramlayout[2, :] = GridLayout()
         gl[1,1] = update
         gl[1,2] = resetp
-        # [update, resetp]
         on(update.clicks) do clicks
             for l in keys(slidervals)
                 v = slidervals[l][]
