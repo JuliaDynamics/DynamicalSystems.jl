@@ -21,3 +21,4 @@ p = [σ => 28.0,
 
 tspan = (0.0, 100.0)
 prob = ODEProblem(sys, u0, tspan, p)
+ds = CoupledODEs(prob)
