@@ -51,8 +51,8 @@ function DynamicalSystems.interactive_trajectory(
     fig = Figure(; figure...)
     # Set up trajectrory plot
     statespacelayout = fig[1,1] = GridLayout()
-    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs) : lims
-    statespaceax, tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
+    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, nothing)[1] : lims
+    tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
         lims, pds, colors, plotkwargs, markersize, tail, axis, fade,
     )
     # Set up layouting and add controls
@@ -171,7 +171,7 @@ function _init_statespace_plot!(
         color = colors, markersize = markersize, finalargs...)
     !isnothing(lims) && (statespaceax.limits = lims)
     is3D && (statespaceax.protrusions = 50) # removes overlap of labels
-    return statespaceax, tailobs, finalpoints
+    return tailobs, finalpoints
 end
 function _init_trajectory_observables(pds, tail)
     N = length(current_states(pds))
@@ -199,24 +199,29 @@ function _trajectory_plot_controls!(layout)
     )
     return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
-function _traj_lim_estimator(ds, u0s, idxs)
+function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
     ds = deepcopy(ds)
-    Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.1
-    tr = DynamicalSystems.trajectory(ds, 100, u0s[1]; Δt)[1]
-    _mi, _ma = DynamicalSystems.minmaxima(tr)
-    mi, ma = _mi[idxs], _ma[idxs]
-    for i in 2:length(u0s)
-        tr = DynamicalSystems.trajectory(ds, 100, u0s[i]; Δt)[1]
+    mi = fill(Inf, length(idxs))
+    ma = fill(-Inf, length(idxs))
+    omi = fill(Inf, length(observables))
+    oma = fill(-Inf, length(observables))
+    for i in 1:length(u0s)
+        tr, = DynamicalSystems.trajectory(ds, 1000dt, u0s[i]; Δt = dt)
         _mii, _maa = DynamicalSystems.minmaxima(tr)
         mii, maa = _mii[idxs], _maa[idxs]
         mi = min.(mii, mi)
         ma = max.(maa, ma)
+        # do same but now by transforming the `tr` set into the observed set
+        otr = StateSpaceSet(map(u -> [observe_state(ds, f, u) for f in observables], tr))
+        omii, omaa = DynamicalSystems.minmaxima(otr)
+        omi = min.(omii, omi)
+        oma = max.(omaa, oma)
     end
     # Alright, now we just have to put them into limits and increase a bit
-    mi = mi .- 0.1mi
-    ma = ma .+ 0.1ma
-    lims = [(mi[i], ma[i]) for i in 1:length(idxs)]
+    lims = [(mi[i]-0.1mi[i], ma[i]+0.1ma[i]) for i in 1:length(idxs)]
     lims = (lims...,)
+    observable_lims = [(omi[i]-0.1omi[i], oma[i]+0.1oma[i]) for i in 1:length(observables)]
+    return lims, observable_lims
 end
 
 # Parameter handling
@@ -245,11 +250,19 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
     timeseries_names = [_timeseries_name(f) for f in fs],
     colors = [COLORS[i] for i in 1:length(u0s)],
-    timeseries_ylims = [(0, 1) for f in fs],
+    timeseries_ylims = nothing,
     timelabel = "time", timeunit = 1,
+    Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
+    idxs = 1:min(length(u0s[1]), 3),
     kwargs...)
 
-    fig, dsobs = interactive_trajectory(ds, u0s; colors, figure = (size = (1600, 800),), kwargs...)
+    # automatic limits
+    if isnothing(timeseries_ylims)
+        lims, timeseries_ylims = _traj_lim_estimator(ds, u0s, idxs, fs, Δt)
+    end
+
+    fig, dsobs = interactive_trajectory(ds, u0s; Δt, idxs, lims, colors, figure = (size = (1600, 800),), kwargs...)
+
     timeserieslayout = fig[:, 2] = GridLayout()
     _init_timeseries_plots!(
         timeserieslayout, dsobs, fs, colors, linekwargs, timeseries_names,
@@ -275,7 +288,7 @@ function _init_timeseries_plots!(
     for (j, f) in enumerate(fs)
         for (i, tail) in enumerate(dsobs.tail_observables)
             observed_data = map(tail, dsobs.current_step) do x, n
-                [Point2f(max(0, dsobs.Δt*(n - T + k)/timeunit), _obtain_data(x[k], f)) for k in 1:length(x)]
+                [Point2f(max(0, dsobs.Δt*(n - T + k)/timeunit), observe_state(dsobs.pds, f, x[k])) for k in 1:length(x)]
             end
             # plot them
             lk = linekwargs isa AbstractVector ? linekwargs[i] : linekwargs
@@ -298,4 +311,6 @@ end
 _obtain_data(x::AbstractVector, f::Int) = x[f]
 _obtain_data(x::AbstractVector, f::Function) = f(x)
 _timeseries_name(f::Int) = "u"*subscript(f)
-_timeseries_name(f) = string(f)
+_timeseries_name(f::Function) = string(f)
+_timeseries_name(f::Union{AbstractString,Symbol}) = string(f)
+_timeseries_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))

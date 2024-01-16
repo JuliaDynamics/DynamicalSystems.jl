@@ -163,7 +163,7 @@ end
     to_alpha(c, α = 0.75)
 Create a color same as `c` but with given alpha channel.
 """
-function to_alpha(c, α = 1.2)
+function to_alpha(c, α = 0.75)
     c = to_color(c)
     return RGBAf(c.r, c.g, c.b, α)
 end
