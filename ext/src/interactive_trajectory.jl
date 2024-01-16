@@ -1,12 +1,4 @@
 using DynamicalSystems.DataStructures
-# TODO: currently we can't utilize symbols as keys for parameter sliders, because
-# the parameter sliders are also used to access the initial parameters.
-# Once the `SymbolicIndexingInterface.getp` function can be used directly on the
-# parameter container (Vector), then this can be solved easily by re-coding
-# the `DynamicalSystems.set_parameter!` function to take in the parameter
-# container (which it does already) and apply `getp` directly on the container.
-# https://github.com/SciML/SymbolicIndexingInterface.jl/pull/33
-# needs to be merged.
 
 # TODO: make `pnames` extract names from symbols
 
@@ -52,14 +44,13 @@ function DynamicalSystems.interactive_trajectory(
     fig = Figure(; figure...)
     # Set up trajectrory plot
     statespacelayout = fig[1,1] = GridLayout()
-    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, nothing)[1] : lims
+    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, [1])[1] : lims
     tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
         lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_axis,
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
-        position = statespace_axis ? [2,1] : [1,1]
-        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout, position)
+        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout, statespace_axis)
     else
         # So that we can leave the interactive UI code as is
         reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
@@ -125,6 +116,8 @@ function DynamicalSystems.interactive_trajectory(
     return fig, dso
 end
 
+vector_idx_observe(ds, u, idxs::AbstractVector{<:Int}) = u[idxs]
+vector_idx_observe(ds, u, idxs) = [observe_state(ds, i, u) for i in idxs]
 
 # Main panels of animation
 "Create the state space axis and evolution controls. Return the axis."
@@ -135,19 +128,24 @@ function _init_statespace_plot!(
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
     axisposition = statespace_axis ? layout[1,1] : Figure()[1,1]
+    xlabel = _timeseries_name(idxs[1])
+    ylabel = _timeseries_name(idxs[2])
     statespaceax = if is3D
-        Axis3(axisposition; xlabel = "u₁", ylabel = "u₂", zlabel = "u₃", axis...)
+        zlabel = _timeseries_name(idxs[3])
+        Axis3(axisposition; xlabel, ylabel, zlabel, axis...)
     else
-        Axis(axisposition; xlabel = "u₁", ylabel = "u₂", axis...)
+        Axis(axisposition; xlabel, ylabel, axis...)
     end
     # Here we make two more observables for the plotted tails and plotted final
     # states, so that the stored observables in `dsobs` are the full system state;
     # This simplifies drastically making custom animations
     T = length(idxs) == 2 ? Point2f : Point3f
     plotted_tailobs = [
-        map(x -> T[y[idxs] for y in x], ob) for ob in tailobs
+        # here x is a tail of the full dynamical system state (an observable!)
+        # while y is a point on the tail, i.e., a state space point
+        map(x -> T[vector_idx_observe(ds, y, idxs) for y in x], ob) for ob in tailobs
     ]
-    plotted_finalpoints = map(x -> T[y[idxs] for y in x], finalpoints)
+    plotted_finalpoints = map(x -> T[vector_idx_observe(ds, y, idxs) for y in x], finalpoints)
 
     # Initialize trajectories plotted element
     for (i, ob) in enumerate(plotted_tailobs)
@@ -194,8 +192,9 @@ function _init_trajectory_observables(pds, tail)
     finalpoints = Observable([x[][end] for x in tailobs])
     return tailobs, finalpoints
 end
-function _trajectory_plot_controls!(gl, position)
-    controllayout = setindex!(gl, GridLayout(tellwidth = false, tellheight = false), position...)
+function _trajectory_plot_controls!(gl, statespace_axis)
+    position = statespace_axis ? [2,1] : [1,1]
+    controllayout = setindex!(gl, GridLayout(tellwidth = false, tellheight = statespace_axis), position...)
     reset = Button(controllayout[1, 0]; label = "reset")
     run = Button(controllayout[1, 1]; label = "run")
     step = Button(controllayout[1, 2]; label = "step")
@@ -213,8 +212,8 @@ function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
     oma = fill(-Inf, length(observables))
     for i in 1:length(u0s)
         tr, = DynamicalSystems.trajectory(ds, 1000dt, u0s[i]; Δt = dt)
-        _mii, _maa = DynamicalSystems.minmaxima(tr)
-        mii, maa = _mii[idxs], _maa[idxs]
+        _tr = StateSpaceSet(map(u -> [observe_state(ds, i, u) for i in idxs], tr))
+        mii, maa = DynamicalSystems.minmaxima(_tr)
         mi = min.(mii, mi)
         ma = max.(maa, ma)
         # do same but now by transforming the `tr` set into the observed set
@@ -260,12 +259,15 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     timelabel = "time", timeunit = 1,
     Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
     idxs = 1:min(length(u0s[1]), 3),
+    lims = nothing,
     kwargs...)
 
     # automatic limits
-    if isnothing(timeseries_ylims)
-        lims, timeseries_ylims = _traj_lim_estimator(ds, u0s, idxs, fs, Δt)
+    if isnothing(timeseries_ylims) || isnothing(lims)
+        _lims, _timeseries_ylims = _traj_lim_estimator(ds, u0s, idxs, fs, Δt)
     end
+    isnothing(lims) && (lims = _lims)
+    isnothing(timeseries_ylims) && (timeseries_ylims = _timeseries_ylims)
 
     fig, dsobs = interactive_trajectory(ds, u0s; Δt, idxs, lims, colors, figure = (size = (1600, 800),), kwargs...)
 
