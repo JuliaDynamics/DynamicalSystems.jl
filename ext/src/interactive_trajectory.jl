@@ -32,6 +32,7 @@ function DynamicalSystems.interactive_trajectory(
         figure = (size = (800, 800),),
         axis = NamedTuple(),
         lims = nothing,
+        statespace_axis = true,
     )
 
     if length(idxs) > dimension(ds)
@@ -53,11 +54,12 @@ function DynamicalSystems.interactive_trajectory(
     statespacelayout = fig[1,1] = GridLayout()
     lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, nothing)[1] : lims
     tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
-        lims, pds, colors, plotkwargs, markersize, tail, axis, fade,
+        lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_axis,
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
-        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout)
+        position = statespace_axis ? [2,1] : [1,1]
+        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout, position)
     else
         # So that we can leave the interactive UI code as is
         reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
@@ -128,13 +130,15 @@ end
 "Create the state space axis and evolution controls. Return the axis."
 function _init_statespace_plot!(
         layout, ds, idxs, lims, pds, colors, plotkwargs, markersize, tail, axis, fade,
+        statespace_axis # whether to show the statespace axis
     )
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
+    axisposition = statespace_axis ? layout[1,1] : Figure()[1,1]
     statespaceax = if is3D
-        Axis3(layout[1,1]; xlabel = "u₁", ylabel = "u₂", zlabel = "u₃", axis...)
+        Axis3(axisposition; xlabel = "u₁", ylabel = "u₂", zlabel = "u₃", axis...)
     else
-        Axis(layout[1,1]; xlabel = "u₁", ylabel = "u₂", axis...)
+        Axis(axisposition; xlabel = "u₁", ylabel = "u₂", axis...)
     end
     # Here we make two more observables for the plotted tails and plotted final
     # states, so that the stored observables in `dsobs` are the full system state;
@@ -168,11 +172,13 @@ function _init_statespace_plot!(
         (marker = :diamond, )
     end
     Makie.scatter!(statespaceax, plotted_finalpoints;
-        color = colors, markersize = markersize, finalargs...)
+        color = colors, markersize, finalargs...
+    )
     !isnothing(lims) && (statespaceax.limits = lims)
     is3D && (statespaceax.protrusions = 50) # removes overlap of labels
     return tailobs, finalpoints
 end
+
 function _init_trajectory_observables(pds, tail)
     N = length(current_states(pds))
     tailobs = Observable[]
@@ -188,8 +194,8 @@ function _init_trajectory_observables(pds, tail)
     finalpoints = Observable([x[][end] for x in tailobs])
     return tailobs, finalpoints
 end
-function _trajectory_plot_controls!(layout)
-    layout[2, 1] = controllayout = GridLayout(tellwidth = false)
+function _trajectory_plot_controls!(gl, position)
+    controllayout = setindex!(gl, GridLayout(tellwidth = false, tellheight = false), position...)
     reset = Button(controllayout[1, 0]; label = "reset")
     run = Button(controllayout[1, 1]; label = "run")
     step = Button(controllayout[1, 2]; label = "step")
