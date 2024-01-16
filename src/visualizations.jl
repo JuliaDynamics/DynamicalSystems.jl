@@ -43,7 +43,7 @@ See also [`interactive_trajectory_timeseries`](@ref).
 ## Visualization keywords
 
 - `colors`: The color for each initial condition (and resulting trajectory).
-- `idxs = 1:min(length(transform(u0s[1])), 3)`: Which variables to plot
+- `idxs = 1:min(length(u0s[1]), 3)`: Which variables to plot
   (up to three can be chosen).
 * `tail = 1000`: Length of plotted trajectory (in units of `Δt`).
 * `fade = true`: The trajectories in state space are faded

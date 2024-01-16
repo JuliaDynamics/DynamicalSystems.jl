@@ -11,4 +11,6 @@ include("src/orbitdiagram.jl")
 include("src/poincareclick.jl")
 include("src/brainscan.jl")
 
+subscript = DynamicalSystemsVisualizations.subscript
+
 end

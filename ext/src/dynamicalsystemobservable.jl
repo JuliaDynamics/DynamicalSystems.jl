@@ -50,8 +50,12 @@ function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int =
 end
 
 function DynamicalSystems.set_parameter!(dso::DynamicalSystemObservable, index, value)
-    dso.param_observable[][index] = value
+    # update actual dynamical system parameter
     set_parameter!(dso.pds, index, value)
+    # update observable of parameters
+    p = dso.param_observable[]
+    set_parameter!(dso.pds, index, value, p)
+    # dso.param_observable[][index] = value
     notify(dso.param_observable)
     return
 end

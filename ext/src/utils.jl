@@ -79,6 +79,7 @@ record_interaction(file, figure; kwargs...)
 
 """
     subscript(i::Int)
+
 Transform `i` to a string that has `i` as a subscript.
 """
 function subscript(i::Int)
@@ -111,6 +112,7 @@ end
 
 """
     superscript(i::Int)
+
 Transform `i` to a string that has `i` as a superscript.
 """
 function superscript(i::Int)

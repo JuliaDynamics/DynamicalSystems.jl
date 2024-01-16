@@ -1,4 +1,14 @@
 using DynamicalSystems.DataStructures
+# TODO: currently we can't utilize symbols as keys for parameter sliders, because
+# the parameter sliders are also used to access the initial parameters.
+# Once the `SymbolicIndexingInterface.getp` function can be used directly on the
+# parameter container (Vector), then this can be solved easily by re-coding
+# the `DynamicalSystems.set_parameter!` function to take in the parameter
+# container (which it does already) and apply `getp` directly on the container.
+# https://github.com/SciML/SymbolicIndexingInterface.jl/pull/33
+# needs to be merged.
+
+# TODO: make `pnames` extract names from symbols
 
 function DynamicalSystems.interactive_trajectory(
         ds::DynamicalSystems.DynamicalSystem, u0s = [DynamicalSystems.current_state(ds)];
@@ -87,7 +97,7 @@ function DynamicalSystems.interactive_trajectory(
     if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
         slidervals, sliders = _add_ds_param_controls!(
-            paramlayout, parameter_sliders, parameter_names, current_parameters(ds)
+            ds, paramlayout, parameter_sliders, parameter_names, current_parameters(ds)
         )
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
         resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
@@ -121,9 +131,11 @@ function _init_statespace_plot!(
     )
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
-    statespaceax = !is3D ? Axis(layout[1,1]; xlabel = "x1", ylabel = "x2", axis...) :
-        Axis3(layout[1,1]; xlabel = "x1", ylabel = "x2", zlabel = "x3", axis...)
-
+    statespaceax = if is3D
+        Axis3(layout[1,1]; xlabel = "u₁", ylabel = "u₂", zlabel = "u₃", axis...)
+    else
+        Axis(layout[1,1]; xlabel = "u₁", ylabel = "u₂", axis...)
+    end
     # Here we make two more observables for the plotted tails and plotted final
     # states, so that the stored observables in `dsobs` are the full system state;
     # This simplifies drastically making custom animations
@@ -208,12 +220,12 @@ function _traj_lim_estimator(ds, u0s, idxs)
 end
 
 # Parameter handling
-function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
+function _add_ds_param_controls!(ds, paramlayout, parameter_sliders, pnames, p0)
     slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
     sliders = Dict{keytype(parameter_sliders), Any}() # for updating via reset parameters
     tuples_for_slidergrid = []
-    for (i, (l, vals)) in enumerate(parameter_sliders)
-        startvalue = p0[l]
+    for (l, vals) in parameter_sliders # dictionary
+        startvalue = current_parameter(ds, l, p0)
         label = string(pnames[l])
         push!(tuples_for_slidergrid, (;label, range = vals, startvalue))
     end
@@ -222,7 +234,6 @@ function _add_ds_param_controls!(paramlayout, parameter_sliders, pnames, p0)
         slidervals[l] = sg.sliders[i].value
         sliders[l] = sg.sliders[i]
     end
-
     return slidervals, sliders
 end
 
@@ -286,5 +297,5 @@ end
 
 _obtain_data(x::AbstractVector, f::Int) = x[f]
 _obtain_data(x::AbstractVector, f::Function) = f(x)
-_timeseries_name(f::Int) = "x"*subscript(f)
+_timeseries_name(f::Int) = "u"*subscript(f)
 _timeseries_name(f) = string(f)
