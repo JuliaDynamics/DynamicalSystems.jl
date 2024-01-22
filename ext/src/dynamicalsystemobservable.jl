@@ -38,7 +38,7 @@ function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int = 1)
     return nothing
 end
 
-function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u, i::Int = 1)
+function DynamicalSystems.set_state!(dso::DynamicalSystemObservable, u::AbstractArray, i::Int = 1)
     dso.current_step.val = 0
     set_state!(dso.pds, copy(u), i)
     val = dso.tail_observables[i][]
