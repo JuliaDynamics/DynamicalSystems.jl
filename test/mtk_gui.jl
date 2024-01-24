@@ -17,7 +17,7 @@ sys = structural_simplify(lorenz)
 tspan = (0.0, 100.0)
 prob = ODEProblem(sys, nothing, (0.0, 100.0))
 ds = CoupledODEs(prob)
-sys = referrenced_sciml_sys(ds)
+sys = referrenced_sciml_model(ds)
 
 parameter_sliders = Dict(
     # can use integer indexing
