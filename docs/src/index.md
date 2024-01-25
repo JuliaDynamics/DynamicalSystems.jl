@@ -19,11 +19,14 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 
 ## Latest news
 
-DynamicalSystems.jl moved to Julia 1.9+, and now exports visualization
-and interactive applications automatically once Makie (or Makie backends
-such as GLMakie) come into scope, using the new package extension system.
+DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
 
-The package InteractiveDynamics.jl is now obsolete.
+At a low level, this happens via the functions `observe_state`, `set_state!`,
+`current_parameter` and `set_parameter!`.
+
+Additionally, `interactive_trajectory_timeseries` allows symbolic indexing
+for state space plot, timeseries plots, or parameter sliders.
+Everything is also automatically named and limits are also automatically deduced for everything! Super convenient!
 
 ## [Learning resources](@id learning)
 

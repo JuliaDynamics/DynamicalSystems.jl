@@ -360,9 +360,9 @@ Let's create a the Roessler system as an MTK model:
 ```@example MAIN
 using ModelingToolkit
 
+@variables t
+D = Differential(t)
 @mtkmodel Roessler begin
-    @variables t
-    D = Differential(t)
     @parameters begin
         a = 0.2
         b = 0.2
@@ -414,10 +414,14 @@ current_parameter(roessler, model.c)
 ```
 
 ```@example MAIN
-set_parameter!(roessler, 5.0, model.c)
+set_parameter!(roessler, model.c, 5.0)
 ```
 
-and this symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.
+```@example MAIN
+current_parameter(roessler, model.c)
+```
+
+This symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.
 
 ## Core components reference
 

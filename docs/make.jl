@@ -9,12 +9,6 @@ Downloads.download(
 )
 include("build_docs_with_style.jl")
 
-# Also bring in visualizations from interactive dynamics docs:
-# using InteractiveDynamics
-# infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
-# outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
-# cp(infile, outfile; force = true)
-
 pages =  [
     "Introduction" => "index.md",
     "Overarching tutorial" => "tutorial.md",
