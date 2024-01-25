@@ -2,21 +2,31 @@ export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, sca
   interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries
 
 """
-    interactive_trajectory(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dsobs
+    interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
 
-Create a panel (a new Makie figure) that contains an axis showing the evolving trajectories
-of `ds` while optionally allowing for interactively starting/stopping the time evolution
-and/or changing the system parameters via sliders. Return the newly created figure `fig`
-that may include interactivity-related buttons, and a `dsobs::DynamicalSystemObservable`
-that facilities the creation of custom animations and/or interactive
-applications, see the custom animations section below.
+Create a Makie `Figure` that to visualize trajectories and timeseries of `ds`.
+This `Figure` can also be used as an interactive GUI (requires `GLMakie`) to enable
+interactive control over parameters and time evolution.
+It can also be used to reate videos, as well as customized animations, see below.
+
+`fs` is a `Vector` of "indices to observe", i.e., anything that can be given
+to [`observe_state`](@ref). Each observation index will make a timeseries plot.
+`u0s` is a `Vector` of initial conditions. Each is evolved with a unique color and displayed
+both as a trajectory in state space and as an observed timeseries.
 
 The given dynamical system is always cast into a `ParallelDynamicalSystem`.
 The trajectories from the initial conditions in `u0s` (a vector of vectors)
 are all evolved and visualized in parallel. By default
 only the current state of the system is used.
 
-See also [`interactive_trajectory_timeseries`](@ref).
+## Return
+
+Return the newly created figure `fig`
+that may include interactivity-related buttons, and a `dsobs::DynamicalSystemObservable`
+that facilities the creation of custom animations and/or interactive
+applications, see the custom animations section below.
+
+See also [`interactive_trajectory`](@ref).
 
 ## Interactivity and time stepping keywords
 
@@ -26,23 +36,25 @@ See also [`interactive_trajectory_timeseries`](@ref).
   manually using the custom animations etup that we describe below; `add_controls` only
   concerns the buttons and interactivity added to the created panel.
 - `parameter_sliders = nothing`: If given, it must be a dictionary, mapping
-  parameter indices (of the parameter container of `ds`) into ranges. Each combination
+  parameter indices (any valid index that can be given to [`set_parameter!`](@ref))
+  to ranges of parameter values. Each combination
   of index and range becomes a slider that can be interactively controlled to alter
-  a system parameter on the fly during time evolution. Note that all parameter systems
-  can always be altered on the fly using the custom animation setup that we describe below;
+  a system parameter on the fly during time evolution. Note that all system parameters
+  can also be altered using the custom animation setup that we describe below;
   `parameter_sliders` only conserns the buttons and interactivity added to the created panel.
-- `parameter_names = Dict(keys(ps) .=> keys(ps))`: Dictionary mapping parameter keys to labels.
-  Only valid if `parameter_sliders` is given.
+- `parameter_names = Dict(keys(ps) .=> string.(keys(ps)))`: Dictionary mapping parameter
+  keys to labels. Only used if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
-  0.01 for continuous time systems.
+  0.01 for continuous time systems. For internal simplicity, continuous time dynamical
+  systems are evolved non-adaptively with constant step size equal to `Δt`.
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
-  function, which is called between each plot update.
+  function, which is called between each plot update. Useful when time integration is
+  computationally inexpensive and animation proceeds too fast.
 
 ## Visualization keywords
 
-- `colors`: The color for each initial condition (and resulting trajectory).
-- `idxs = 1:min(length(transform(u0s[1])), 3)`: Which variables to plot
-  (up to three can be chosen).
+- `colors`: The color for each initial condition (and resulting trajectory and timeseries).
+  Needs to be a `Vector` of equal length as `u0s`.
 * `tail = 1000`: Length of plotted trajectory (in units of `Δt`).
 * `fade = true`: The trajectories in state space are faded
   to full transparency if `true`.
@@ -53,17 +65,30 @@ See also [`interactive_trajectory_timeseries`](@ref).
   `plotkwargs` can also be a vector of named tuples, in which case each initial condition
   gets different arguments.
 
-## Layouting keywords
+## Statespace trajectory keywords
 
-- `idxs = 1:min(dimension(ds), 3)`: Which variables of `ds` should be plotted.
-  If three indices are given, the trajectory plot is also 3D, otherwise 2D. Note that no
-  transformation of the dynamical system is done, you can use a `ProjectedDynamicalSystem`
-  if you want to visualize an arbitrary transformation of `ds`.
+- `idxs = 1:min(length(u0s[1]), 3)`: Which variables to plot in a state space trajectory.
+  Any index that can be given to [`observe_state`](@ref) can be given here.
+- `statespace_axis = true`: Whether to create and display an axis for the trajectory plot.
+- `idxs = 1:min(length(u0s[1]), 3)`: Which variables to plot in a state space trajectory.
+  Any index that can be given to [`observe_state`](@ref) can be given here.
+  If three indices are given, the trajectory plot is also 3D, otherwise 2D.
 - `lims`: A tuple of tuples (min, max) for the axis limits. If not given, they are
-  automatically deduced by evolving each of `u0s` 100 units and picking most extreme
-  values (limits are _not_ adjusted by default during the live animations)
+  automatically deduced by evolving each of `u0s` 1000 `Δt` units and picking most extreme
+  values (limits are _not_ adjusted by default during the live animations).
 - `figure, axis`: both can be named tuples with arbitrary keywords
   propagated to the generation of the `Figure` and state space `Axis` instances.
+
+## Timeseries keywords
+
+- `linekwargs = NamedTuple()`: Extra keywords propagated to the timeseries plots.
+  Can also be a vector of named tuples, each one for each unique initial condition.
+- `timeseries_names`: A vector of strings with length equal to `fs` giving names to
+  the y-labels of the timeseries plots.
+- `timeseries_ylims`: A vector of 2-tuples for the lower and upper limits of the
+  y-axis of each timeseries plot. If not given it is deduced automatically similarly to `lims`.
+- `timeunit = 1`: the units of time, if any. Sets the units of the timeseries x-axis.
+- `timelabel = "time"`: label of the x-axis of the timeseries plots.
 
 ## Custom animations
 
@@ -90,37 +115,17 @@ This information can be used to create custom animations and/or interactive apps
 In principle, the only thing a user has to do is create new observables from
 the existing ones using e.g. the `on` function and plot these new observables.
 Various examples are provided in the online documentation.
-"""
-function interactive_trajectory end
 
-
-"""
-    interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
-
-An extension to [ `interactive_trajectory`](@ref), which adds a new panel to the right
-of the original trajectory panel. This new panel contains timeseries of various observed
-quantities from the state of the dynamical system. These observed timeseries are given in
-`fs`. It is a vector of integers and/or functions. Integers mean to simply observe the
-specified variable. Functions are all functions of the full state of the dynamical system
-that return a real number.
-
-## Keyword arguments
-
-- `linekwargs = NamedTuple()`: Extra keywords propagated to the timeseries plots.
-  Can also be a vector of named tuples, each one for each unique initial condition.
-- `timeseries_names`: A vector of strings with length equal to `fs` giving names to
-  the y-labels of the timeseries plots.
-- `timeseries_ylims`: A vector of 2-tuples for the lower and upper limits of the
-  y-axis of each timeseries plot. This can't be deduced automatically as
-  arbitrary observables are allowed in the timeseries.
-- `timeunit = 1`: the units of time, if any. The actual time elapsed is divided by
-  this number.
-- `timelabel = "time"`: label of the x-axis of the timeseries plots.
-
-All other keywords are propagated to [`interactive_trajectory`](@ref).
 """
 function interactive_trajectory_timeseries end
 
+"""
+    interactive_trajectory(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dsobs
+
+Same as [`interactive_trajectory_timeseries`](@ref), but does not plot any timeseries
+only the trajectory in a (projected) state space.
+"""
+function interactive_trajectory end
 
 
 """

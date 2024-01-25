@@ -6,13 +6,92 @@ The main functionality is [`interactive_trajectory`](@ref) that allows building 
 
 ## Interactive- or animated trajectory evolution
 
+The following GUI is obtained with the function [`interactive_trajectory_timeseries`](@ref) and the code snippet below it!
+
 ```@raw html
 <video width="100%" height="auto" controls autoplay loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/interactive_trajectory.mp4?raw=true" type="video/mp4">
 </video>
 ```
 
+```julia
+using DynamicalSystems, GLMakie, ModelingToolkit
+
+# Define the variables and parameters in symbolic format
+@variables t
+D = Differential(t)
+@parameters begin
+    a = 0.29
+    b = 0.14
+    c = 4.52
+end
+@variables begin
+    x(t) = 10.0
+    y(t) = 0.0
+    z(t) = 1.0
+    nlt(t) # nonlinear term
+end
+
+# Create the equations of the model
+eqs = [
+    D(x) ~ -y - z,
+    D(y) ~ x + a*y,
+    D(z) ~ b + nlt - z*c,
+    nlt ~ z*x, # observed variable
+]
+
+# Create the model via ModelingToolkit
+@named roessler = ODESystem(eqs)
+model = structural_simplify(roessler)
+# Cast it into an `ODEProblem` and then into a `DynamicalSystem`
+prob = ODEProblem(model)
+ds = CoupledODEs(prob)
+# If you have "lost" the model, use:
+model = referrenced_sciml_model(ds)
+
+# Define which parameters will be interactive during the simulation
+parameter_sliders = Dict(
+    # can use integer indexing
+    1 => 0:0.01:1,
+    # the global scope symbol
+    b => 0:0.01:1,
+    # or the symbol obtained from the MTK model
+    model.c => 0:0.01:10,
+)
+
+# Define what variables will be visualized as timeseries
+norm(u) = sqrt(u[1]*u[1] + u[2]*u[2])
+observables = [
+    1,         # can use integer indexing,
+    z,         # MTK state variable
+    model.nlt, # MTK observed variable
+    norm,      # or arbitrary function of the state
+]
+
+# Define what variables will be visualized as state space trajectory
+# same as above, any indexing works, but ensure to make the vector `Any`
+# so that integers are not converted to symbolic variables
+idxs = Any[1, y, 3]
+
+u0s = [
+    # no fancy indexing here yet; numbers must correspond to state variables
+    [-4.0, -4, 0.1],
+    [4.0, 4, 0.2],
+    [5.72, 0.28, 0.21],
+    [-5.72, 0.0, 0.0],
+]
+
+update_theme!(fontsize = 14)
+
+fig, dsobs = interactive_trajectory_timeseries(ds, observables, u0s;
+    parameter_sliders, idxs,
+)
+
+display(fig)
+```
+
 ```@docs
+interactive_trajectory_timeseries
 interactive_trajectory
 ```
 
@@ -109,13 +188,13 @@ Now, after the live animation "run" button is pressed, we can interactively chan
 
 We can also change the parameters non-interactively using `set_parameter!`
 
-```@example
+```@example MAIN
 set_parameter!(dsobs, 2, 50.0)
 
 fig
 ```
 
-```@example
+```@example MAIN
 set_parameter!(dsobs, 2, 10.0)
 
 fig
@@ -175,8 +254,6 @@ end
 </video>
 ```
 
-
-
 ## Cobweb Diagrams
 ```@raw html
 <video width="100%" height="auto" controls autoplay loop>
@@ -229,6 +306,7 @@ ps, us = scaleod(oddata)
 ```
 
 ## Interactive Poincaré Surface of Section
+
 ```@raw html
 <video width="100%" height="auto" controls autoplay loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/interactive_psos.mp4?raw=true" type="video/mp4">
@@ -273,6 +351,7 @@ labels = ("q₂" , "p₂"),  color = λcolor, diffeq...)
 ```
 
 ## Scanning a Poincaré Surface of Section
+
 ```@raw html
 <video width="100%" height="auto" controls autoplay loop>
 <source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/psos_brainscan.mp4?raw=true" type="video/mp4">

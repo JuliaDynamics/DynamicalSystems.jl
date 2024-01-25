@@ -7,6 +7,17 @@ The changelog here therefore lists either major changes to the overarching Dynam
 
 The changelogs of individual subpackages are self-contained for each package.
 
+# v3.3
+
+DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
+
+At a low level, this happens via the functions `observe_state`, `set_state!`,
+`current_parameter` and `set_parameter!`.
+
+Additionally, `interactive_trajectory_timeseries` allows symbolic indexing
+for state space plot, timeseries plots, or parameter sliders.
+Everything is also automatically named and limits are also automatically deduced for everything! Super convenient!
+
 # v3.2
 
 - Significant improvement of `interactive_trajectory` by allowing the states or parameters of the system to be reset to their original values!

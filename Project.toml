@@ -1,7 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "3.2.4"
+version = "3.3.0"
 
 [deps]
 Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
@@ -30,7 +30,7 @@ ChaosTools = "3"
 ComplexityMeasures = "2, 3"
 DataStructures = "0.18"
 DelayEmbeddings = "2.7"
-DynamicalSystemsBase = "3"
+DynamicalSystemsBase = "3.5"
 FractalDimensions = "1"
 Makie = "≥ 0.19"
 PredefinedDynamicalSystems = "1"

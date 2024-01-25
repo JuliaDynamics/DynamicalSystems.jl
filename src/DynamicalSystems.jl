@@ -28,8 +28,8 @@ include("visualizations.jl")
 
 # Update messages:
 using Scratch
-display_update = true
-version_number = "3.1.0"
+display_update = false
+version_number = "3.3.0"
 update_name = "update_v$(version_number)"
 
 if display_update
@@ -40,11 +40,6 @@ if display_update
             stdout,
             """
             \nUpdate message: DynamicalSystems v$(version_number)\n
-            DynamicalSystems.jl moved to Julia 1.9+, and now exports visualization
-            and interactive applications automatically once Makie (or Makie backends
-            such as GLMakie) come into scope, using the new package extension system.
-
-            The package InteractiveDynamics.jl is now obsolete.
             """;
             color = :light_magenta,
         )
