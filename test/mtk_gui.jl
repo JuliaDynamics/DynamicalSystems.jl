@@ -1,5 +1,6 @@
 using DynamicalSystems, GLMakie, ModelingToolkit
 
+# Define the variables and parameters in symbolic format
 @variables t
 D = Differential(t)
 @parameters begin
@@ -14,6 +15,7 @@ end
     nlt(t) # nonlinear term
 end
 
+# Create the equations of the model
 eqs = [
     D(x) ~ -y - z,
     D(y) ~ x + a*y,
@@ -21,14 +23,16 @@ eqs = [
     nlt ~ z*x, # observed variable
 ]
 
+# Create the model via ModelingToolkit
 @named roessler = ODESystem(eqs)
 model = structural_simplify(roessler)
-
-tspan = (0.0, 100.0)
-prob = ODEProblem(sys)
+# Cast it into an `ODEProblem` and then into a `DynamicalSystem`
+prob = ODEProblem(model)
 ds = CoupledODEs(prob)
+# If you have "lost" the model, use:
 model = referrenced_sciml_model(ds)
 
+# Define which parameters will be interactive during the simulation
 parameter_sliders = Dict(
     # can use integer indexing
     1 => 0:0.01:1,
@@ -38,8 +42,8 @@ parameter_sliders = Dict(
     model.c => 0:0.01:10,
 )
 
+# Define what variables will be visualized as timeseries
 norm(u) = sqrt(u[1]*u[1] + u[2]*u[2])
-
 observables = [
     1,         # can use integer indexing,
     z,         # MTK state variable
@@ -47,7 +51,9 @@ observables = [
     norm,      # or arbitrary function of the state
 ]
 
-# same as above, any indexing works:
+# Define what variables will be visualized as state space trajectory
+# same as above, any indexing works, but ensure to make the vector `Any`
+# so that integers are not converted to symbolic variables
 idxs = Any[1, y, 3]
 
 u0s = [
