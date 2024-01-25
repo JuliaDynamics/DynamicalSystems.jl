@@ -81,8 +81,6 @@ u0s = [
     [-5.72, 0.0, 0.0],
 ]
 
-update_theme!(fontsize = 14)
-
 fig, dsobs = interactive_trajectory_timeseries(ds, observables, u0s;
     parameter_sliders, idxs,
 )
