@@ -1,6 +1,6 @@
 # [Overarching tutorial for DynamicalSystems.jl](@id tutorial)
 
-This page serves as a short, but to-the-point, introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
+This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
 
 Going through this tutorial should take you about 20 minutes.
 
@@ -22,7 +22,7 @@ in your Julia session.
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two components:
 
 1. The [`StateSpaceSet`](@ref), which represents numerical data. They can be observed or measured from experiments, sampled trajectories of dynamical systems, or just unordered sets in a state space. A `StateSpaceSet` is a container of equally-sized points, representing multivariate timeseries or multivariate datasets. Timeseries, which are univariate sets, are represented by the `AbstractVector{<:Real}` Julia base type.
-2. The [`DynamicalSystem`](@ref), which is the abstract representation of a dynamical system with a known dynamic evolution rule. `DynamicalSystem` defines an extendable interface, but typically one uses concrete implementations such as [`DeterministicIteratedMap`](@ref) or [`CoupledODEs`](@ref).
+2. The [`DynamicalSystem`](@ref), which is the abstract representation of a dynamical system with a known dynamic evolution rule. `DynamicalSystem` defines an extendable interface, but typically one uses existing implementations such as [`DeterministicIteratedMap`](@ref) or [`CoupledODEs`](@ref).
 
 ## Making dynamical systems
 
@@ -47,6 +47,10 @@ The distinction is done on whether `f` is defined as an in-place (iip) function 
 **iip** is suggested for systems with high dimension and **oop** for small.
 The break-even point is between 10 to 100 dimensions but should be benchmarked
 on a case-by-case basis as it depends on the complexity of `f`.
+
+!!! note "Autonomous vs non-autonomous systems"
+    Whether the dynamical system is autonomous (`f` doesn't depend on time) or not, it is still necessary to include `t` as an argument to `f`. Some algorithms utilize this information, some do not, but we prefer to keep a consistent interface either way.
+
 
 ### Example: Henon map
 
@@ -176,25 +180,6 @@ lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
 ```
-
-### Integration with ModelingToolkit.jl
-
-DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
-
-To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
-
-Let's create a system as an example:
-```@example MAIN
-using ModelingToolkit
-
-# TODO: Write this
-
-# TODO: make the timeseries interactive the main function.
-
-```
-
-
-
 
 ## Using dynamical systems
 
@@ -365,13 +350,84 @@ fig
 since the real value is outside the distribution we have confidence the data are not pure noise.
 
 
+## Integration with ModelingToolkit.jl
+
+DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
+
+To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
+
+Let's create a the Roessler system as an MTK model:
+```@example MAIN
+using ModelingToolkit
+
+@mtkmodel Roessler begin
+    @variables t
+    D = Differential(t)
+    @parameters begin
+        a = 0.2
+        b = 0.2
+        c = 5.7
+    end
+    @variables begin
+        x(t) = 1.0
+        y(t) = 0.0
+        z(t) = 0.0
+        nlt(t) # nonlinear term
+    end
+    @equations begin
+        D(x) ~ -y -z
+        D(y) ~ x + a*y
+        D(z) ~ b + nlt
+        nlt ~ z*(x - c)
+    end
+end
+
+@mtkbuild model = Roessler()
+```
+this model can then be made into an `ODEProblem`:
+```@example MAIN
+prob = ODEProblem(model)
+```
+(notice that because we specified initial values for all parameters and variables during the model creation  we do need to provide additional initial values)
+
+Now, this problem can be made into a [`CoupledODEs`](@ref):
+
+```@example MAIN
+roessler = CoupledODEs(prob)
+```
+
+This dynamical system instance can be used in the rest of the library like anything else. Additionally, you can "observe" referenced symbolic variables:
+```@example MAIN
+observe_state(roessler, model.x)
+```
+
+```@example MAIN
+observe_state(roessler, model.nlt)
+```
+
+These observables can also be used in the GUI visualization [`interactive_trajectory_timeseries`](@ref).
+
+You can also symbolically alter parameters
+
+```@example MAIN
+current_parameter(roessler, model.c)
+```
+
+```@example MAIN
+set_parameter!(roessler, 5.0, model.c)
+```
+
+and this symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.
+
 ## Core components reference
+
 ```@docs
 StateSpaceSet
 DynamicalSystem
 ```
 
 ## Dynamical system implementations
+
 ```@docs
 DeterministicIteratedMap
 CoupledODEs
@@ -383,4 +439,4 @@ ArbitrarySteppable
 
 ## Learn more
 
-To learn more, you need to visit the documentation pages of the individual packages. See the [contents](@ref contents) page for more!
+To learn more, you need to visit the documentation pages of the modules that compose DynamicalSystems.jl. See the [contents](@ref contents) page for more!
