@@ -17,7 +17,7 @@ function DynamicalSystems.interactive_trajectory(
         # parameters
         parameter_sliders = nothing,
         # `pnames` is deprecated
-        pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> string.(keys(parameter_sliders))),
+        pnames = isnothing(parameter_sliders) ? nothing : Dict(keys(parameter_sliders) .=> parameter_name.(keys(parameter_sliders))),
         parameter_names = pnames,
         add_controls = true,
         # figure and axis
@@ -44,7 +44,7 @@ function DynamicalSystems.interactive_trajectory(
     fig = Figure(; figure...)
     # Set up trajectrory plot
     statespacelayout = fig[1,1] = GridLayout()
-    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, [1])[1] : lims
+    lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, [1], Δt)[1] : lims
     tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
         lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_axis,
     )
@@ -128,10 +128,10 @@ function _init_statespace_plot!(
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
     axisposition = statespace_axis ? layout[1,1] : Figure()[1,1]
-    xlabel = _timeseries_name(idxs[1])
-    ylabel = _timeseries_name(idxs[2])
+    xlabel = timeseries_name(idxs[1])
+    ylabel = timeseries_name(idxs[2])
     statespaceax = if is3D
-        zlabel = _timeseries_name(idxs[3])
+        zlabel = timeseries_name(idxs[3])
         Axis3(axisposition; xlabel, ylabel, zlabel, axis...)
     else
         Axis(axisposition; xlabel, ylabel, axis...)
@@ -253,7 +253,7 @@ end
 function DynamicalSystems.interactive_trajectory_timeseries(
     ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
     linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
-    timeseries_names = [_timeseries_name(f) for f in fs],
+    timeseries_names = [timeseries_name(f) for f in fs],
     colors = [COLORS[i] for i in 1:length(u0s)],
     timeseries_ylims = nothing,
     timelabel = "time", timeunit = 1,
@@ -318,7 +318,10 @@ end
 
 _obtain_data(x::AbstractVector, f::Int) = x[f]
 _obtain_data(x::AbstractVector, f::Function) = f(x)
-_timeseries_name(f::Int) = "u"*subscript(f)
-_timeseries_name(f::Function) = string(f)
-_timeseries_name(f::Union{AbstractString,Symbol}) = string(f)
-_timeseries_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))
+timeseries_name(f::Int) = "u"*subscript(f)
+timeseries_name(f::Function) = string(f)
+timeseries_name(f::Union{AbstractString,Symbol}) = string(f)
+timeseries_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))
+parameter_name(f::Int) = "p"*subscript(f)
+parameter_name(f::Union{AbstractString,Symbol}) = string(f)
+parameter_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))

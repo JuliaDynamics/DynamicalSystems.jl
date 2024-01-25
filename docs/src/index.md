@@ -118,8 +118,7 @@ The version of `DynamicalSystems` by itself is a bit meaningless, because the mo
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
-using CairoMakie, InteractiveDynamics, DynamicalSystems
-include("../style.jl")
+using CairoMakie, DynamicalSystems
 ```
 
 ```@example MAIN
