@@ -49,6 +49,7 @@ The break-even point is between 10 to 100 dimensions but should be benchmarked
 on a case-by-case basis as it depends on the complexity of `f`.
 
 ### Example: Henon map
+
 Let's make the Henon map, defined as
 ```math
 \begin{aligned}
@@ -176,6 +177,24 @@ Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
 ```
 
+### Integration with ModelingToolkit.jl
+
+DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
+
+To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
+
+Let's create a system as an example:
+```@example MAIN
+using ModelingToolkit
+
+# TODO: Write this
+
+# TODO: make the timeseries interactive the main function.
+
+```
+
+
+
 
 ## Using dynamical systems
 
@@ -185,7 +204,7 @@ You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that u
 steps = 10_000
 lyapunovspectrum(lorenz96, steps)
 ```
-As expected, there is at least one positive Lyapunov exponent (before the system is chaotic) and at least one zero Lyapunov exponent, because the system is continuous time.
+As expected, there is at least one positive Lyapunov exponent, because the system is chaotic, and at least one zero Lyapunov exponent, because the system is continuous time.
 
 Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is "multistable" in the sense that some initial conditions diverge to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with [`Attractors`](@ref), and would work as follows:
 
