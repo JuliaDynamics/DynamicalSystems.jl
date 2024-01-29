@@ -1,9 +1,5 @@
 # Contributor Guide
 
-_TL;DR: To contribute via pull requests you can check issues that have labels "wanted feature" or "good first issue" in the GitHub repositories of the subpackages of DynamicalSystems.jl_
-
----
-
 The ultimate goal for **DynamicalSystems.jl** is
 to be a useful *library* for scientists working on nonlinear dynamics and to make nonlinear dynamics accessible and reproducible.
 
@@ -15,14 +11,15 @@ work together to improve the library! If you want to help the cause, there are m
    [DynamicalSystems.jl Issues](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues) page.
 2. Suggest methods that you think should be included in our library. This should be
    done by opening a new issue that describes the method, gives references to papers
-   using the method and also justifies why the method should be included.
-3. Contribute code by solving issues. The easiest issues to tackle are the ones with label ["good first issue"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22good+first+issue%22+).
-4. Contribute code by implementing new methods! That is the most **awesome** way to
-   contribute! The individual packages that compose **DynamicalSystems.jl** have plenty of issues with the tag ["wanted feature"](https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+label%3A%22wanted+feature%22+), which can get you started on a big contribution!
-5. Contribute code by defining a new pre-defined dynamical system that you found useful.
+   using the method and also justifies why the method should be included. Please open an issue to the GitHub page of the submodule of DynamicalSystems.jl that you feel is the most related to the method.
+3. Contribute code by solving existing issues. The easiest issues to tackle are the ones with label "good first issue". Here is a list of all such issues from all submodules of **DynamicalSystems.jl**: [link](https://github.com/issues?page=1&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FAttractors.jl+repo%3AJuliaDynamics%2FComplexityMeasures.jl+repo%3AJuliaDynamics%2FFractalDimensions.jl+repo%3AJuliaDynamics%2FStateSpaceSets.jl+label%3A%22good+first+issue%22).
+4. Contribute code by implementing new methods! That is by far the most impactful way to contribute to the library. The individual packages that compose **DynamicalSystems.jl** have plenty of issues that outline new methods wanted by the library, that are likely not tagged as "good first issues" because they will likely require familiarity that goes beyond a complete beginner. You can tackle one of these if you want to contribute! Additionally, we strongly welcome contributions of brand new algorithms that have just been developed during research in nonlinear dynamics. In fact, **DynamicalSystems.jl** started with the vision that researchers would add their newly developed methods directly to the library when they publish the methods.
 
 ## Contributing Code
-When contributing code, you should keep these things in mind:
+
+When contributing code, principles for writing good scientific code apply. We recommend the [Good Scientific Code workshop] material for teaching you this.
+
+You should keep these things in mind:
 
 * In general, the
   speed of the implementation is important, but not as important as the
@@ -31,17 +28,18 @@ When contributing code, you should keep these things in mind:
   Julia allows you to have perfectly readable code but also super fast ;)
   If necessary add comments to the code, so that somebody that knows the method, can also understand the code immediately.
 * Try to design general, extendable functions instead of unnecessarily specialized to the case at hand.
-* For the documentation strings of new methods and systems please follow the convention of the documentation strings of DynamicalSystems.jl. Specifically, the first section should describe the function in a couple of sentences, its positional arguments and its return value. The next section `## Keyword Arguments` describes the keywords. The next section `## Description` describes the algorithm in detail if need be. Lastly, papers that are relevant to the method must be cited. Have a look at the documentation strings of `lyapunov` and `lyapunovspectrum` to get an idea.
+* The documentation strings of the new API functions you contribute are the most important to make as good as possible. Please follow the convention of the documentation strings of DynamicalSystems.jl outlined below.
 
 ## Documentation string style
+
 Documentation strings are the most important thing in your pull request/code. The number 1 priority of DynamicalSystems.jl is highest possible quality of documentation and utmost transparency, and the best way to achieve this is with good documentation strings. In DynamicalSystems.jl we recommend that documentation strings are structured in the following way (and this is also the recommendation we give in the [Good Scientific Code Workshop](https://youtu.be/x3swaMSCcYk?t=11087)).
 
 1. Clear call signature in code syntax, including expected input types if necessary. The call signature should ONLY include only the most important information, not list out in detail every keyword!
 1. Brief summary of the function
-1. [Optional] Return value and type if not obvious
-1. [Optional] References to related functions if sensible
-1. [Optional] Keyword arguments list if the function has some
-1. [Optional] Detailed discussion of functionality if function behavior is scientifically involved
-1. [Optional] Citations to relevant scientific papers!
+1. [Optional] Return value and type if not obvious (almost always it is not obvious!)
+1. [Optional] References to related functions if sensible with the `@ref` command.
+1. [Optional] Keyword arguments list if the function has some with a `## Keyword arguments` subsection.
+1. [Optional] Detailed discussion of functionality if function behavior is scientifically involved with a `## Description` subsection.
+1. [Optional] Citations to relevant scientific papers with the `@cite` command.
 
-The syntax of the documentation strings follows Documenter.jl protocol. Please see the documentation string of the [lyapunov](https://github.com/JuliaDynamics/ChaosTools.jl/blob/a7ba7f559e24bd6e32d270b9a6281d4b919a20a1/src/chaosdetection/lyapunovs/lyapunov.jl#L4-L65) function and use the same structure.
+The syntax of the documentation strings follows Documenter.jl protocol. Please see the documentation string of the [`lyapunov`](https://github.com/JuliaDynamics/ChaosTools.jl/blob/a7ba7f559e24bd6e32d270b9a6281d4b919a20a1/src/chaosdetection/lyapunovs/lyapunov.jl#L4-L65) function and use the same structure.

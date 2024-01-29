@@ -1,4 +1,3 @@
-
 # TODO: Somehow extract this from an online repo...?
 COLORSCHEME = [
     "#7143E0",
