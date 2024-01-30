@@ -11,7 +11,7 @@ function DynamicalSystems.interactive_trajectory(
         Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
         pause = nothing,
         # Visualization
-        colors = collect(cgrad(COLORSCHEME, N; categorical = true)),
+        colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
         plotkwargs = NamedTuple(), markersize = 15,
         fade = true,
         # parameters
@@ -254,7 +254,7 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
     linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
     timeseries_names = [timeseries_name(f) for f in fs],
-    colors = collect(cgrad(COLORSCHEME, N; categorical = true)),
+    colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
     timeseries_ylims = nothing,
     timelabel = "time", timeunit = 1,
     Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
