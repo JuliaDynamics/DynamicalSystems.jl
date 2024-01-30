@@ -1,7 +1,5 @@
 using DynamicalSystems.DataStructures
 
-# TODO: make the timeseries interactive the main function.
-
 function DynamicalSystems.interactive_trajectory(
         ds::DynamicalSystems.DynamicalSystem, u0s = [DynamicalSystems.current_state(ds)];
         # Selection of what to plot
