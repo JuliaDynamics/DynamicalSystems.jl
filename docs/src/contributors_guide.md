@@ -6,12 +6,10 @@ to be a useful *library* for scientists working on nonlinear dynamics and to mak
 Of course, for such an ambitious goal to be achieved, many of us should try to
 work together to improve the library! If you want to help the cause, there are many ways to contribute to the **DynamicalSystems.jl** library:
 
-1. Just *use it*. If you encountered unexpected behavior simply report it either on
-   our [gitter chatroom](https://gitter.im/JuliaDynamics/Lobby) or using the
-   [DynamicalSystems.jl Issues](https://github.com/JuliaDynamics/DynamicalSystems.jl/issues) page.
+1. Just *use it*! Share it with your colleagues if it was useful for you, and report unexpected behaviour if you find any (see [here](@ref ask_questions) for how).
 2. Suggest methods that you think should be included in our library. This should be
    done by opening a new issue that describes the method, gives references to papers
-   using the method and also justifies why the method should be included. Please open an issue to the GitHub page of the submodule of DynamicalSystems.jl that you feel is the most related to the method.
+   using the method and also justifies why the method should be included. Please open an issue to the GitHub page of the submodule of **DynamicalSystems.jl** that you feel is the most related to the method.
 3. Contribute code by solving existing issues. The easiest issues to tackle are the ones with label "good first issue". Here is a list of all such issues from all submodules of **DynamicalSystems.jl**: [link](https://github.com/issues?page=1&q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDelayEmbeddings.jl+repo%3AJuliaDynamics%2FRecurrenceAnalysis.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FAttractors.jl+repo%3AJuliaDynamics%2FComplexityMeasures.jl+repo%3AJuliaDynamics%2FFractalDimensions.jl+repo%3AJuliaDynamics%2FStateSpaceSets.jl+label%3A%22good+first+issue%22).
 4. Contribute code by implementing new methods! That is by far the most impactful way to contribute to the library. The individual packages that compose **DynamicalSystems.jl** have plenty of issues that outline new methods wanted by the library, that are likely not tagged as "good first issues" because they will likely require familiarity that goes beyond a complete beginner. You can tackle one of these if you want to contribute! Additionally, we strongly welcome contributions of brand new algorithms that have just been developed during research in nonlinear dynamics. In fact, **DynamicalSystems.jl** started with the vision that researchers would add their newly developed methods directly to the library when they publish the methods.
 
