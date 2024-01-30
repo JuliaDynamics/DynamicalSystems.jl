@@ -1,0 +1,1053 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="./assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="./assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="./assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="./assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i,700|Source+Code+Pro">
+        <style>body,input{font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Source Code Pro","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="./assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="./assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#introduction" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Introduction & Contents
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Introduction & Contents
+      </label>
+    
+    <a href="." title="Introduction & Contents" class="md-nav__link md-nav__link--active">
+      Introduction & Contents
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contents" title="Contents" class="md-nav__link">
+    Contents
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamicalsystemsbase" title="DynamicalSystemsBase" class="md-nav__link">
+    DynamicalSystemsBase
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delayembeddings" title="DelayEmbeddings" class="md-nav__link">
+    DelayEmbeddings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chaostools" title="ChaosTools" class="md-nav__link">
+    ChaosTools
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrenceanalysis" title="RecurrenceAnalysis" class="md-nav__link">
+    RecurrenceAnalysis
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#our-goals" title="Our Goals" class="md-nav__link">
+    Our Goals
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" title="Installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citing" title="Citing" class="md-nav__link">
+    Citing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues-with-bounties" title="Issues with Bounties" class="md-nav__link">
+    Issues with Bounties
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contacting" title="Contacting" class="md-nav__link">
+    Contacting
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-donating" title="Contributing &amp; Donating" class="md-nav__link">
+    Contributing &amp; Donating
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      DynamicalSystemsBase
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        DynamicalSystemsBase
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="ds/general/" title="Dynamical System Definition" class="md-nav__link">
+      Dynamical System Definition
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="ds/evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="ds/predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      DelayEmbeddings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        DelayEmbeddings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="embedding/dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="embedding/reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="embedding/estimate/" title="Estimating Delay Embedding Parameters" class="md-nav__link">
+      Estimating Delay Embedding Parameters
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/chaos_detection/" title="Chaos Distinction" class="md-nav__link">
+      Chaos Distinction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="chaos/choosing/" title="Choosing a solver" class="md-nav__link">
+      Choosing a solver
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      RecurrenceAnalysis
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        RecurrenceAnalysis
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="rqa/rplots/" title="Recurrence Plots" class="md-nav__link">
+      Recurrence Plots
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="rqa/quantification/" title="Quantification & Analysis functions" class="md-nav__link">
+      Quantification & Analysis functions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="rqa/windowed/" title="Windowed RQA" class="md-nav__link">
+      Windowed RQA
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contents" title="Contents" class="md-nav__link">
+    Contents
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamicalsystemsbase" title="DynamicalSystemsBase" class="md-nav__link">
+    DynamicalSystemsBase
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delayembeddings" title="DelayEmbeddings" class="md-nav__link">
+    DelayEmbeddings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chaostools" title="ChaosTools" class="md-nav__link">
+    ChaosTools
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrenceanalysis" title="RecurrenceAnalysis" class="md-nav__link">
+    RecurrenceAnalysis
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#our-goals" title="Our Goals" class="md-nav__link">
+    Our Goals
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" title="Installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citing" title="Citing" class="md-nav__link">
+    Citing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues-with-bounties" title="Issues with Bounties" class="md-nav__link">
+    Issues with Bounties
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contacting" title="Contacting" class="md-nav__link">
+    Contacting
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-donating" title="Contributing &amp; Donating" class="md-nav__link">
+    Contributing &amp; Donating
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/index.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                  <h1>Introduction & Contents</h1>
+                
+                <p><img alt="DynamicalSystems.jl logo: The Double Pendulum" src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/chaos/dynamicalsystems_logo.gif?raw=true" /></p>
+<p><a id='Introduction-1'></a></p>
+<h2 id="introduction">Introduction</h2>
+<p><strong>DynamicalSystems.jl</strong> is a Julia software library for the exploration of chaos and nonlinear dynamics.</p>
+<div class="admonition info">
+<p class="admonition-title">JuliaDynamics</p>
+<p><strong>DynamicalSystems.jl</strong> is part of <a href="https://juliadynamics.github.io/JuliaDynamics/">JuliaDynamics</a>, check out our <a href="https://juliadynamics.github.io/JuliaDynamics/">website</a> for more cool stuff!</p>
+</div>
+<p>The documentation you are reading now was built with the following stable versions:</p>
+<div class="codehilite"><pre><span></span> * DelayEmbeddings ........... 1.0.1
+ * RecurrenceAnalysis ........ 1.0.1
+ * DynamicalSystemsBase ...... 1.2.3
+ * ChaosTools ................ 1.5.0
+</pre></div>
+
+
+<p>See the <a href="./news">News</a> page for recent updates!</p>
+<div class="admonition info">
+<p class="admonition-title">Introductory textbooks</p>
+<p>Our library assumes some basic knowledge of nonlinear dynamics and complex systems.</p>
+<p>If you are new to the field but want to learn more, we can suggest the following textbooks as introductions:</p>
+<ul>
+<li>Nonlinear Dynamics And Chaos - S. Strogatz</li>
+<li>An Exploration of Dynamical Systems and Chaos - J. Argyris <em>et al.</em></li>
+<li>Chaos in Dynamical Systems - E. Ott</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Jupyter Notebooks / Tutorials</p>
+<p><a href="https://github.com/JuliaDynamics/JuliaDynamics/tree/master/tutorials">In this repository</a> you can find various Jupyter notebooks that have been used as introductory tutorials for <strong>DynamicalSystems.jl</strong>!</p>
+</div>
+<p><a id='Contents-1'></a></p>
+<h2 id="contents">Contents</h2>
+<p>The <em>module</em> <code>DynamicalSystems</code> re-exports all following functionality, grouped into different packages.</p>
+<p><a id='<a href="ds/general">DynamicalSystemsBase</a>-1'></a></p>
+<h3 id="dynamicalsystemsbase"><a href="./ds/general"><code>DynamicalSystemsBase</code></a></h3>
+<ul>
+<li>
+<p>Intuitive, consistent APIs for the definition of general <a href="./definition/general">dynamical systems</a>, under a unified struct <a href="ds/general/#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a>. The following combinations are possible:</p>
+<ul>
+<li>Continuous or Discrete systems. Continuous systems use <a href="http://docs.juliadiffeq.org/latest/"><code>DifferentialEquations.jl</code></a> for solving the ODE problem.</li>
+<li>In-place or out-of-place (large versus small systems).</li>
+<li>Auto-differentiated or not (for the Jacobian function).</li>
+</ul>
+</li>
+<li>
+<p>Automatic "completion" of the dynamics of the system with numerically computed Jacobians, in case they are not provided by the user.</p>
+</li>
+<li>Robust implementations of all kinds of integrators, that evolve the system, many states of the system, or even deviation vectors. See the <a href="./advanced">advanced documentation</a> for this.</li>
+<li>Library of <a href="./ds/predefined">predefined well-known dynamical systems</a> that have been used extensively in scientific research.</li>
+</ul>
+<p><a id='<a href="embedding/reconstruction">DelayEmbeddings</a>-1'></a></p>
+<h3 id="delayembeddings"><a href="./embedding/reconstruction"><code>DelayEmbeddings</code></a></h3>
+<p>Is a package for performing delay coordinate embeddings and finding optimal parameters for doing so.</p>
+<ul>
+<li>Unified &amp; dedicated interface for <a href="./embedding/dataset">numerical data</a>: <a href="embedding/dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a>.</li>
+<li>Simple and extendable <a href="embedding/dataset/#DelayEmbeddings.neighborhood"><code>neighborhood</code></a> estimation by interfacing <a href="https://github.com/KristofferC/NearestNeighbors.jl"><code>NearestNeighbors</code></a>.</li>
+<li>
+<p>Flexible and abstracted <a href="embedding/reconstruction/#DelayEmbeddings.reconstruct"><code>reconstruct</code></a> interface, that creates the delay-coordinates reconstruction of a timeseries efficiently.</p>
+<ul>
+<li>Supports multiple dimensions and multiple timescales.</li>
+<li>Methods that estimate optimal embedding parameters: the delay time (<a href="embedding/estimate/#DelayEmbeddings.estimate_delay"><code>estimate_delay</code></a>) and the number of temporal neighbors  (<a href="embedding/estimate/#DelayEmbeddings.estimate_dimension"><code>estimate_dimension</code></a>).</li>
+<li>Fast calculation of mutual information: <a href="embedding/estimate/#DelayEmbeddings.mutualinformation"><code>mutualinformation</code></a>.</li>
+</ul>
+</li>
+</ul>
+<p><a id='<a href="chaos/overview">ChaosTools</a>-1'></a></p>
+<h3 id="chaostools"><a href="./chaos/overview"><code>ChaosTools</code></a></h3>
+<p>Is a package that has many algorithms for chaotic dynamical systems. All algorithms are independent of each other but they are also not expansive enough to be a standalone package.</p>
+<p>Please see the <a href="./chaos/overview">overview section</a> for a full list of features. Here is a quick summary:</p>
+<ul>
+<li>Poincare S.O.S. and orbit diagrams</li>
+<li>Lyapunov Exponents</li>
+<li>Entropies and Dimensions</li>
+<li>Lyapunov exponent of a timeseries (numerical data)</li>
+<li>Finding Fixed Points of Maps</li>
+<li>GALI (Generalized Alignment Index) for distinguishing chaotic and regular behavior</li>
+<li>Nonlinear timeseries analysis</li>
+</ul>
+<p><a id='<a href="rqa/rplots">RecurrenceAnalysis</a>-1'></a></p>
+<h3 id="recurrenceanalysis"><a href="./rqa/rplots"><code>RecurrenceAnalysis</code></a></h3>
+<p><code>RecurrenceAnalysis</code> offers tools to compute and analyze <a href="https://en.wikipedia.org/wiki/Recurrence_plot">Recurrence Plots</a>, a field called <a href="https://en.wikipedia.org/wiki/Recurrence_quantification_analysis">Recurrence Quantification Analysis</a>.</p>
+<ul>
+<li><a href="./rqa/rplots">Recurrence, cross-recurrence and joint-recurrence "plots" (they are matrices)</a>.</li>
+<li>
+<p><a href="./rqa/quantification">Recurrence quantification analysis</a> (RQA):</p>
+<ul>
+<li>Recurrence rate, determinism, average/maximum diagonal length, divergence, laminarity, trend, entropy, trapping time, average/maximum vertical length.</li>
+<li>Fine-tuning of the algorithms that compute the above (e.g. Theiler window and many more)</li>
+<li><a href="./rqa/windowed">Windowed versions</a> of the above</li>
+</ul>
+</li>
+</ul>
+<p><a id='Our-Goals-1'></a></p>
+<h2 id="our-goals">Our Goals</h2>
+<p>The ultimate goal for <strong>DynamicalSystems.jl</strong> is to be a useful <strong>software library</strong> for students and scientists working on chaos, nonlinear dynamics and in general dynamical systems. The word "library" is intended in the literal sense: a place where people go to learn things.</p>
+<p>With <strong>DynamicalSystems.jl</strong> we try to</p>
+<ol>
+<li>Be concise, intuitive, and general. All functions we offer work just as well with any system, whether it is a simple continuous chaotic system, like the <a href="./definition/predefined/#DynamicalSystemsBase.Systems.lorenz">Lorenz attractor</a>, or a high dimensional discrete map like <a href="./definition/predefined/#DynamicalSystemsBase.Systems.coupledstandardmaps">coupled standard maps</a>.</li>
+<li>Be accurate, reliable and performant.</li>
+<li>Be transparent with respect to what is happening "under the hood", i.e. be clear about exactly what each function call does. We take care of this aspect in many ways; by being well-documented, giving references to scientific papers and having clear source code.</li>
+</ol>
+<p><a id='Installation-1'></a></p>
+<h2 id="installation">Installation</h2>
+<p>Simply use <code>]add DynamicalSystems</code> to install everything. Alternatively you can also do <code>using Pkg; Pkg.add("DynamicalSystems")</code>.</p>
+<hr />
+<p>For more advanced users, you can choose which packages to install and use at a high level. The <em>package</em> <code>DynamicalSystems</code> serves two purposes: it re-exports everything under a single module <code>DynamicalSystems</code> and it also builds the documentation.</p>
+<p>All packages depend on <code>DelayEmbeddings</code> which defines core numeric data structures and methods. For example <code>RecurrenceAnalysis</code> and <code>TimeseriesPrediction</code> depend only on <code>DelayEmbeddings</code>. Packages that require equations of motion also depend on <code>DynamicalSystemsBase</code>, like for example <code>ChaosTools</code>.</p>
+<p>If you only need functionality of a specific package you can install only that one, e.g. <code>]add RecurrenceAnalysis</code> and only the minimum amount of requirements will be installed.</p>
+<p><a id='Citing-1'></a></p>
+<h2 id="citing">Citing</h2>
+<p>There is a (very small) paper associated with <strong>DynamicalSystems.jl</strong>. If we have helped you in research that led to a publication, please be kind enough to cite it, using the DOI <code>10.21105/joss.00598</code> or the following BiBTeX entry:</p>
+<div class="codehilite"><pre><span></span>@article{Datseris2018,
+  doi = {10.21105/joss.00598},
+  url = {https://doi.org/10.21105/joss.00598},
+  year  = {2018},
+  month = {mar},
+  volume = {3},
+  number = {23},
+  pages = {598},
+  author = {George Datseris},
+  title = {DynamicalSystems.jl: A Julia software library for chaos and nonlinear dynamics},
+  journal = {Journal of Open Source Software}
+}
+</pre></div>
+
+
+<p><a id='Issues-with-Bounties-1'></a></p>
+<h2 id="issues-with-bounties">Issues with Bounties</h2>
+<p>Money that <strong>DynamicalSystems.jl</strong> obtains from awards, sponsors or donators are converted into bounties for GitHub issues. The full list of issues that have a bounty is <a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=is%3Aopen+is%3Aissue+org%3AJuliaDynamics+label%3Abounty">available here</a>.</p>
+<p>By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)</p>
+<p><a id='Contacting-1'></a></p>
+<h2 id="contacting">Contacting</h2>
+<p>You can <a href="https://gitter.im/JuliaDynamics/Lobby">join our chatroom</a> for discussions and/or questions about the packages of the JuliaDynamics organization! If you are using the Julia Slack workplace, please join the channel <code>#dynamics-bridged</code>.</p>
+<p><a id='Contributing-and-Donating-1'></a></p>
+<h2 id="contributing-donating">Contributing &amp; Donating</h2>
+<p>Be sure to visit the <a href="./contributors_guide">Contributor Guide</a> page, because you can help make this package better without having to write a single line of code! Also, if you find this package helpful please consider staring it on <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl">GitHub</a>! This gives us an accurate lower bound of users that this package has already helped!</p>
+<p>Finally, you can donate for the development of <strong>DynamicalSystems.jl</strong>. You can do that by adding bounties to existing issues on the GitHub repositories (you can open new issues as well). Every issue has an automatic way to create a bounty using <a href="https://www.bountysource.com/">Bountysource</a>, see the first comment of each issue.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+        
+          <a href="ds/general/" title="Dynamical System Definition" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Dynamical System Definition
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="./assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="./assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"."}})</script>
+      
+        <script src="./assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

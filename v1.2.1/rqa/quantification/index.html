@@ -1,0 +1,1234 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>Quantification & Analysis functions - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i,700|Source+Code+Pro">
+        <style>body,input{font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Source Code Pro","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#quantification-analysis-functions" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Quantification & Analysis functions
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction & Contents" class="md-nav__link">
+      Introduction & Contents
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      DynamicalSystemsBase
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        DynamicalSystemsBase
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/general/" title="Dynamical System Definition" class="md-nav__link">
+      Dynamical System Definition
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      DelayEmbeddings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        DelayEmbeddings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/estimate/" title="Estimating Delay Embedding Parameters" class="md-nav__link">
+      Estimating Delay Embedding Parameters
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/chaos_detection/" title="Chaos Distinction" class="md-nav__link">
+      Chaos Distinction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/choosing/" title="Choosing a solver" class="md-nav__link">
+      Choosing a solver
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      RecurrenceAnalysis
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        RecurrenceAnalysis
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../rplots/" title="Recurrence Plots" class="md-nav__link">
+      Recurrence Plots
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Quantification & Analysis functions
+      </label>
+    
+    <a href="./" title="Quantification & Analysis functions" class="md-nav__link md-nav__link--active">
+      Quantification & Analysis functions
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rqa-measures" title="RQA Measures" class="md-nav__link">
+    RQA Measures
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-in-one-bundle" title="All-in-one Bundle" class="md-nav__link">
+    All-in-one Bundle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classical-rqa-measures" title="Classical RQA Measures" class="md-nav__link">
+    Classical RQA Measures
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extended-rqa-measures" title="Extended RQA Measures" class="md-nav__link">
+    Extended RQA Measures
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrence-time-measures" title="Recurrence Time Measures" class="md-nav__link">
+    Recurrence Time Measures
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyword-table" title="Keyword table" class="md-nav__link">
+    Keyword table
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recurrence-structures-histograms" title="Recurrence Structures Histograms" class="md-nav__link">
+    Recurrence Structures Histograms
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../windowed/" title="Windowed RQA" class="md-nav__link">
+      Windowed RQA
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      InteractiveChaos
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        InteractiveChaos
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../interact/od/" title="Orbit Diagram" class="md-nav__link">
+      Orbit Diagram
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../interact/psos/" title="Poincaré Surface of Section" class="md-nav__link">
+      Poincaré Surface of Section
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../interact/highlight/" title="Trajectory Highlighter" class="md-nav__link">
+      Trajectory Highlighter
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rqa-measures" title="RQA Measures" class="md-nav__link">
+    RQA Measures
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-in-one-bundle" title="All-in-one Bundle" class="md-nav__link">
+    All-in-one Bundle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classical-rqa-measures" title="Classical RQA Measures" class="md-nav__link">
+    Classical RQA Measures
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extended-rqa-measures" title="Extended RQA Measures" class="md-nav__link">
+    Extended RQA Measures
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recurrence-time-measures" title="Recurrence Time Measures" class="md-nav__link">
+    Recurrence Time Measures
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyword-table" title="Keyword table" class="md-nav__link">
+    Keyword table
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recurrence-structures-histograms" title="Recurrence Structures Histograms" class="md-nav__link">
+    Recurrence Structures Histograms
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/rqa/quantification.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Quantification-and-Analysis-functions-1'></a></p>
+<h1 id="quantification-analysis-functions">Quantification &amp; Analysis functions</h1>
+<p>A <a href="../rplots/#RecurrenceAnalysis.RecurrenceMatrix"><code>RecurrenceMatrix</code></a> can be analyzed in several ways to yield information about the dynamics of the trajectory. All these various <em>measures</em> and functions are collectively called "Recurrence Quantification Analysis" (RQA).</p>
+<p>To understand how each measure can be useful, we suggest to see the review articles listed in our documentation strings, namely:</p>
+<ol>
+<li>N. Marwan <em>et al.</em>, "Recurrence plots for the analysis of complex systems", <em>Phys. Reports 438</em>(5-6), 237-329 (2007).</li>
+<li>N. Marwan &amp; C.L. Webber, "Mathematical and computational foundations of recurrence quantifications", in: Webber, C.L. &amp; N. Marwan (eds.), <em>Recurrence Quantification Analysis. Theory and Best Practices</em>, Springer, pp. 3-43 (2015).</li>
+</ol>
+<p>You can also check the wikipedia page for <a href="https://en.wikipedia.org/wiki/Recurrence_quantification_analysis">Recurrence quantification analysis</a>.</p>
+<p>The functions described in this page all accept a recurrence matrix (<code>x</code>), see the <a href="../rplots">previous page</a>.</p>
+<p><a id='RQA-Measures-1'></a></p>
+<h2 id="rqa-measures">RQA Measures</h2>
+<p><a id='All-in-one-Bundle-1'></a></p>
+<h3 id="all-in-one-bundle">All-in-one Bundle</h3>
+<p>In case you need all of the RQA-related functions (see below) and you don't want to write 10 lines of code to compute them all (since they are so many) we provide an all-in-one function that computes all of them and returns a NamedTuple of the results!</p>
+<p><a id='RecurrenceAnalysis.rqa' href='#RecurrenceAnalysis.rqa'>#</a>
+<strong><code>RecurrenceAnalysis.rqa</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">rqa</span><span class="p">(</span><span class="n">R</span><span class="p">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Calculate all RQA parameters of a recurrence matrix <code>R</code>. See the functions referred to below for the definition of the different parameters and the default values of the arguments. Using this function is much more efficient than calling all individual functions one by one.</p>
+<p><strong>Return</strong></p>
+<p>The returned value is a NamedTuple with the following entries:</p>
+<ul>
+<li><code>RR</code>: recurrence rate (see <a href="./#RecurrenceAnalysis.recurrencerate"><code>recurrencerate</code></a>)</li>
+<li><code>DET</code>: determinsm (see <a href="./#RecurrenceAnalysis.determinism"><code>determinism</code></a>)</li>
+<li><code>L</code>: average length of diagonal structures (see <a href="./#RecurrenceAnalysis.dl_average"><code>dl_average</code></a>)</li>
+<li><code>Lmax</code>: maximum length of diagonal structures (see <a href="./#RecurrenceAnalysis.dl_max"><code>dl_max</code></a>)</li>
+<li><code>DIV</code>: divergence (see <a href="./#RecurrenceAnalysis.divergence"><code>divergence</code></a>)</li>
+<li><code>ENTR</code>: entropy of diagonal structures (see <a href="./#RecurrenceAnalysis.dl_entropy"><code>dl_entropy</code></a>)</li>
+<li><code>TREND</code>: trend of recurrences (see <a href="./#RecurrenceAnalysis.trend"><code>trend</code></a>)</li>
+<li><code>LAM</code>: laminarity (see <a href="./#RecurrenceAnalysis.laminarity"><code>laminarity</code></a>)</li>
+<li><code>TT</code>: trapping time (see <a href="./#RecurrenceAnalysis.trappingtime"><code>trappingtime</code></a>)</li>
+<li><code>Vmax</code>: maximum length of vertical structures (see <a href="./#RecurrenceAnalysis.vl_max"><code>vl_max</code></a>)</li>
+<li><code>VENTR</code>: entropy of vertical structures (see <a href="./#RecurrenceAnalysis.vl_entropy"><code>vl_entropy</code></a>)</li>
+<li><code>MRT</code>: mean recurrence time (see <a href="./#RecurrenceAnalysis.meanrecurrencetime"><code>meanrecurrencetime</code></a>)</li>
+<li><code>RTE</code> recurrence time entropy (see <a href="./#RecurrenceAnalysis.rt_entropy"><code>rt_entropy</code></a>)</li>
+<li><code>NMPRT</code>: number of the most probable recurrence time (see <a href="./#RecurrenceAnalysis.nmprt"><code>nmprt</code></a>)</li>
+</ul>
+<p>In the case of empty histograms (e.g. no existing vertical lines less than the keyword <code>lminvert</code>) the average and maximum values (<code>L</code>, <code>Lmax</code>, <code>TT</code>, <code>Vmax</code>, <code>MRT</code>) are returned as <code>0.0</code> but their respective entropies (<code>ENTR</code>, <code>VENTR</code>, <code>RTE</code>) are returned as <code>NaN</code>.</p>
+<p><strong>Keyword Arguments</strong></p>
+<p>Standard keyword arguments are the ones accepted by the functions listed below, i.e. <code>theiler</code>, <code>lmin</code>, and <code>border</code>:</p>
+<ul>
+<li><code>theiler</code> is used to define a "Theiler window" around the central diagonal or "line of identity" (LOI): a region of points that are excluded in the calculation of RQA parameters, in order to rule out self-recurrences and apparent recurrences for smooth or high resolution data. The LOI is excluded by default for matrices of the types <code>RecurrenceMatrix</code> or <code>JointRecurrenceMatrix</code>, but it is included for matrices of the type <code>CrossRecurrenceMatrix</code>. <code>theiler=0</code> means that the whole matrix is scanned for lines. <code>theiler=1</code> means that the LOI is excluded. In general, <code>theiler=n</code> means that the <code>n</code> central diagonals are excluded (at both sides of the LOI, i.e. actually <code>2n-1</code> diagonals are excluded).</li>
+<li><code>lmin</code> is used to define the minimum line length in the parameters that describe the distributions of diagonal or vertical lines (it is set as 2 by default).</li>
+<li><code>border</code> is used to avoid border effects in the calculation of <code>TREND</code> (cf. <a href="./#RecurrenceAnalysis.trend"><code>trend</code></a>).</li>
+</ul>
+<p>In addition <code>theilerdiag</code>, <code>lmindiag</code> may be used to declare specific values that override the values of <code>theiler</code> and <code>lmin</code> in the calculation of parameters related to diagonal structures. Likewise, <code>theilervert</code> and <code>lminvert</code> can be used for the calculation of parameters related to vertical structures.</p>
+<p>The keyword argument <code>onlydiagonal</code> (<code>false</code> by default) can be set to <code>true</code> in order to restrict the analysis to the recurrence rate and the parameters related to diagonal structures (<code>RR</code>, <code>DET</code>, <code>L</code>, <code>Lmax</code>, <code>DIV</code> and <code>ENTR</code>), which makes this function slightly faster.</p>
+<hr />
+<div class="admonition note">
+<p class="admonition-title">Return values for empty histograms</p>
+<p>It may be the case that for a given recurrence matrix some structures do not exist at all. For example there are recurrence matrices that have no vertical lengths (or no vertical lengths with length less than <code>lmin</code>). In such cases the behavior of our RQA pipeline is the following:</p>
+<ol>
+<li>Quantities that represent maximum or average values are <code>0.0</code>.</li>
+<li>Quantities that represent entropies are <code>NaN</code>.</li>
+</ol>
+</div>
+<hr />
+<p>See also the <a href="../windowed/#RecurrenceAnalysis.@windowed"><code>@windowed</code></a> macro for a windowed version of <a href="../@def"><code>rqa</code></a>!</p>
+<p><a id='Classical-RQA-Measures-1'></a></p>
+<h3 id="classical-rqa-measures">Classical RQA Measures</h3>
+<p><a id='RecurrenceAnalysis.recurrencerate' href='#RecurrenceAnalysis.recurrencerate'>#</a>
+<strong><code>RecurrenceAnalysis.recurrencerate</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">recurrencerate</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the recurrence rate of the recurrence matrix <code>R</code>.</p>
+<p><strong>Description</strong></p>
+<p>The recurrence rate is calculated as:</p>
+<div>
+<div class="MathJax_Preview">
+RR = \frac{1}{S} \sum R
+</div>
+<script type="math/tex; mode=display">
+RR = \frac{1}{S} \sum R
+</script>
+</div>
+<p>where <span><span class="MathJax_Preview">S</span><script type="math/tex">S</script></span> is the size of <code>R</code> or the region of <code>R</code> with potential recurrent points. There is not a unique definition of that denominator, which is defined as the full size of the matrix in many sources (e.g. [1]), whereas in others it is adjusted to remove the points of the LOI when they are excluded from the count [2,3].</p>
+<p>For matrices of type <code>RecurrenceMatrix</code> or <code>JointRecurrenceMatrix</code>, where the points around the central diagonal are usually excluded, the denominator is adjusted to the size of the matrix outside the Theiler window (by default equal to the LOI, and adjustable with the keyword argument <code>theiler</code>; see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for details). For matrices of type <code>CrossRecurrenceMatrix</code>, where normally all points are analyzed, the denominator is always the full size of the matrix, regardless of the Theiler window that might be defined (none by default).</p>
+<p><em>Hint</em>: to reproduce the calculations done following the formulas that use the full size of the matrix in the denominator, use <code>CrossRecurrenceMatrix(s,s,ε)</code> to define the recurrence matrix, instead of <code>RecurrenceMatrix(s,ε)</code>, setting <code>theiler=1</code> (or <code>theiler=n</code> in general) to explicitly exclude the LOI or other diagonals around it.</p>
+<p><strong>References</strong></p>
+<p>[1] : N. Marwan <em>et al.</em>, "Recurrence plots for the analysis of complex systems", <em>Phys. Reports 438</em>(5-6), 237-329 (2007).</p>
+<p>[2] : C.L. Webber &amp; J.P. Zbilut, "Recurrence Quantification Analysis of Nonlinear Dynamical Systems", in: Riley MA &amp; Van Orden GC, Tutorials in Contemporary Nonlinear Methods for the Behavioral Sciences, 26-94 (2005). URL: https://www.nsf.gov/pubs/2005/nsf05057/nmbs/nmbs.pdf</p>
+<p>[3] : N. Marwan &amp; C.L. Webber, "Mathematical and computational foundations of recurrence quantifications", in: Webber, C.L. &amp; N. Marwan (eds.), <em>Recurrence Quantification Analysis. Theory and Best Practices</em>, Springer, pp. 3-43 (2015).</p>
+<p><a id='RecurrenceAnalysis.determinism' href='#RecurrenceAnalysis.determinism'>#</a>
+<strong><code>RecurrenceAnalysis.determinism</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">determinism</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the determinism of the recurrence matrix <code>R</code>:</p>
+<p><strong>Description</strong></p>
+<p>The determinism is calculated as:</p>
+<div>
+<div class="MathJax_Preview">
+DET = \frac{\sum_{l=lmin}{l P(l)}}{\sum_{l=1}{l P(l)}} =
+\frac{\sum_{l=lmin}{l P(l)}}{\sum R}
+</div>
+<script type="math/tex; mode=display">
+DET = \frac{\sum_{l=lmin}{l P(l)}}{\sum_{l=1}{l P(l)}} =
+\frac{\sum_{l=lmin}{l P(l)}}{\sum R}
+</script>
+</div>
+<p>where <span><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span> stands for the lengths of diagonal lines in the matrix, and <span><span class="MathJax_Preview">P(l)</span><script type="math/tex">P(l)</script></span> is the number of lines of length equal to <span><span class="MathJax_Preview">l</span><script type="math/tex">l</script></span>.</p>
+<p><code>lmin</code> is set to 2 by default, and this calculation rules out all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.dl_average' href='#RecurrenceAnalysis.dl_average'>#</a>
+<strong><code>RecurrenceAnalysis.dl_average</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">dl_average</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the average of the diagonal lines contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.dl_max' href='#RecurrenceAnalysis.dl_max'>#</a>
+<strong><code>RecurrenceAnalysis.dl_max</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">dl_max</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the longest diagonal line contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.dl_entropy' href='#RecurrenceAnalysis.dl_entropy'>#</a>
+<strong><code>RecurrenceAnalysis.dl_entropy</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">dl_entropy</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the Shannon entropy of the diagonal lines contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.divergence' href='#RecurrenceAnalysis.divergence'>#</a>
+<strong><code>RecurrenceAnalysis.divergence</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">divergence</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the divergence of the recurrence matrix <code>R</code> (actually the inverse of <a href="./#RecurrenceAnalysis.dl_max"><code>dl_max</code></a>).</p>
+<p><a id='RecurrenceAnalysis.trend' href='#RecurrenceAnalysis.trend'>#</a>
+<strong><code>RecurrenceAnalysis.trend</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">trend</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">border</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the trend of recurrences in the recurrence matrix <code>R</code>.</p>
+<p><strong>Description</strong></p>
+<p>The trend is the slope of the linear regression that relates the density of recurrent points in the diagonals parallel to the LOI and the distance between those diagonals and the LOI. It quantifies the degree of system stationarity, such that in recurrence plots where points "fade away" from the central diagonal, the trend will have a negative value.</p>
+<p>It is calculated as:</p>
+<div>
+<div class="MathJax_Preview">
+TREND = 10^3\frac{\sum_{d=\tau}^{\tilde{N}}\delta[d]\left(RR[d]-\langle RR[d]\rangle\right)}{\sum_{d=\tau}^{\tilde{N}}\delta[d]^2}
+</div>
+<script type="math/tex; mode=display">
+TREND = 10^3\frac{\sum_{d=\tau}^{\tilde{N}}\delta[d]\left(RR[d]-\langle RR[d]\rangle\right)}{\sum_{d=\tau}^{\tilde{N}}\delta[d]^2}
+</script>
+</div>
+<p>where <span><span class="MathJax_Preview">RR[d]</span><script type="math/tex">RR[d]</script></span> is the local recurrence rate of the diagonal <span><span class="MathJax_Preview">d</span><script type="math/tex">d</script></span>, <span><span class="MathJax_Preview">\delta[d]</span><script type="math/tex">\delta[d]</script></span> is a balanced measure of the distance between that diagonal and the LOI, <span><span class="MathJax_Preview">\tau</span><script type="math/tex">\tau</script></span> is the Theiler window (number of central diagonals that are excluded), and <span><span class="MathJax_Preview">\tilde{N}</span><script type="math/tex">\tilde{N}</script></span> is the number of the outmost diagonal that is included.</p>
+<p>This parameter is expressed in units of variation recurrence rate every 1000 data points, hence the factor <span><span class="MathJax_Preview">10^3</span><script type="math/tex">10^3</script></span> in the formula [1]. </p>
+<p>The 10 outermost diagonals (counting from the corners of the matrix) are excluded by default to avoid "border effects". Use the keyword argument <code>border</code> to define a different number of excluded lines, and <code>theiler</code> to define the size of the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for details).</p>
+<p><em>Note</em>: In rectangular cross-recurrence plots (i.e. when the time series that originate them are not of the same length), the limits of the formula for TREND are not clearly defined. For the sake of consistency, this function limits the calculations to the biggest square matrix that contains the LOI.</p>
+<p><strong>References</strong></p>
+<p>[1] C.L. Webber &amp; J.P. Zbilut, "Recurrence Quantification Analysis of Nonlinear Dynamical Systems", in: Riley MA &amp; Van Orden GC, <em>Tutorials in Contemporary Nonlinear Methods for the Behavioral Sciences</em>, 2005, 26-94. https://www.nsf.gov/pubs/2005/nsf05057/nmbs/nmbs.pdf</p>
+<hr />
+<p><a id='Extended-RQA-Measures-1'></a></p>
+<h3 id="extended-rqa-measures">Extended RQA Measures</h3>
+<p><a id='RecurrenceAnalysis.laminarity' href='#RecurrenceAnalysis.laminarity'>#</a>
+<strong><code>RecurrenceAnalysis.laminarity</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">laminarity</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the laminarity of the recurrence matrix <code>R</code>.</p>
+<p><strong>Description</strong></p>
+<p>The laminarity is calculated as:</p>
+<div>
+<div class="MathJax_Preview">
+LAM = \frac{\sum_{v=lmin}{v P(l)}}{\sum_{v=1}{v P(v)}} =
+\frac{\sum_{v=lmin}{v P(l)}}{\sum R}
+</div>
+<script type="math/tex; mode=display">
+LAM = \frac{\sum_{v=lmin}{v P(l)}}{\sum_{v=1}{v P(v)}} =
+\frac{\sum_{v=lmin}{v P(l)}}{\sum R}
+</script>
+</div>
+<p>where <span><span class="MathJax_Preview">v</span><script type="math/tex">v</script></span> stands for the lengths of vertical lines in the matrix, and <span><span class="MathJax_Preview">P(v)</span><script type="math/tex">P(v)</script></span> is the number of lines of length equal to <span><span class="MathJax_Preview">v</span><script type="math/tex">v</script></span>.</p>
+<p><code>lmin</code> is set to 2 by default, and this calculation rules out all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.trappingtime' href='#RecurrenceAnalysis.trappingtime'>#</a>
+<strong><code>RecurrenceAnalysis.trappingtime</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">trappingtime</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the trapping time of the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p>The trapping time is the average of the vertical line structures and thus equal to <a href="./#RecurrenceAnalysis.vl_average"><code>vl_average</code></a>.</p>
+<p><a id='RecurrenceAnalysis.vl_average' href='#RecurrenceAnalysis.vl_average'>#</a>
+<strong><code>RecurrenceAnalysis.vl_average</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">vl_average</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the average of the vertical lines contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.vl_max' href='#RecurrenceAnalysis.vl_max'>#</a>
+<strong><code>RecurrenceAnalysis.vl_max</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">vl_max</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the longest vertical line contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.vl_entropy' href='#RecurrenceAnalysis.vl_entropy'>#</a>
+<strong><code>RecurrenceAnalysis.vl_entropy</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">vl_entropy</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the Shannon entropy of the vertical lines contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<hr />
+<p><a id='Recurrence-Time-Measures-1'></a></p>
+<h3 id="recurrence-time-measures">Recurrence Time Measures</h3>
+<p><a id='RecurrenceAnalysis.meanrecurrencetime' href='#RecurrenceAnalysis.meanrecurrencetime'>#</a>
+<strong><code>RecurrenceAnalysis.meanrecurrencetime</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">meanrecurrencetime</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the mean recurrence time of the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p>Equivalent to <a href="./#RecurrenceAnalysis.rt_average"><code>rt_average</code></a>.</p>
+<p><a id='RecurrenceAnalysis.nmprt' href='#RecurrenceAnalysis.nmprt'>#</a>
+<strong><code>RecurrenceAnalysis.nmprt</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">nmprt</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the number of the most probable recurrence time (NMPRT), ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p>This number indicates how many times the system has recurred using the recurrence time that appears most frequently, i.e it is the maximum value of the histogram of recurrence times [1].</p>
+<p><strong>References</strong></p>
+<p>[1] : E.J. Ngamga <em>et al.</em> "Recurrence analysis of strange nonchaotic dynamics", <em>Physical Review E</em>, 75(3), 036222(1-8), 2007, DOI:10.1103/physreve.75.036222</p>
+<p><a id='RecurrenceAnalysis.rt_entropy' href='#RecurrenceAnalysis.rt_entropy'>#</a>
+<strong><code>RecurrenceAnalysis.rt_entropy</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">rt_entropy</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the Shannon entropy of the recurrence times contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<p><a id='RecurrenceAnalysis.rt_average' href='#RecurrenceAnalysis.rt_average'>#</a>
+<strong><code>RecurrenceAnalysis.rt_average</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">rt_average</span><span class="p">(</span><span class="n">R</span><span class="p">[;</span> <span class="n">lmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">theiler</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Calculate the average of the recurrence times contained in the recurrence matrix <code>R</code>, ruling out the lines shorter than <code>lmin</code> (2 by default) and all the points inside the Theiler window (see <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for the default values and usage of the keyword argument <code>theiler</code>).</p>
+<hr />
+<p><a id='Keyword-table-1'></a></p>
+<h2 id="keyword-table">Keyword table</h2>
+<p>Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:</p>
+<table>
+<thead>
+<tr>
+<th align="right">Argument</th>
+<th align="right">Default</th>
+<th align="right">Functions</th>
+<th align="right">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right"><code>theiler</code></td>
+<td align="right">0 for <code>CrossRecurrenceMatrix</code>, 1 otherwise.</td>
+<td align="right"><code>recurrencerate</code><br/><code>determinism</code><br/><code>*_average</code><br/><code>*_max</code><br/><code>*_entropy</code><br/><code>divergence</code><br/><code>trend</code><br/><code>laminarity</code><br/><code>trappingtime</code><br/> <code>meanrecurrencetime</code><br/><code>nmprt</code></td>
+<td align="right">Theiler window: number of diagonals around the LOI <strong>excluded</strong> from the analysis. The value <code>0</code> means that the LOI is <em>included</em> in the analysis. Use <code>1</code> to exclude the LOI.</td>
+</tr>
+<tr>
+<td align="right"><code>lmin</code></td>
+<td align="right">2</td>
+<td align="right"><code>determinism</code><br/><code>*_average</code><br/><code>*_max</code><br/><code>*_entropy</code><br/><code>divergence</code><br/><code>laminarity</code><br/><code>trappingtime</code><br/> <code>meanrecurrencetime</code><br/><code>nmprt</code></td>
+<td align="right">Minimum length of the recurrent structures (diagonal or vertical) considered in the analysis.</td>
+</tr>
+<tr>
+<td align="right"><code>border</code></td>
+<td align="right">10</td>
+<td align="right"><code>trend</code></td>
+<td align="right">Number of diagonals excluded from the analysis near the border of the matrix.</td>
+</tr>
+</tbody>
+</table>
+<p><a id='Recurrence-Structures-Histograms-1'></a></p>
+<h2 id="recurrence-structures-histograms">Recurrence Structures Histograms</h2>
+<p>The functions that we list in this page internally compute histograms of some recurrence structures, like e.g. the vertical lengths. You can access these values directly with the following function:</p>
+<p><a id='RecurrenceAnalysis.recurrencestructures' href='#RecurrenceAnalysis.recurrencestructures'>#</a>
+<strong><code>RecurrenceAnalysis.recurrencestructures</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">recurrencestructures</span><span class="p">(</span><span class="n">x</span><span class="o">::</span><span class="n">AbstractRecurrenceMatrix</span><span class="p">;</span>
+                         <span class="n">diagonal</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span>
+                         <span class="n">vertical</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span>
+                         <span class="n">recurrencetimes</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span>
+                         <span class="n">kwargs</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Return a dictionary with the histograms of the recurrence structures contained in the recurrence matrix <code>x</code>, with the keys <code>"diagonal"</code>, <code>"vertical"</code> or <code>"recurrencetimes"</code>, depending on what keyword arguments are given as <code>true</code>.</p>
+<p><strong>Description</strong></p>
+<p>Each item of the dictionary is a vector of integers, such that the <code>i</code>-th element of the vector is the number of lines of length <code>i</code> contained in <code>x</code>.</p>
+<ul>
+<li><code>"diagonal"</code> counts the diagonal lines, i.e. the recurrent trajectories.</li>
+<li><code>"vertical"</code> counts the vertical lines, i.e. the laminar states.</li>
+<li><code>"recurrencetimes"</code> counts the vertical distances between recurrent states,   i.e. the recurrence times.</li>
+</ul>
+<p>All the points of the matrix are counted by default. The keyword argument <code>theiler</code> can be passed to rule out the lines around the main diagonal. See the arguments of the function <a href="./#RecurrenceAnalysis.rqa"><code>rqa</code></a> for further details.</p>
+<p>"Empty" histograms are represented always as <code>[0]</code>.</p>
+<p><em>Notice</em>: There is not a unique operational definition of "recurrence times". In the analysis of recurrence plots, usually the  "second type" of recurrence times as defined by Gao and Cai [1] are considered, i.e. the distance between consecutive (but separated) recurrent structures in the vertical direction of the matrix. But that distance is not uniquely defined when the vertical recurrent structures are longer than one point. The recurrence times calculated here are the distance between the midpoints of consecutive lines, which is a balanced estimator of the Poincaré recurrence times [2].</p>
+<p><strong>References</strong></p>
+<p>[1] J. Gao &amp; H. Cai. "On the structures and quantification of recurrence plots". <a href="https://www.sciencedirect.com/science/article/pii/S0375960100003042?via%3Dihub"><em>Physics Letters A</em>, 270(1-2), 75–87 (2000)</a>.</p>
+<p>[2] N. Marwan &amp; C.L. Webber, "Mathematical and computational foundations of recurrence quantifications", in: Webber, C.L. &amp; N. Marwan (eds.), <em>Recurrence Quantification Analysis. Theory and Best Practices</em>, Springer, pp. 3-43 (2015).</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../rplots/" title="Recurrence Plots" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Recurrence Plots
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../windowed/" title="Windowed RQA" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Windowed RQA
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script>
+      
+        <script src="../../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

@@ -1,0 +1,884 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>Estimating Delay Embedding Parameters - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#estimating-delay-embedding-parameters" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Estimating Delay Embedding Parameters
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Dynamical Systems
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Dynamical Systems
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/general/" title="Dynamical System Definition" class="md-nav__link">
+      Dynamical System Definition
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ds/predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/chaos_detection/" title="Chaos Distinction" class="md-nav__link">
+      Chaos Distinction
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Delay Coordinates Embedding
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Delay Coordinates Embedding
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Estimating Delay Embedding Parameters
+      </label>
+    
+    <a href="./" title="Estimating Delay Embedding Parameters" class="md-nav__link md-nav__link--active">
+      Estimating Delay Embedding Parameters
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#delay-time" title="Delay Time" class="md-nav__link">
+    Delay Time
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedding-dimension" title="Embedding Dimension" class="md-nav__link">
+    Embedding Dimension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutual-information" title="Mutual Information" class="md-nav__link">
+    Mutual Information
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Recurrence Quantification Analysis
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Recurrence Quantification Analysis
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/rplots/" title="Recurrence Plots" class="md-nav__link">
+      Recurrence Plots
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/quantification/" title="Quantification & Analysis functions" class="md-nav__link">
+      Quantification & Analysis functions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/windowed/" title="Windowed RQA" class="md-nav__link">
+      Windowed RQA
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#delay-time" title="Delay Time" class="md-nav__link">
+    Delay Time
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedding-dimension" title="Embedding Dimension" class="md-nav__link">
+    Embedding Dimension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutual-information" title="Mutual Information" class="md-nav__link">
+    Mutual Information
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/embedding/estimate.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Estimating-Delay-Embedding-Parameters-1'></a></p>
+<h1 id="estimating-delay-embedding-parameters">Estimating Delay Embedding Parameters</h1>
+<p>The following functions can estimate good values that can be used in <a href="../reconstruction/#DelayEmbeddings.reconstruct"><code>reconstruct</code></a> for either the delay time or the number of temporal neighbors.</p>
+<p><a id='Delay-Time-1'></a></p>
+<h2 id="delay-time">Delay Time</h2>
+<p><a id='DelayEmbeddings.estimate_delay' href='#DelayEmbeddings.estimate_delay'>#</a>
+<strong><code>DelayEmbeddings.estimate_delay</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>estimate_delay(s, method::String) -&gt; τ
+</pre></div>
+
+
+<p>Estimate an optimal delay to be used in <a href="../reconstruction/#DelayEmbeddings.reconstruct"><code>reconstruct</code></a> or <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>. Return the exponential decay time <code>τ</code> rounded to an integer.</p>
+<p>The <code>method</code> can be one of the following:</p>
+<ul>
+<li><code>"first_zero"</code> : find first delay at which the auto-correlation function becomes 0.</li>
+<li><code>"first_min"</code> : return delay of first minimum of the auto-correlation function.</li>
+</ul>
+<p><a id='Embedding-Dimension-1'></a></p>
+<h2 id="embedding-dimension">Embedding Dimension</h2>
+<p><a id='DelayEmbeddings.estimate_dimension' href='#DelayEmbeddings.estimate_dimension'>#</a>
+<strong><code>DelayEmbeddings.estimate_dimension</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">estimate_dimension</span><span class="o">(</span><span class="nt">s</span><span class="p">::</span><span class="nd">AbstractVector</span><span class="o">,</span> <span class="err">τ</span><span class="p">::</span><span class="nd">Int</span><span class="o">,</span> <span class="err">γ</span><span class="nt">s</span> <span class="o">=</span> <span class="nt">1</span><span class="p">:</span><span class="nd">5</span><span class="o">,</span> <span class="nt">method</span> <span class="o">=</span> <span class="s2">&quot;afnn&quot;</span><span class="o">;</span> <span class="nt">kwargs</span><span class="o">...)</span>
+</pre></div>
+
+
+<p>Compute a quantity that can estimate an optimal amount of temporal neighbors <code>γ</code> to be used in <a href="../reconstruction/#DelayEmbeddings.reconstruct"><code>reconstruct</code></a> or <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>.</p>
+<p><strong>Description</strong></p>
+<p>Given the scalar timeseries <code>s</code> and the embedding delay <code>τ</code> compute a quantity for each <code>γ ∈ γs</code> based on the "nearest neighbors" in the embedded time series.</p>
+<p>The quantity that is calculated depends on the algorithm defined by the string <code>method</code>:</p>
+<ul>
+<li><code>"afnn"</code> (default) is Cao's "Averaged False Nearest Neighbors" method [1], which   gives a ratio of distances between nearest neighbors. This ratio saturates   around <code>1.0</code> near the optimal value of <code>γ</code> (see <a href="./#DelayEmbeddings.afnn"><code>afnn</code></a>).</li>
+<li><code>"fnn"</code> is Kennel's "False Nearest Neighbors" method [2], which gives the   number of points that cease to be "nearest neighbors" when the dimension   increases. This number drops down to zero near the optimal value of <code>γ</code>.   This method accepts the keyword arguments <code>rtol</code> and <code>atol</code>, which stand   for the "tolerances" required by Kennel's algorithm (see <a href="./#DelayEmbeddings.fnn"><code>fnn</code></a>).</li>
+<li><code>"f1nn"</code> is Krakovská's "False First Nearest Neighbors" method [3], which   gives the ratio of pairs of points that cease to be "nearest neighbors"   when the dimension increases. This number drops down to zero near the   optimal value of <code>γ</code> (see <a href="./#DelayEmbeddings.f1nn"><code>f1nn</code></a>).</li>
+</ul>
+<p>Please be aware that in <strong>DynamicalSystems.jl</strong> <code>γ</code> stands for the amount of temporal neighbors and not the embedding dimension (<code>D = γ + 1</code>, see also <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>).</p>
+<p><strong>References</strong></p>
+<p>[1] : Liangyue Cao, <a href="https://www.sciencedirect.com/science/article/pii/S0167278997001188?via%3Dihub">Physica D, pp. 43-50 (1997)</a></p>
+<p>[2] : M. Kennel <em>et al.</em>, <a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.45.3403">Phys. Review A <strong>45</strong>(6), 3403-3411</a> (1992).</p>
+<p>[3] : Anna Krakovská <em>et al.</em>, <a href="https://doi.org/10.1155/2015/932750">J. Complex Sys. 932750 (2015)</a></p>
+<p><a id='DelayEmbeddings.fnn' href='#DelayEmbeddings.fnn'>#</a>
+<strong><code>DelayEmbeddings.fnn</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">fnn</span><span class="o">(</span><span class="nt">s</span><span class="p">::</span><span class="nd">AbstractVector</span><span class="o">,</span> <span class="err">τ</span><span class="p">:</span><span class="nd">Int</span><span class="o">,</span> <span class="err">γ</span><span class="nt">s</span> <span class="o">=</span> <span class="nt">1</span><span class="p">:</span><span class="nd">5</span><span class="o">;</span> <span class="nt">rtol</span><span class="o">=</span><span class="nt">10</span><span class="o">.,</span> <span class="nt">atol</span><span class="o">=</span><span class="nt">2</span><span class="o">.)</span>
+</pre></div>
+
+
+<p>Calculate the number of "false nearest neighbors" (FNN) of the datasets created from <code>s</code> with a sequence of <code>τ</code>-delayed temporal neighbors.</p>
+<p><strong>Description</strong></p>
+<p>Given a dataset made by embedding <code>s</code> with <code>γ</code> temporal neighbors and delay <code>τ</code>, the "false nearest neighbors" (FNN) are the pairs of points that are nearest to each other at dimension <code>γ</code>, but are separated at dimension <code>γ+1</code>. Kennel's criteria for detecting FNN are based on a threshold for the relative increment of the distance between the nearest neighbors (<code>rtol</code>, eq. 4 in [1]), and another threshold for the ratio between the increased distance and the "size of the attractor" (<code>atol</code>, eq. 5 in [1]). These thresholds are given as keyword arguments.</p>
+<p>The returned value is a vector with the number of FNN for each <code>γ ∈ γs</code>. The optimal value for <code>γ</code> is found at the point where the number of FNN approaches zero.</p>
+<p>Please be aware that in <strong>DynamicalSystems.jl</strong> <code>γ</code> stands for the amount of temporal neighbors and not the embedding dimension (<code>D = γ + 1</code>, see also <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>).</p>
+<p>See also: <a href="./#DelayEmbeddings.estimate_dimension"><code>estimate_dimension</code></a>, <a href="./#DelayEmbeddings.afnn"><code>afnn</code></a>, <a href="./#DelayEmbeddings.f1nn"><code>f1nn</code></a>.</p>
+<p><strong>References</strong></p>
+<p>[1] : M. Kennel <em>et al.</em>, "Determining embedding dimension for phase-space reconstruction using a geometrical construction", <em>Phys. Review A 45</em>(6), 3403-3411 (1992).</p>
+<p><a id='DelayEmbeddings.afnn' href='#DelayEmbeddings.afnn'>#</a>
+<strong><code>DelayEmbeddings.afnn</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>afnn(s::AbstractVector, τ:Int, γs = 1:5, p = Inf)
+</pre></div>
+
+
+<p>Compute the parameter E₁ of Cao's "averaged false nearest neighbors" method for determining the minimum embedding dimension of the time series <code>s</code>, with a sequence of <code>τ</code>-delayed temporal neighbors [1].</p>
+<p><strong>Description</strong></p>
+<p>Given the scalar timeseries <code>s</code> and the embedding delay <code>τ</code> compute the values of <code>E₁</code> for each <code>γ ∈ γs</code>, according to Cao's Method (eq. 3 of [1]).</p>
+<p>This quantity is a ratio of the averaged distances between the nearest neighbors of the reconstructed time series, which quantifies the increment of those distances when the number of temporal neighbors changes from <code>γ</code> to <code>γ+1</code>.</p>
+<p>Please be aware that in <strong>DynamicalSystems.jl</strong> <code>γ</code> stands for the amount of temporal neighbors and not the embedding dimension (<code>D = γ + 1</code>, see also <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>).</p>
+<p>Return the vector of all computed <code>E₁</code>s. To estimate a good value for <code>γ</code> from this, find <code>γ</code> for which the value <code>E₁</code> saturates at some value around 1.</p>
+<p><em>Note: This method does not work for datasets with perfectly periodic signals.</em></p>
+<p>See also: <a href="./#DelayEmbeddings.estimate_dimension"><code>estimate_dimension</code></a>, <a href="./#DelayEmbeddings.fnn"><code>fnn</code></a>, <a href="./#DelayEmbeddings.f1nn"><code>f1nn</code></a>.</p>
+<p><strong>References</strong></p>
+<p>[1] : Liangyue Cao, <a href="https://www.sciencedirect.com/science/article/pii/S0167278997001188?via%3Dihub">Physica D, pp. 43-50 (1997)</a></p>
+<p><a id='DelayEmbeddings.f1nn' href='#DelayEmbeddings.f1nn'>#</a>
+<strong><code>DelayEmbeddings.f1nn</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>f1nn(s::AbstractVector, τ:Int, γs = 1:5)
+</pre></div>
+
+
+<p>Calculate the ratio of "false first nearest neighbors" (FFNN) of the datasets created from <code>s</code> with a sequence of <code>τ</code>-delayed temporal neighbors.</p>
+<p><strong>Description</strong></p>
+<p>Given a dataset made by embedding <code>s</code> with <code>γ</code> temporal neighbors and delay <code>τ</code>, the "first nearest neighbors" (FFNN) are the pairs of points that are nearest to each other at dimension <code>γ</code> that cease to be nearest neighbors at dimension <code>γ+1</code> [1].</p>
+<p>The returned value is a vector with the ratio between the number of FFNN and the number of points in the dataset for each <code>γ ∈ γs</code>. The optimal value for <code>γ</code> is found at the point where this ratio approaches zero.</p>
+<p>Please be aware that in <strong>DynamicalSystems.jl</strong> <code>γ</code> stands for the amount of temporal neighbors and not the embedding dimension (<code>D = γ + 1</code>, see also <a href="../reconstruction/#DelayEmbeddings.embed"><code>embed</code></a>).</p>
+<p>See also: <a href="./#DelayEmbeddings.estimate_dimension"><code>estimate_dimension</code></a>, <a href="./#DelayEmbeddings.afnn"><code>afnn</code></a>, <a href="./#DelayEmbeddings.fnn"><code>fnn</code></a>.</p>
+<p><strong>References</strong></p>
+<p>[1] : Anna Krakovská <em>et al.</em>, "Use of false nearest neighbours for selecting variables and embedding parameters for state space reconstruction", <em>J Complex Sys</em> 932750 (2015), DOI: 10.1155/2015/932750</p>
+<p><a id='DelayEmbeddings.stochastic_indicator' href='#DelayEmbeddings.stochastic_indicator'>#</a>
+<strong><code>DelayEmbeddings.stochastic_indicator</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>stochastic_indicator(s::AbstractVector, τ:Int, γs = 1:4) -&gt; E₂s
+</pre></div>
+
+
+<p>Compute an estimator for apparent randomness in a reconstruction with <code>γs</code> temporal neighbors.</p>
+<p><strong>Description</strong></p>
+<p>Given the scalar timeseries <code>s</code> and the embedding delay <code>τ</code> compute the values of <code>E₂</code> for each <code>γ ∈ γs</code>, according to Cao's Method (eq. 5 of [1]).</p>
+<p>Use this function to confirm that the input signal is not random and validate the results of <a href="./#DelayEmbeddings.estimate_dimension"><code>estimate_dimension</code></a>. In the case of random signals, it should be <code>E₂ ≈ 1 ∀ γ</code>.</p>
+<p><strong>References</strong></p>
+<p>[1] : Liangyue Cao, <a href="https://www.sciencedirect.com/science/article/pii/S0167278997001188?via%3Dihub">Physica D, pp. 43-50 (1997)</a></p>
+<hr />
+<p><a id='Mutual-Information-1'></a></p>
+<h2 id="mutual-information">Mutual Information</h2>
+<p>Coming soon...</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../reconstruction/" title="Delay Coordinates" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Delay Coordinates
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../rqa/rplots/" title="Recurrence Plots" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Recurrence Plots
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script>
+      
+        <script src="../../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

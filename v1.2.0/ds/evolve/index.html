@@ -1,0 +1,803 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>Time Evolution - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i,700|Source+Code+Pro">
+        <style>body,input{font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Source Code Pro","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#time-evolution-of-systems" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Time Evolution
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction & Contents" class="md-nav__link">
+      Introduction & Contents
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      DynamicalSystemsBase
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        DynamicalSystemsBase
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../general/" title="Dynamical System Definition" class="md-nav__link">
+      Dynamical System Definition
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Time Evolution
+      </label>
+    
+    <a href="./" title="Time Evolution" class="md-nav__link md-nav__link--active">
+      Time Evolution
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#solution-precision-for-continuous-systems" title="Solution precision for continuous systems" class="md-nav__link">
+    Solution precision for continuous systems
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      DelayEmbeddings
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        DelayEmbeddings
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../embedding/estimate/" title="Estimating Delay Embedding Parameters" class="md-nav__link">
+      Estimating Delay Embedding Parameters
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/chaos_detection/" title="Chaos Distinction" class="md-nav__link">
+      Chaos Distinction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/choosing/" title="Choosing a solver" class="md-nav__link">
+      Choosing a solver
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      RecurrenceAnalysis
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        RecurrenceAnalysis
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/rplots/" title="Recurrence Plots" class="md-nav__link">
+      Recurrence Plots
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/quantification/" title="Quantification & Analysis functions" class="md-nav__link">
+      Quantification & Analysis functions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rqa/windowed/" title="Windowed RQA" class="md-nav__link">
+      Windowed RQA
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#solution-precision-for-continuous-systems" title="Solution precision for continuous systems" class="md-nav__link">
+    Solution precision for continuous systems
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/ds/evolve.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Time-Evolution-of-Systems-1'></a></p>
+<h1 id="time-evolution-of-systems">Time Evolution of Systems</h1>
+<div class="admonition info">
+<p class="admonition-title">Trajectory and Timeseries</p>
+<p>The word "timeseries" can be confusing, because it can mean a univariate (also called scalar or one-dimensional) timeseries or a multivariate (also called multi-dimensional) timeseries. To resolve this confusion, in <strong>DynamicalSystems.jl</strong> we have the following convention: <strong>"timeseries"</strong> always refers to a one-dimensional vector of numbers, which exists with respect to some other one-dimensional vector of numbers that corresponds to a time-vector. On the other hand, the word <strong>"trajectory"</strong> is used to refer to a <em>multi-dimensional</em> timeseries, which is of course simply a group/set of one-dimensional timeseries.</p>
+<p>Note that the data representation of a "trajectory" in Julia may vary: from a 2D Matrix to independent Vectors. In our package, a trajectory is always represented using a <a href="../../embedding/dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a>, which is a <code>Vector</code> of <code>SVector</code>s, and each <code>SVector</code> represents a data-point (the values of the variables at a given time-point).</p>
+</div>
+<p><strong>DynamicalSystems.jl</strong> provides a convenient function for getting a trajectory of a system at equally spaced time points:</p>
+<p><a id='DynamicalSystemsBase.trajectory' href='#DynamicalSystemsBase.trajectory'>#</a>
+<strong><code>DynamicalSystemsBase.trajectory</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">trajectory</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span><span class="o">,</span> <span class="nt">T</span> <span class="cp">[</span><span class="p">,</span> <span class="nx">u</span><span class="cp">]</span><span class="o">;</span> <span class="nt">kwargs</span><span class="o">...)</span> <span class="nt">-</span><span class="o">&gt;</span> <span class="nt">dataset</span>
+</pre></div>
+
+
+<p>Return a dataset that will contain the trajectory of the system, after evolving it for total time <code>T</code>, optionally starting from state <code>u</code>. See <a href="../../embedding/dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a> for info on how to use this object.</p>
+<p>A <code>W×D</code> dataset is returned, with <code>W = length(t0:dt:T)</code> with <code>t0:dt:T</code> representing the time vector (<em>not</em> returned) and <code>D</code> the system dimension. For discrete systems both <code>T</code> and <code>dt</code> must be integers.</p>
+<p><strong>Keyword Arguments</strong></p>
+<ul>
+<li><code>dt</code> :  Time step of value output during the solving of the continuous system. For discrete systems it must be an integer. Defaults to <code>0.01</code> for continuous and <code>1</code> for discrete.</li>
+<li><code>Ttr</code> : Transient time to evolve the initial state before starting saving states.</li>
+<li><code>diffeq...</code> : Keyword arguments propagated into <code>init</code> of DifferentialEquations.jl. For example <code>abstol = 1e-9</code>.  Only valid for continuous systems. If you want to specify a solver, do so by using the name <code>alg</code>, e.g.: <code>alg = Tsit5(), maxiters = 1000</code>. This requires you to have been first <code>using OrdinaryDiffEq</code> to access the solvers. See <code>DynamicalSystemsBase.CDS_KWARGS</code> for default values. These keywords can also include <code>callback</code> for <a href="http://docs.juliadiffeq.org/latest/features/callback_functions.html">event handling</a>. Using a <code>SavingCallback</code> with <code>trajectory</code> will lead to unexpected behavior!</li>
+</ul>
+<hr />
+<p>Notice that if you want to do repeated evolutions of different states of a continuous system, you should use the <a href="../../advanced/#DynamicalSystemsBase.integrator"><code>integrator</code></a> interface instead.</p>
+<p><a id='Solution-precision-for-continuous-systems-1'></a></p>
+<h2 id="solution-precision-for-continuous-systems">Solution precision for continuous systems</h2>
+<p>A numerical solution of an ODE is not the "true" solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.</p>
+<p>DifferentialEquations.jl offers a tool, called <a href="http://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification.html">Uncertainty Quantification</a>, which allows users to asses up to what time-scales the numerical solution is close to the "true" solution. For example, using the default solving parameters of <strong>DynamicalSystems.jl</strong>, the Lorenz system is accurate up to time <code>t = 50.0</code>.</p>
+<p>However, fortunately for us, there is not too much worry about the numerical solution diverging from the true solution. That is because of the <a href="http://mathworld.wolfram.com/ShadowingTheorem.html">shadowing theorem</a> (or <a href="http://www.scholarpedia.org/article/Shadowing_lemma_for_flows">shadowing lemma</a>):</p>
+<div class="admonition quote">
+<p class="admonition-title">Shadowing Theorem</p>
+<p>Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.</p>
+</div>
+<p>This simply means that one can always numerically study chaos not only qualitatively but also quantitatively. For more information, see the book <em>Chaos in Dynamical Systems</em> by E. Ott, or the <a href="http://www.scholarpedia.org/article/Shadowing_lemma_for_flows">scholarpedia</a> entry.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../general/" title="Dynamical System Definition" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Dynamical System Definition
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../predefined/" title="Predefined Systems" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Predefined Systems
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script>
+      
+        <script src="../../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Time Evolution · DynamicalSystems.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link href="../../assets/logo.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="DynamicalSystems.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">DynamicalSystems.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Introduction</a></li><li><a class="tocitem" href="../../contents/">Contents</a></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">DelayEmbeddings</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../embedding/dataset/">Numerical Data</a></li><li><a class="tocitem" href="../../embedding/reconstruction/">Delay Coordinates Embedding</a></li><li><a class="tocitem" href="../../embedding/estimate/">Estimating Delay Embedding Parameters</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">DynamicalSystemsBase</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../general/">Dynamical System Definition</a></li><li class="is-active"><a class="tocitem" href>Time Evolution</a><ul class="internal"><li><a class="tocitem" href="#Example-1"><span>Example</span></a></li><li><a class="tocitem" href="#Solution-precision-for-continuous-systems-1"><span>Solution precision for continuous systems</span></a></li></ul></li><li><a class="tocitem" href="../predefined/">Predefined Dynamical Systems</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">ChaosTools</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../chaos/orbitdiagram/">Orbit Diagrams &amp; PSOS</a></li><li><a class="tocitem" href="../../chaos/lyapunovs/">Lyapunov Exponents</a></li><li><a class="tocitem" href="../../chaos/chaos_detection/">Detecting &amp; Categorizing Chaos</a></li><li><a class="tocitem" href="../../chaos/entropies/">Entropies and Dimensions</a></li><li><a class="tocitem" href="../../chaos/nlts/">Nonlinear Timeseries Analysis</a></li><li><a class="tocitem" href="../../chaos/periodicity/">Periodicity</a></li><li><a class="tocitem" href="../../chaos/choosing/">Choosing a solver</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-6" type="checkbox"/><label class="tocitem" for="menuitem-6"><span class="docs-label">RecurrenceAnalysis</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../rqa/rplots/">Recurrence Plots</a></li><li><a class="tocitem" href="../../rqa/quantification/">Recurrence Quantification Analysis</a></li><li><a class="tocitem" href="../../rqa/windowed/">Windowed RQA</a></li></ul></li><li><a class="tocitem" href="../../advanced/">Advanced Documentation</a></li><li><a class="tocitem" href="../../contributors_guide/">Contributor Guide</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">DynamicalSystemsBase</a></li><li class="is-active"><a href>Time Evolution</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Time Evolution</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/master/docs/src/ds/evolve.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Time-Evolution-of-Systems-1"><a class="docs-heading-anchor" href="#Time-Evolution-of-Systems-1">Time Evolution of Systems</a><a class="docs-heading-anchor-permalink" href="#Time-Evolution-of-Systems-1" title="Permalink"></a></h1><div class="admonition is-info"><header class="admonition-header">Trajectory and Timeseries</header><div class="admonition-body"><p>The word &quot;timeseries&quot; can be confusing, because it can mean a univariate (also called scalar or one-dimensional) timeseries or a multivariate (also called multi-dimensional) timeseries. To resolve this confusion, in <strong>DynamicalSystems.jl</strong> we have the following convention: <strong>&quot;timeseries&quot;</strong> always refers to a one-dimensional vector of numbers, which exists with respect to some other one-dimensional vector of numbers that corresponds to a time-vector. On the other hand, the word <strong>&quot;trajectory&quot;</strong> is used to refer to a <em>multi-dimensional</em> timeseries, which is of course simply a group/set of one-dimensional timeseries.</p><p>Note that the data representation of a &quot;trajectory&quot; in Julia may vary: from a 2D Matrix to independent Vectors. In our package, a trajectory is always represented using a <a href="../../embedding/dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a>, which is a <code>Vector</code> of <code>SVector</code>s, and each <code>SVector</code> represents a data-point (the values of the variables at a given time-point).</p></div></div><p><strong>DynamicalSystems.jl</strong> provides a convenient function for getting a trajectory of a system at equally spaced time points:</p><article class="docstring"><header><a class="docstring-binding" id="DynamicalSystemsBase.trajectory" href="#DynamicalSystemsBase.trajectory"><code>DynamicalSystemsBase.trajectory</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">trajectory(ds::DynamicalSystem, T [, u]; kwargs...) -&gt; dataset</code></pre><p>Return a dataset that will contain the trajectory of the system, after evolving it for total time <code>T</code>, optionally starting from state <code>u</code>. See <a href="../../embedding/dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a> for info on how to use this object.</p><p>A <code>W×D</code> dataset is returned, with <code>W = length(t0:dt:T)</code> with <code>t0:dt:T</code> representing the time vector (<em>not</em> returned) and <code>D</code> the system dimension. For discrete systems both <code>T</code> and <code>dt</code> must be integers.</p><p><strong>Keyword Arguments</strong></p><ul><li><code>dt</code> :  Time step of value output during the solving of the continuous system. For discrete systems it must be an integer. Defaults to <code>0.01</code> for continuous and <code>1</code> for discrete.</li><li><code>Ttr</code> : Transient time to evolve the initial state before starting saving states.</li><li><code>diffeq...</code> : Keyword arguments propagated into <code>init</code> of DifferentialEquations.jl. For example <code>abstol = 1e-9</code>.  Only valid for continuous systems. If you want to specify a solver, do so by using the name <code>alg</code>, e.g.: <code>alg = Tsit5(), maxiters = 1000</code>. This requires you to have been first <code>using OrdinaryDiffEq</code> to access the solvers. See <code>DynamicalSystemsBase.CDS_KWARGS</code> for default values. These keywords can also include <code>callback</code> for <a href="http://docs.juliadiffeq.org/latest/features/callback_functions.html">event handling</a>. Using a <code>SavingCallback</code> with <code>trajectory</code> will lead to unexpected behavior!</li></ul></div></section></article><hr/><p>Notice that if you want to do repeated evolutions of different states of a continuous system, you should use the <a href="../../advanced/#DynamicalSystemsBase.integrator"><code>integrator</code></a> interface instead.</p><h2 id="Example-1"><a class="docs-heading-anchor" href="#Example-1">Example</a><a class="docs-heading-anchor-permalink" href="#Example-1" title="Permalink"></a></h2><pre><code class="language-julia">using DynamicalSystems
+ds = Systems.towel()
+tr = trajectory(ds, 100)</code></pre><pre><code class="language-none">3-dimensional Dataset{Float64} with 101 points
+ 0.085     -0.121       0.075   
+ 0.285813  -0.0675286   0.238038
+ 0.76827   -0.038933    0.672094
+ 0.681871   0.0508933   0.825263
+ 0.837347   0.0372633   0.555269
+ 0.51969    0.0616256   0.940906
+ 0.966676  -0.00171595  0.2225  
+ 0.112748   0.0674955   0.653573
+ 0.386547  -0.0886542   0.869349
+ 0.910741  -0.0316828   0.411607
+ ⋮                              
+ 0.729743   0.0566836   0.25032 
+ 0.739275   0.0308018   0.720691
+ 0.740845   0.047263    0.767058
+ 0.740185   0.0494093   0.684863
+ 0.738165   0.0466359   0.825703
+ 0.747373   0.0506512   0.553337
+ 0.719603   0.0437958   0.944377
+ 0.784243   0.0495777   0.20732 
+ 0.631288   0.0375437   0.631114</code></pre><p>To get every 3-rd point of the trajectory, do</p><pre><code class="language-julia">tr = trajectory(ds, 100; dt = 3)</code></pre><pre><code class="language-none">3-dimensional Dataset{Float64} with 34 points
+ 0.085     -0.121       0.075   
+ 0.681871   0.0508933   0.825263
+ 0.966676  -0.00171595  0.2225  
+ 0.910741  -0.0316828   0.411607
+ 0.545332   0.0508239   0.819404
+ 0.544182  -0.0940112   0.270849
+ 0.690701  -0.0679162   0.727605
+ 0.939111   0.010943    0.736301
+ 0.841034   0.0322099   0.689976
+ 0.140788   0.0876455   0.918065
+ ⋮                              
+ 0.223785   0.0902301   0.75948 
+ 0.510326   0.0726233   0.682717
+ 0.529268  -0.069801    0.962927
+ 0.435893  -0.0686173   0.92088 
+ 0.583619  -0.0769684   0.76526 
+ 0.729705  -0.0680752   0.508933
+ 0.739275   0.0308018   0.720691
+ 0.738165   0.0466359   0.825703
+ 0.784243   0.0495777   0.20732 </code></pre><p>Identical syntax is used for continuous systems</p><pre><code class="language-julia">ds = Systems.lorenz()
+tr = trajectory(ds, 10.0; dt = 0.01)</code></pre><pre><code class="language-none">3-dimensional Dataset{Float64} with 1001 points
+  0.0       10.0       0.0      
+  0.951226  10.0352    0.0479002
+  1.82768   10.3224    0.18683  
+  2.6593    10.839     0.416592 
+  3.47133   11.5678    0.744804 
+  4.28518   12.496     1.18585  
+  5.1191    13.6125    1.76047  
+  5.98858   14.9063    2.49569  
+  6.90648   16.3638    3.42487  
+  7.88291   17.9659    4.58749  
+  ⋮                             
+ -8.3603    -9.01682  25.9478   
+ -8.42664   -9.09574  26.0152   
+ -8.49391   -9.16911  26.0931   
+ -8.56145   -9.23601  26.1809   
+ -8.62859   -9.29558  26.278    
+ -8.69462   -9.34701  26.3833   
+ -8.75883   -9.38954  26.4959   
+ -8.82053   -9.4225   26.6146   
+ -8.879     -9.44532  26.7382   </code></pre><p>And a final example controlling the integrator accuracy:</p><pre><code class="language-julia">ds = Systems.lorenz()
+tr = trajectory(ds, 10.0; dt = 0.1, atol = 1e-9, rtol = 1e-9)</code></pre><pre><code class="language-none">3-dimensional Dataset{Float64} with 101 points
+  0.0      10.0       0.0    
+  8.92478  19.6843    6.02839
+ 20.0553   24.8278   39.9785 
+  9.89834  -7.67213  42.312  
+ -2.67297  -9.86486  30.4531 
+ -6.73013  -8.71064  27.4841 
+ -7.91     -8.6127   26.6731 
+ -8.44188  -8.84913  26.7275 
+ -8.72491  -8.86503  27.1909 
+ -8.70356  -8.53165  27.5098 
+  ⋮                          
+ -7.90031  -8.12215  25.9823 
+ -8.35258  -8.96853  25.9951 
+ -8.94423  -9.40349  26.9656 
+ -9.09671  -8.90393  27.9988 
+ -8.62374  -7.96528  28.0069 
+ -8.01075  -7.54849  27.038  
+ -7.8329   -7.96259  26.0287 
+ -8.23296  -8.84597  25.8467 
+ -8.879    -9.44531  26.7382 </code></pre><h2 id="Solution-precision-for-continuous-systems-1"><a class="docs-heading-anchor" href="#Solution-precision-for-continuous-systems-1">Solution precision for continuous systems</a><a class="docs-heading-anchor-permalink" href="#Solution-precision-for-continuous-systems-1" title="Permalink"></a></h2><p>A numerical solution of an ODE is not the &quot;true&quot; solution, uniquely defined by a (well-defined) ODE and an initial condition. Especially for chaotic systems, where deviations are amplified exponentially, one is left worried if the numerical solutions truly are part of the system and can truly give insight in understanding the system.</p><p>DifferentialEquations.jl offers a tool, called <a href="https://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification/">Uncertainty Quantification</a>, which allows users to asses up to what time-scales the numerical solution is close to the &quot;true&quot; solution. For example, using the default solving parameters of <strong>DynamicalSystems.jl</strong>, the Lorenz system is accurate up to time <code>t = 50.0</code>.</p><p>However, fortunately for us, there is not too much worry about the numerical solution diverging from the true solution. That is because of the <a href="http://mathworld.wolfram.com/ShadowingTheorem.html">shadowing theorem</a> (or <a href="http://www.scholarpedia.org/article/Shadowing_lemma_for_flows">shadowing lemma</a>):</p><div class="admonition"><header class="admonition-header">Shadowing Theorem</header><div class="admonition-body"><p>Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near (&quot;shadows&quot;) the numerically computed one.</p></div></div><p>This simply means that one can always numerically study chaos not only qualitatively but also quantitatively. For more information, see the book <em>Chaos in Dynamical Systems</em> by E. Ott, or the <a href="http://www.scholarpedia.org/article/Shadowing_lemma_for_flows">scholarpedia</a> entry.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../general/">« Dynamical System Definition</a><a class="docs-footer-nextpage" href="../predefined/">Predefined Dynamical Systems »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 12 March 2020 22:15">Thursday 12 March 2020</span>. Using Julia version 1.3.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

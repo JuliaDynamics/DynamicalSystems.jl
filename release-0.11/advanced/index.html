@@ -1,0 +1,824 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia package for the exploration of chaos in continuous and discrete dynamical systems.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.6.3">
+    
+    
+      
+        <title>Advanced Documentation - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.9b572555.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.6079476c.css">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#advanced-documentation" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Advanced Documentation
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </span>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      DynamicalSystemsBase.jl
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        DynamicalSystemsBase.jl
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../definition/general/" title="Dynamical Systems" class="md-nav__link">
+      Dynamical Systems
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../definition/evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../definition/dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../definition/predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      ChaosTools.jl
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        ChaosTools.jl
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/chaos_detection/" title="Chaos Detection" class="md-nav__link">
+      Chaos Detection
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../chaos/visualization/" title="Visualization" class="md-nav__link">
+      Visualization
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Advanced Documentation
+      </label>
+    
+    <a href="./" title="Advanced Documentation" class="md-nav__link md-nav__link--active">
+      Advanced Documentation
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integrators" title="Integrators" class="md-nav__link">
+    Integrators
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-initializing-an-integrator" title="Re-initializing an integrator" class="md-nav__link">
+    Re-initializing an integrator
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#discrete" title="Discrete" class="md-nav__link">
+    Discrete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous" title="Continuous" class="md-nav__link">
+    Continuous
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-of-dynamicalsystem" title="Implementation of DynamicalSystem" class="md-nav__link">
+    Implementation of DynamicalSystem
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integrators" title="Integrators" class="md-nav__link">
+    Integrators
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-initializing-an-integrator" title="Re-initializing an integrator" class="md-nav__link">
+    Re-initializing an integrator
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#discrete" title="Discrete" class="md-nav__link">
+    Discrete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous" title="Continuous" class="md-nav__link">
+    Continuous
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-of-dynamicalsystem" title="Implementation of DynamicalSystem" class="md-nav__link">
+    Implementation of DynamicalSystem
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/advanced.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Advanced-documentation-1'></a></p>
+<h1 id="advanced-documentation">Advanced documentation</h1>
+<p>This section overviews the various integrators available from <code>DynamicalSystemsBase</code>, as well as gives some insight into the internals, so that other developers that want to use this library can build upon it.</p>
+<p><a id='Integrators-1'></a></p>
+<h2 id="integrators">Integrators</h2>
+<p><a id='DynamicalSystemsBase.integrator' href='#DynamicalSystemsBase.integrator'>#</a>
+<strong><code>DynamicalSystemsBase.integrator</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">integrator</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span> <span class="cp">[</span><span class="p">,</span> <span class="nx">u0</span><span class="cp">]</span><span class="o">;</span> <span class="nt">diff_eq_kwargs</span><span class="o">)</span> <span class="nt">-</span><span class="o">&gt;</span> <span class="nt">integ</span>
+</pre></div>
+
+
+<p>Return an integrator object that can be used to evolve a system interactively using <code>step!(integ [, Δt])</code>. Optionally specify an initial state <code>u0</code>.</p>
+<p>See <a href="../definition/evolve/#DynamicalSystemsBase.trajectory"><code>trajectory</code></a> for <code>diff_eq_kwargs</code>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/6a015f7af674daa0c44aadf0b93ef42ed6549274/src/dynamicalsystem/dynamicalsystem.jl#L326-L332' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystemsBase.parallel_integrator' href='#DynamicalSystemsBase.parallel_integrator'>#</a>
+<strong><code>DynamicalSystemsBase.parallel_integrator</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">parallel_integrator</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span><span class="o">,</span> <span class="nt">states</span><span class="o">;</span> <span class="nt">diff_eq_kwargs</span><span class="o">)</span> <span class="nt">-</span><span class="o">&gt;</span> <span class="nt">integ</span>
+</pre></div>
+
+
+<p>Return an integrator object that can be used to evolve many <code>states</code> of a system in parallel interactively using <code>step!(integ [, Δt])</code>.</p>
+<p>Internally the integrator propagates a vector of vectors, each one being a state. Only for the case of in-place continuous systems, the integrator propagates a matrix with each column being a state, because at the moment DifferentialEquations.jl does not support <code>Vector[Vector]</code> as state.</p>
+<p>See <a href="../definition/evolve/#DynamicalSystemsBase.trajectory"><code>trajectory</code></a> for <code>diff_eq_kwargs</code>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/6a015f7af674daa0c44aadf0b93ef42ed6549274/src/dynamicalsystem/dynamicalsystem.jl#L370-L381' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystemsBase.tangent_integrator' href='#DynamicalSystemsBase.tangent_integrator'>#</a>
+<strong><code>DynamicalSystemsBase.tangent_integrator</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">tangent_integrator</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span><span class="o">,</span> <span class="nt">Q0</span> <span class="o">|</span> <span class="nt">k</span><span class="p">::</span><span class="nd">Int</span><span class="o">;</span> <span class="nt">u0</span><span class="o">,</span> <span class="nt">t0</span><span class="o">,</span> <span class="nt">diff_eq_kwargs</span><span class="o">)</span>
+</pre></div>
+
+
+<p>Return an integrator object that evolves in parallel both the system as well as deviation vectors living on the tangent space.</p>
+<p><code>Q0</code> is a <em>matrix</em> whose columns are initial values for deviation vectors. If instead of a matrix <code>Q0</code> an integer <code>k</code> is given, then <code>k</code> random orthonormal vectors are choosen as initial conditions.</p>
+<p>You can also give as a keyword argument a different initial state at time <code>u0, t0</code>.</p>
+<p>See <a href="../definition/evolve/#DynamicalSystemsBase.trajectory"><code>trajectory</code></a> for <code>diff_eq_kwargs</code>.</p>
+<p><strong>Description</strong></p>
+<p>If <span><span class="MathJax_Preview">J</span><script type="math/tex">J</script></span> is the jacobian of the system then the <em>tangent dynamics</em> are the equations that evolve in parallel the system as well as a deviation vector (or matrix) <span><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>:</p>
+<div>
+<div class="MathJax_Preview">
+\begin{aligned}
+\dot{u} &amp;= f(u, p, t) \\
+\dot{w} &amp;= J(u, p, t) \times w
+\end{aligned}
+</div>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\dot{u} &= f(u, p, t) \\
+\dot{w} &= J(u, p, t) \times w
+\end{aligned}
+</script>
+</div>
+<p>with <span><span class="MathJax_Preview">f</span><script type="math/tex">f</script></span> being the equations of motion and <span><span class="MathJax_Preview">u</span><script type="math/tex">u</script></span> the system state. Similar equations hold for the discrete case.</p>
+<p>Internally the integrator propagates a matrix, with the first column being the state and each subsequent one being a deviation vector.</p>
+<p>See <a href="../definition/evolve/#DynamicalSystemsBase.trajectory"><code>trajectory</code></a> for <code>diff_eq_kwargs</code>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/6a015f7af674daa0c44aadf0b93ef42ed6549274/src/dynamicalsystem/dynamicalsystem.jl#L335-L367' class='documenter-source'>source</a><br></p>
+<hr />
+<p>Notice that the state type <code>integrator.u</code> of each integrator is quite different and <em>does change</em> between the possible versions of a <a href="../definition/general/#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a>!</p>
+<p>If you want to use <code>reinit!</code> (see below), first check the state type of the <code>integrator.u</code>.</p>
+<p>For <code>tangent_integrator</code> the <code>u</code> is a matrix with the first column being the actual system state, and all the rest being deviation vectors.</p>
+<p>For <code>parallel_integrator</code> the <code>u</code> is a vector of vectors, where each vector is a a system state. Only in the case of in-place continuous systems is the state actually a matrix with each column being a state, because DifferentialEquations at the moment does not support <code>Vector[Vector]</code> as integrator state.</p>
+<p>For the "standard" integrator the <code>u</code> is always a vector of course.</p>
+<p><a id='Re-initializing-an-integrator-1'></a></p>
+<h2 id="re-initializing-an-integrator">Re-initializing an integrator</h2>
+<p>It is much more efficient to re-inialize an integrator than to create a new one. This can be very helpful when looping over initial conditions and/or parameter values.</p>
+<p>All high-level functions from <code>ChaosTools</code> have a set-up part that creates an integrator, and a low-level part that does the computation.</p>
+<p>The low level part is your friend! Use it! See the <a href="../chaos/chaos_detection/#using-gali">Using <code>gali</code></a> page for an example.</p>
+<p><a id='Discrete-1'></a></p>
+<h3 id="discrete">Discrete</h3>
+<p>The <code>reinit!</code> signature is:</p>
+<div class="codehilite"><pre><span></span><span class="n">reinit!</span><span class="p">(</span><span class="n">integ</span><span class="o">::</span><span class="n">MinimalDiscreteIntegrator</span><span class="p">,</span> <span class="n">u</span><span class="p">;</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">integ</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
+</pre></div>
+
+
+<p><code>reinit!</code> is not necessary when one changes parameters <code>p</code>. Just change them in place, using <code>integ.p[index] = value</code>.</p>
+<p><a id='Continuous-1'></a></p>
+<h3 id="continuous">Continuous</h3>
+<p>The call signature is identical, with a bunch of extra keyword arguments.</p>
+<div class="codehilite"><pre><span></span><span class="n">reinit!</span><span class="p">(</span><span class="n">integ</span><span class="o">::</span><span class="n">ODEIntegrator</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">integ</span><span class="o">.</span><span class="n">sol</span><span class="o">.</span><span class="n">prob</span><span class="o">.</span><span class="n">u0</span><span class="p">;</span>  <span class="n">t0</span> <span class="o">=</span> <span class="n">integ</span><span class="o">.</span><span class="n">sol</span><span class="o">.</span><span class="n">prob</span><span class="o">.</span><span class="n">tspan</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+
+<p>The full documentation for <code>reinit!(::ODEIntegrator)</code> is <a href="http://docs.juliadiffeq.org/latest/basics/integrator.html#Reinit-1">here</a>. Although, for usage within <strong>DynamicalSystems.jl</strong> the other arguments do not matter, because steps are never saved.</p>
+<p>In the continuous case you should <code>reinit!</code> even after changing a parameter value, because the derivatives need to be re-computed.</p>
+<p><a id='Implementation-of-DynamicalSystem-1'></a></p>
+<h2 id="implementation-of-dynamicalsystem">Implementation of <code>DynamicalSystem</code></h2>
+<div class="codehilite"><pre><span></span><span class="k">abstract</span> <span class="k">type</span> <span class="n">DynamicalSystem</span><span class="p">{</span>
+        <span class="n">IIP</span><span class="p">,</span>     <span class="c"># is in place , for dispatch purposes and clarity</span>
+        <span class="n">S</span><span class="p">,</span>       <span class="c"># state type</span>
+        <span class="n">D</span><span class="p">,</span>       <span class="c"># dimension</span>
+        <span class="n">F</span><span class="p">,</span>       <span class="c"># equations of motion</span>
+        <span class="n">P</span><span class="p">,</span>       <span class="c"># parameters</span>
+        <span class="n">JAC</span><span class="p">,</span>     <span class="c"># jacobian</span>
+        <span class="n">JM</span><span class="p">,</span>      <span class="c"># jacobian matrix</span>
+        <span class="n">IAD</span><span class="p">}</span>     <span class="c"># is auto-differentiated</span>
+    <span class="c"># one-liner: {IIP, S, D, F, P, JAC, JM, IAD}</span>
+    <span class="c"># Subtypes of DynamicalSystem have fields:</span>
+    <span class="c"># 1. prob</span>
+    <span class="c"># 2. jacobian (function)</span>
+    <span class="c"># 3. J (matrix)  &lt;- will allow Sparse implementation in the future</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>This allows easily using multiple dispatch on the first three type parameters, which are the most important for dispatching purposes.</p>
+<p>The final type-parameter <code>IAD</code> is useful when creating the <code>tangent_integrator</code>, so that the vector field is not computed twice!</p>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../chaos/visualization/" title="Visualization" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Visualization
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../contributors_guide/" title="Contributor Guide" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Contributor Guide
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.abd7b172.js"></script>
+      
+      <script>app.initialize({version:"0.17.2",url:{base:".."}})</script>
+      
+        <script src="../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

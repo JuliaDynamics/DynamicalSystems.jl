@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia package for the exploration of chaos in continuous and discrete dynamical systems.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <link rel="shortcut icon" href="../assets/images/favicon.png">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.10.3">
+    
+    
+      
+        <title>Periodicity - DynamicalSystems.jl</title>
+      
+    
+    
+      <script src="../assets/javascripts/modernizr-e826f8942a.js"></script>
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application-9011e2d3f8.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-23f75ab9c7.palette.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../assets/Documenter.css">
+    
+    
+  </head>
+  
+  
+  
+  
+    <body data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon md-icon--home"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+            
+            Periodicity
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result" data-md-lang-search="" data-md-lang-tokenizer="[\s\-]+">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <div class="md-nav__button md-logo">
+      
+        <i class="md-icon md-icon--home"></i>
+      
+    </div>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../system_definition/" title="System Definition" class="md-nav__link">
+      System Definition
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Periodicity
+      </label>
+    
+    <a href="./" title="Periodicity" class="md-nav__link md-nav__link--active">
+      Periodicity
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#detecting-stable-and-unstable-periodic-orbits-of-maps" title="Detecting Stable and Unstable Periodic Orbits of Maps" class="md-nav__link">
+    Detecting Stable and Unstable Periodic Orbits of Maps
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-map-example" title="Standard Map example" class="md-nav__link">
+    Standard Map example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#detecting-stable-and-unstable-periodic-orbits-of-maps" title="Detecting Stable and Unstable Periodic Orbits of Maps" class="md-nav__link">
+    Detecting Stable and Unstable Periodic Orbits of Maps
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-map-example" title="Standard Map example" class="md-nav__link">
+    Standard Map example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/periodicity.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                  <h1>Periodicity</h1>
+                
+                <p><a id='Detecting-Stable-and-Unstable-Periodic-Orbits-of-Maps-1'></a></p>
+<h2 id="detecting-stable-and-unstable-periodic-orbits-of-maps">Detecting Stable and Unstable Periodic Orbits of Maps</h2>
+<p>Chaotic behavior of low dimensional dynamical systems is affected by the position and the stability properties of the <a href="http://www.scholarpedia.org/article/Unstable_periodic_orbits">unstable periodic orbits</a> existing in the chaotic sea.</p>
+<p>Finding unstable (or stable) periodic orbits in the sea of a discrete mapping analytically rapidly becomes <em>impossible</em> for higher orders of Fixed Points. Fortunately there is a numeric algorithm due to Schmelcher &amp; Diakonos which allows such a computation. Notice that even though the algorithm can find stable fixed points, it is mainly aimed at <em>unstable</em> ones and may not work for all stable ones.</p>
+<p>The functions <code>periodicorbits</code> and <code>lambdamatrix</code> implement the algorithm:</p>
+<p><a id='DynamicalSystems.periodicorbits' href='#DynamicalSystems.periodicorbits'>#</a>
+<strong><code>DynamicalSystems.periodicorbits</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">periodicorbits</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DiscreteDS</span><span class="o">,</span> <span class="nt">o</span><span class="o">,</span> <span class="nt">ics</span> <span class="cp">[</span><span class="p">,</span> <span class="err">λ</span><span class="nx">s</span><span class="p">,</span> <span class="nx">indss</span><span class="p">,</span> <span class="nx">singss</span><span class="cp">]</span> <span class="o">;</span> <span class="nt">kwargs</span><span class="o">...)</span> <span class="nt">-</span><span class="o">&gt;</span> <span class="nt">FP</span>
+</pre></div>
+
+
+<p>Find stable and unstable fixed points <code>FP</code> the system <code>ds</code> of order <code>o</code> using the algorithm due to Schmelcher &amp; Diakonos [1], which turns unstable fixed points of the original map to dissipatively stable through the transformation:</p>
+<span>\[
+\mathbf{x}_{n+1} = S_k(\mathbf{x}_n) = \mathbf{x}_n +
+\mathbf{\Lambda}_k\left(\mathbf{f}^{(o)}(\mathbf{x}_n) - \mathbf{x}_n\right)
+\]</span><p>with <span>\(\mathbf{f}\)</span> = <code>ds.eom</code>. <code>ics</code> is a collection of initial conditions (container of <code>SVector</code>s) to be evolved.</p>
+<p>The optional arguments <code>λs, indss, singss</code> <strong>must be containers</strong> of appropriate values, besides <code>λs</code> which can also be a number. The elements of those lists are passed to: <code>lambdamatrix(λ, inds, sings)</code>, which creates the appropriate <span>\(\mathbf{\Lambda}_k\)</span> matrix (see <a href="./#DynamicalSystems.lambdamatrix"><code>lambdamatrix</code></a> for more). If these arguments are not given, a random permutation will be chosen for them, with <code>λ=0.001</code>.</p>
+<p><strong>All initial conditions are evolved for all</strong> <span>\(\mathbf{\Lambda}_k\)</span> which can very quickly lead to long computation times, so be wise on your choice of <code>λs, indss, singss</code>!</p>
+<p>The following <em>keyword</em> arguments fine-tune the algorithm convergence and output (i.c. stands for initial condition):</p>
+<ul>
+<li><code>maxiters::Int = 100000</code> : Maximum amount of iterations an i.c. will be iterated  before claiming it has not converged.</li>
+<li><code>disttol = 1e-10</code> : Distance tolerance. If the 2-norm of a previous state with  the next one is <code>≤ disttol</code> then it has converged to a fixed point.</li>
+<li><code>inftol = 10.0</code> : If a state reaches <code>norm(state) ≥ inftol</code> it is assumed that  it has escaped to infinity (and is thus abandoned).</li>
+<li><code>roundtol::Int = 4</code> : The found fixed points are rounded  to <code>roundtol</code> digits before pushed into the list of returned fixed points <code>FP</code>,  <em>if</em> they are not already contained in <code>FP</code>.  This is done so that <code>FP</code> doesn't contain duplicate fixed points (notice  that this has nothing to do with <code>disttol</code>). Turn this to <code>16</code> to get the full  precision of the algorithm.</li>
+</ul>
+<p>[1] : P. Schmelcher &amp; F. K. Diakonos, Phys. Rev. Lett. <strong>78</strong>, pp 4733 (1997)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/2233e3a22cc1c88ebc20bca6e5fb66d72b4f3f9d/src/periodic.jl#L81-L122' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.lambdamatrix' href='#DynamicalSystems.lambdamatrix'>#</a>
+<strong><code>DynamicalSystems.lambdamatrix</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>lambdamatrix(λ, inds::Vector{Int}, sings) -&gt; Λk
+</pre></div>
+
+
+<p>Return the matrix <span>\(\mathbf{\Lambda}_k\)</span> used to create a new dynamical system with some unstable fixed points turned to stable (see <a href="./#DynamicalSystems.periodicorbits"><code>periodicorbits</code></a>).</p>
+<p><strong>Arguments:</strong></p>
+<ol>
+<li><code>λ&lt;:Real</code> : the multiplier of the <span>\(C_k\)</span> matrix, with <code>0&lt;λ&lt;1</code>.</li>
+<li><code>inds::Vector{Int}</code> : The <code>i</code>th entry of this vector gives the <em>row</em> of the nonzero element of the <code>i</code>th column of <span>\(C_k\)</span>. Each element of <code>inds</code> <strong>must be unique</strong> such that the resulting matrix is orthogonal <em>and</em> represents the group of special reflections and permutations.</li>
+<li><code>sings::Vector{&lt;:Real}</code> : The element of the <code>i</code>th column of <span>\(C_k\)</span> is +1 if <code>signs[i] &gt; 0</code> and -1 otherwise (<code>sings</code> can also be <code>Bool</code> vector).</li>
+</ol>
+<p>Deciding the appropriate values for <code>λ, inds, sings</code> is not trivial. However, in ref. [2] there is a lot of information that can help with that decision. Also, by appropriately choosing various values for <code>λ</code>, one can sort periodic orbits from e.g. least unstable to most unstable, see [3] for details.</p>
+<div class="codehilite"><pre><span></span>lambdamatrix(λ, D::Integer)
+</pre></div>
+
+
+<p>Create a random <span>\(\mathbf{\Lambda}_k\)</span> by randomly generating an <code>inds</code> and a <code>sings</code> from all possible combinations. The <em>collections</em> of all these combinations can be obtained by:</p>
+<div class="codehilite"><pre><span></span><span class="n">indperms</span><span class="p">,</span> <span class="n">singperms</span> <span class="o">=</span> <span class="n">lambdaperms</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+
+
+<p>[2] : D. Pingel <em>et al.</em>, Phys. Rev. E <strong>62</strong>, pp 2119 (2000)</p>
+<p>[3] : F. K. Diakonos <em>et al.</em>, Phys. Rev. Lett. <strong>81</strong>, pp 4349 (1998)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/2233e3a22cc1c88ebc20bca6e5fb66d72b4f3f9d/src/periodic.jl#L9-L43' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.lambdaperms' href='#DynamicalSystems.lambdaperms'>#</a>
+<strong><code>DynamicalSystems.lambdaperms</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>lambdaperms(D) -&gt; indperms, singperms
+</pre></div>
+
+
+<p>Return two collections that each contain all possible combinations of indices (total of <span>\(D!\)</span>) and sings (total of <span>\(2^D\)</span>) for dimension <code>D</code> (see <a href="./#DynamicalSystems.lambdamatrix"><code>lambdamatrix</code></a>).</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/2233e3a22cc1c88ebc20bca6e5fb66d72b4f3f9d/src/periodic.jl#L65-L69' class='documenter-source'>source</a><br></p>
+<hr />
+<p><a id='Standard-Map-example-1'></a></p>
+<h3 id="standard-map-example">Standard Map example</h3>
+<p>For example, let's find the fixed points of the <a href="../system_definition/#DynamicalSystems.Systems.standardmap">Standard Map</a> of order 2, 3, 4, 5, 6 and 8. We will use all permutations for the <code>signs</code> but only one for the <code>inds</code>. We will also only use one <code>λ</code> value, and a 21×21 density of initial conditions:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span><span class="p">,</span> <span class="n">PyPlot</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">standardmap</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="nb">π</span><span class="p">,</span> <span class="mi">21</span><span class="p">);</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="n">ics</span> <span class="o">=</span> <span class="p">[</span><span class="n">SVector</span><span class="p">{</span><span class="mi">2</span><span class="p">}(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="kp">in</span> <span class="n">xs</span> <span class="k">for</span> <span class="n">y</span> <span class="kp">in</span> <span class="n">ys</span><span class="p">]</span>
+
+<span class="c"># All permutations of [±1, ±1]:</span>
+<span class="n">singss</span> <span class="o">=</span> <span class="p">[[</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+<span class="c"># I know from personal research I only need this `inds`:</span>
+<span class="n">indss</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span> <span class="c"># &lt;- must be container of vectors!!!</span>
+<span class="n">λs</span> <span class="o">=</span> <span class="mf">0.005</span> <span class="c"># &lt;- only this allowed to not be vector (could also be vector)</span>
+
+<span class="n">orders</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">ALLFP</span> <span class="o">=</span> <span class="kt">Any</span><span class="p">[]</span>
+
+<span class="n">ttt</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">o</span> <span class="kp">in</span> <span class="n">orders</span>
+    <span class="n">FP</span> <span class="o">=</span> <span class="n">periodicorbits</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">ics</span><span class="p">,</span> <span class="n">λs</span><span class="p">,</span> <span class="n">indss</span><span class="p">,</span> <span class="n">singss</span><span class="p">)</span>
+    <span class="n">push!</span><span class="p">(</span><span class="n">ALLFP</span><span class="p">,</span> <span class="n">FP</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;Total time: </span><span class="si">$</span><span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">ttt</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span><span class="s"> mins.&quot;</span><span class="p">)</span>
+<span class="c"># It takes a good 3-5 minutes to do all computations!</span>
+
+
+<span class="c"># Create phase-space plot:</span>
+<span class="n">iters</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">timeseries</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">iters</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="kp">in</span> <span class="n">xs</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="kp">in</span> <span class="n">ys</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SVector</span><span class="p">{</span><span class="mi">2</span><span class="p">}(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">append!</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">timeseries</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">iters</span><span class="p">))</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">m</span> <span class="o">=</span> <span class="kt">Matrix</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">s</span><span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs</span><span class="p">[</span><span class="k">end</span><span class="p">])</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ys</span><span class="p">[</span><span class="k">end</span><span class="p">])</span>
+
+<span class="c"># Plot fixed points:</span>
+<span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;^&quot;</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">,</span> <span class="s">&quot;p&quot;</span><span class="p">,</span> <span class="s">&quot;h&quot;</span><span class="p">,</span> <span class="s">&quot;8&quot;</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;g&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">,</span> <span class="s">&quot;grey&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">6</span>
+    <span class="n">FP</span> <span class="o">=</span> <span class="n">ALLFP</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">PyPlot</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="kp">in</span> <span class="n">FP</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="kp">in</span> <span class="n">FP</span><span class="p">],</span>
+    <span class="n">marker</span><span class="o">=</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">10.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">8</span><span class="o">-</span><span class="n">o</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;order </span><span class="si">$o</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">markeredgecolor</span> <span class="o">=</span> <span class="s">&quot;yellow&quot;</span><span class="p">,</span> <span class="n">markeredgewidth</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&quot;upper right&quot;</span><span class="p">,</span> <span class="n">framealpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$\\</span><span class="s">theta</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$</span><span class="s">p</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>After 3 to 5 minutes, you will get this plot: <img alt="Imgur" src="https://i.imgur.com/Pj5sxKA.png" /></p>
+<p>You can confirm for yourself that this is correct, for many reasons:</p>
+<ol>
+<li>It is the same <a href="https://journals.aps.org/pre/abstract/10.1103/PhysRevE.92.012914">fig. 12 of this publication</a>.</li>
+<li>Fixed points of order <span>\(n\)</span> are also fixed points of order <span>\(2n, 3n, 4n, ...\)</span></li>
+<li>Besides fixed points of previous orders, <em>original</em> fixed points of order <span>\(n\)</span> come in <span>\(2n\)</span>-sized pairs (see e.g. order 5). This is correct because in a conservative map the fixed points must be pairs of elliptic-hyperbolic.</li>
+</ol>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../nlts/" title="Nonlinear Timeseries Analysis" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Nonlinear Timeseries Analysis
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../contributors_guide/" title="Contributor Guide" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Contributor Guide
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalBilliards.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application-f3ab9e5ff8.js"></script>
+      
+      
+      <script>app.initialize({url:{base:".."}})</script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

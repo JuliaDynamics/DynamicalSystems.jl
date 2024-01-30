@@ -1,0 +1,852 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>Numerical Data - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#numerical-data" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Numerical Data
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Fundamentals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Fundamentals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../general/" title="Dynamical Systems" class="md-nav__link">
+      Dynamical Systems
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Numerical Data
+      </label>
+    
+    <a href="./" title="Numerical Data" class="md-nav__link md-nav__link--active">
+      Numerical Data
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-functions" title="Dataset Functions" class="md-nav__link">
+    Dataset Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-io" title="Dataset I/O" class="md-nav__link">
+    Dataset I/O
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#neighborhoods-in-a-dataset" title="Neighborhoods in a Dataset" class="md-nav__link">
+    Neighborhoods in a Dataset
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/chaos_detection/" title="Chaos Detection" class="md-nav__link">
+      Chaos Detection
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      TimeseriesPrediction
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        TimeseriesPrediction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tsprediction/localmodels/" title="Local Modeling" class="md-nav__link">
+      Local Modeling
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tsprediction/st_prediction/" title="Spatiotemporal Timeseries" class="md-nav__link">
+      Spatiotemporal Timeseries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-functions" title="Dataset Functions" class="md-nav__link">
+    Dataset Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-io" title="Dataset I/O" class="md-nav__link">
+    Dataset I/O
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#neighborhoods-in-a-dataset" title="Neighborhoods in a Dataset" class="md-nav__link">
+    Neighborhoods in a Dataset
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/definition/dataset.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Numerical-Data-1'></a></p>
+<h1 id="numerical-data">Numerical Data</h1>
+<p>Numerical data in <strong>DynamicalSystems.jl</strong> is represented by a structure called <code>Dataset</code></p>
+<p><a id='DynamicalSystemsBase.Dataset' href='#DynamicalSystemsBase.Dataset'>#</a>
+<strong><code>DynamicalSystemsBase.Dataset</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>Dataset{D, T} &lt;: AbstractDataset{D,T}
+</pre></div>
+
+
+<p>A dedicated interface for datasets. It contains <em>equally-sized datapoints</em> of length <code>D</code>, represented by <code>SVector{D, T}</code>.</p>
+<p>When indexed with 1 index, a <code>dataset</code> is like a vector of datapoints.</p>
+<p>When indexed with 2 indices it behaves like a matrix that has each of the columns be the timeseries of each of the dynamic variables.</p>
+<p><strong>Description of indexing</strong></p>
+<p>In the following let <code>i, j</code> be integers,  <code>typeof(data) &lt;: AbstractDataset</code> and <code>v1, v2</code> be <code>&lt;: AbstractVector{Int}</code> (<code>v1, v2</code> could also be ranges).</p>
+<ul>
+<li><code>data[i]</code> gives the <code>i</code>th datapoint (returns an <code>SVector</code>)</li>
+<li><code>data[v1]</code> will return a vector of datapoints</li>
+<li><code>data[v1, :]</code> using a <code>Colon</code> as a second index will return a <code>Dataset</code> of these points</li>
+<li><code>data[:, j]</code> gives the <code>j</code>th variable timeseries, as <code>Vector</code></li>
+<li><code>data[v1, v2]</code> returns a <code>Dataset</code> with the appropriate entries (first indices being "time"/point index, while second being dynamic variables)</li>
+<li><code>data[i, j]</code> value of the <code>j</code>th variable, at the <code>i</code>th timepoint</li>
+</ul>
+<p>Use <code>Matrix(dataset)</code> or <code>Dataset(matrix)</code> to convert. It is assumed that each <em>column</em> of the <code>matrix</code> is one dynamic variable. If you have various timeseries vectors <code>x, y, z, ...</code> pass them like <code>Dataset(x, y, z, ...)</code>. You can use <code>columns(dataset)</code> to obtain the reverse, i.e. all columns of the dataset in a tuple.</p>
+<hr />
+<p>In essence a <code>Dataset</code> is simply a container for a <code>Vector</code> of <code>SVector</code>s. However, it is visually represented as a matrix, similarly to how numerical data would be printed on a spreadsheet (with time being the <em>column</em> direction). It also offers a lot more functionality than just pretty-printing. Besides the examples in the documentation string, you can also do:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="n">hen</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">henon</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">hen</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span> <span class="c"># this returns a dataset</span>
+<span class="k">for</span> <span class="n">point</span> <span class="kp">in</span> <span class="n">data</span>
+<span class="c"># do stuff with each datapoint</span>
+<span class="c"># (vector with as many elements as system dimension)</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>All functions from <strong>DynamicalSystems.jl</strong> that manipulate and use data are expecting an <code>AbstractDataset</code> subtype. This allows us to define efficient methods that coordinate well with other packages, like e.g. <a href="./#DynamicalSystemsBase.neighborhood"><code>neighborhood</code></a>.</p>
+<p>If given a matrix, we first convert to <code>Dataset</code>. This means that you should <em>first convert</em> your data to a <code>Dataset</code> if you want to call functions more than once, to avoid constantly converting.</p>
+<p><a id='Dataset-Functions-1'></a></p>
+<h2 id="dataset-functions">Dataset Functions</h2>
+<p>Functions that operate on datasets.</p>
+<p><a id='DynamicalSystemsBase.minima' href='#DynamicalSystemsBase.minima'>#</a>
+<strong><code>DynamicalSystemsBase.minima</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>minima(dataset)
+</pre></div>
+
+
+<p>Return an <code>SVector</code> that contains the minimum elements of each timeseries of the dataset.</p>
+<p><a id='DynamicalSystemsBase.maxima' href='#DynamicalSystemsBase.maxima'>#</a>
+<strong><code>DynamicalSystemsBase.maxima</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>maxima(dataset)
+</pre></div>
+
+
+<p>Return an <code>SVector</code> that contains the maximum elements of each timeseries of the dataset.</p>
+<p><a id='DynamicalSystemsBase.minmaxima' href='#DynamicalSystemsBase.minmaxima'>#</a>
+<strong><code>DynamicalSystemsBase.minmaxima</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>minmaxima(dataset)
+</pre></div>
+
+
+<p>Return <code>minima(dataset), maxima(dataset)</code> without doing the computation twice.</p>
+<p><a id='DynamicalSystemsBase.columns' href='#DynamicalSystemsBase.columns'>#</a>
+<strong><code>DynamicalSystemsBase.columns</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>columns(dataset) -&gt; x, y, z, ...
+</pre></div>
+
+
+<p>Return the individual columns of the dataset.</p>
+<hr />
+<p><a id='Dataset-I/O-1'></a></p>
+<h2 id="dataset-io">Dataset I/O</h2>
+<p>Input/output functionality for an <code>AbstractDataset</code> is already achieved using base Julia, specifically <code>writedlm</code> and <code>readdlm</code>.</p>
+<p>The thing to note is that all data of an <code>AbstractDataset</code> is contained within its field <code>data</code>.</p>
+<p>To write and read a dataset, simply do:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DelimitedFiles</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c"># I will write and read using delimiter &#39;,&#39;</span>
+<span class="n">writedlm</span><span class="p">(</span><span class="s">&quot;data.txt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="sc">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c"># Don&#39;t forget to convert the matrix to a Dataset when reading</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">readdlm</span><span class="p">(</span><span class="s">&quot;data.txt&quot;</span><span class="p">,</span> <span class="sc">&#39;,&#39;</span><span class="p">,</span> <span class="kt">Float64</span><span class="p">))</span>
+</pre></div>
+
+
+<hr />
+<p><a id='Neighborhoods-in-a-Dataset-1'></a></p>
+<h2 id="neighborhoods-in-a-dataset">Neighborhoods in a Dataset</h2>
+<p>Combining the excellent performance of <a href="https://github.com/KristofferC/NearestNeighbors.jl">NearestNeighbors.jl</a> with the <code>AbstractDataset</code> allows us to define a function that calculates a "neighborhood" of a given point, i.e. finds other points near it. The different "types" of the neighborhoods are subtypes of <code>AbstractNeighborhood</code>.</p>
+<p><a id='DynamicalSystemsBase.neighborhood' href='#DynamicalSystemsBase.neighborhood'>#</a>
+<strong><code>DynamicalSystemsBase.neighborhood</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>neighborhood(point, tree, ntype)
+neighborhood(point, tree, ntype, n::Int, w::Int = 1)
+</pre></div>
+
+
+<p>Return a vector of indices which are the neighborhood of <code>point</code> in some <code>data</code>, where the <code>tree</code> was created using <code>tree = KDTree(data [, metric])</code>. The <code>ntype</code> is the type of neighborhood and can be any subtype of <a href="./#DynamicalSystemsBase.AbstractNeighborhood"><code>AbstractNeighborhood</code></a>.</p>
+<p>Use the second method when the <code>point</code> belongs in the data, i.e. <code>point = data[n]</code>. Then <code>w</code> stands for the Theiler window (positive integer). Only points that have index <code>abs(i - n) ≥ w</code> are returned as a neighborhood, to exclude close temporal neighbors. The default <code>w=1</code> is the case of excluding the <code>point</code> itself.</p>
+<p><strong>References</strong></p>
+<p><code>neighborhood</code> simply interfaces the functions <code>knn</code> and <code>inrange</code> from <a href="https://github.com/KristofferC/NearestNeighbors.jl">NearestNeighbors.jl</a> by using the argument <code>ntype</code>.</p>
+<p><a id='DynamicalSystemsBase.AbstractNeighborhood' href='#DynamicalSystemsBase.AbstractNeighborhood'>#</a>
+<strong><code>DynamicalSystemsBase.AbstractNeighborhood</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>AbstractNeighborhood
+</pre></div>
+
+
+<p>Supertype of methods for deciding the neighborhood of points for a given point.</p>
+<p>Concrete subtypes:</p>
+<ul>
+<li><code>FixedMassNeighborhood(K::Int)</code> : The neighborhood of a point consists of the <code>K</code> nearest neighbors of the point.</li>
+<li><code>FixedSizeNeighborhood(ε::Real)</code> : The neighborhood of a point consists of all neighbors that have distance &lt; <code>ε</code> from the point.</li>
+</ul>
+<p>See <a href="./#DynamicalSystemsBase.neighborhood"><code>neighborhood</code></a> for more.</p>
+<hr />
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../evolve/" title="Time Evolution" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Time Evolution
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../reconstruction/" title="Delay Coordinates" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Delay Coordinates
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script>
+      
+        <script src="../../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

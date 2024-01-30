@@ -1,0 +1,1071 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia package for the exploration of chaos in continuous and discrete dynamical systems.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.0.4">
+    
+    
+      
+        <title>System Definition - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application-709eec9410.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-23f75ab9c7.palette.css">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr-e826f8942a.js"></script>
+    
+    
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    
+      <body data-md-color-primary="deep-purple" data-md-color-accent="teal">
+    
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+            
+            System Definition
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </span>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        System Definition
+      </label>
+    
+    <a href="./" title="System Definition" class="md-nav__link md-nav__link--active">
+      System Definition
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#discrete-systems" title="Discrete Systems" class="md-nav__link">
+    Discrete Systems
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dimensional-discrete-systems" title="1-dimensional Discrete Systems" class="md-nav__link">
+    1-dimensional Discrete Systems
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#big-discrete-systems" title="Big Discrete Systems" class="md-nav__link">
+    Big Discrete Systems
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuous-systems" title="Continuous Systems" class="md-nav__link">
+    Continuous Systems
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dimension-of-a-system" title="Dimension of a System" class="md-nav__link">
+    Dimension of a System
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-evolution" title="System evolution" class="md-nav__link">
+    System evolution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordination-with-other-packages" title="Coordination with other packages" class="md-nav__link">
+    Coordination with other packages
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-data" title="Numerical Data" class="md-nav__link">
+    Numerical Data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predefined-systems" title="Predefined Systems" class="md-nav__link">
+    Predefined Systems
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../chaos_detection/" title="Chaos Detection" class="md-nav__link">
+      Chaos Detection
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#discrete-systems" title="Discrete Systems" class="md-nav__link">
+    Discrete Systems
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dimensional-discrete-systems" title="1-dimensional Discrete Systems" class="md-nav__link">
+    1-dimensional Discrete Systems
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#big-discrete-systems" title="Big Discrete Systems" class="md-nav__link">
+    Big Discrete Systems
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuous-systems" title="Continuous Systems" class="md-nav__link">
+    Continuous Systems
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dimension-of-a-system" title="Dimension of a System" class="md-nav__link">
+    Dimension of a System
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-evolution" title="System evolution" class="md-nav__link">
+    System evolution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordination-with-other-packages" title="Coordination with other packages" class="md-nav__link">
+    Coordination with other packages
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-data" title="Numerical Data" class="md-nav__link">
+    Numerical Data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predefined-systems" title="Predefined Systems" class="md-nav__link">
+    Predefined Systems
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/system_definition.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='System-Definition-1'></a></p>
+<h1 id="system-definition">System Definition</h1>
+<p>For <code>DynamicalSystems.jl</code> a system is simple a structure that contains the system's state, the equations of motion and the Jacobian. The last two are <em>functions</em> that take as an input a state.</p>
+<p>This of course stands for systems where one already <strong>knows the equations of motion</strong>. if instead, your "system" is in the form of <a href="#numerical-data">numerical data</a>, then see the appropriate section.</p>
+<div class="admonition warning">
+<p class="admonition-title">Non-autonomous systems</p>
+<p>This package does <strong>not</strong> accept non-autonomous systems. To use such systems with this package increase the dimensionality of your system by 1, by introducing an additional variable <code>τ</code> such that <code>dτdt = 1</code> (or <code>τ_next = τ_prev + 1</code>). This additional variable will serve as the "time" in your equations of motion.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Trajectory and Timeseries</p>
+<p>The word "timeseries" can be very confusing, because it can mean a one-dimensional timeseries or a multi-dimensional timeseries. To resolve this confusion, in DynamicalSystems.jl we have the following convention: <strong>"timeseries"</strong> always refers to a one-dimensional vector of numbers, which exists with respect to some other one-dimensional vector of numbers that corresponds to a time-vector. On the other hand, the word <strong>"trajectory"</strong> is used to refer to a <em>multi-dimensional</em> timeseries, which is of course simply a group/set of one-dimensional timeseries.</p>
+<p>Note that the data representation of a "trajectory" in Julia may vary: from a 2D Matrix to independent Vectors. In our package, a trajectory is always represented using a <a href="./#DynamicalSystems.Dataset"><code>Dataset</code></a>, which is a <code>Vector</code> of <code>SVector</code>s, and each <code>SVector</code> represents a data-point (the values of the variables at a given time-point).</p>
+</div>
+<p><a id='Discrete-Systems-1'></a></p>
+<h2 id="discrete-systems">Discrete Systems</h2>
+<p>Discrete systems are of the form:</p>
+<span>\[
+\vec{x}_{n+1} = \vec{f}(\vec{x}_n).
+\]</span><p>The Type representing such systems is called <code>DiscreteDS</code>:</p>
+<p><a id='DynamicalSystems.DiscreteDS' href='#DynamicalSystems.DiscreteDS'>#</a>
+<strong><code>DynamicalSystems.DiscreteDS</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>DiscreteDS(state, eom [, jacob]; name=&quot;&quot;) &lt;: DynamicalSystem
+</pre></div>
+
+
+<p><code>D</code>-dimensional discrete dynamical system (used for <code>D ≤ 10</code>).</p>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>state::SVector{D}</code> : Current state-vector of the system, stored in the data format of <code>StaticArray</code>'s <code>SVector</code>.</li>
+<li><code>eom</code> (function) : The function that represents the system's equations of motion (also called vector field). The function is of the format: <code>eom(u) -&gt; SVector</code> which means that given a state-vector <code>u</code> it returns an <code>SVector</code> containing the next state.</li>
+<li><code>jacob</code> (function) : A function that calculates the system's jacobian matrix, based on the format: <code>jacob(u) -&gt; SMatrix</code> which means that given a state-vector <code>u</code> it returns an <code>SMatrix</code> containing the Jacobian at that state.</li>
+<li><code>name::String</code> : A name for the dynamical system (possibly including parameter values), solely for pretty-printing purposes. Always passed to the constructors as a keyword.</li>
+</ul>
+<p>If the <code>jacob</code> is not provided by the user, it is created automatically using the module <a href="http://www.juliadiff.org/ForwardDiff.jl/stable/"><code>ForwardDiff</code></a>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/discrete.jl#L11-L30' class='documenter-source'>source</a><br></p>
+<hr />
+<p>The documentation string of the constructor is perfectly self-contained, but for the sake of clarity we will go through all the steps in the following.</p>
+<p><code>state</code> is simply the state the system starts (a.k.a. initial conditions) and <code>eom</code> is a <em>function</em> that takes a <code>state</code> as an input and returns the next state as an output. The <code>jacob</code> is also a <em>function</em> that takes a <code>state</code> as an input and returns the Jacobian matrix of the system (at this state). This however is optional and if not provided by the user, will be calculated automatically using the package <code>ForwardDiff.jl</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Return form of the <code>eom</code> function</p>
+<p>It is <strong>heavily</strong> advised that the equations of motion <code>eom</code> function returns an <code>SVector</code> from the julia package <a href="https://github.com/JuliaArrays/StaticArrays.jl"><code>StaticArrays.jl</code></a> and similarly the <code>jacob</code> function returns an <code>SMatrix</code>. <a href="https://github.com/Datseris/DynamicalSystems.jl/tree/master/test/benchmarks">Numerous benchmarks</a> have been made in order to deduce the most efficient possible way to define a system, and this way was proved to be the best when the system's dimension is small.</p>
+</div>
+<p>For example, let's create one of the <a href="#predefined-systems">Predefined Systems</a> offered by this package, the Hénon map:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="k">using</span> <span class="n">StaticArrays</span> <span class="c">#only necessary when defining a system</span>
+
+<span class="n">eom_henon</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">SVector</span><span class="p">{</span><span class="mi">2</span><span class="p">}(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">b</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">jacob_henon</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="nd">@SMatrix</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">1.0</span><span class="p">;</span> <span class="n">b</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="n">hen</span> <span class="o">=</span> <span class="n">DiscreteDS</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">eom_henon</span><span class="p">,</span> <span class="n">jacob_henon</span><span class="p">)</span>
+</pre></div>
+
+
+<p>If we did not want to write a Jacobian, we could do</p>
+<div class="codehilite"><pre><span></span><span class="n">hen_nojac</span> <span class="o">=</span> <span class="n">DiscreteDS</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">eom_henon</span><span class="p">)</span>
+</pre></div>
+
+
+<p>and the Jacobian function would be created automatically.</p>
+<p><a id='dimensional-Discrete-Systems-1'></a></p>
+<h3 id="1-dimensional-discrete-systems">1-dimensional Discrete Systems</h3>
+<p>In the case of maps, there a special structure for one-dimensional systems. The syntax is <code>DiscreteDS1D(state, eom [, deriv])</code>. In this one-dimensional case, you don't need to worry about <code>StaticArrays.jl</code> because everything is in plain numbers. For example:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+
+<span class="nd">@inline</span> <span class="n">eom_logistic</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">r</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>  <span class="c"># this is a closure</span>
+<span class="nd">@inline</span> <span class="n">deriv_logistic</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">r</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="n">x</span><span class="p">)</span> <span class="c"># this is a closure</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">3.7</span>
+<span class="n">logistic</span> <span class="o">=</span> <span class="n">DiscreteDS1D</span><span class="p">(</span><span class="n">rand</span><span class="p">(),</span> <span class="n">eom_logistic</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">deriv_logistic</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Once again, if you skip the derivative functions it will be calculated automatically using <code>ForwardDiff.jl</code>.</p>
+<p><a id='Big-Discrete-Systems-1'></a></p>
+<h3 id="big-discrete-systems">Big Discrete Systems</h3>
+<p>At around <code>D=10</code> dimensions, Static Arrays start to become less efficient than Julia's base Arrays, provided that the latter use in-place operations. For cases of discrete systems with much higher dimensions there is a different type, which we call <code>BigDiscreteDS</code>:</p>
+<p><a id='DynamicalSystems.BigDiscreteDS' href='#DynamicalSystems.BigDiscreteDS'>#</a>
+<strong><code>DynamicalSystems.BigDiscreteDS</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>BigDiscreteDS(state, eom! [, jacob! [, J]]; name=&quot;&quot;) &lt;: DynamicalSystem
+</pre></div>
+
+
+<p><code>D</code>-dimensional discrete dynamical system (used for big <code>D</code>). The equations for this system perform all operations <em>in-place</em>.</p>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>state::Vector{T}</code> : Current state-vector of the system.</li>
+<li><code>eom!</code> (function) : The function that represents the system's equations of motion (also called vector field). The function is of the format: <code>eom!(xnew, x)</code> which means that given a state-vector <code>x</code> and another similar one <code>xnew</code>, it writes in-place the new state in <code>xnew</code>.</li>
+<li><code>jacob!</code> (function) : A function that calculates the system's jacobian matrix, based on the format: <code>jacob!(J, x)</code> which means that given a state-vector <code>x</code> it writes in-place the Jacobian in <code>J</code>.</li>
+<li><code>J::Matrix{T}</code> : Initialized Jacobian matrix (optional). This field is not displayed.</li>
+<li><code>dummystate::Vector{T}</code> : Dummy vector, which most of the time fills the role of the previous state in e.g. <a href="./#DynamicalSystems.evolve"><code>evolve</code></a>. This field is not displayed.</li>
+<li><code>name::String</code> : A name for the dynamical system (possibly including parameter values), solely for pretty-printing purposes. Always passed to the constructors as a keyword.</li>
+</ul>
+<p>If the <code>jacob!</code> is not provided by the user, it is created automatically using the module <a href="http://www.juliadiff.org/ForwardDiff.jl/stable/"><code>ForwardDiff</code></a>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/discrete.jl#L78-L103' class='documenter-source'>source</a><br></p>
+<hr />
+<p>In this case, <em>all</em> operations are done in place both for the equations of motion as well as the Jacobian. Notice that the fields <code>eom!</code> and <code>jacob!</code> end in a <code>!</code> to remind users about this fact.</p>
+<p>In addition, the possibility of providing an initialized Jacobian allows one to "cheat". For example, let's look at the definition of the function for the Jacobian for the <a href="../system_definition/#DynamicalSystems.Systems.henonhelies">coupled standard maps</a>:</p>
+<div class="codehilite"><pre><span></span><span class="c">### The following are inside a local scope!</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">u0</span><span class="p">),</span> <span class="mi">2</span><span class="n">M</span><span class="p">,</span> <span class="mi">2</span><span class="n">M</span><span class="p">)</span> <span class="c">#u0 is the state of the system</span>
+<span class="c"># Set ∂/∂p entries (they are eye(M,M))</span>
+<span class="c"># And they don&#39;t change, they are constants</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="n">idxs</span>
+    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="nd">@inbounds</span> <span class="k">function</span> <span class="n">jacob_coupledsm!</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="c"># x[i] ≡ θᵢ</span>
+    <span class="c"># x[[idxsp1[i]]] ≡ θᵢ+₁</span>
+    <span class="c"># x[[idxsm1[i]]] ≡ θᵢ-₁</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="n">idxs</span>
+        <span class="n">cosθ</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">cosθp</span><span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">idxsp1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">cosθm</span><span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">idxsm1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">cosθ</span> <span class="o">+</span> <span class="n">Γ</span><span class="o">*</span><span class="p">(</span><span class="n">cosθp</span> <span class="o">+</span> <span class="n">cosθm</span><span class="p">)</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">idxsm1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Γ</span><span class="o">*</span><span class="n">cosθm</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">idxsp1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Γ</span><span class="o">*</span><span class="n">cosθp</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idxsm1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">idxsm1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idxsp1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">M</span><span class="p">,</span> <span class="n">idxsp1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>The function that evaluates the Jacobian (in-place) only accesses half of the matrix elements, since the other half is constant and correctly initialized. Afterwards this function as well as <code>J</code> are passed into the constructor with <code>BigDiscreteDS(u0, eom_coupledsm!, jacob_coupledsm!, J; name = "something")</code>.</p>
+<p><a id='Continuous-Systems-1'></a></p>
+<h2 id="continuous-systems">Continuous Systems</h2>
+<p>Continuous systems of the form</p>
+<span>\[
+\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}),
+\]</span><p>are defined almost identically with the <code>BigDiscreteDS</code> systems:</p>
+<p><a id='DynamicalSystems.ContinuousDS' href='#DynamicalSystems.ContinuousDS'>#</a>
+<strong><code>DynamicalSystems.ContinuousDS</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>ContinuousDS(state, eom! [, jacob! [, J]]; name=&quot;&quot;) &lt;: DynamicalSystem
+</pre></div>
+
+
+<p><code>D</code>-dimensional continuous dynamical system.</p>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>state::Vector{T}</code> : Current state-vector of the system</li>
+<li><code>eom!</code> (function) : The function that represents the system's equations of motion (also called vector field). The function is of the format: <code>eom!(du, u)</code> which means that it is <strong>in-place</strong>, with the Julian syntax (the mutated argument <code>du</code> is the first).</li>
+<li><code>jacob!</code> (function) : The function that represents the Jacobian of the system, given in the format: <code>jacob!(J, u)</code> which means it is in-place, with the mutated argument being the first.</li>
+<li><code>J::Matrix{T}</code> : Initialized Jacobian matrix (optional). This field is not displayed.</li>
+<li><code>name::String</code> : A name for the dynamical system (possibly including parameter values), solely for pretty-printing purposes. Always passed to the constructors as a keyword.</li>
+</ul>
+<p>If the <code>jacob</code> is not provided by the user, it is created automatically using the module <a href="http://www.juliadiff.org/ForwardDiff.jl/stable/"><code>ForwardDiff</code></a>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/continuous.jl#L13-L33' class='documenter-source'>source</a><br></p>
+<hr />
+<p>Once again the fields <code>eom!</code> and <code>jacob!</code> end with a <code>!</code>. There is no distinction based on the size of the system for the continuous case because using <code>SVectors</code> or in-place operations with normal <code>Vectors</code> yield almost no speed differences in conjunction with <a href="http://docs.juliadiffeq.org/stable/index.html">DifferentialEquations.jl</a>.</p>
+<p>As an example, here is the source code that defines the continuous Rössler system, from the <a href="#predefined-systems">Predefined Systems</a>:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="k">function</span> <span class="n">roessler</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">5.7</span><span class="p">)</span>
+    <span class="nd">@inline</span> <span class="nd">@inbounds</span> <span class="k">function</span> <span class="n">eom_roessler!</span><span class="p">(</span><span class="n">du</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">du</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">du</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">du</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">one</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">zero</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">u0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">J</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">:</span><span class="p">]</span> <span class="o">.=</span> <span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">,</span>      <span class="o">-</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">J</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">:</span><span class="p">]</span> <span class="o">.=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span>  <span class="n">a</span><span class="p">,</span>       <span class="n">o</span><span class="p">]</span>
+    <span class="n">J</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="o">:</span><span class="p">]</span> <span class="o">.=</span> <span class="p">[</span><span class="n">u0</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="n">u0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">]</span>
+    <span class="nd">@inline</span> <span class="nd">@inbounds</span> <span class="k">function</span> <span class="n">jacob_roessler!</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">J</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span> <span class="n">J</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span>
+    <span class="k">end</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Roessler76 system (a=</span><span class="si">$</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="s">, b=</span><span class="si">$</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="s">, c=</span><span class="si">$</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="s">)&quot;</span>
+  <span class="k">return</span> <span class="n">ContinuousDS</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">eom_roessler!</span><span class="p">,</span> <span class="n">jacob_roessler!</span><span class="p">,</span> <span class="n">J</span><span class="p">;</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">ros</span> <span class="o">=</span> <span class="n">roessler</span><span class="p">()</span>
+</pre></div>
+
+
+<p><a id='Dimension-of-a-System-1'></a></p>
+<h2 id="dimension-of-a-system">Dimension of a System</h2>
+<p>The dimension of any sub-type of <code>DynamicalSystem</code> is obtained by <code>D = dimension(ds)</code>.</p>
+<p><a id='System-evolution-1'></a></p>
+<h2 id="system-evolution">System evolution</h2>
+<p>DynamicalSystems.jl provides convenient interfaces for the evolution of systems.   These are the functions related to system evolution:</p>
+<p><a id='DynamicalSystems.evolve' href='#DynamicalSystems.evolve'>#</a>
+<strong><code>DynamicalSystems.evolve</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">evolve</span><span class="o">(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span><span class="o">,</span> <span class="nt">T</span><span class="o">=</span><span class="nt">1</span><span class="o">;</span> <span class="nt">diff_eq_kwargs</span> <span class="o">=</span> <span class="nt">Dict</span><span class="o">())</span> <span class="nt">-</span><span class="o">&gt;</span> <span class="nt">final_state</span>
+</pre></div>
+
+
+<p>Evolve a <code>ds</code> for total "time" <code>T</code> and return the <code>final_state</code> (does not change <code>ds.state</code>). For discrete systems <code>T</code> corresponds to steps and thus it must be integer. See <a href="./#DynamicalSystems.trajectory"><code>trajectory</code></a> for using <code>diff_eq_kwargs</code>.</p>
+<p>This function <em>does not store</em> any information about intermediate steps. Use <a href="./#DynamicalSystems.trajectory"><code>trajectory</code></a> if you want to produce a trajectory of the system. If you want to perform step-by-step evolution of a continuous system, use <code>ODEIntegrator(ds, args...)</code> and the <code>step!(integrator)</code> function provided by <code>DifferentialEquations</code>.</p>
+<p>See also <a href="./#DynamicalSystems.evolve!"><code>evolve!</code></a>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/discrete.jl#L146-L161' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.evolve!' href='#DynamicalSystems.evolve!'>#</a>
+<strong><code>DynamicalSystems.evolve!</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">evolve</span><span class="o">!(</span><span class="nt">ds</span><span class="p">::</span><span class="nd">DynamicalSystem</span><span class="o">,</span> <span class="nt">T</span><span class="o">;</span> <span class="nt">diff_eq_kwargs</span> <span class="o">=</span> <span class="nt">Dict</span><span class="o">())</span>
+</pre></div>
+
+
+<p>Same as <a href="./#DynamicalSystems.evolve"><code>evolve</code></a>, but also updates the system's <code>state</code> field with the final state after evolution.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/discrete.jl#L179-L183' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.trajectory' href='#DynamicalSystems.trajectory'>#</a>
+<strong><code>DynamicalSystems.trajectory</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="o">::</span><span class="n">DynamicalSystem</span><span class="p">,</span> <span class="n">T</span><span class="p">;</span> <span class="n">kwargs</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dataset</span>
+</pre></div>
+
+
+<p>Return a dataset what will contain the trajectory of the sytem, after evolving it for time <code>T</code>. See <a href="./#DynamicalSystems.Dataset"><code>Dataset</code></a> for info on how to manipulate this object.</p>
+<p>For the discrete case, <code>T</code> is an integer and a <code>T×D</code> dataset is returned (<code>D</code> is the system dimensionality). For the continuous case, a <code>W×D</code> dataset is returned, with <code>W = length(0:dt:T)</code> with <code>0:dt:T</code> representing the time vector (<em>not</em> returned).</p>
+<p><strong>Keyword Arguments</strong></p>
+<ul>
+<li><code>dt = 0.05</code> : (only for continuous) Time step of value output during the solving of the continuous system.</li>
+<li><code>diff_eq_kwargs = Dict()</code> : (only for continuous) A dictionary <code>Dict{Symbol, ANY}</code> of keyword arguments passed into the <code>solve</code> of the <code>DifferentialEquations.jl</code> package, for example <code>Dict(:abstol =&gt; 1e-9)</code>. If you want to specify a solver, do so by using the symbol <code>:solver</code>, e.g.: <code>Dict(:solver =&gt; DP5(), :maxiters =&gt; 1e9)</code>. This requires you to have been first <code>using OrdinaryDiffEq</code> to access the solvers.</li>
+</ul>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/discrete.jl#L198-L220' class='documenter-source'>source</a><br></p>
+<hr />
+<p>Especially in the continuous case, an API is provided for usage directly with <a href="https://github.com/JuliaDiffEq/DifferentialEquations.jl">DifferentialEquations.jl</a>, by giving additional constructors:</p>
+<p><a id='DiffEqBase.ODEProblem' href='#DiffEqBase.ODEProblem'>#</a>
+<strong><code>DiffEqBase.ODEProblem</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">ODEProblem</span><span class="p">(</span><span class="n">ds</span><span class="o">::</span><span class="n">ContinuousDS</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Return an <code>ODEProblem</code> with the given system information (t0 is zero). This can be passed directly into <code>solve</code> from <a href="http://docs.juliadiffeq.org/stable/index.html"><code>DifferentialEquations.jl</code></a>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/continuous.jl#L77-L84' class='documenter-source'>source</a><br></p>
+<p><a id='OrdinaryDiffEq.ODEIntegrator' href='#OrdinaryDiffEq.ODEIntegrator'>#</a>
+<strong><code>OrdinaryDiffEq.ODEIntegrator</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">ODEIntegrator</span><span class="p">(</span><span class="n">ds</span><span class="o">::</span><span class="n">ContinuousDS</span><span class="p">,</span> <span class="n">t</span><span class="p">;</span> <span class="n">diff_eq_kwargs</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Return an <code>ODEIntegrator</code>, by first creating an <code>ODEProblem(ds, t)</code>. This can be used directly with the interfaces of <a href="http://docs.juliadiffeq.org/stable/index.html"><code>DifferentialEquations.jl</code></a>.</p>
+<p><code>diff_eq_kwargs = Dict()</code> is a dictionary <code>Dict{Symbol, ANY}</code> of keyword arguments passed into the <code>init</code> of the <a href="http://docs.juliadiffeq.org/stable/index.html"><code>DifferentialEquations.jl</code></a> package, for example <code>Dict(:abstol =&gt; 1e-9)</code>. If you want to specify a solver, do so by using the symbol <code>:solver</code>, e.g.: <code>Dict(:solver =&gt; DP5(), :tstops =&gt; 0:0.01:t)</code>. This requires you to have been first <code>using OrdinaryDiffEq</code> to access the solvers.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/continuous.jl#L92-L108' class='documenter-source'>source</a><br></p>
+<p>Notice that if you want to do repeated evolutions of a continuous system, you should use the <code>ODEIntegrator(ds::DynamicalSystem)</code> in conjunction with <code>reinit!(integrator, newstate)</code> to avoid the intermediate step of creating a <code>ContinuousDS</code> each time. –-</p>
+<p><a id='Coordination-with-other-packages-1'></a></p>
+<h2 id="coordination-with-other-packages">Coordination with other packages</h2>
+<p>You can take advantage of the <a href="https://docs.julialang.org/en/stable/manual/methods/#Function-like-objects-1">"Function-like objects"</a> (known as functors) capabilities of Julia, to have a universal definition of your equations of motion that fits both the expected structure of DynamicalSystems.jl as well as other packages.</p>
+<p>For example, take a look at the following code:</p>
+<div class="codehilite"><pre><span></span><span class="n">struct</span> <span class="n">Lorenz96</span><span class="p">{</span><span class="n">T</span> <span class="o">&lt;:</span> <span class="kt">Real</span><span class="p">}</span> <span class="c"># Structure with the parameters of Lorenz96 system</span>
+  <span class="n">F</span><span class="o">::</span><span class="n">T</span>
+  <span class="n">N</span><span class="o">::</span><span class="kt">Int</span>
+  <span class="c"># Inner constructor</span>
+  <span class="k">function</span> <span class="p">(</span><span class="o">::</span><span class="kt">Type</span><span class="p">{</span><span class="n">Lorenz96</span><span class="p">})(</span><span class="n">F</span><span class="o">::</span><span class="kt">Real</span><span class="p">,</span> <span class="n">N</span><span class="o">::</span><span class="kt">Integer</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="nd">@assert</span> <span class="n">N</span> <span class="o">≥</span> <span class="mi">3</span> <span class="s">&quot;`N` must be at least 3&quot;</span>
+    <span class="n">new</span><span class="p">{</span><span class="n">typeof</span><span class="p">(</span><span class="n">F</span><span class="p">)}(</span><span class="n">F</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># Equations of motion as expected by e.g. LTISystems.jl or others</span>
+<span class="nd">@inbounds</span> <span class="k">function</span> <span class="p">(</span><span class="n">obj</span><span class="o">::</span><span class="n">Lorenz96</span><span class="p">{</span><span class="n">T</span><span class="p">})(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="n">where</span> <span class="n">T</span>
+  <span class="n">N</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">F</span>
+  <span class="c"># 3 edge cases</span>
+  <span class="n">dx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+  <span class="n">dx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+  <span class="n">dx</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+  <span class="c"># then the general case</span>
+  <span class="k">for</span> <span class="n">n</span> <span class="kp">in</span> <span class="mi">3</span><span class="o">:</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">dx</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span>
+  <span class="k">end</span>
+  <span class="k">return</span> <span class="n">dx</span>
+<span class="k">end</span>
+<span class="c"># Equations of motion as expected by DynamicalSystems.jl</span>
+<span class="k">function</span> <span class="p">(</span><span class="n">obj</span><span class="o">::</span><span class="n">Lorenz96</span><span class="p">{</span><span class="n">T</span><span class="p">})(</span><span class="n">dx</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="n">where</span> <span class="n">T</span>
+  <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">zero</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>This way you can simply pass the object <code>Lorenz96</code> to the constructor of <code>ContinuousDS</code>:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="n">lor</span> <span class="o">=</span> <span class="n">Lorenz96</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c"># create struct</span>
+<span class="n">u0</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="c"># pass the struct as &quot;equations of motion&quot;:</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ContinuousDS</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">lor</span><span class="p">;</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Lorenz 96 (chain of 5)&quot;</span><span class="p">)</span>
+<span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span> <span class="c"># works!</span>
+</pre></div>
+
+
+<p>Notice that this <em>is not necessary</em> if you want to incorporate only DifferentialEquations.jl and DynamicalSystems.jl, since we provide interfaces for <code>ODEProblem</code> and <code>ODEIntegrator</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Closures and Functors</p>
+<p>Julia handles <a href="https://docs.julialang.org/en/stable/devdocs/functions/#Closures-1">Closures</a> like Functor objects. For our predefined systems we use closures instead of functors, but you can see for yourself that these 2 approaches are almost the same.</p>
+</div>
+<p><a id='Numerical-Data-1'></a></p>
+<h2 id="numerical-data">Numerical Data</h2>
+<p>Numerical data in DynamicalSystems.jl is represented by a structure called <code>Dataset</code>:</p>
+<p><a id='DynamicalSystems.Dataset' href='#DynamicalSystems.Dataset'>#</a>
+<strong><code>DynamicalSystems.Dataset</code></strong> &mdash; <em>Type</em>.</p>
+<div class="codehilite"><pre><span></span>Dataset{D, T} &lt;: AbstractDataset{D}
+</pre></div>
+
+
+<p>A dedicated interface for datasets, i.e. vectors of vectors. It contains <strong>equally-sized datapoints</strong> of length <code>D</code>, represented by <code>SVector{D, T}</code>, containing numbers of type <code>T</code>.</p>
+<p><code>Dataset</code> has methods for iterating, <code>convert</code>, <code>push!</code>, <code>append!</code> and other basic functions.</p>
+<p>The internal data representation is more efficient than having a <code>Matrix</code> and also leads to faster numerical computation of other quantities (like e.g. entropies). However, it can be used exactly like a matrix that has each of the columns be the timeseries of each of the dynamic variables. <a href="./#DynamicalSystems.trajectory"><code>trajectory</code></a> always returns a <code>Dataset</code>.</p>
+<p>For example,</p>
+<div class="codehilite"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span> <span class="c">#this gives a dataset that behaves like a matrix</span>
+<span class="n">data</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c"># this is the second variable timeseries</span>
+<span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">:</span><span class="p">]</span> <span class="c"># this is the first datapoint of the dataset (D-dimensional)</span>
+<span class="n">data</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="c"># this is the value of the third variable, at the 5th timepoint</span>
+</pre></div>
+
+
+<p>Use <code>convert(Matrix, dataset)</code> to create a <code>Matrix</code>, and <code>convert(Dataset, matrix)</code> to create a <code>Dataset</code> from a matrix. <strong>Notice:</strong>  <code>convert(Dataset, matrix)</code> assumes that each column of the matrix represents one dynamic variable. If instead each column of the matrix represents a datapoint, use <code>reinterpret(Dataset, matrix)</code>.</p>
+<p>If you have various timeseries vectors <code>x, y, z, ...</code> pass them like <code>Dataset(x, y, z, ...)</code>.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/dataset.jl#L34-L65' class='documenter-source'>source</a><br></p>
+<hr />
+<p>In essence a <code>Dataset</code> is simply a container for a <code>Vector</code> of <code>Vector</code>s, but only for cases where the all inner vectors are of equal size. However, it is visually represented as a matrix, similarly to how numerical data would be printed on a spreadsheet (with time being the <em>column</em> direction). It also offers a lot more functionality than just pretty-printing. Besides the examples in the documentation string, you can also do:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="n">hen</span> <span class="o">==</span> <span class="n">Systems</span><span class="o">.</span><span class="n">henon</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">hen</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">point</span> <span class="kp">in</span> <span class="n">data</span>
+<span class="c"># do stuff with each datapoint (vector with as many elements as system dimension)</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>All functions of our package that manipulate and use data are expecting a <code>Dataset</code> instance. If given a matrix, they will first convert to <code>Dataset</code>. This means that you should first convert your data to a <code>Dataset</code> if you want to call functions more than once, to avoid constantly converting.</p>
+<p><a id='Predefined-Systems-1'></a></p>
+<h2 id="predefined-systems">Predefined Systems</h2>
+<p>Predefined systems exist in the <code>Systems</code> submodule exported by <code>DynamicalSystems</code>, in the form of functions that return a <code>DynamicalSystem</code>. They are accessed like:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">lorenz</span><span class="p">(</span><span class="n">ρ</span> <span class="o">=</span> <span class="mf">32.0</span><span class="p">)</span>
+<span class="n">typeof</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span> <span class="c"># ContinuousDS</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+</pre></div>
+
+
+<p>So far, the predefined systems that exist in the <code>Systems</code> sub-module are:</p>
+<p><a id='DynamicalSystems.Systems.coupledstandardmaps' href='#DynamicalSystems.Systems.coupledstandardmaps'>#</a>
+<strong><code>DynamicalSystems.Systems.coupledstandardmaps</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>    <span class="n">coupledstandardmaps</span><span class="p">(</span><span class="n">M</span><span class="o">::</span><span class="kt">Int</span><span class="p">,</span> <span class="n">u0</span> <span class="o">=</span> <span class="mf">0.001</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="n">M</span><span class="p">);</span> <span class="n">ks</span> <span class="o">=</span> <span class="n">ones</span><span class="p">(</span><span class="n">M</span><span class="p">),</span> <span class="n">Γ</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+\theta_{i}' &amp;= \theta_i + p_{i}' \\
+p_{i}' &amp;= p_i + k_i\sin(\theta_i) - \Gamma \left[
+\sin(\theta_{i+1} - \theta_{i}) + \sin(\theta_{i-1} - \theta_{i})
+\right]
+\end{aligned}
+\]</span><p>A discrete system of <code>M</code> nonlinearly coupled standard maps, first introduced in [1] to study diffusion and chaos thresholds. The <em>total</em> dimension of the system is <code>2M</code>. The maps are coupled through <code>Γ</code> and the <code>i</code>-th map has a nonlinear parameter <code>ks[i]</code>.</p>
+<p>[1] : H. Kantz &amp; P. Grassberger, J. Phys. A <strong>21</strong>, pp 127–133 (1988)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L333-L352' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.double_pendulum' href='#DynamicalSystems.Systems.double_pendulum'>#</a>
+<strong><code>DynamicalSystems.Systems.double_pendulum</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>double_pendulum(u0=rand(4); G=10.0, L1 = 1.0, L2 = 1.0, M1 = 1.0, M2 = 1.0)
+</pre></div>
+
+
+<p>Famous chaotic double pendulum system (also used for our logo!). Keywords are gravity (G), lengths of each rod and mass of each ball (all assumed SI units).</p>
+<p>The variables order is [θ1, dθ1/dt, θ2, dθ2/dt].</p>
+<p>Jacobian is created automatically (thus methods that use the Jacobian will be slower)!</p>
+<p>(please contribute the Jacobian and the e.o.m. in LaTeX :smile:)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L97-L107' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.henon' href='#DynamicalSystems.Systems.henon'>#</a>
+<strong><code>DynamicalSystems.Systems.henon</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">henon</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+x_{n+1} &amp;= 1 - ax^2_n+y_n \\
+y_{n+1} &amp; = bx_n
+\end{aligned}
+\]</span><p>The Hénon map is a two-dimensional mapping due to Hénon [1] that can display a strange attractor (at the default parameters). In addition, it also displays many other aspects of chaos, like period doubling or intermittency, for other parameters.</p>
+<p>According to the author, it is a system displaying all the properties of the Lorentz system (1963) while being as simple as possible.</p>
+<p>Default values are the ones used in the original paper.</p>
+<p>[1] : M. Hénon, Commun.Math. Phys. <strong>50</strong>, pp 69 (1976)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L409-L429' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.henonhelies' href='#DynamicalSystems.Systems.henonhelies'>#</a>
+<strong><code>DynamicalSystems.Systems.henonhelies</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>henonhelies(u0=[0, -0.25, 0.42081,0]; λ = 1)
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+\dot{x} &amp;= p_x \\
+\dot{y} &amp;= p_y \\
+\dot{p}_x &amp;= -x -2\lambda xy \\
+\dot{p}_y &amp;= -y -\lambda (x^2 - y^2)
+\end{aligned}
+\]</span><p>The Hénon–Heiles system [1] was introduced as a simplification of the motion of a star around a galactic center. It was originally intended to study the existence of a "third integral of motion" (which would make this 4D system integrable). In that search, the authors encountered chaos, as the third integral existed for only but a few initial conditions.</p>
+<p>The default initial condition is a typical chaotic orbit.</p>
+<p>[1] : Hénon, M. &amp; Heiles, C., The Astronomical Journal <strong>69</strong>, pp 73–79 (1964)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L131-L151' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.logistic' href='#DynamicalSystems.Systems.logistic'>#</a>
+<strong><code>DynamicalSystems.Systems.logistic</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">logistic</span><span class="p">(</span><span class="n">x0</span> <span class="o">=</span> <span class="n">rand</span><span class="p">();</span> <span class="n">r</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+x_{n+1} = rx_n(1-x_n)
+\]</span><p>The logistic map is an one dimensional unimodal mapping due to May [1] and is used by many as the archetypal example of how chaos can arise from very simple equations.</p>
+<p>Originally intentend to be a discretized model of polulation dynamics, it is now famous for its bifurcation diagram, an immensly complex graph that that was shown be universal by Feigenbaum [2].</p>
+<p>[1] : R. M. May, Nature <strong>261</strong>, pp 459 (1976)</p>
+<p>[2] : M. J. Feigenbaum, J. Stat. Phys. <strong>19</strong>, pp 25 (1978)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L437-L454' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.lorenz' href='#DynamicalSystems.Systems.lorenz'>#</a>
+<strong><code>DynamicalSystems.Systems.lorenz</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">lorenz</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">];</span> <span class="n">σ</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">ρ</span> <span class="o">=</span> <span class="mf">28.0</span><span class="p">,</span> <span class="n">β</span> <span class="o">=</span> <span class="mi">8</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+\dot{X} &amp;= \sigma(Y-X) \\
+\dot{Y} &amp;= -XZ + \rho X -Y \\
+\dot{Z} &amp;= XY - \beta Z
+\end{aligned}
+\]</span><p>The famous three dimensional system due to Lorenz [1], shown to exhibit so-called "deterministic nonperiodic flow". It was originally invented to study a simplified form of atmospheric convection.</p>
+<p>Currently, it is most famous for its strange attractor (occuring at the default parameters), which resembles a butterfly. For the same reason it is also associated with the term "butterfly effect" (a term which Lorenz himself disliked) even though the effect applies generally to dynamical systems. Default values are the ones used in the original paper.</p>
+<p>[1] : E. N. Lorenz, J. atmos. Sci. <strong>20</strong>, pp 130 (1963)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L10-L32' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.lorenz96' href='#DynamicalSystems.Systems.lorenz96'>#</a>
+<strong><code>DynamicalSystems.Systems.lorenz96</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="nt">lorenz96</span><span class="o">(</span><span class="nt">N</span><span class="p">::</span><span class="nd">Int</span><span class="o">,</span> <span class="nt">u0</span> <span class="o">=</span> <span class="nt">rand</span><span class="o">(</span><span class="nt">M</span><span class="o">);</span> <span class="nt">F</span><span class="o">=</span><span class="nt">0</span><span class="p">.</span><span class="nc">01</span><span class="o">)</span>
+</pre></div>
+
+
+<p><code>N</code> is the chain length, <code>F</code> the forcing. Jacobian is created automatically.</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L202-L205' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.roessler' href='#DynamicalSystems.Systems.roessler'>#</a>
+<strong><code>DynamicalSystems.Systems.roessler</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">roessler</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">5.7</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+\dot{x} &amp;= -y-z \\
+\dot{y} &amp;= x+ay \\
+\dot{z} &amp;= -b + z(x-c)
+\end{aligned}
+\]</span><p>This three-dimensional continuous system is due to Rössler [1]. It is a system that by design behaves similarly to the <code>lorenz</code> system and displays a (fractal) strange attractor.</p>
+<p>However, it is easier to analyze qualitatively, as for example the attractor is composed of a single manifold. Default values are the same as the original paper.</p>
+<p>[1] : O. E. Rössler, Phys. Lett. <strong>57A</strong>, pp 397 (1976)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L56-L77' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.standardmap' href='#DynamicalSystems.Systems.standardmap'>#</a>
+<strong><code>DynamicalSystems.Systems.standardmap</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">standardmap</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="mf">0.001</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="n">k</span> <span class="o">=</span> <span class="mf">0.971635</span><span class="p">)</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+\theta_{n+1} &amp;= \theta_n + p_{n+1} \\
+p_{n+1} &amp;= p_n + k\sin(\theta_n)
+\end{aligned}
+\]</span><p>The standard map (also known as Chirikov standard map) is a two dimensional, area-preserving chaotic mapping due to Chirikov [1]. It is one of the most studied chaotic systems and by far the most studied Hamiltonian (area-preserving) mapping.</p>
+<p>The map corresponds to the  Poincaré's surface of section of the kicked rotor system. Changing the non-linearity parameter <code>k</code> transitions the system from completely periodic motion, to quasi-periodic, to local chaos (mixed phase-space) and finally to global chaos.</p>
+<p>The default parameter <code>k</code> is the critical parameter where the golden-ratio torus is destroyed, as was calculated by Greene [2]. The e.o.m. considers the angle variable <code>θ</code> to be the first, and the angular momentum <code>p</code> to be the second, while both variables are always taken modulo 2π (the mapping is on the [0,2π)² torus).</p>
+<p>[1] : B. V. Chirikov, Preprint N. <strong>267</strong>, Institute of Nuclear Physics, Novosibirsk (1969)</p>
+<p>[2] : J. M. Greene, J. Math. Phys. <strong>20</strong>, pp 1183 (1979)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L282-L311' class='documenter-source'>source</a><br></p>
+<p><a id='DynamicalSystems.Systems.towel' href='#DynamicalSystems.Systems.towel'>#</a>
+<strong><code>DynamicalSystems.Systems.towel</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span><span class="n">towel</span><span class="p">(</span><span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.085</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.121</span><span class="p">,</span> <span class="mf">0.075</span><span class="p">])</span>
+</pre></div>
+
+
+<span>\[
+\begin{aligned}
+x_{n+1} &amp;= a x_n (1-x_n) -0.05 (y_n +0.35) (1-2z_n) \\
+y_{n+1} &amp;= 0.1 \left( \left( y_n +0.35 \right)\left( 1+2z_n\right) -1 \right)
+\left( 1 -1.9 x_n \right) \\
+z_{n+1} &amp;= 3.78 z_n (1-z_n) + b y_n
+\end{aligned}
+\]</span><p>The folded-towel map is a hyperchaotic mapping due to Rössler [1]. It is famous for being a mapping that has the smallest possible dimensions necessary for hyperchaos, having two positive and one negative Lyapunov exponent.</p>
+<p>The name comes from the fact that when plotted looks like a folded towel, in every projection.</p>
+<p>Default values are the ones used in the original paper.</p>
+<p>[1] : O. E. Rössler, Phys. Lett. <strong>71A</strong>, pp 155 (1979)</p>
+<p><a target='_blank' href='https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/909df5b22e36e9ea75dedc2a29b556482f4ae040/src/systems/famous_systems.jl#L242-L264' class='documenter-source'>source</a><br></p>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href=".." title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Introduction
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../lyapunovs/" title="Lyapunov Exponents" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Lyapunov Exponents
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application-8e4952e681.js"></script>
+      
+      <script>app.initialize({version:"0.17.2",url:{base:".."}})</script>
+      
+        <script src="../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

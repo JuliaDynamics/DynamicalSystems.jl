@@ -1,0 +1,908 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="A Julia software library for the exploration of chaos and nonlinear dynamics.">
+      
+      
+      
+        <meta name="author" content="George Datseris">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.4">
+    
+    
+      
+        <title>Local Modeling - DynamicalSystems.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets\Documenter.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="deep-purple" data-md-color-accent="teal">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#local-modeling" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DynamicalSystems.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span>
+              <span class="md-header-nav__topic">
+                Local Modeling
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DynamicalSystems.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    DynamicalSystems.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Fundamentals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Fundamentals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../definition/general/" title="Dynamical Systems" class="md-nav__link">
+      Dynamical Systems
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../definition/evolve/" title="Time Evolution" class="md-nav__link">
+      Time Evolution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../definition/dataset/" title="Numerical Data" class="md-nav__link">
+      Numerical Data
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../definition/reconstruction/" title="Delay Coordinates" class="md-nav__link">
+      Delay Coordinates
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../definition/predefined/" title="Predefined Systems" class="md-nav__link">
+      Predefined Systems
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/overview/" title="Features Overview" class="md-nav__link">
+      Features Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/orbitdiagram/" title="Orbit Diagrams & PSOS" class="md-nav__link">
+      Orbit Diagrams & PSOS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/lyapunovs/" title="Lyapunov Exponents" class="md-nav__link">
+      Lyapunov Exponents
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/entropies/" title="Entropies and Dimensions" class="md-nav__link">
+      Entropies and Dimensions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis" class="md-nav__link">
+      Nonlinear Timeseries Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/periodicity/" title="Periodicity" class="md-nav__link">
+      Periodicity
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../chaos/chaos_detection/" title="Chaos Detection" class="md-nav__link">
+      Chaos Detection
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      TimeseriesPrediction
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        TimeseriesPrediction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Local Modeling
+      </label>
+    
+    <a href="./" title="Local Modeling" class="md-nav__link md-nav__link--active">
+      Local Modeling
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#local-model-prediction" title="Local Model Prediction" class="md-nav__link">
+    Local Model Prediction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1d-example" title="1D Example" class="md-nav__link">
+    1D Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2d-example" title="2D Example" class="md-nav__link">
+    2D Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-measures" title="Error Measures" class="md-nav__link">
+    Error Measures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#z-prediction-in-the-roessler-system" title="Z Prediction in the Roessler System" class="md-nav__link">
+    Z Prediction in the Roessler System
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../st_prediction/" title="Spatiotemporal Timeseries" class="md-nav__link">
+      Spatiotemporal Timeseries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/" title="Advanced Documentation" class="md-nav__link">
+      Advanced Documentation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../contributors_guide/" title="Contributor Guide" class="md-nav__link">
+      Contributor Guide
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../news/" title="News" class="md-nav__link">
+      News
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#local-model-prediction" title="Local Model Prediction" class="md-nav__link">
+    Local Model Prediction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1d-example" title="1D Example" class="md-nav__link">
+    1D Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2d-example" title="2D Example" class="md-nav__link">
+    2D Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-measures" title="Error Measures" class="md-nav__link">
+    Error Measures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#z-prediction-in-the-roessler-system" title="Z Prediction in the Roessler System" class="md-nav__link">
+    Z Prediction in the Roessler System
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/tsprediction/localmodels.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <p><a id='Local-Modeling-1'></a></p>
+<h1 id="local-modeling">Local Modeling</h1>
+<div class="admonition warn">
+<p class="admonition-title">Not yet on Julia 0.7</p>
+<p><code>TimeseriesPrediction</code> has not yet been updated to Julia 0.7!</p>
+</div>
+<p>Local Modeling predicts timeseries using a delay embedded state space reconstruction. It finds the nearest neighbors of a query point within this reconstructed space and applies a local model to make a prediction. "Local" model refers to the fact that the images (future points) of the <a href="../../definition/dataset/#DynamicalSystemsBase.neighborhood"><code>neighborhood</code></a> of a point are the only component used to make a prediction.</p>
+<p>This Local Modeling is proven to be a very effective tool for timeseries of low-dimensional  chaotic attractors.</p>
+<div class="admonition tip">
+<p class="admonition-title">Reconstruction parameters</p>
+<p>Don't forget that <strong>DynamicalSystems.jl</strong> also has functions for estimating good parameters for delay embedding: <a href="../../chaos/nlts/#ChaosTools.estimate_delay"><code>estimate_delay</code></a> and <a href="../../chaos/nlts/#ChaosTools.estimate_dimension"><code>estimate_dimension</code></a>.</p>
+</div>
+<p><a id='Local-Model-Prediction-1'></a></p>
+<h2 id="local-model-prediction">Local Model Prediction</h2>
+<div class="codehilite"><pre><span></span>localmodel_tsp
+AbstractLocalModel
+</pre></div>
+
+
+<p><a id='D-Example-1'></a></p>
+<h2 id="1d-example">1D Example</h2>
+<p>We will predict the future of a (relatively simple) timeseries:</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">TimeseriesPrediction</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">roessler</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+<span class="n">N_train</span> <span class="o">=</span> <span class="mi">6001</span>
+<span class="n">s_train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">N_train</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">s_test</span>  <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">N_train</span><span class="o">:</span><span class="k">end</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">ntype</span> <span class="o">=</span> <span class="n">FixedMassNeighborhood</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">s_pred</span> <span class="o">=</span> <span class="n">localmodel_tsp</span><span class="p">(</span><span class="n">s_train</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">p</span><span class="p">;</span> <span class="n">ntype</span><span class="o">=</span><span class="n">ntype</span><span class="p">)</span>
+
+<span class="n">s_pred_10</span> <span class="o">=</span> <span class="n">localmodel_tsp</span><span class="p">(</span><span class="n">s_train</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">p÷10</span><span class="p">;</span>
+    <span class="n">ntype</span><span class="o">=</span><span class="n">ntype</span><span class="p">,</span> <span class="n">stepsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">using</span> <span class="n">PyPlot</span>
+<span class="n">figure</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="mi">550</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="mi">600</span><span class="p">,</span> <span class="n">s_train</span><span class="p">[</span><span class="mi">5501</span><span class="o">:</span><span class="k">end</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;training (trunc.)&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C1&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mi">600</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="p">(</span><span class="mi">600</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="p">),</span> <span class="n">s_test</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C3&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;actual signal&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mi">600</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="p">(</span><span class="mi">600</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="p">),</span> <span class="n">s_pred</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C0&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;predicted&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mi">600</span><span class="o">:</span><span class="n">dt</span><span class="o">*</span><span class="mi">10</span><span class="o">:</span><span class="p">(</span><span class="mi">600</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="p">),</span> <span class="n">s_pred_10</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C2&quot;</span><span class="p">,</span>
+    <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&quot;s&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;pred. step=10&quot;</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="s">&quot;AverageLocalModel, Training points: </span><span class="si">$</span><span class="p">(</span><span class="n">N_train</span><span class="p">)</span><span class="s">, attempted prediction: </span><span class="si">$</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$</span><span class="s">t</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">);</span> <span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$</span><span class="s">x</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="Average local model prediction" src="https://i.imgur.com/VJSjHMI.png" /></p>
+<p><a id='D-Example-2'></a></p>
+<h2 id="2d-example">2D Example</h2>
+<p>Predicting multivariate timeseries works the same as with scalar timeseries.</p>
+<div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">TimeseriesPrediction</span>
+<span class="k">using</span> <span class="n">StaticArrays</span><span class="o">:</span> <span class="n">SVector</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">roessler</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+<span class="n">N_train</span> <span class="o">=</span> <span class="mi">1501</span>
+<span class="n">s_train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">N_train</span><span class="p">,</span> <span class="n">SVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>
+<span class="c">#Identical to data[1:N_train, 1:2] but much faster</span>
+<span class="n">s_test</span>  <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">N_train</span><span class="o">:</span><span class="k">end</span><span class="p">,</span> <span class="n">SVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stepsize</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">s_pred_10</span> <span class="o">=</span> <span class="n">localmodel_tsp</span><span class="p">(</span><span class="n">s_train</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">p</span><span class="p">;</span>  <span class="n">stepsize</span> <span class="o">=</span> <span class="n">stepsize</span><span class="p">)</span>
+
+<span class="k">using</span> <span class="n">PyPlot</span><span class="p">;</span> <span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">idx_prev</span> <span class="o">=</span> <span class="mi">200</span> <span class="c"># how many previous points to show</span>
+<span class="n">tf</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">((</span><span class="n">N_train</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span> <span class="c"># final time of test set</span>
+
+<span class="c"># Plot real x-coordinate</span>
+<span class="n">plot</span><span class="p">((</span><span class="n">tf</span> <span class="o">-</span> <span class="n">idx_prev</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="n">tf</span><span class="p">,</span> <span class="n">s_train</span><span class="p">[</span><span class="n">N_train</span><span class="o">-</span><span class="n">idx_prev</span><span class="o">:</span><span class="k">end</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;real x&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C1&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">tf</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="p">(</span><span class="n">tf</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="p">),</span> <span class="n">s_test</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">p</span><span class="o">*</span><span class="n">stepsize</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C1&quot;</span><span class="p">)</span>
+<span class="c"># Plot predicted x-coordinate</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">tf</span><span class="o">:</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="o">:</span><span class="p">(</span><span class="n">tf</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="p">),</span> <span class="n">s_pred_10</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C0&quot;</span><span class="p">,</span>
+<span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;pred. x&quot;</span><span class="p">)</span>
+
+<span class="c"># Plot real y-coordinate</span>
+<span class="n">plot</span><span class="p">((</span><span class="n">tf</span> <span class="o">-</span> <span class="n">idx_prev</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="n">tf</span><span class="p">,</span> <span class="n">s_train</span><span class="p">[</span><span class="n">N_train</span><span class="o">-</span><span class="n">idx_prev</span><span class="o">:</span><span class="k">end</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;real y&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C2&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">tf</span><span class="o">:</span><span class="n">dt</span><span class="o">:</span><span class="p">(</span><span class="n">tf</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="p">),</span> <span class="n">s_test</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">p</span><span class="o">*</span><span class="n">stepsize</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C2&quot;</span><span class="p">)</span>
+<span class="c"># Plot predicted y-coordinate</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">tf</span><span class="o">:</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="o">:</span><span class="p">(</span><span class="n">tf</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">stepsize</span><span class="p">),</span> <span class="n">s_pred_10</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;C4&quot;</span><span class="p">,</span>
+<span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;pred. y&quot;</span><span class="p">)</span>
+
+<span class="c"># Plot separatrix</span>
+<span class="n">plot</span><span class="p">([</span><span class="n">tf</span><span class="p">,</span><span class="n">tf</span><span class="p">],[</span><span class="o">-</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span> <span class="s">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">title</span><span class="p">(</span><span class="s">&quot;AverageLocalModel, Training points: </span><span class="si">$</span><span class="p">(</span><span class="n">N_train</span><span class="p">)</span><span class="s">, attempted prediction: </span><span class="si">$</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="s">, step=</span><span class="si">$</span><span class="p">(</span><span class="n">stepsize</span><span class="p">)</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$</span><span class="s">t</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">);</span> <span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\$</span><span class="s">x, y</span><span class="se">\$</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="2D Average local model prediction" src="https://i.imgur.com/pewxuFl.png" /></p>
+<p><a id='Error-Measures-1'></a></p>
+<h2 id="error-measures">Error Measures</h2>
+<p>Being able to evaluate model performance without looking at plots can be very helpful when trying to quantify its error as well as finding good parameters in the first place.</p>
+<div class="codehilite"><pre><span></span>MSEp
+</pre></div>
+
+
+<p>Here is an example function that employs <code>MSEp</code> to find good parameters. It takes in a timeseries <code>s</code> and ranges for the dimensions, delays and number of nearest neighbors to  try. Keyword arguments are <code>valid_len</code>, which is the number of prediction steps, and <code>num_tries</code> the number of different starting points to choose.</p>
+<p>It then calculates <code>MSEp</code> for all parameter combinations and returns the best parameter set.</p>
+<div class="codehilite"><pre><span></span><span class="k">function</span> <span class="n">estimate_param</span><span class="p">(</span><span class="n">s</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="p">,</span>
+    <span class="n">dims</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">K</span><span class="p">;</span> <span class="n">valid_len</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_tries</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">Result</span> <span class="o">=</span> <span class="kt">Dict</span><span class="p">{</span><span class="n">SVector</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="kt">Int</span><span class="p">},</span><span class="kt">Float64</span><span class="p">}()</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">D</span> <span class="o">∈</span> <span class="n">dims</span><span class="p">,</span> <span class="n">τ</span> <span class="o">∈</span> <span class="n">delay</span>
+        <span class="n">s_train</span> <span class="o">=</span> <span class="nd">@view</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="k">end</span><span class="o">-</span><span class="n">D</span><span class="o">*</span><span class="n">τ</span><span class="o">-</span><span class="n">valid_len</span><span class="o">-</span><span class="n">num_tries</span><span class="o">-</span><span class="mi">50</span><span class="p">]</span>
+        <span class="n">s_test</span> <span class="o">=</span> <span class="nd">@view</span> <span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="o">-</span><span class="p">(</span><span class="n">D</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">τ</span><span class="o">-</span><span class="n">valid_len</span><span class="o">-</span><span class="n">num_tries</span><span class="o">:</span><span class="k">end</span><span class="p">]</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">Reconstruction</span><span class="p">(</span><span class="n">s_train</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">τ</span><span class="p">)</span>
+        <span class="n">R_test</span> <span class="o">=</span> <span class="n">Reconstruction</span><span class="p">(</span><span class="n">s_test</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">τ</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">KDTree</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="o">∈</span> <span class="n">K</span>
+            <span class="n">ntype</span> <span class="o">=</span> <span class="n">FixedMassNeighborhood</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">Result</span><span class="p">[</span><span class="nd">@SVector</span><span class="p">([</span><span class="n">D</span><span class="p">,</span><span class="n">τ</span><span class="p">,</span><span class="n">k</span><span class="p">])]</span> <span class="o">=</span>
+            <span class="n">MSEp</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">R_test</span><span class="p">,</span> <span class="n">valid_len</span><span class="p">;</span> <span class="n">ntype</span><span class="o">=</span><span class="n">ntype</span><span class="p">,</span>
+                <span class="n">stepsize</span><span class="o">=</span><span class="n">stepsize</span><span class="p">)</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">best_param</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">Result</span><span class="p">))[</span><span class="n">findmin</span><span class="p">(</span><span class="n">values</span><span class="p">(</span><span class="n">Result</span><span class="p">))[</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">best_param</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p><a id='Z-Prediction-in-the-Roessler-System-1'></a></p>
+<h2 id="z-prediction-in-the-roessler-system">Z Prediction in the Roessler System</h2>
+<p>This is an animation of timeseries prediction of the <code>z</code> variable of the Roessler system. On the left you can see the time evolution of the whole system with the chaotic attractor indicated in gray. The right side is a plot of the <code>z</code> component of the system. The actual values are displayed in green. In red you can see the iteratively predicted version. As training set it used part of the attractor shown in gray on the left.</p>
+<video controls="controls"> <source src="https://i.imgur.com/QwYdeBy.mp4" type="video/mp4"> </video>
+
+<p>You can find the script that produced this animation in <code>DynamicalSystems/coolanimations/roessler_Z_tspred.jl</code>.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../chaos/chaos_detection/" title="Chaos Detection" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Chaos Detection
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../st_prediction/" title="Spatiotemporal Timeseries" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Spatiotemporal Timeseries
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.30f6b8b1.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script>
+      
+        <script src="../../assets\mathjaxhelper.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>
