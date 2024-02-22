@@ -43,7 +43,7 @@ eqs = [
 # Create the model via ModelingToolkit
 @named roessler = ODESystem(eqs)
 # Explicitly disable parameter spliting, so that integer
-# indices can also be used (NOT RECOMMENDED!!!)
+# indices can also be used (not recommended in general!)
 model = structural_simplify(roessler; split = false)
 # Cast it into an `ODEProblem` and then into a `DynamicalSystem`
 prob = ODEProblem(model)
@@ -94,7 +94,6 @@ display(fig)
 interactive_trajectory_timeseries
 interactive_trajectory
 ```
-
 
 ### Example 1: interactive trajectory animation
 

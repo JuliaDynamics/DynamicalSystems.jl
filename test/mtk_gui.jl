@@ -25,7 +25,7 @@ eqs = [
 
 # Create the model via ModelingToolkit
 @named roessler = ODESystem(eqs)
-model = structural_simplify(roessler)
+model = structural_simplify(roessler; split = false)
 # Cast it into an `ODEProblem` and then into a `DynamicalSystem`
 prob = ODEProblem(model)
 ds = CoupledODEs(prob)
