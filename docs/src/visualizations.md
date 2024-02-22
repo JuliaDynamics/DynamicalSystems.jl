@@ -42,7 +42,9 @@ eqs = [
 
 # Create the model via ModelingToolkit
 @named roessler = ODESystem(eqs)
-model = structural_simplify(roessler)
+# Explicitly disable parameter spliting, so that integer
+# indices can also be used (NOT RECOMMENDED!!!)
+model = structural_simplify(roessler; split = false)
 # Cast it into an `ODEProblem` and then into a `DynamicalSystem`
 prob = ODEProblem(model)
 ds = CoupledODEs(prob)
