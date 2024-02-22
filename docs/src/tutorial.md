@@ -356,11 +356,20 @@ DynamicalSystems.jl understands when a model has been generated via [ModelingToo
 
 To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
 
+!!! note "ProcessBasedModelling.jl"
+    ProcessBasedModelling.jl is an extension to ModelingToolkit.jl for creating
+    models from a set of equations. It has been designed to be useful for scenarios
+    applicable to a typical nonlinear dynamics analysis workflow,
+    and provides better error messages during system construction than MTK.
+    Have a look [at its docs](https://juliadynamics.github.io/ProcessBasedModelling.jl/stable/)!
+
+
 Let's create a the Roessler system as an MTK model:
+
 ```@example MAIN
 using ModelingToolkit
 
-@variables t
+@variables t # use unitless time
 D = Differential(t)
 @mtkmodel Roessler begin
     @parameters begin
