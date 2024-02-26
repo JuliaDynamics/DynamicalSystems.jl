@@ -1,12 +1,14 @@
 using DynamicalSystems, GLMakie, ModelingToolkit
+# Import canonical time and time-derivative from MTK,
+# however use the unitless versions as we don't need units here
+using ModelingToolkit: t_nounits as t, D_nounits as D
 
 # Define the variables and parameters in symbolic format
-@variables t
-D = Differential(t)
 @parameters begin
     a = 0.29
     b = 0.14
     c = 4.52
+    d = 1.0
 end
 @variables begin
     x(t) = 10.0
@@ -20,12 +22,13 @@ eqs = [
     D(x) ~ -y - z,
     D(y) ~ x + a*y,
     D(z) ~ b + nlt - z*c,
-    nlt ~ z*x, # observed variable
+    nlt ~ d*z*x, # observed variable
 ]
 
 # Create the model via ModelingToolkit
-@named roessler = ODESystem(eqs)
-model = structural_simplify(roessler)
+@named roessler = ODESystem(eqs, t)
+# Do not split parameters so that integer indexing can be used as well
+model = structural_simplify(roessler; split = false)
 # Cast it into an `ODEProblem` and then into a `DynamicalSystem`
 prob = ODEProblem(model)
 ds = CoupledODEs(prob)
@@ -38,16 +41,19 @@ parameter_sliders = Dict(
     1 => 0:0.01:1,
     # the global scope symbol
     b => 0:0.01:1,
-    # or the symbol obtained from the MTK model
+    # the symbol obtained from the MTK model
     model.c => 0:0.01:10,
+    # or a `Symbol` with same name as the parameter
+    :d => 0.8:0.01:1.2,
 )
 
 # Define what variables will be visualized as timeseries
 norm(u) = sqrt(u[1]*u[1] + u[2]*u[2])
 observables = [
     1,         # can use integer indexing,
-    z,         # MTK state variable
+    z,         # MTK state variable (unknown)
     model.nlt, # MTK observed variable
+    :y,        # `Symbol` instance with same name
     norm,      # or arbitrary function of the state
 ]
 
