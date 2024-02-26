@@ -1,0 +1,160 @@
+<!DOCTYPE html><HTML class="no-js" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="ie=edge" http-equiv="x-ua-compatible"/><meta content="A Julia software library for the exploration of chaos and nonlinear dynamics." name="description"/><meta content="George Datseris" name="author"/><meta content="Copy to clipboard" name="lang:clipboard.copy"/><meta content="Copied to clipboard" name="lang:clipboard.copied"/><meta content="en" name="lang:search.language"/><meta content="True" name="lang:search.pipeline.stopwords"/><meta content="True" name="lang:search.pipeline.trimmer"/><meta content="No matching documents" name="lang:search.result.none"/><meta content="1 matching document" name="lang:search.result.one"/><meta content="# matching documents" name="lang:search.result.other"/><meta content="[\s\-]+" name="lang:search.tokenizer"/><link href="../../assets/images/favicon.png" rel="shortcut icon"/><meta content="mkdocs-0.17.5, mkdocs-material-2.9.4" name="generator"/><title>Quantification &amp; Analysis functions - DynamicalSystems.jl</title><link href="../../assets/stylesheets/application.451f80e5.css" rel="stylesheet"/><link href="../../assets/stylesheets/application-palette.22915126.css" rel="stylesheet"/><meta content="#7e57c2" name="theme-color"/><script src="../../assets/javascripts/modernizr.1aa3b519.js"></script><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono" rel="stylesheet"/><style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style><link href="../../assets/fonts/material-icons.css" rel="stylesheet"/><link href="../../assets\Documenter.css" rel="stylesheet"/><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This documentation is not for the latest version. <br> <a href="' + href + '">Go to the latest documentation</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body data-md-color-accent="teal" data-md-color-primary="deep-purple" dir="ltr"><svg class="md-svg"><defs><svg height="448" id="__github" viewBox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg"><path d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" fill="currentColor"></path></svg></defs></svg><input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/><input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/><label class="md-overlay" data-md-component="overlay" for="__drawer"></label><a class="md-skip" href="#quantification-analysis-functions" tabindex="1">
+        Skip to content
+      </a><header class="md-header" data-md-component="header"><nav class="md-header-nav md-grid"><div class="md-flex"><div class="md-flex__cell md-flex__cell--shrink"><a class="md-header-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label></div><div class="md-flex__cell md-flex__cell--stretch"><div class="md-flex__ellipsis md-header-nav__title" data-md-component="title"><span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span><span class="md-header-nav__topic">
+                Quantification &amp; Analysis functions
+              </span></div></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--search md-header-nav__button" for="__search"></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/><label class="md-icon md-search__icon" for="__search"></label><button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+        
+      </button></form><div class="md-search__output"><div class="md-search__scrollwrap" data-md-scrollfix=""><div class="md-search-result" data-md-component="result"><div class="md-search-result__meta">
+            Type to start searching
+          </div><ol class="md-search-result__list"></ol></div></div></div></div></div></div><div class="md-flex__cell md-flex__cell--shrink"><div class="md-header-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div></div></div></nav></header><div class="md-container"><main class="md-main"><div class="md-main__inner md-grid" data-md-component="container"><div class="md-sidebar md-sidebar--primary" data-md-component="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary" data-md-level="0"><label class="md-nav__title md-nav__title--site" for="__drawer"><a class="md-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a>
+    DynamicalSystems.jl
+  </label><div class="md-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../.." title="Introduction">
+      Introduction
+    </a></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" id="nav-2" type="checkbox"/><label class="md-nav__link" for="nav-2">
+      Dynamical Systems
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-2">
+        Dynamical Systems
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../ds/general/" title="Dynamical System Definition">
+      Dynamical System Definition
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../ds/evolve/" title="Time Evolution">
+      Time Evolution
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../ds/predefined/" title="Predefined Systems">
+      Predefined Systems
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/><label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/overview/" title="Features Overview">
+      Features Overview
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/orbitdiagram/" title="Orbit Diagrams &amp; PSOS">
+      Orbit Diagrams &amp; PSOS
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/lyapunovs/" title="Lyapunov Exponents">
+      Lyapunov Exponents
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/entropies/" title="Entropies and Dimensions">
+      Entropies and Dimensions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis">
+      Nonlinear Timeseries Analysis
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/periodicity/" title="Periodicity">
+      Periodicity
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/chaos_detection/" title="Chaos Distinction">
+      Chaos Distinction
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" id="nav-4" type="checkbox"/><label class="md-nav__link" for="nav-4">
+      Delay Coordinates Embedding
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-4">
+        Delay Coordinates Embedding
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../embedding/dataset/" title="Numerical Data">
+      Numerical Data
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../embedding/reconstruction/" title="Delay Coordinates">
+      Delay Coordinates
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../embedding/estimate/" title="Estimating Delay Embedding Parameters">
+      Estimating Delay Embedding Parameters
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input checked="" class="md-toggle md-nav__toggle" data-md-toggle="nav-5" id="nav-5" type="checkbox"/><label class="md-nav__link" for="nav-5">
+      Recurrence Quantification Analysis
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-5">
+        Recurrence Quantification Analysis
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../rplots/" title="Recurrence Plots">
+      Recurrence Plots
+    </a></li><li class="md-nav__item md-nav__item--active"><input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/><label class="md-nav__link md-nav__link--active" for="__toc">
+        Quantification &amp; Analysis functions
+      </label><a class="md-nav__link md-nav__link--active" href="./" title="Quantification &amp; Analysis functions">
+      Quantification &amp; Analysis functions
+    </a><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#all-in-one-bundle" title="All-in-one Bundle">
+    All-in-one Bundle
+  </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../windowed/" title="Windowed RQA">
+      Windowed RQA
+    </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../../advanced/" title="Advanced Documentation">
+      Advanced Documentation
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../contributors_guide/" title="Contributor Guide">
+      Contributor Guide
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../news/" title="News">
+      News
+    </a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#all-in-one-bundle" title="All-in-one Bundle">
+    All-in-one Bundle
+  </a></li></ul></nav></div></div></div><div class="md-content"><article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/rqa/quantification.md" title="Edit this page"></a><p><a id="Quantification-and-Analysis-functions-1"></a></p><h1 id="quantification-analysis-functions">Quantification &amp; Analysis functions</h1><p>A <a href="../rplots/#RecurrenceAnalysis.recurrencematrix"><code>recurrencematrix</code></a> can be analyzed in several ways to yield information about the dynamics of the timeseries. All these various quantities and functions listed in this section are also listed in the wikipedia page for <a href="https://en.wikipedia.org/wiki/Recurrence_quantification_analysis">Recurrence quantification analysis</a>. We also suggest the review articles listed in our documentation strings, namely:</p><ol><li>N. Marwan <em>et al.</em>, "Recurrence plots for the analysis of complex systems", <em>Phys. Reports 438</em>(5-6), 237-329 (2007).</li><li>N. Marwan &amp; C.L. Webber, "Mathematical and computational foundations of recurrence quantifications", in: Webber, C.L. &amp; N. Marwan (eds.), <em>Recurrence Quantification Analysis. Theory and Best Practices</em>, Springer, pp. 3-43 (2015).</li></ol><p>The following functions all accept a recurrence matrix, see the <a href="../rplots">previous page</a>.</p><p><a href="#RecurrenceAnalysis.recurrencerate" id="RecurrenceAnalysis.recurrencerate">#</a><strong><code>RecurrenceAnalysis.recurrencerate</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>recurrencerate(x; theiler=0)
+</pre></div><p>Calculate the recurrence rate (RR) of a recurrence matrix, ruling out the points within the Theiler window.</p><p><a href="#RecurrenceAnalysis.determinism" id="RecurrenceAnalysis.determinism">#</a><strong><code>RecurrenceAnalysis.determinism</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>determinism(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the determinism (DET) of a recurrence matrix, ruling out the points within the Theiler window and diagonals shorter than a minimum value.</p><p><a href="#RecurrenceAnalysis.avgdiag" id="RecurrenceAnalysis.avgdiag">#</a><strong><code>RecurrenceAnalysis.avgdiag</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>avgdiag(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the average diagonal length (L) in a recurrence matrix, ruling out the points within the Theiler window and diagonals shorter than a minimum value.</p><p><a href="#RecurrenceAnalysis.maxdiag" id="RecurrenceAnalysis.maxdiag">#</a><strong><code>RecurrenceAnalysis.maxdiag</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>maxdiag(x; theiler=0)
+</pre></div><p>Calculate the longest diagonal (Lmax) in a recurrence matrix, ruling out the points within the Theiler window.</p><p><a href="#RecurrenceAnalysis.divergence" id="RecurrenceAnalysis.divergence">#</a><strong><code>RecurrenceAnalysis.divergence</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>divergence(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the divergence of a recurrence matrix (actually the inverse of <code>maxdiag</code>.</p><p><a href="#RecurrenceAnalysis.trend" id="RecurrenceAnalysis.trend">#</a><strong><code>RecurrenceAnalysis.trend</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>trend(x; theiler=0, border=10)
+</pre></div><p>Calculate the trend of recurrences in recurrence matrix towards its edges, ruling out the points within the Theiler window and in the outermost diagonals.</p><p><a href="#RecurrenceAnalysis.laminarity" id="RecurrenceAnalysis.laminarity">#</a><strong><code>RecurrenceAnalysis.laminarity</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>laminarity(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the laminarity (LAM) of a recurrence matrix, ruling out vertical lines shorter than a minimum value.</p><p><a href="#RecurrenceAnalysis.trappingtime" id="RecurrenceAnalysis.trappingtime">#</a><strong><code>RecurrenceAnalysis.trappingtime</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>trappingtime(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the trapping time (TT) of a recurrence matrix, ruling out vertical lines shorter than a minimum value.</p><p><a href="#RecurrenceAnalysis.maxvert" id="RecurrenceAnalysis.maxvert">#</a><strong><code>RecurrenceAnalysis.maxvert</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>maxvert(x; theiler=0)
+</pre></div><p>Calculate the longest vertical line (Vmax) of a recurrence matrix.</p><p><a href="#RecurrenceAnalysis.entropy" id="RecurrenceAnalysis.entropy">#</a><strong><code>RecurrenceAnalysis.entropy</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>entropy(x; lmin=2, theiler=0)
+</pre></div><p>Calculate the entropy of diagonal lengths (ENT) of a recurrence matrix, ruling out the points within the Theiler window and diagonals shorter than a minimum value.</p><p>This function is not exported and should be accessed like <code>RecurrenceAnalysis.entropy</code>.</p><hr/><p>Since most of the above functions can be fined tuned with keyword arguments, here is a table summarizing them that could be of use:</p><table><thead><tr><th align="right">Argument</th><th align="right">Default</th><th align="right">Functions</th><th align="right">Description</th></tr></thead><tbody><tr><td align="right"><code>scale</code></td><td align="right">1</td><td align="right"><code>recurrencematrix</code><br/><code>crossrecurrencematrix</code><br/><code>jointrecurrencematrix</code></td><td align="right">Function or fixed number to scale the threshold or radius that is used to identify recurrences. Use <code>maximum</code> if the threshold is to be taken as a fraction of the maximum distance, <code>mean</code> if it is a fraction of the mean distance, etc., and <code>1</code> (identity scale, applied by default) to keep the threshold without scaling.</td></tr><tr><td align="right"><code>theiler</code></td><td align="right">0</td><td align="right"><code>recurrencerate</code><br/><code>determinism</code><br/><code>avgdiag</code><br/><code>maxdiag</code><br/><code>divergence</code><br/><code>entropy</code><br/><code>trend</code><br/><code>laminarity</code><br/><code>trappingtime</code><br/><code>maxvert</code></td><td align="right">'Theiler' window: number of diagonals around the LOI excluded from the analysis.</td></tr><tr><td align="right"><code>lmin</code></td><td align="right">2</td><td align="right"><code>determinism</code><br/><code>avgdiag</code><br/><code>maxdiag</code><br/><code>divergence</code><br/><code>entropy</code><br/><code>laminarity</code><br/><code>trappingtime</code><br/><code>maxvert</code></td><td align="right">Minimum length of the recurrent structures (diagonal or vertical) considered in the analysis.</td></tr><tr><td align="right"><code>border</code></td><td align="right">10</td><td align="right"><code>trend</code></td><td align="right">Number of diagonals excluded from the analysis near the border of the matrix.</td></tr></tbody></table><p><a id="All-in-one-Bundle-1"></a></p><h2 id="all-in-one-bundle">All-in-one Bundle</h2><p>In case you need all of the aforementioned functions and you don't want to write 10 lines of code to compute them all (since they are so many) we also got an all-in-one function that computes all of them and returns a dictionary of the result!</p><p><a href="#RecurrenceAnalysis.rqa" id="RecurrenceAnalysis.rqa">#</a><strong><code>RecurrenceAnalysis.rqa</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>rqa(x; kwargs...)
+</pre></div><p>Calculate RQA parameters of a recurrence matrix. See the functions <code>recurrencerate</code>, <code>determinism</code>, <code>avgdiag</code>, <code>maxdiag</code>, <code>divergence</code>, <code>entropy</code>, <code>trend</code>, <code>laminarity</code>, <code>trappingtime</code> and <code>maxvert</code> for the definition of the different parameters and the default values of the arguments.</p><p>The keyword arguments <code>theilerdiag</code>, <code>lmindiag</code> may be used to declare specific values that override the values of <code>theiler</code> and <code>lmin</code> in the calculation of parameters related to diagonal structures. Likewise, <code>theilervert</code> and <code>lminvert</code> can be used for the calculation of parameters related to vertical structures.</p><p>The returned value is a dictionary with the following keys:</p><ul><li>"RR": recurrence rate (see <code>recurrencerate</code>)</li><li>"DET": determinsm (see <code>determinism</code>)</li><li>"L": average length of diagonal structures (see <code>avgdiag</code>)</li><li>"Lmax": maximum length of diagonal structures (see <code>maxdiag</code>)</li><li>"DIV": divergence (see <code>divergence</code>)</li><li>"ENT": entropy of diagonal structures (see <code>entropy</code>)</li><li>"TND": trend of recurrences (see <code>trend</code>)</li><li>"LAM": laminarity (see <code>laminarity</code>)</li><li>"TT": trapping time (see <code>trappingtime</code>)</li><li>"Vmax": maximum length of vertical structures (<code>see</code>maxvert`)</li></ul><p>The keyword argument <code>onlydiagonal</code> (<code>false</code> by default) can be set to <code>true</code> in order to restrict the analysis to the recurrence rate and the parameters related to diagonal structures ("RR", "DET", "L", "Lmax", "DIV" and "ENT").</p><hr/><p>See also the <a href="../windowed/#RecurrenceAnalysis.@windowed"><code>@windowed</code></a> macro for a windowed version of the above!</p></article></div></div></main><footer class="md-footer"><div class="md-footer-nav"><nav class="md-footer-nav__inner md-grid"><a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../rplots/" rel="prev" title="Recurrence Plots"><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-back md-footer-nav__button"></i></div><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Recurrence Plots
+              </span></div></a><a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../windowed/" rel="next" title="Windowed RQA"><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Windowed RQA
+              </span></div><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i></div></a></nav></div><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a></div><div class="md-footer-social"><link href="../../assets/fonts/font-awesome.css" rel="stylesheet"/><a class="md-footer-social__link fa fa-github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl"></a></div></div></div></footer></div><script src="../../assets/javascripts/application.30f6b8b1.js"></script><script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script><script src="../../assets\mathjaxhelper.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></HTML>
