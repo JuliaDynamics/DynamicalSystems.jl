@@ -126,10 +126,10 @@ function _init_statespace_plot!(
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
     axisposition = statespace_axis ? layout[1,1] : Figure()[1,1]
-    xlabel = timeseries_name(idxs[1])
-    ylabel = timeseries_name(idxs[2])
+    xlabel = state_name(idxs[1])
+    ylabel = state_name(idxs[2])
     statespaceax = if is3D
-        zlabel = timeseries_name(idxs[3])
+        zlabel = state_name(idxs[3])
         Axis3(axisposition; xlabel, ylabel, zlabel, axis...)
     else
         Axis(axisposition; xlabel, ylabel, axis...)
@@ -251,7 +251,7 @@ end
 function DynamicalSystems.interactive_trajectory_timeseries(
     ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
     linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
-    timeseries_names = [timeseries_name(f) for f in fs],
+    timeseries_names = [state_name(f) for f in fs],
     colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
     timeseries_ylims = nothing,
     timelabel = "time", timeunit = 1,
@@ -316,10 +316,3 @@ end
 
 _obtain_data(x::AbstractVector, f::Int) = x[f]
 _obtain_data(x::AbstractVector, f::Function) = f(x)
-timeseries_name(f::Int) = "u"*subscript(f)
-timeseries_name(f::Function) = string(f)
-timeseries_name(f::Union{AbstractString,Symbol}) = string(f)
-timeseries_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))
-parameter_name(f::Int) = "p"*subscript(f)
-parameter_name(f::Union{AbstractString,Symbol}) = string(f)
-parameter_name(f) = string(DynamicalSystemsBase.SymbolicIndexingInterface.getname(f))

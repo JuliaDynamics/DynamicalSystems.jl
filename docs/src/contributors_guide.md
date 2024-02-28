@@ -40,4 +40,8 @@ Documentation strings are the most important thing in your pull request/code. Th
 1. [Optional] Detailed discussion of functionality if function behavior is scientifically involved with a `## Description` subsection.
 1. [Optional] Citations to relevant scientific papers with the `@cite` command.
 
-The syntax of the documentation strings follows Documenter.jl protocol. Please see the documentation string of the [`lyapunov`](https://github.com/JuliaDynamics/ChaosTools.jl/blob/a7ba7f559e24bd6e32d270b9a6281d4b919a20a1/src/chaosdetection/lyapunovs/lyapunov.jl#L4-L65) function and use the same structure.
+The syntax of the documentation strings follows Documenter.jl protocol.
+For an example docstring to use as a reference, you can use the `ApproximateEntropy`:
+
+- [rendered documentation string](https://juliadynamics.github.io/DynamicalSystemsDocs.jl/complexitymeasures/stable/complexity/#ComplexityMeasures.ApproximateEntropy)
+- [source code documentation string](https://github.com/JuliaDynamics/ComplexityMeasures.jl/blob/550c444651053ee3fe1a09fbe511ece195783baf/src/complexity_measures/approximate_entropy.jl#L8-L67)
