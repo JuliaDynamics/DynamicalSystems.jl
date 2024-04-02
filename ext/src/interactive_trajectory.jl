@@ -23,6 +23,7 @@ function DynamicalSystems.interactive_trajectory(
         axis = NamedTuple(),
         lims = nothing,
         statespace_axis = true,
+        starting_step = 1,
     )
 
     if length(idxs) > dimension(ds)
@@ -48,7 +49,9 @@ function DynamicalSystems.interactive_trajectory(
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
-        reset, run, step, stepslider = _trajectory_plot_controls!(statespacelayout, statespace_axis)
+        reset, run, step, stepslider = _trajectory_plot_controls!(
+            statespacelayout, statespace_axis, starting_step
+        )
     else
         # So that we can leave the interactive UI code as is
         reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
@@ -91,16 +94,26 @@ function DynamicalSystems.interactive_trajectory(
             ds, paramlayout, parameter_sliders, parameter_names, current_parameters(ds)
         )
         update = Button(fig, label = "update", tellwidth = false, tellheight = true)
+        urs = Button(fig, label = "u.r.s.", tellwidth = false, tellheight = true)
         resetp = Button(fig, label = "reset p", tellwidth = false, tellheight = true)
         gl = paramlayout[2, :] = GridLayout()
         gl[1,1] = update
-        gl[1,2] = resetp
+        gl[1,2] = urs
+        gl[1,3] = resetp
+        # what happens when the update button gets pressed
         on(update.clicks) do clicks
             for l in keys(slidervals)
                 v = slidervals[l][]
                 set_parameter!(dso, l, v)
             end
         end
+        # what happens when the u.r.s. button gets pressed
+        on(urs.clicks) do clicks
+            update.clicks[] = update.clicks[] + 1 # click update button
+            reset[] = reset[] + 1 # click reset button
+            step[] = step[] + 1 # click step button
+        end
+        # what happens when the reset p button gets pressed
         on(resetp.clicks) do clicks
             set_parameters!(pds, p0)
             # Also **visually** reset sliders to initial parameters
@@ -190,15 +203,15 @@ function _init_trajectory_observables(pds, tail)
     finalpoints = Observable([x[][end] for x in tailobs])
     return tailobs, finalpoints
 end
-function _trajectory_plot_controls!(gl, statespace_axis)
+function _trajectory_plot_controls!(gl, statespace_axis::Bool, starting_step)
     position = statespace_axis ? [2,1] : [1,1]
     controllayout = setindex!(gl, GridLayout(tellwidth = false, tellheight = statespace_axis), position...)
     reset = Button(controllayout[1, 0]; label = "reset")
     run = Button(controllayout[1, 1]; label = "run")
     step = Button(controllayout[1, 2]; label = "step")
-    slider_vals = vcat(1:10, 100:100:1000)
+    slider_vals = unique(round.(Int, 10 .^ (range(0, 4; length = 1001))))
     sg = SliderGrid(controllayout[1,3],
-        (label = "steps =", range = slider_vals, startvalue = 1),
+        (label = "steps =", range = slider_vals, startvalue = starting_step),
     )
     return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
