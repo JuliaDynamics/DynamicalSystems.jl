@@ -4,44 +4,53 @@ export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, sca
 """
     interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
 
-Create a Makie `Figure` that to visualize trajectories and timeseries of `ds`.
-This `Figure` can also be used as an interactive GUI (requires `GLMakie`) to enable
+Create a Makie `Figure` to visualize trajectories and timeseries of observables of `ds`.
+This `Figure` can also be used as an interactive GUI to enable
 interactive control over parameters and time evolution.
-It can also be used to reate videos, as well as customized animations, see below.
+It can also be used to create videos, as well as customized animations, see below.
 
 `fs` is a `Vector` of "indices to observe", i.e., anything that can be given
 to [`observe_state`](@ref). Each observation index will make a timeseries plot.
 `u0s` is a `Vector` of initial conditions. Each is evolved with a unique color and displayed
 both as a trajectory in state space and as an observed timeseries.
 
-The given dynamical system is always cast into a `ParallelDynamicalSystem`.
 The trajectories from the initial conditions in `u0s` (a vector of vectors)
 are all evolved and visualized in parallel. By default
 only the current state of the system is used.
 
 ## Return
 
-Return the newly created figure `fig`
-that may include interactivity-related buttons, and a `dsobs::DynamicalSystemObservable`
-that facilities the creation of custom animations and/or interactive
+Return `fig, dsobs::DynamicalSystemObservable`. `fig` is the created `Figure`.
+`dsobs` facilities the creation of custom animations and/or interactive
 applications, see the custom animations section below.
 
 See also [`interactive_trajectory`](@ref).
 
 ## Interactivity and time stepping keywords
 
-- `add_controls = true`: If `true`, below the main axis containing the trajectories
-  some controls for animating the trajectories live are added: run, pause, and how many
-  steps to evolve for per animation step. The plotted trajectories can always be evolved
+_GUI functionality is possible when the plotting backend is `GLMakie`.
+Do `using GLMakie; GLMakie.activate!()` to ensure this is the chosen backend._
+
+- `add_controls = true`: If `true`, below the state space axis
+  some buttons for animating the trajectories live are added:
+  - `reset`: results the parallel trajectories to their initial conditions
+  - `run`: when clicked it evolves the trajectories forwards in time indefinitely.
+    click again to stop the evolution.
+  - `step`: when clicked it evolves the trajectories forwards in time for the
+    amount of steps chosen by the slider to its right.
+  The plotted trajectories can always be evolved
   manually using the custom animations etup that we describe below; `add_controls` only
-  concerns the buttons and interactivity added to the created panel.
+  concerns the buttons and interactivity added to the created figure.
 - `parameter_sliders = nothing`: If given, it must be a dictionary, mapping
   parameter indices (any valid index that can be given to [`set_parameter!`](@ref))
-  to ranges of parameter values. Each combination
-  of index and range becomes a slider that can be interactively controlled to alter
-  a system parameter on the fly during time evolution. Note that all system parameters
-  can also be altered using the custom animation setup that we describe below;
-  `parameter_sliders` only conserns the buttons and interactivity added to the created panel.
+  to ranges of parameter values. Each combination of index and range becomes a slider
+  that can be interactively controlled to alter a system parameter on the fly during time
+  evolution. Below the parameter sliders, three buttons are added for GUI usage:
+  - `update`: when clicked the chosen parameter values are propagated into the system
+  - `u.r.s.`: when clicked it is equivalent with clicking in order: "update", "reset", "step".
+  - `reset p`: when clicked it resets
+  Parameters can also be altered using the custom animation setup that we describe below;
+  `parameter_sliders` only conserns the buttons and interactivity added to the created figure.
 - `parameter_names = Dict(keys(ps) .=> string.(keys(ps)))`: Dictionary mapping parameter
   keys to labels. Only used if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
@@ -50,6 +59,7 @@ See also [`interactive_trajectory`](@ref).
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
   function, which is called between each plot update. Useful when time integration is
   computationally inexpensive and animation proceeds too fast.
+- `starting_step = 1`: the starting value of the "step" slider.
 
 ## Visualization keywords
 
@@ -101,7 +111,6 @@ are triggered by the interactive GUI buttons (the first two when the system is s
 time, the last one when the parameters are updated). However, these observables,
 and hence the corresponding plotted trajectories that are `map`ed from these observables,
 can be updated via the formal API of `DynamicalSystem`:
-
 ```
 step!(dsobs, n::Int = 1)
 ```
