@@ -115,11 +115,12 @@ function DynamicalSystems.interactive_trajectory(
         end
         # what happens when the reset p button gets pressed
         on(resetp.clicks) do clicks
+            # first, reset actual dynamical system parameters
             set_parameters!(pds, p0)
-            # Also **visually** reset sliders to initial parameters
-            for k in keys(p0)
-                haskey(sliders, k) || continue
-                set_close_to!(sliders[k], p0[k])
+            # then also **visually** reset sliders to initial parameters
+            for (k, slider) in sliders # remember sliders is a dictionary
+                p0k = current_parameter(ds, k, p0)
+                set_close_to!(slider, p0k)
             end
         end
     end
