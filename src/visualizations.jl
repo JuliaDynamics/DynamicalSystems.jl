@@ -13,6 +13,9 @@ It can also be used to create videos, as well as customized animations, see belo
 to [`observe_state`](@ref). Each observation index will make a timeseries plot.
 `u0s` is a `Vector` of initial conditions. Each is evolved with a unique color and displayed
 both as a trajectory in state space and as an observed timeseries.
+Elements of `u0` can be either `Vector{Real}` encoding a full state
+or `Dict` to partially set a state from current state of `ds`
+(same as in [`set_state!`](@ref)).
 
 The trajectories from the initial conditions in `u0s` (a vector of vectors)
 are all evolved and visualized in parallel. By default
