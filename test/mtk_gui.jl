@@ -50,13 +50,13 @@ parameter_sliders = Dict(
 )
 
 # Define what variables will be visualized as timeseries
-norm(u) = sqrt(u[1]*u[1] + u[2]*u[2])
+power(u) = sqrt(u[1]*u[1] + u[2]*u[2])
 observables = [
     1,         # can use integer indexing,
     z,         # MTK state variable (unknown)
     model.nlt, # MTK observed variable
     :y,        # `Symbol` instance with same name
-    norm,      # or arbitrary function of the state
+    power,      # or arbitrary function of the state
 ]
 
 # Define what variables will be visualized as state space trajectory
