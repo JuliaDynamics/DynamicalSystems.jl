@@ -37,9 +37,9 @@ function DynamicalSystems.interactive_trajectory(
         ds = CoupledODEs(ds, newdiffeq)
     end
 
-    u00s = deepcopy(u0s)
     p0 = initial_parameters(ds)
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
+    u00s = deepcopy(current_states(pds))
     fig = Figure(; figure...)
     # Set up trajectrory plot
     statespacelayout = fig[1,1] = GridLayout()

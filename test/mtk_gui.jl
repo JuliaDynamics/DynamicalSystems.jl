@@ -29,8 +29,9 @@ eqs = [
 @named roessler = ODESystem(eqs, t)
 # Do not split parameters so that integer indexing can be used as well
 model = structural_simplify(roessler; split = false)
-# Cast it into an `ODEProblem` and then into a `DynamicalSystem`
-prob = ODEProblem(model)
+# Cast it into an `ODEProblem` and then into a `DynamicalSystem`.
+# Due to low-dimensionality it is preferred to cast into out of place
+prob = ODEProblem{false}(model, nothing, (0.0, Inf); u0_constructor = x->SVector(x...))
 ds = CoupledODEs(prob)
 # If you have "lost" the model, use:
 model = referrenced_sciml_model(ds)
@@ -44,17 +45,18 @@ parameter_sliders = Dict(
     # the symbol obtained from the MTK model
     model.c => 0:0.01:10,
     # or a `Symbol` with same name as the parameter
+    # (which is the easiest and recommended way)
     :d => 0.8:0.01:1.2,
 )
 
 # Define what variables will be visualized as timeseries
-norm(u) = sqrt(u[1]*u[1] + u[2]*u[2])
+power(u) = sqrt(u[1]*u[1] + u[2]*u[2])
 observables = [
     1,         # can use integer indexing,
     z,         # MTK state variable (unknown)
     model.nlt, # MTK observed variable
     :y,        # `Symbol` instance with same name
-    norm,      # or arbitrary function of the state
+    power,      # or arbitrary function of the state
 ]
 
 # Define what variables will be visualized as state space trajectory
@@ -63,19 +65,22 @@ observables = [
 idxs = Any[1, y, 3]
 
 u0s = [
-    # no fancy indexing here yet; numbers must correspond to state variables
-    [-4.0, -4, 0.1],
-    [4.0, 4, 0.2],
-    [5.72, 0.28, 0.21],
-    [-5.72, 0.0, 0.0],
+    # we can specify dictionaries, each mapping the variable to its value
+    # un-specified variables get the value they currently have in `ds`
+    Dict(:x => -4, :y => -4, :z => 0.1),
+    Dict(:x => 4, :y => 3, :z => 0.1),
+    Dict(:x => -5.72),
+    Dict(:x => 5.72, :y => 0.28, :z => 0.21),
 ]
 
 update_theme!(fontsize = 14)
+tail = 1000
 
 fig, dsobs = interactive_trajectory_timeseries(ds, observables, u0s;
-    parameter_sliders, statespace_axis = true, Δt = 0.01,
-    tail = 1000, idxs,
+    parameter_sliders, Δt = 0.01, tail, idxs,
     figure = (size = (1100, 650),)
 )
+
+step!(dsobs, 2tail)
 
 display(fig)
