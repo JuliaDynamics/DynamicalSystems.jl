@@ -229,15 +229,16 @@ function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
         mi = min.(mii, mi)
         ma = max.(maa, ma)
         # do same but now by transforming the `tr` set into the observed set
-        otr = StateSpaceSet(map(u -> [observe_state(ds, f, u) for f in observables], tr))
+        otr = map(u -> Float64[observe_state(ds, f, u) for f in observables], tr)
+        otr = StateSpaceSet(otr)
         omii, omaa = DynamicalSystems.minmaxima(otr)
         omi = min.(omii, omi)
         oma = max.(omaa, oma)
     end
     # Alright, now we just have to put them into limits and increase a bit
-    lims = [(mi[i]-0.1mi[i], ma[i]+0.1ma[i]) for i in 1:length(idxs)]
+    lims = [(mi[i]-0.02mi[i], ma[i]+0.02ma[i]) for i in 1:length(idxs)]
     lims = (lims...,)
-    observable_lims = [(omi[i]-0.1omi[i], oma[i]+0.1oma[i]) for i in 1:length(observables)]
+    observable_lims = [(omi[i]-0.02omi[i], oma[i]+0.02oma[i]) for i in 1:length(observables)]
     return lims, observable_lims
 end
 
