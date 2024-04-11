@@ -17,9 +17,10 @@ Elements of `u0` can be either `Vector{Real}` encoding a full state
 or `Dict` to partially set a state from current state of `ds`
 (same as in [`set_state!`](@ref)).
 
-The trajectories from the initial conditions in `u0s` (a vector of vectors)
+The trajectories from the initial conditions in `u0s`
 are all evolved and visualized in parallel. By default
 only the current state of the system is used.
+`u0s` can be anything accepted by a [`ParallelDynamicalSystem`](@ref).
 
 ## Return
 
