@@ -11,7 +11,7 @@ function DynamicalSystems.interactive_trajectory(
         # Visualization
         colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
         plotkwargs = NamedTuple(), markersize = 15,
-        fade = true,
+        fade = 0.5,
         # parameters
         parameter_sliders = nothing,
         # `pnames` is deprecated
@@ -163,9 +163,9 @@ function _init_statespace_plot!(
     for (i, ob) in enumerate(plotted_tailobs)
         pk = plotkwargs isa Vector ? plotkwargs[i] : plotkwargs
         x = to_color(colors[i])
-        if fade
-            x = [RGBAf(x.r, x.g, x.b, i/tail) for i in 1:tail]
-        end
+        # add fade
+        fade = Float32(fade)
+        x = [RGBAf(x.r, x.g, x.b, (i/tail)^(fade)) for i in 1:tail]
         if !DynamicalSystems.isdiscretetime(ds)
             Makie.lines!(statespaceax, ob;
                 color = x, linewidth = 3.0, transparency = true, pk...

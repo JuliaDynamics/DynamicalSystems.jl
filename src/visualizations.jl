@@ -70,8 +70,11 @@ Do `using GLMakie; GLMakie.activate!()` to ensure this is the chosen backend._
 - `colors`: The color for each initial condition (and resulting trajectory and timeseries).
   Needs to be a `Vector` of equal length as `u0s`.
 * `tail = 1000`: Length of plotted trajectory (in units of `Δt`).
-* `fade = true`: The trajectories in state space are faded
-  to full transparency if `true`.
+* `fade = 0.5`: The trajectories in state space are faded
+  towards full transparency. The alpha channel (transparency) scales as `t^fade` with `t`
+  ranging from 0 to 1 (1 being the end of the trajectory).
+  Use `fade = 1.0` for linear fading or `fade = 0` for no fading. Current default
+  makes fading progress faster at trajectory start and slower at trajectory end.
 - `markersize = 15`: Size of markers of trajectory endpoints. For discrete systems
   half of that is used for the trajectory tail.
 * `plotkwargs = NamedTuple()`: A named tuple of keyword arguments propagated to
