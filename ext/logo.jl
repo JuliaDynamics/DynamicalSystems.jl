@@ -47,7 +47,7 @@ end
 x1,x2,y1,y2 = xycoords(current_state(dp))
 rod   = Observable([Point2f(0, 0), Point2f(x1, y1), Point2f(x2, y2)])
 balls = Observable([Point2f(0, 0), Point2f(x1, y1), Point2f(x2, y2)])
-tail = 3000 # length of plotted trajectory, in units of `dt`
+tail = 2000 # length of plotted trajectory, in units of `dt`
 traj = CircularBuffer{Point2f}(tail)
 fill!(traj, Point2f(x2, y2))
 traj = Observable(traj)
