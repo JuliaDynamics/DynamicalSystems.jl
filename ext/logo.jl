@@ -29,7 +29,8 @@ p0 = (G=10.0, L1, L2, M1 = 1.0, M2 = 1.0)
 u0 = [π/3, 0, 3π/4, -2]
 
 # Solve diffeq with constant step for smoother curves
-diffeq = (alg = Vern9(), adaptive = false, dt = 0.005)
+dt = 0.005
+diffeq = (alg = Vern9(), adaptive = false, dt)
 dp = CoupledODEs(doublependulum_rule, u0, p0; diffeq)
 
 # map state to x-y coordinates in 2D space
@@ -53,8 +54,9 @@ fill!(traj, Point2f(x2, y2))
 traj = Observable(traj)
 
 # %% Initialize figure
-fig = Figure(size = (800, 800), backgroundcolor = :transparent)
-ax = Axis(fig[1,1]; backgroundcolor = :transparent)
+bgcolor = :transparent
+fig = Figure(size = (800, 800), backgroundcolor = bgcolor)
+ax = Axis(fig[1,1]; backgroundcolor = bgcolor)
 ax.limits = ((-L1-L2-0.1, L1 + L2+0.1), (-L1-L2-0.1, L1 + L2 + 0.1))
 hidedecorations!(ax)
 hidespines!(ax)
@@ -143,14 +145,33 @@ while d > 0.01
 end
 
 d
-current_time(dp)
+tf = current_time(dp)
 
 fig
 
-save(desktop("logo_transparent.png"), fig; px_per_unit = 4)
-trajline.visible = false
-save(desktop("logo_no_tail.png"), fig; px_per_unit = 4)
-trajline.visible = true
+# save(desktop("logo_transparent.png"), fig; px_per_unit = 4)
+# trajline.visible = false
+# save(desktop("logo_no_tail.png"), fig; px_per_unit = 4)
+# trajline.visible = true
+
+# %% animate from some t start to tf
+u0 = [π/2 + 0.1, +2.03, 0.3, +5.412]
+reinit!(dp, u0)
+
+span = tail*dt
+ts = tf - span
+animstep!(dp, ts) # initial state
+
+# fig.backgroundcolor = :
+dtrecord = dt*5
+frames = range(0, span; length = Int(span ÷ dtrecord))
+@show length(frames)
+
+record(fig, desktop("logo.mp4"), frames; framerate = 30) do i # i = frame number
+    animstep!(dp, dtrecord)
+    fig
+end # for each step of this loop, a frame is recorded
+
 
 
 # %% step, animate
