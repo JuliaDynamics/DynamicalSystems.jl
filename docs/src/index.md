@@ -10,18 +10,23 @@ DynamicalSystems
 
 Welcome to the documentation of **DynamicalSystems.jl**!
 
-- The [contents](@ref contents) page gives a summary of all packages that are part of the library.
 - If you have not used the library before, and would like to get started, then please read the [overarching tutorial](@ref tutorial) for the library.
+- The [contents](@ref contents) page gives a summary of all packages that are part of the library.
 - See the [learning resources](@ref learning) below to find out more resources about learning the library and using it in scientific research and/or education.
+- Besides the formal algorithmic/scientific content of **DynamicalSystems.jl** (those in the [contents](@ref contents)) page, the library also provides basic functionality for interactive or offline animations and visualizations. These are found in the [visualizations](@ref visualization) page.
 - The remaining of this introduction page discusses our goals with the library, how to participate as a user or developer, how to cite, and other relevant information (see the sections of the sidebar on the left).
 
 
 ## Latest news
 
-The new major version, v3, of **DynamicalSystems.jl** has been released! This is a massive release, with a huge amount of new content, and a re-write of many of the fundamentals of the library!
+DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
 
-The full details of this release are too long to describe here, so please read more about it in our [changelog]([xx](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/CHANGELOG.md))!
+At a low level, this happens via the functions `observe_state`, `set_state!`,
+`current_parameter` and `set_parameter!`.
 
+Additionally, `interactive_trajectory_timeseries` allows symbolic indexing
+for state space plot, timeseries plots, or parameter sliders.
+Everything is also automatically named and limits are also automatically deduced for everything! Super convenient!
 
 ## [Learning resources](@id learning)
 
@@ -31,43 +36,22 @@ We have written an undergraduate level textbook as an introduction to nonlinear 
 * [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
 
 
-Additional textbooks on nonlinear dynamics worth having a look are:
+Additional textbooks on nonlinear dynamics with practical focus are:
 * Chaos in Dynamical Systems - E. Ott
 * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
+* Nonlinear Dynamics and Chaos - S. Strogatz
 
 ### Course on applied nonlinear dynamics and complex systems
 
 We are developing a full course (targeting a graduate or undergraduate semester long course) on applied nonlinear dynamics, nonlinear timeseries analysis, and complex systems, using the packages of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/). **DynamicalSystems.jl** is part of this course.
 
-The materials of the course are on GitHub: https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses
+The materials of the course are on GitHub: <https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses>
 
-
-## [Our Goals](@id goals)
-
-**DynamicalSystems.jl** was created with three goals in mind.
-The first was to fill the missing gap of a high quality and general purpose software for nonlinear dynamics, which can make the field of nonlinear dynamics accessible and reproducible.
-The second goal was to create a useful _library_ where students and scientists from different fields may come and learn about methods of nonlinear dynamics.
-
-The third goal was to fundamentally change the perception of the role of code in both scientific education as well as research.
-It is rarely the case that real, _runnable_ code is shown in the classroom, because it is often long and messy.
-This is especially hurtful for nonlinear dynamics, a field where computer-assisted exploration is critical.
-And published work in this field fares even worse, with the overwhelming majority of published research not sharing the code used to create the paper.
-This makes reproducing these papers difficult, while some times straight-out impossible.
-
-To achieve these goals we made **DynamicalSystems.jl** so that it is:
-
-1. **Transparent**: extra care is taken so that the source code of all functions is clear and easy to follow, while remaining as small and concise as possible.
-2. **Intuitive**: a software simple to use and understand makes experimentation easier.
-3. **Easy to extend**: this makes contributions more likely, and can motivate researchers to implement their method here, instead of leaving it in a cryptic script stored in some data server, never-to-be-published with the paper.
-4. **Reliable**: the algorithm implementations are tested extensively.
-5. **Well-documented**: all implemented algorithms provide a high-level scientific description of their functionality in their documentation string as well as references to scientific papers.
-6. **General**: all algorithms work just as well with any system, whether it is a simple continuous chaotic system, like the Lorenz model, or a high dimensional discrete system like coupled standard maps.
-7. **Performant**: written entirely in Julia, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Citing
 
 There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
-you in research that led to a publication, please be kind enough to cite it, using
+you in research that led to a publication, please cite it using
 the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 ```
 @article{Datseris2018,
@@ -84,7 +68,9 @@ the DOI `10.21105/joss.00598` or the following BiBTeX entry:
 }
 ```
 
-however, we would really appreciate it if you also cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
+Irrespectively of **DynamicalSystems.jl**, _please also cite the specific algorithm that you used from the library_. The documentation of the function used will point you to the correct reference.
+
+Besides the library, we would also appreciate it if you cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
 
 ```
 @book{DatserisParlitz2022,
@@ -99,14 +85,13 @@ however, we would really appreciate it if you also cited the textbook we wrote t
 }
 ```
 
-
-## Asking questions
+## [Asking questions](@id ask_questions)
 
 There are three options for asking questions:
 
-1. Join the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations.
-2. Join our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
-3. Open an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example.
+1. As a new post in the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations, also using `dynamical-systems` as a tag.
+2. As a message in our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
+3. By opening an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example. This is the most useful approach when you encounter unexpected behaviour.
 
 ## Contributing & Donating
 
@@ -133,15 +118,14 @@ The version of `DynamicalSystems` by itself is a bit meaningless, because the mo
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
-using CairoMakie, InteractiveDynamics, DynamicalSystems
-include("../style.jl")
+using CairoMakie, DynamicalSystems
 ```
 
 ```@example MAIN
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools"
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools", "CairoMakie",
     ];
     mode = PKGMODE_MANIFEST
 )
@@ -152,11 +136,17 @@ Pkg.status([
 
 
 ## Other NLD-relevant packages
+
 Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosystem with plenty of functionality that is relevant for nonlinear dynamics. We list some useful references below:
 
 * [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (infastructure already used in DynamicalSystems.jl), it also has much more features like SDE solvers or uncertainty quantification.
 * [DiffEqSensitivity.jl](https://github.com/SciML/DiffEqSensitivity.jl) - Discrete and continuous local sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters, hosting [various forward and adjoint methods as well as methods tailored to chaotic systems](https://diffeq.sciml.ai/stable/analysis/sensitivity/).
-* [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
+* [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) - Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
 * [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for automated bifurcation analysis.
-* [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Package for easily simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
-* [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) for agent based modelling.
+* [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
+* [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) - Agent based modelling.
+* [EasyModelAnalysis.jl](https://github.com/SciML/EasyModelAnalysis.jl) - Analysis tools for conveniently analysing solutions of DiffEq systems.
+* [SignalDecomposition.jl](https://github.com/JuliaDynamics/SignalDecomposition.jl) - Decompose a signal/timeseries into structure and noise or seasonal and residual components.
+* [ARFIMA.jl](https://github.com/JuliaDynamics/ARFIMA.jl) - generate ARFIMA process timeseries.
+* [ConcurrentSim.jl](https://github.com/JuliaDynamics/ConcurrentSim.jl) - discrete event process oriented simulation framework.
+* [CausalityTools.jl](https://github.com/JuliaDynamics/CausalityTools.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.

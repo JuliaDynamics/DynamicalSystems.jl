@@ -1,7 +1,31 @@
 # Changelog for DynamicalSystems
 
-The package DynamicalSystems.jl does not have any actual code.
-It re-exports other packages. The changelog here only lists major changes to the overarching DynamicalSystems.jl ecosystem. The changelogs of individual subpackages are self-contained for each package.
+The package DynamicalSystems.jl has little actual code.
+It mainly re-exports other packages. The source code contained here is only regarding graphical interactive applications for dynamical systems.
+
+The changelog here therefore lists either major changes to the overarching DynamicalSystems.jl ecosystem, or major changes to plotting infastructure.
+
+The changelogs of individual subpackages are self-contained for each package.
+
+# v3.3
+
+DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
+
+At a low level, this happens via the functions `observe_state`, `set_state!`,
+`current_parameter` and `set_parameter!`.
+
+Additionally, `interactive_trajectory_timeseries` allows symbolic indexing
+for state space plot, timeseries plots, or parameter sliders.
+Everything is also automatically named and limits are also automatically deduced for everything! Super convenient!
+
+# v3.2
+
+- Significant improvement of `interactive_trajectory` by allowing the states or parameters of the system to be reset to their original values!
+
+# v3.1
+
+DynamicalSystems.jl moved to Julia 1.9 and also ported all code related to interactive visualizations here (utilizing the new package extensions system).
+Now the `InteractiveDynamics` package is obsolete.
 
 # DynamicalSystems.jl v3.0
 

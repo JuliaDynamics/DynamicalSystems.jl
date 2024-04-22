@@ -1,6 +1,6 @@
 # [Overarching tutorial for DynamicalSystems.jl](@id tutorial)
 
-This page serves as a short, but to-the-point, introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
+This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
 
 Going through this tutorial should take you about 20 minutes.
 
@@ -22,7 +22,7 @@ in your Julia session.
 The individual packages that compose `DynamicalSystems` interact flawlessly with each other because of the following two components:
 
 1. The [`StateSpaceSet`](@ref), which represents numerical data. They can be observed or measured from experiments, sampled trajectories of dynamical systems, or just unordered sets in a state space. A `StateSpaceSet` is a container of equally-sized points, representing multivariate timeseries or multivariate datasets. Timeseries, which are univariate sets, are represented by the `AbstractVector{<:Real}` Julia base type.
-2. The [`DynamicalSystem`](@ref), which is the abstract representation of a dynamical system with a known dynamic evolution rule. `DynamicalSystem` defines an extendable interface, but typically one uses concrete implementations such as [`DeterministicIteratedMap`](@ref) or [`CoupledODEs`](@ref).
+2. The [`DynamicalSystem`](@ref), which is the abstract representation of a dynamical system with a known dynamic evolution rule. `DynamicalSystem` defines an extendable interface, but typically one uses existing implementations such as [`DeterministicIteratedMap`](@ref) or [`CoupledODEs`](@ref).
 
 ## Making dynamical systems
 
@@ -48,7 +48,12 @@ The distinction is done on whether `f` is defined as an in-place (iip) function 
 The break-even point is between 10 to 100 dimensions but should be benchmarked
 on a case-by-case basis as it depends on the complexity of `f`.
 
+!!! note "Autonomous vs non-autonomous systems"
+    Whether the dynamical system is autonomous (`f` doesn't depend on time) or not, it is still necessary to include `t` as an argument to `f`. Some algorithms utilize this information, some do not, but we prefer to keep a consistent interface either way.
+
+
 ### Example: Henon map
+
 Let's make the Henon map, defined as
 ```math
 \begin{aligned}
@@ -86,7 +91,7 @@ henon = DeterministicIteratedMap(henon_rule, u0, p0)
 ```
 
 `henon` is a `DynamicalSystem`, one of the two core structures of the library.
-`DynamicalSystem`s can evolved interactively, and queried, using the interface defined by [`DynamicalSystem`](@ref). The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
+They can evolved interactively, and queried, using the interface defined by [`DynamicalSystem`](@ref). The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
 
 ```@example MAIN
 total_time = 10_000
@@ -114,10 +119,10 @@ for $i \in \{1, \ldots, N\}$ and $N+j=j$.
 
 Here, instead of a discrete time map we have $N$ coupled ordinary differential equations. However, creating the dynamical system works out just like above, but using `CoupledODEs` instead of `DeterministicIteratedMap`.
 
-First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the _in-place_ form for `f`, overwriting in place the rate of change in a pre-allocated container.
+First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the _in-place_ form for `f`, overwriting in place the rate of change in a pre-allocated container. It is [customary](https://docs.julialang.org/en/v1/manual/style-guide/#bang-convention) to append the name of functions that modify their arguments in-place with a bang (`!`).
 
 ```@example MAIN
-function lorenz96_rule(du, u, p, t)
+function lorenz96_rule!(du, u, p, t)
     F = p[1]; N = length(u)
     # 3 edge cases
     du[1] = (u[2] - u[N - 1]) * u[N] - u[1] + F
@@ -137,7 +142,7 @@ then, like before, we define an initial state and parameters, and initialize the
 N = 6
 u0 = range(0.1, 1; length = N)
 p0 = [8.0]
-lorenz96 = CoupledODEs(lorenz96_rule, u0, p0)
+lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0)
 ```
 
 and, again like before, we may obtain a trajectory the same way
@@ -153,7 +158,7 @@ We can't scatterplot something 6-dimensional but we can visualize all timeseries
 
 ```@example MAIN
 fig = Figure()
-ax = Axis(fig[1,1]; xlabel = "time", ylabel = "variable")
+ax = Axis(fig[1, 1]; xlabel = "time", ylabel = "variable")
 for var in columns(Y)
     lines!(ax, t, var)
 end
@@ -168,14 +173,13 @@ When initializing a `CoupledODEs` you can tune the solver properties to your hea
 ```@example MAIN
 using OrdinaryDiffEq # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
-lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule, u0, p0; diffeq)
+lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 ```
 
 ```@example MAIN
 Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
 ```
-
 
 ## Using dynamical systems
 
@@ -185,7 +189,7 @@ You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that u
 steps = 10_000
 lyapunovspectrum(lorenz96, steps)
 ```
-As expected, there is at least one positive Lyapunov exponent (before the system is chaotic) and at least one zero Lyapunov exponent, because the system is continuous time.
+As expected, there is at least one positive Lyapunov exponent, because the system is chaotic, and at least one zero Lyapunov exponent, because the system is continuous time.
 
 Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is "multistable" in the sense that some initial conditions diverge to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with [`Attractors`](@ref), and would work as follows:
 
@@ -292,11 +296,11 @@ heatmap(Rg; colormap = :grays,
 
 ## More nonlinear timeseries analysis
 
-A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_traditional_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
+A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
 
 ```@example MAIN
 w = Y[:, 1] # first variable of Lorenz96
-𝒟, τ, e = optimal_traditional_de(w)
+𝒟, τ, e = optimal_separated_de(w)
 𝒟
 ```
 
@@ -304,7 +308,7 @@ and compare
 
 ```@example MAIN
 fig = Figure()
-axs = [Axis3(fig[1,i]) for i in 1:2]
+axs = [Axis3(fig[1, i]) for i in 1:2]
 for (S, ax) in zip((Y, 𝒟), axs)
     lines!(ax, S[:, 1], S[:, 2], S[:, 3])
 end
@@ -346,13 +350,97 @@ fig
 since the real value is outside the distribution we have confidence the data are not pure noise.
 
 
+## Integration with ModelingToolkit.jl
+
+DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
+
+To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
+
+!!! note "ProcessBasedModelling.jl"
+    ProcessBasedModelling.jl is an extension to ModelingToolkit.jl for creating
+    models from a set of equations. It has been designed to be useful for scenarios
+    applicable to a typical nonlinear dynamics analysis workflow,
+    and provides better error messages during system construction than MTK.
+    Have a look [at its docs](https://juliadynamics.github.io/ProcessBasedModelling.jl/stable/)!
+
+
+Let's create a the Roessler system as an MTK model:
+
+```@example MAIN
+using ModelingToolkit
+
+@variables t # use unitless time
+D = Differential(t)
+@mtkmodel Roessler begin
+    @parameters begin
+        a = 0.2
+        b = 0.2
+        c = 5.7
+    end
+    @variables begin
+        x(t) = 1.0
+        y(t) = 0.0
+        z(t) = 0.0
+        nlt(t) # nonlinear term
+    end
+    @equations begin
+        D(x) ~ -y -z
+        D(y) ~ x + a*y
+        D(z) ~ b + nlt
+        nlt ~ z*(x - c)
+    end
+end
+
+@mtkbuild model = Roessler()
+```
+this model can then be made into an `ODEProblem`:
+```@example MAIN
+prob = ODEProblem(model)
+```
+(notice that because we specified initial values for all parameters and variables during the model creation  we do need to provide additional initial values)
+
+Now, this problem can be made into a [`CoupledODEs`](@ref):
+
+```@example MAIN
+roessler = CoupledODEs(prob)
+```
+
+This dynamical system instance can be used in the rest of the library like anything else. Additionally, you can "observe" referenced symbolic variables:
+```@example MAIN
+observe_state(roessler, model.x)
+```
+
+```@example MAIN
+observe_state(roessler, model.nlt)
+```
+
+These observables can also be used in the GUI visualization [`interactive_trajectory_timeseries`](@ref).
+
+You can also symbolically alter parameters
+
+```@example MAIN
+current_parameter(roessler, model.c)
+```
+
+```@example MAIN
+set_parameter!(roessler, model.c, 5.0)
+```
+
+```@example MAIN
+current_parameter(roessler, model.c)
+```
+
+This symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.
+
 ## Core components reference
+
 ```@docs
 StateSpaceSet
 DynamicalSystem
 ```
 
 ## Dynamical system implementations
+
 ```@docs
 DeterministicIteratedMap
 CoupledODEs
@@ -364,4 +452,4 @@ ArbitrarySteppable
 
 ## Learn more
 
-To learn more, you need to visit the documentation pages of the individual packages. See the [contents](@ref contents) page for more!
+To learn more, you need to visit the documentation pages of the modules that compose DynamicalSystems.jl. See the [contents](@ref contents) page for more!

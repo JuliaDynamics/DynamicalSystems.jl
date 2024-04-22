@@ -1,6 +1,7 @@
 cd(@__DIR__)
 
 using DynamicalSystems
+# TODO: cross-reference docstirngs directly into package's repos!
 
 import Downloads
 Downloads.download(
@@ -9,17 +10,11 @@ Downloads.download(
 )
 include("build_docs_with_style.jl")
 
-# Also bring in visualizations from interactive dynamics docs:
-# using InteractiveDynamics
-# infile = joinpath(pkgdir(InteractiveDynamics), "docs", "src", "dynamicalsystems.md")
-# outfile = joinpath(@__DIR__, "src", "dynamicalsystems_interactive.md")
-# cp(infile, outfile; force = true)
-
 pages =  [
     "Introduction" => "index.md",
     "Overarching tutorial" => "tutorial.md",
     "Contents" => "contents.md",
-    # "Interactive GUIs" => "dynamicalsystems_interactive.md",
+    "Animations, GUIs, Visuals" => "visualizations.md",
     "Contributor Guide" => "contributors_guide.md",
 ]
 
@@ -33,8 +28,10 @@ build_docs_with_style(pages, DynamicalSystems,
     Attractors,
     FractalDimensions,
     TimeseriesSurrogates,
-    # InteractiveDynamics,
     PredefinedDynamicalSystems;
     authors = "George Datseris <datseris.george@gmail.com>",
-    expandfirst = ["index.md"], #  this is the first script that loads colorscheme
+    expandfirst = ["index.md"],
+    # We need to remove the cross references because we don't list here
+    # the whole `DynamicalSystem` API...
+    warnonly = [:doctest, :missing_docs, :cross_references],
 )
