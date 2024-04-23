@@ -1,7 +1,6 @@
 using DynamicalSystems, GLMakie, ModelingToolkit
-# Import canonical time and time-derivative from MTK,
-# however use the unitless versions as we don't need units here
-using ModelingToolkit: t_nounits as t, D_nounits as D
+# Import canonical time from MTK, however use the unitless version
+using ModelingToolkit: t_nounits as t
 
 # Define the variables and parameters in symbolic format
 @parameters begin
@@ -19,9 +18,9 @@ end
 
 # Create the equations of the model
 eqs = [
-    D(x) ~ -y - z,
-    D(y) ~ x + a*y,
-    D(z) ~ b + nlt - z*c,
+    Differential(t)(x) ~ -y - z,
+    Differential(t)(y) ~ x + a*y,
+    Differential(t)(z) ~ b + nlt - z*c,
     nlt ~ d*z*x, # observed variable
 ]
 
@@ -52,11 +51,12 @@ parameter_sliders = Dict(
 # Define what variables will be visualized as timeseries
 power(u) = sqrt(u[1]*u[1] + u[2]*u[2])
 observables = [
-    1,         # can use integer indexing,
-    z,         # MTK state variable (unknown)
+    1,         # can use integer indexing
+    z,         # MTK state variable (called "unknown")
     model.nlt, # MTK observed variable
-    :y,        # `Symbol` instance with same name
-    power,      # or arbitrary function of the state
+    :y,        # `Symbol` instance with same name as symbolic variable
+    power,     # arbitrary function of the state
+    x^2 - y^2, # arbitrary symbolic expression of symbolic variables
 ]
 
 # Define what variables will be visualized as state space trajectory
