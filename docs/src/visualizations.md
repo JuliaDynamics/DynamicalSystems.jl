@@ -146,23 +146,22 @@ using LinearAlgebra: norm, dot
 
 # Dynamical system and initial conditions
 ds = Systems.thomas_cyclical(b = 0.2)
-u0s = ([3, 1, 1.], [1, 3, 1.], [1, 1, 3.])
+u0s = [[3, 1, 1.], [1, 3, 1.], [1, 1, 3.]] # must be a vector of states!
 
 # Observables we get timeseries of:
-f1 = 3
-f2 = function distance_from_symmetry(u)
+function distance_from_symmetry(u)
     v = SVector{3}(1/√3, 1/√3, 1/√3)
     t = dot(v, u)
     return norm(u - t*v)
 end
-fs = [f1, f2]
+fs = [3, distance_from_symmetry]
 
 fig, dsobs = interactive_trajectory_timeseries(ds, fs, u0s;
-    idxs = [1, 2], timeseries_names = ["x3", "dist. symm."],
-    timeseries_ylims = [(-2, 4), (0, 5)],
+    idxs = [1, 2], Δt = 0.05, tail = 500,
     lims = ((-2, 4), (-2, 4)),
-    Δt = 0.05, tail = 500,
-    add_controls = false
+    timeseries_ylims = [(-2, 4), (0, 5)],
+    add_controls = false,
+    figure = (size = (800, 400),)
 )
 
 fig
