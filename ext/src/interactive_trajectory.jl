@@ -244,11 +244,19 @@ end
 
 # Parameter handling
 function _add_ds_param_controls!(ds, paramlayout, parameter_sliders, pnames, p0)
+    parameter_sliders = deepcopy(parameter_sliders) # so we can modify it for wrong parameters
     slidervals = Dict{keytype(parameter_sliders), Observable}() # directly has the slider observables
     sliders = Dict{keytype(parameter_sliders), Any}() # for updating via reset parameters
     tuples_for_slidergrid = []
     for (l, vals) in parameter_sliders # dictionary
-        startvalue = current_parameter(ds, l, p0)
+        startvalue = NaN
+        try
+            startvalue = current_parameter(ds, l, p0)
+        catch err
+            @warn "Could not obtain parameter with index $(l). Got error: $(err). Skipping."
+            delete!(parameter_sliders, l)
+            continue
+        end
         label = string(pnames[l])
         push!(tuples_for_slidergrid, (;label, range = vals, startvalue))
     end
