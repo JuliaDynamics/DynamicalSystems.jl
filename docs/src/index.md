@@ -89,9 +89,9 @@ Besides the library, we would also appreciate it if you cited the textbook we wr
 
 There are three options for asking questions:
 
-1. As a new post in the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations, also using `dynamical-systems` as a tag.
-2. As a message in our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace.
-3. By opening an issue directly on the GitHub page of DynamicalSystems.jl while providing a Minimal Working Example. This is the most useful approach when you encounter unexpected behaviour.
+1. As a new post in the official [Julia discourse](https://discourse.julialang.org/) and ask a question under the category Specific Domains > Modelling & Simulations, also using `dynamical-systems` as a tag. This option is preferred for any meaningfully involved question, as the answer there will be future-searchable.
+2. As a message in our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace. This option is preferred for a brief question with (expected) simple answer, or to get an opinion about something, or to chat about something.
+3. By opening an issue directly on the [GitHub page of DynamicalSystems.jl](https://github.com/JuliaDynamics/DynamicalSystems.jl) while providing a Minimal Working Example. This option is preferred when you encounter unexpected behavior.
 
 ## Contributing & Donating
 
