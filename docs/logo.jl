@@ -56,10 +56,8 @@ fill!(traj, Point2f(x2, y2))
 traj = Observable(traj)
 
 # %% Initialize figure
-bgcolor = :transparent
-# bgcolor = :white
-fig = Figure(size = (800, 800), backgroundcolor = bgcolor)
-ax = Axis(fig[1,1]; backgroundcolor = bgcolor, aspect = DataAspect() )
+fig = Figure(size = (800, 800), backgroundcolor = :transparent)
+ax = Axis(fig[1,1]; backgroundcolor = :transparent, aspect = DataAspect() )
 # this is maximum possible limits:
 # ax.limits = ((-L1-L2-0.1, L1 + L2+0.1), (-L1-L2-0.1, L1 + L2 + 0.1))
 # this is reduced size in height:
@@ -153,7 +151,6 @@ tf = current_time(dp)
 # reported final time of evolution from given initial condition:
 # 168.38499999991936
 
-
 # okay, save high quality version:
 ax.backgroundcolor = :transparent
 CairoMakie.save(desktop("juliadynamics_logo.png"), fig; px_per_unit = 4)
@@ -164,7 +161,11 @@ trajline.visible = true
 # and one more with white background
 ax.backgroundcolor = :white
 CairoMakie.save(desktop("juliadynamics_logo_white.png"), fig; px_per_unit = 4)
+# and a dark background
+ax.backgroundcolor = "#1e1e20"
+CairoMakie.save(desktop("juliadynamics_logo_dark.png"), fig; px_per_unit = 4)
 ax.backgroundcolor = :transparent
+
 
 # save(desktop("logo_transparent.png"), fig; px_per_unit = 4)
 # trajline.visible = false
