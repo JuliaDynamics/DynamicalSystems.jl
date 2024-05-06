@@ -76,8 +76,18 @@ julia_red     = RGBf(0.796, 0.235, 0.2)
 
 lighter_green  = RGBf(0.376, 0.678, 0.318)
 lighter_red    = RGBf(0.835, 0.388, 0.361)
-lighter_blue   = RGBf(0.4, 0.51, 0.878)
+lighter_blue = RGBf(0.4, 0.51, 0.878)
 lighter_purple = RGBf(0.667, 0.475, 0.757)
+
+function lighten(c, f = 1.2)
+    c = to_color(c)
+    hsl = Makie.HSLA(c)
+    neg = Makie.RGBAf(Makie.HSLA(hsl.h, hsl.s, clamp(hsl.l*f, 0.0, 1.0), hsl.alpha))
+    neg = Makie.RGBf(Makie.HSL(hsl.h, hsl.s, clamp(hsl.l*f, 0.0, 1.0)))
+    return neg
+end
+
+lighter_blue_x = lighten(lighter_blue)
 
 lighter_green  = julia_green
 lighter_red    = julia_red
@@ -85,6 +95,8 @@ lighter_blue   = julia_blue
 lighter_purple = julia_purple
 
 # color of the trajectory (fading out)
+c = lighter_blue_x
+tailcoltransplight = [RGBAf(c.r, c.g, c.b, (i/tail)^(1.2)) for i in 1:tail]
 c = julia_blue
 tailcoltransp = [RGBAf(c.r, c.g, c.b, (i/tail)^(1.2)) for i in 1:tail]
 tailcol = [RGBf(c.r, c.g, c.b) for i in 1:tail]
@@ -92,7 +104,7 @@ trajline = lines!(ax, traj; color = tailcoltransp, linewidth = 4)
 
 
 # rods that connect the pendulum
-lines!(ax, balls; linewidth = 12, color = :black)
+rodlines = lines!(ax, balls; linewidth = 12, color = :black)
 
 scatter!(ax, balls; marker = :circle, strokewidth = 10,
     strokecolor = [julia_green, julia_red, julia_purple],
@@ -160,22 +172,29 @@ save(desktop("juliadynamics_logo_no_tail.png"), fig; px_per_unit = 4)
 trajline.visible = true
 # and one more with white background
 ax.backgroundcolor = :white
+fig.scene.backgroundcolor = to_color(:white)
 CairoMakie.save(desktop("juliadynamics_logo_white.png"), fig; px_per_unit = 4)
 # and a dark background
+rodlines.color = :white
+trajline.color = tailcoltransplight
 ax.backgroundcolor = "#1e1e20"
+fig.scene.backgroundcolor = to_color("#1e1e20")
 CairoMakie.save(desktop("juliadynamics_logo_dark.png"), fig; px_per_unit = 4)
 ax.backgroundcolor = :transparent
-
-
-# save(desktop("logo_transparent.png"), fig; px_per_unit = 4)
-# trajline.visible = false
-# save(desktop("logo_no_tail.png"), fig; px_per_unit = 4)
-# trajline.visible = true
+fig.scene.backgroundcolor = to_color(:transparent)
+CairoMakie.save(desktop("juliadynamics_logo_dark_transp.png"), fig; px_per_unit = 4)
+# reset back to standard
+trajline.color = tailcoltransp
+rodlines.color = :black
 
 fig
 
 # %% perform video animation animate from some t start to tf
-ax.backgroundcolor = :transparent
+rodlines.color = :white
+trajline.color = tailcoltransplight
+ax.backgroundcolor = "#1e1e20"
+fig.scene.backgroundcolor = to_color("#1e1e20")
+
 reinit!(dp, u0)
 resize!(fig, 800, 800)
 
@@ -184,9 +203,9 @@ ts = tf - span
 # ts += 20dt # for whatever reason we have to do this correction
 animstep!(dp, ts) # initial state
 
-# fig.backgroundcolor = :
-dtrecord = dt*5
-frames = range(0, span; length = Int(span ÷ dtrecord))
+# fig.scene.backgroundcolor = :
+dtrecord = dt*10
+frames = 1:(Int(span ÷ dtrecord) - 10)
 @show length(frames)
 
 record(fig, desktop("juliadynamics_logo_anim.mp4"), frames; framerate = 30) do i # i = frame number
