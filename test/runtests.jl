@@ -1,6 +1,6 @@
-using DynamicalSystems, Tests, GLMakie
+using DynamicalSystems, Test, GLMakie
 
-@testset "DynamicalSystems" begin
+@testset "Interactive Orbit Diagram" begin
     ps = Dict(
     1 => 1:0.1:30,
     2 => 10:0.1:50,
@@ -11,6 +11,6 @@ using DynamicalSystems, Tests, GLMakie
 
     ds = PredefinedDynamicalSystems.lorenz()
 
-    @test interactive_orbitdiagram(ds, 1, 1.0, 3.0)
+    interactive_orbitdiagram(ds, 1, 1.0, 3.0)
 end
 

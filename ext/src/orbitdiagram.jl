@@ -5,13 +5,13 @@ function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0
     )
 
     figure = Figure(size = (1200, 600))
-    display(figure)
+    # display(figure)
     odax = figure[1,1] = Axis(figure; title)
     for z in (:xpanlock, :ypanlock, :xzoomlock, :yzoomlock)
         setproperty!(odax, z, true)
     end
     controllayout = figure[1, 2] = GridLayout()
-    display(figure)
+    # display(figure)
 
     controllayout.tellheight[] = false
     odax.tellheight = true
@@ -40,7 +40,7 @@ function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0
     odax.ylabel = "u"*subscript(i[])
     on(i) do o; odax.ylabel = "u"*subscript(o); end
     odax.xlabel = parname
-    MakieLayout.deactivate_interaction!(odax, :rectanglezoom)
+    deactivate_interaction!(odax, :rectanglezoom)
     rect = select_rectangle(odax.scene)
 
     # # Uppon interactively selecting a rectangle, with value `r` (in [0,1]²)
@@ -140,9 +140,11 @@ function minimal_normalized_od(ds, i, p_index, p₋, p₊,
 
     pvalues = range(p₋, stop = p₊, length = d)
     pdif = p₊ - p₋
-    od = Vector{Point2f}() # make this pre-allocated
+    # od = Vector{Point2f}() # make this pre-allocated
+    od = Vector{Point2f}(undef, d*n)
     xmin = eltype(current_state(ds))(Inf)
     xmax = eltype(current_state(ds))(-Inf)
+    count = 1
     @inbounds for p in pvalues
         pp = (p - p₋)/pdif # p to plot, in [0, 1]
         set_parameter!(ds, p_index, p)
@@ -151,13 +153,16 @@ function minimal_normalized_od(ds, i, p_index, p₋, p₊,
         for _ in 1:n
             step!(ds)
             x = current_state(ds)[i]
-            push!(od, Point2f(pp, x))
+            # push!(od, Point2f(pp, x))
+            od[count] = Point2f(pp, x)
+
             # update limits
             if x < xmin
                 xmin = x
             elseif x > xmax
                 xmax = x
             end
+            count += 1
         end
     end
     # normalize x values to [0, 1]

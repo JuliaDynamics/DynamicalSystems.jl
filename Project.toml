@@ -40,3 +40,11 @@ Scratch = "1"
 StateSpaceSets = "1"
 TimeseriesSurrogates = "2.1"
 julia = "1.9"
+
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+
+[targets]
+test = ["Test", "GLMakie"]
