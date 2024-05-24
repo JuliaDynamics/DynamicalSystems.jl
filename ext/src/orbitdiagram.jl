@@ -4,7 +4,7 @@ function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0
         u0 = nothing, parname = "p", title = ""
     )
 
-    figure = Figure(resolution = (1200, 600))
+    figure = Figure(size = (1200, 600))
     display(figure)
     odax = figure[1,1] = Axis(figure; title)
     for z in (:xpanlock, :ypanlock, :xzoomlock, :yzoomlock)
