@@ -216,6 +216,7 @@ function _trajectory_plot_controls!(gl, statespace_axis::Bool, starting_step)
     )
     return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
+
 function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
     ds = deepcopy(ds)
     mi = fill(Inf, length(idxs))
@@ -226,14 +227,14 @@ function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
         tr, = DynamicalSystems.trajectory(ds, 1000dt, u0s[i]; Δt = dt)
         _tr = StateSpaceSet(map(u -> [observe_state(ds, i, u) for i in idxs], tr))
         mii, maa = DynamicalSystems.minmaxima(_tr)
-        mi = min.(mii, mi)
-        ma = max.(maa, ma)
+        mi = isnumber(mii) ? min.(mii, mi) : mi
+        ma = isnumber(maa) ? max.(maa, ma) : ma
         # do same but now by transforming the `tr` set into the observed set
         otr = map(u -> Float64[observe_state(ds, f, u) for f in observables], tr)
         otr = StateSpaceSet(otr)
         omii, omaa = DynamicalSystems.minmaxima(otr)
-        omi = min.(omii, omi)
-        oma = max.(omaa, oma)
+        omi = isnumber(omii) ? min.(omii, omi) : omi
+        oma = isnumber(omaa) ? max.(omaa, oma) : oma
     end
     # Alright, now we just have to put them into limits and increase a bit
     lims = [(mi[i]-0.02mi[i], ma[i]+0.02ma[i]) for i in 1:length(idxs)]
@@ -241,6 +242,9 @@ function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
     observable_lims = [(omi[i]-0.02omi[i], oma[i]+0.02oma[i]) for i in 1:length(observables)]
     return lims, observable_lims
 end
+# we use this function because min/max is contaminated by NaN/Infs
+isnumber(x::Real) = !(isnan(x) || isinf(x))
+isnumber(x) = all(isnumber, x)
 
 # Parameter handling
 function _add_ds_param_controls!(ds, paramlayout, parameter_sliders, pnames, p0)
@@ -307,7 +311,17 @@ function _init_timeseries_plots!(
 
     # First, create axis
     axs = [Axis(layout[i, 1]; ylabel = tsnames[i]) for i in 1:length(fs)]
-    for i in 1:length(fs); ylims!(axs[i], tslims[i]); end
+    for i in 1:length(fs);
+        # we use a `try` clause here because there may be cases
+        # where the ylims are the same, such as 0-0. NaNs we already take care of in the automatic estimator!
+        try
+            ylims!(axs[i], tslims[i])
+        catch err
+            @warn "Couldn't automatically set axis y-limits for observable $(fs[i]). "*
+            "Got error: $(err)"
+        end
+    end
+
     linkxaxes!(axs...)
     for i in 1:length(fs)-1; hidexdecorations!(axs[i]; grid = false); end
     axs[end].xlabel = timelabel
