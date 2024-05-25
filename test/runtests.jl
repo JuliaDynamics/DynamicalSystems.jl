@@ -1,4 +1,4 @@
-using DynamicalSystems, Test, GLMakie
+using DynamicalSystems, Test, Makie
 
 @testset "Interactive Orbit Diagram" begin
     ps = Dict(
