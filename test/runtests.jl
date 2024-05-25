@@ -11,6 +11,7 @@ using DynamicalSystems, Test, Makie
 
     ds = PredefinedDynamicalSystems.lorenz()
 
-    interactive_orbitdiagram(ds, 1, 1.0, 3.0)
+    fig, _ = interactive_orbitdiagram(ds, 1, 1.0, 3.0)
+    @test fig isa Makie.Figure
 end
 
