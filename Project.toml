@@ -1,7 +1,7 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "3.3.15"
+version = "3.3.16"
 
 [deps]
 Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
@@ -40,3 +40,11 @@ Scratch = "1"
 StateSpaceSets = "1"
 TimeseriesSurrogates = "2.1"
 julia = "1.9"
+
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+
+[targets]
+test = ["Test", "Makie"]
