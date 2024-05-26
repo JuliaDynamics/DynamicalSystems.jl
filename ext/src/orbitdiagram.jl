@@ -5,13 +5,11 @@ function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0
     )
 
     figure = Figure(size = (1200, 600))
-    # display(figure)
     odax = figure[1,1] = Axis(figure; title)
     for z in (:xpanlock, :ypanlock, :xzoomlock, :yzoomlock)
         setproperty!(odax, z, true)
     end
     controllayout = figure[1, 2] = GridLayout()
-    # display(figure)
 
     controllayout.tellheight[] = false
     odax.tellheight = true
@@ -140,7 +138,6 @@ function minimal_normalized_od(ds, i, p_index, p₋, p₊,
 
     pvalues = range(p₋, stop = p₊, length = d)
     pdif = p₊ - p₋
-    # od = Vector{Point2f}() # make this pre-allocated
     od = Vector{Point2f}(undef, d*n)
     xmin = eltype(current_state(ds))(Inf)
     xmax = eltype(current_state(ds))(-Inf)
@@ -153,7 +150,6 @@ function minimal_normalized_od(ds, i, p_index, p₋, p₊,
         for _ in 1:n
             step!(ds)
             x = current_state(ds)[i]
-            # push!(od, Point2f(pp, x))
             od[count] = Point2f(pp, x)
 
             # update limits
