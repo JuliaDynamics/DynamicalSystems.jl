@@ -14,6 +14,8 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
     )
 
     error("this function has not yet been updated to DynamicalSystems.jl v3.0. PR welcomed!")
+    # TODO: What is needed here is to make this use `PoincareMap`.
+    # and that's it!
 
     @assert typeof(plane) <: Tuple
     @assert length(idxs) == 2
