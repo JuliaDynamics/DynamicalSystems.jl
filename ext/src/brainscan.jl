@@ -8,24 +8,16 @@ function DynamicalSystems.interactive_poincaresos_scan(
         colors = [COLORS[i] for i in 1:length(As)]
     )
 
-    for A in As; @assert size(A, 2) == 3; end
+    for A in As; @assert dimension(A) == 3; end
     @assert j ∈ 1:3
     mi, ma = total_minmaxima(As)
 
     otheridxs = SVector(setdiff(1:3, j)...)
 
-    figure = Figure(resolution = (1600, 800))
+    figure = Figure(size = (1600, 800))
     display(figure)
     ax = figure[1, 1] = Axis3(figure)
     axp = figure[1, 2] = Axis(figure)
-    # old
-    # sll = labelslider!(
-    #     figure, "$(('x':'z')[j]) =", range(mi[j], ma[j]; length = 100);
-    #     sliderkw = Dict(:startvalue => (ma[j]+mi[j])/2)
-    # )
-    # figure[2, :] = sll.layout
-    # y = sll.slider.value
-    # new
     sg = SliderGrid(figure[2,:],
         (label = "$(('x':'z')[j]) =", range =  range(mi[j], ma[j]; length = 1001),
         startvalue = (ma[j]+mi[j])/2)
@@ -64,10 +56,10 @@ function DynamicalSystems.interactive_poincaresos_scan(
 
     a = RGBAf(0,0,0,0)
     c = RGBAf(0.2, 0.2, 0.25, 1.0)
-    img = Makie.ImagePattern([c a; a c]);
-    Makie.mesh!(ax, p; color = img);
+    img = Makie.ImagePattern([c a; a c])
+    Makie.mesh!(ax, p; color = img)
 
-    return figure, ax, axp
+    return figure
 end
 
 function total_minmaxima(As::Vector{<:AbstractStateSpaceSet})
