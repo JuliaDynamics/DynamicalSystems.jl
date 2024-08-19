@@ -144,15 +144,18 @@ for var in columns(Y)
 end
 fig
 
-# ### ODE solving
+# ### ODE solving and choosing solver
 
 # Continuous time dynamical systems are evolved through DifferentialEquations.jl.
 # In this sense, the above `trajectory` function is a simplified version of `DifferentialEquations.solve`.
 # If you only care about evolving a dynamical system forwards in time, you are probably better off using
 # DifferentialEquations.jl directly. DynamicalSystems.jl can be used to do many other things that either occur during
-# the time evolution or after it, see the section below on [using dynamical systems](@ref using)
+# the time evolution or after it, see the section below on [using dynamical systems](@ref using).
 
-# When initializing a `CoupledODEs` you can tune the solver properties to your heart's content using any of the [ODE solvers](https://diffeq.sciml.ai/latest/solvers/ode_solve/) and any of the [common solver options](https://diffeq.sciml.ai/latest/basics/common_solver_opts/). For example:
+# When initializing a `CoupledODEs` you can tune the solver properties to your heart's
+# content using any of the [ODE solvers](https://diffeq.sciml.ai/latest/solvers/ode_solve/)
+# and any of the [common solver options](https://diffeq.sciml.ai/latest/basics/common_solver_opts/).
+# For example:
 
 using OrdinaryDiffEq # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
@@ -162,6 +165,72 @@ lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 
 Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
+
+# The choice of the solver algorithm can have **huge impact on the performance and stability of the ODE integration!**
+# We will showcase this with two simple examples
+
+# #### Higher accuracy, higher order
+
+# The solver `Tsit5` (the default solver) is most performant when medium-high error
+# tolerances are requested. When we require very small errors, choosing a different solver
+# can be more accurate. This can be especially impactful for chaotic dynamical systems.
+# Let's first expliclty ask for a given accuracy when solving the ODE by passing the
+# keywords `abstol, reltol` (for absolute and relative tolerance respectively),
+# and compare performance to a naive solver one would use:
+
+using BenchmarkTools: @btime
+using OrdinaryDiffEq: BS3 # equivalent of odeint23
+
+for alg in (BS3(), Vern9())
+    diffeq = (; alg, abstol = 1e-12, reltol = 1e-12)
+    lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0; diffeq)
+    @btime step!($lorenz96, 100.0) # evolve for 100 time units
+end
+
+# The performance difference is dramatic!
+
+# #### Stiff problems
+
+# A "stiff" ODE problem is one that can be numerically unstable unless the step size (or equivalently, the step error tolerances) are extremely small. There are several situations where a problem may be come "stiff":
+
+# - The derivative values can get very large for some state values.
+# - There is a large _timescale separation_ between the dynamics of the variables
+# - There is a large _speed separation_ between different state space regions
+
+# One must be aware whether this is possible for their system and choose a solver that is better suited to tackle stiff problems. If not, a solution may diverge and the ODE integrator will throw an error or a warning.
+
+# Many of the problems in DifferentialEquations.jl are suitable for dealing with stiff problems. We can create a stiff problem by using the well known Van der Pol  oscillator _with a timescale separation_:
+
+# $$
+# \begin{aligned}
+# \dot{x} & = y \\
+# \dot{y} /  \mu &= (1-x^2)y - x
+# \end{aligned}
+# $$
+
+# with $\mu$ being the timescale of the $y$ variable in units of the timescale of the $x$ variable. For very large values of $\mu$ this problem becomes stiff.
+
+# Let's compare
+
+function vanderpol_rule(u, μ, t)
+    x, y = u
+    dx = y
+    dy = μ*((1-x^2)*y - x)
+    return SVector(dx, dy)
+end
+
+μ = 1e6
+
+for alg in (Tsit5(), Rodas5P()) # default vs specialized solver
+    diffeq = (; alg, abstol = 1e-12, reltol = 1e-12, maxiters = typemax(Int))
+    vdp = CoupledODEs(vanderpol_rule, SVector(1.0, 1.0), μ; diffeq)
+    @btime step!($vdp, 100.0)
+end
+
+# We see that the stiff solver `Rodas5P` is much faster than the default `Tsit5` when there is a large timescale separation. This happened because `Rodas5P` required much less steps to integrated the same total amount of time. In fact, there are cases where regular solvers will _fail_ to integrate the ODE if the problem is very stiff, e.g. in the [ROBER example](https://docs.sciml.ai/SciMLBenchmarksOutput/stable/StiffODE/ROBER/).
+
+# So using an appropriate solver really does matter!
+# For more information on choosing solvers consult the DifferentialEquations.jl documentation.
 
 # ## [Using dynamical systems](@id using)
 
