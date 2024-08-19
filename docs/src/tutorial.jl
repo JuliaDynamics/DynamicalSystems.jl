@@ -281,7 +281,7 @@ R = RecurrenceMatrix(Y, 8.0)
 Rg = grayscale(R)
 rr = recurrencerate(R)
 heatmap(Rg; colormap = :grays,
-    axis = (title = "recurrence rate = $(rr)", aspect = 1,)
+    axis = (title = "recurrence rate = $(round(rr; digits = 3))", aspect = 1)
 )
 
 
