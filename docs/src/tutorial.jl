@@ -110,11 +110,11 @@ scatter(X[:, 1], X[:, 2])
 
 function lorenz96_rule!(du, u, p, t)
     F = p[1]; N = length(u)
-    # 3 edge cases
+    ## 3 edge cases
     du[1] = (u[2] - u[N - 1]) * u[N] - u[1] + F
     du[2] = (u[3] - u[N]) * u[1] - u[2] + F
     du[N] = (u[1] - u[N - 2]) * u[N - 1] - u[N] + F
-    # then the general case
+    ## then the general case
     for n in 3:(N - 1)
         du[n] = (u[n + 1] - u[n - 2]) * u[n - 1] - u[n] + F
     end
@@ -400,7 +400,7 @@ fig
 
 # since the real value is outside the distribution we have confidence the data are not pure noise.
 
-## Integration with ModelingToolkit.jl
+# ## Integration with ModelingToolkit.jl
 
 # DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
 
