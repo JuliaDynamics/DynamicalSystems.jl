@@ -4,6 +4,7 @@ using CairoMakie
 using DataStructures: CircularBuffer
 desktop() = joinpath(homedir(), "Desktop")
 desktop(args...) = joinpath(desktop(), args...)
+desktop() = @__DIR__
 
 # double pendulum dynamical system
 @inbounds function doublependulum_rule(u, p, t)
@@ -61,7 +62,8 @@ ax = Axis(fig[1,1]; backgroundcolor = :transparent, aspect = DataAspect() )
 # this is maximum possible limits:
 # ax.limits = ((-L1-L2-0.1, L1 + L2+0.1), (-L1-L2-0.1, L1 + L2 + 0.1))
 # this is reduced size in height:
-ax.limits = ((-L1-L2-0.1, L1 + L2+0.1), (-L1-L2-0.1, (L1 + L2 + 0.1)/2))
+lima = 0.1
+ax.limits = ((-L1-L2-lima, L1 + L2+lima), (-L1-L2-lima, (L1 + L2 + lima)/2))
 ylims!(-0.8660254037844386/2 - 2.1, -0.8660254037844386/2 + 2.1) # center y of axis for equal aspect ratio
 # ax.aspect = 1
 hidedecorations!(ax)
@@ -114,13 +116,18 @@ scatter!(ax, balls; marker = :circle, strokewidth = 10,
 
 function animstep!(dp)
     step!(dp)
-    x1,x2,y1,y2 = xycoords(current_state(dp))
+    update!(current_state(dp))
+end
+
+function update!(u)
+    x1,x2,y1,y2 = xycoords(u)
     rod[] = [Point2f(0, 0), Point2f(x1, y1), Point2f(x2, y2)]
     balls[] = [Point2f(0, 0), Point2f(x1, y1), Point2f(x2, y2)]
     push!(traj[], Point2f(x2, y2))
     notify(traj)
 end
-function animstep!(dp, t)
+
+function animstep!(dp::DynamicalSystem, t)
     t0 = current_time(dp)
     while current_time(dp) < t0 + t
         animstep!(dp)
@@ -132,7 +139,7 @@ fig
 
 # %% find initial condition that leads to nice Julia logo:
 using DynamicalSystems.StateSpaceSets.Distances
-u0 = [π/2 + 0.1, +2.03, 0.3, +5.412]
+u0 = SVector{4}([π/2 + 0.1, +2.03, 0.3, +5.412])
 reinit!(dp, u0)
 
 
@@ -159,11 +166,19 @@ end
 
 d
 tf = current_time(dp)
+uf = current_state(dp)
 
 # reported final time of evolution from given initial condition:
 # 168.38499999991936
 
-# okay, save high quality version:
+# Final state
+# 5.757958811321035
+# -5.924686393536801
+# 58.11993236370379
+# -2.839077350331716
+
+
+# %% okay, save high quality version:
 ax.backgroundcolor = :transparent
 CairoMakie.save(desktop("juliadynamics_logo.png"), fig; px_per_unit = 4)
 # and one without tail
@@ -183,34 +198,108 @@ CairoMakie.save(desktop("juliadynamics_logo_dark.png"), fig; px_per_unit = 4)
 ax.backgroundcolor = :transparent
 fig.scene.backgroundcolor = to_color(:transparent)
 CairoMakie.save(desktop("juliadynamics_logo_dark_transp.png"), fig; px_per_unit = 4)
-# reset back to standard
-trajline.color = tailcoltransp
-rodlines.color = :black
+
+# add text axis
+resize!(fig, 1600, 800)
+texax = Axis(fig[:, 0]; backgroundcolor = "#1e1e20")
+
+resize!(fig, 1600, 600)
+
+lima = 0.1
+ax.limits = ((-L1-L2-lima, L1 + L2+lima), (-L1-L2-lima, (L1 + L2 + lima)/2))
 
 fig
 
-# %% perform video animation animate from some t start to tf
+
+# %% Add DynamicalSystems.jl font
+
+empty!(texax)
+hidedecorations!(texax)
+hidespines!(texax)
+
+dstext = text!(texax, 1.0, 0.5;
+    text = "Dynamical\nSystems.jl", font = joinpath(@__DIR__, "montserrat", "Montserrat-Medium.ttf"),
+    align = (:right, :center), justification = :right, space = :relative,
+    color = :white, fontsize = 130, offset = (-30.0, 0),
+)
+
+scatter!(
+    [0.694, 0.89], [0.725, 0.445]; markersize = 40,
+    color = julia_blue
+)
+
+# add horizontal line
+lines!(texax, [1, 1], [0.2, 0.8]; color = :white, linewidth = 15,)
+texax.limits = ((0, 1), (0, 1))
+fig
+
+
+# %% save full logo!
+# dark version
+texax.backgroundcolor = :transparent
+CairoMakie.save(desktop("juliadynamics_full_logo_transparent.png"), fig; px_per_unit = 4)
+
+ax.backgroundcolor = "#1e1e20"
+texax.backgroundcolor = "#1e1e20"
+fig.scene.backgroundcolor = to_color("#1e1e20")
+CairoMakie.save(desktop("juliadynamics_full_logo_dark.png"), fig; px_per_unit = 4)
+
+# light
+
+ax.backgroundcolor = :white
+fig.scene.backgroundcolor = to_color(:white)
+
+
+CairoMakie.save(desktop("juliadynamics_full_logo_transparent.png"), fig; px_per_unit = 4)
+
+
+CairoMakie.save(desktop("juliadynamics_logo_white.png"), fig; px_per_unit = 4)
+trajline.color = tailcoltransplight
+
+
+# reset back to dark
 rodlines.color = :white
 trajline.color = tailcoltransplight
 ax.backgroundcolor = "#1e1e20"
 fig.scene.backgroundcolor = to_color("#1e1e20")
 
-reinit!(dp, u0)
-resize!(fig, 800, 800)
+
+
+# %% adjust limits
+
+
+
+
+# %% perform video animation animate from some t start to tf
+# we use solve here, it is so much simpler for adjusting time
+prob = ODEProblem((u,p,t) -> -doublependulum_rule(u,p,t), uf, (0.0, 100.0), p0)
+
+sol = solve(prob; alg = Vern9(), dt, dense = true, adaptive = false)
+
+
+fig
 
 span = tail*dt
 ts = tf - span
-# ts += 20dt # for whatever reason we have to do this correction
-animstep!(dp, ts) # initial state
+ts -= 78dt # for whatever reason we have to do this correction
+
+time = ...?
+
+for t in 0:dt:ts
+    u = sol(t)
+    update!(u)
+end
+
 
 # fig.scene.backgroundcolor = :
-dtrecord = dt*10
-frames = 1:(Int(span ÷ dtrecord) - 10)
-@show length(frames)
+freq = 10 # record every 10th step
+times = (0:dt:ts)[end]:dt:tf
 
-record(fig, desktop("juliadynamics_logo_anim.mp4"), frames; framerate = 30) do i # i = frame number
-    animstep!(dp, dtrecord)
-    fig
+record(fig, desktop("juliadynamics_logo_anim.mp4"); framerate = 30) do io
+    for (i, t) in enumerate(times)
+        update!(sol(t))
+        i % freq == 0 && recordframe!(io)
+    end
 end
 
 fig

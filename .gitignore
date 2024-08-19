@@ -7,3 +7,5 @@ Manifest.toml
 *.scss
 *.css
 *style.jl
+*.mp4
+*.png
