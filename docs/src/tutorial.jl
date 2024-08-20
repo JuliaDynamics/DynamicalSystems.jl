@@ -201,12 +201,12 @@ end
 
 # Many of the problems in DifferentialEquations.jl are suitable for dealing with stiff problems. We can create a stiff problem by using the well known Van der Pol  oscillator _with a timescale separation_:
 
-# $$
+# ```math
 # \begin{aligned}
 # \dot{x} & = y \\
 # \dot{y} /  \mu &= (1-x^2)y - x
 # \end{aligned}
-# $$
+# ```
 
 # with $\mu$ being the timescale of the $y$ variable in units of the timescale of the $x$ variable. For very large values of $\mu$ this problem becomes stiff.
 
