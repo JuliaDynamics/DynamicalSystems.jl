@@ -1,8 +1,9 @@
 # # [Overarching tutorial for DynamicalSystems.jl](@id tutorial)
 
-#nb @doc DynamicalSystems
-
-# This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl** library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.
+# This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl**
+# library. It outlines the core components, and how they establish an interface that
+# is used by the rest of the library. It also provides a couple of usage examples
+# to connect the various packages of the library together.
 
 # Going through this tutorial should take you about 20 minutes.
 
@@ -13,10 +14,12 @@
 # using Pkg; Pkg.add("DynamicalSystems")
 # ```
 
-# As discussed in the [contents](@ref contents) page, this installs several packages for the Julia language, that are all exported under a common name. To use them, simply do:
-# ```julia
-# using DynamicalSystems
-# ```
+# This installs several packages for the Julia language. These are the sub-modules/packages
+# that comprise DynamicalSystems.jl, see [contents](@ref contents) for more.
+# All of the functionality is brought into scope when doing:
+
+using DynamicalSystems
+
 # in your Julia session.
 
 # ### Package versions used
@@ -26,8 +29,11 @@ import Pkg
 #nb # Activate an environment in the folder containing the notebook
 #nb Pkg.activate(dirname(@__DIR__))
 #nb Pkg.add(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"])
-
 Pkg.status(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"]; mode = Pkg.PKGMODE_MANIFEST)
+
+#nb # ## DynamicalSystems.jl summary
+
+#nb @doc DynamicalSystems
 
 # ## Core components
 
