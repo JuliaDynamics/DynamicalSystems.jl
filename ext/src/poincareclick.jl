@@ -1,4 +1,11 @@
-ChaosTools = DynamicalSystems.ChaosTools
+
+# function DynamicalSystems.interactive_2dmap(ds)
+
+
+
+
+# end
+
 
 function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
         # PSOS kwargs:
@@ -8,14 +15,15 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
         # Makie kwargs:
         color = randomcolor,
         scatterkwargs = (),
-        labels = ("u₁" , "u₂"),
-        # DiffEq kwargs:
-        diffeq = NamedTuple()
     )
+
+    # TODO: remake this into 2D map!
 
     error("this function has not yet been updated to DynamicalSystems.jl v3.0. PR welcomed!")
     # TODO: What is needed here is to make this use `PoincareMap`.
     # and that's it!
+
+
 
     @assert typeof(plane) <: Tuple
     @assert length(idxs) == 2
@@ -47,7 +55,7 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
         markersize = lift(o -> o*px, m_slider), marker = MARKER, scatterkwargs...
     )
 
-    ax.xlabel, ax.ylabel = labels
+    ax.xlabel, ax.ylabel = ("u₁" , "u₂")
     laststate = Observable(u0)
 
     # Interactive clicking on the psos:
