@@ -8,7 +8,7 @@ const DEFAULT_α = 0.01
 """
     trajectory_highlighter(datasets, vals; kwargs...)
 Open an interactive application for highlighting specific datasets
-and properties of these datasets. `datasets` is a vector of `Dataset` from
+and properties of these datasets. `datasets` is a vector of `StateSpaceSet` from
 **DynamicalSystems.jl**. Each dataset corresponds to a specific value from `vals`
 (a `Vector{<:Real}`). The value of `vals` gives each dataset
 a specific color based on a colormap.
