@@ -37,7 +37,7 @@ PredefinedDynamicalSystems = "1"
 RecurrenceAnalysis = "2"
 Reexport = "1"
 Scratch = "1"
-StateSpaceSets = "1, 2"
+StateSpaceSets = "2"
 TimeseriesSurrogates = "2.1"
 julia = "1.9"
 
