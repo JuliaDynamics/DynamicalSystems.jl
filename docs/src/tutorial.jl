@@ -271,7 +271,7 @@ lyapunovspectrum(lorenz96, steps)
 # applicable dynamical system. The exact same `lyapunovspectrum` function would also work
 # for the Henon map.
 
-lyapunovspectrum(lorenz96, henon)
+lyapunovspectrum(henon, steps)
 
 # Something else that uses a dynamical system is estimating the basins of attraction
 # of a multistable dynamical system.
