@@ -1,7 +1,7 @@
-Dataset = DynamicalSystems.Dataset
+StateSpaceSet = DynamicalSystems.StateSpaceSet
 
 plot_dataset(args...; kwargs...) = plot_dataset!(Scene(), args...; kwargs...)
-function plot_dataset!(scene, data::Dataset{2}, color = :black; kwargs...)
+function plot_dataset!(scene, data::StateSpaceSet{2}, color = :black; kwargs...)
     makiedata = [Point2f(d) for d in data]
     scatter!(scene, makiedata; color = color, markersize = 0.01, kwargs...)
     return scene
@@ -12,7 +12,7 @@ function plot_dataset!(scene, data::Matrix, color = :black; kwargs...)
     scatter!(scene, makiedata; color = color, markersize = 0.01, kwargs...)
     return scene
 end
-function plot_dataset!(scene, data::Dataset{3}, color = :black; kwargs...)
+function plot_dataset!(scene, data::StateSpaceSet{3}, color = :black; kwargs...)
     makiedata = [Point3f(d) for d in data]
     lines!(scene, makiedata; color = color, transparency = true, linewidth = 2.0, kwargs...)
     return scene
