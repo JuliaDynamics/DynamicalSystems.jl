@@ -232,6 +232,8 @@ end
 
 # Let's compare
 
+using OrdinaryDiffEq: Tsit5, Rodas5P
+
 function vanderpol_rule(u, μ, t)
     x, y = u
     dx = y
