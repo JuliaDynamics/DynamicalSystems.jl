@@ -37,16 +37,23 @@ function DynamicalSystems.interactive_trajectory(
         ds = CoupledODEs(ds, newdiffeq)
     end
 
-    p0 = initial_parameters(ds)
-    pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
-    u00s = deepcopy(current_states(pds))
     fig = Figure(; figure...)
     # Set up trajectrory plot
     statespacelayout = fig[1,1] = GridLayout()
+
+    # Given a figure `GridLayout` position generate the main state space axis
+    pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, [1], Δt)[1] : lims
     tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
         lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_axis,
     )
+    # Create the dynamical system observable now with these linked
+    po = Observable(deepcopy(current_parameters(ds)))
+    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, Observable(0), Δt)
+
+
+    dso, pds = _animatable_dynamicalsystem_plot(...)
+
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
         reset, run, step, stepslider = _trajectory_plot_controls!(
@@ -56,10 +63,6 @@ function DynamicalSystems.interactive_trajectory(
         # So that we can leave the interactive UI code as is
         reset = Observable(0); run = Observable(0); step = Observable(0); stepslider = Observable(1)
     end
-
-    # Create the dynamical system observable now with these linked
-    po = Observable(deepcopy(current_parameters(ds)))
-    dso = DynamicalSystemObservable(pds, finalpoints, tailobs, po, Observable(0), Δt)
 
     # Functionality of live evolution. This links all observables with triggers.
     # The run button just triggers the step button perpetually
@@ -78,7 +81,9 @@ function DynamicalSystems.interactive_trajectory(
         # which of course calls the stepping function on the observable
         step!(dso, n)
     end
+
     # Resetting system to initial states
+    u00s = deepcopy(u0s)
     on(reset) do clicks
         for j in eachindex(u00s)
             set_state!(dso, copy(u00s[j]), j)
@@ -88,6 +93,7 @@ function DynamicalSystems.interactive_trajectory(
     # Live parameter changing
     # note here `parameter_sliders` are parameters to have a slider; all parameters
     # can be changed after creation of `dso` via `set_parameter!`
+    p0 = initial_parameters(ds)
     if !isnothing(parameter_sliders)
         paramlayout = fig[2, :] = GridLayout(tellheight = true, tellwidth = false)
         slidervals, sliders = _add_ds_param_controls!(
@@ -126,6 +132,16 @@ function DynamicalSystems.interactive_trajectory(
     end
 
     return fig, dso
+end
+
+function _animatable_dynamicalsystem_plot(...)
+    # ...
+    return dso, pds
+end
+
+function DynamicalSystems.animatable_dynamicalsystem_plot!(...)
+    dso, pds = _animatable_dynamicalsystem_plot(...)
+    return dso
 end
 
 vector_idx_observe(ds, u, idxs::AbstractVector{<:Int}) = u[idxs]

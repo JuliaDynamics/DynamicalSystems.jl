@@ -1,5 +1,7 @@
 export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, scaleod,
-  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries
+  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries,
+  animatable_dynamicalsystem_plot!
+
 
 """
     interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
@@ -142,6 +144,24 @@ Same as [`interactive_trajectory_timeseries`](@ref), but does not plot any times
 only the trajectory in a (projected) state space.
 """
 function interactive_trajectory end
+
+"""
+    animatable_dynamicalsystem_plot!(...) → dso::DynamicalSystemObservable
+
+Convenience function derived from [`interactive_trajectory`](@ref).
+It creates the state space axis, initializes the trajectories in it,
+creates the `DynamicalSystemObservable`, and returns it.
+
+Note that the input to this function is not an axis, but rather a `GridLayout`
+such as `gl = GridLayout(fig[1,1])` from an existing figure.
+This is so that different panels with different dynamical systems can be composed
+in one figure.
+
+For how to create custom animations with `dso` see [`interactive_trajectory_timeseries`](@ref).
+All keywords are the same as in [`interactive_trajectory`](@ref),
+ignoring keywords that enable interactivity.
+"""
+function animatable_dynamicalsystem_plot! end
 
 
 """
