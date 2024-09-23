@@ -1,6 +1,6 @@
-# # [Overarching tutorial for DynamicalSystems.jl](@id tutorial)
+# # [Overarching tutorial for **DynamicalSystems.jl**](@id tutorial)
 
-# This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl**
+# This page serves as a short but to-the-point introduction to the ****DynamicalSystems.jl****
 # library. It outlines the core components, and how they establish an interface that
 # is used by the rest of the library. It also provides a couple of usage examples
 # to connect the various packages of the library together.
@@ -15,7 +15,7 @@
 # ```
 
 # This installs several packages for the Julia language. These are the sub-modules/packages
-# that comprise DynamicalSystems.jl, see [contents](@ref contents) for more.
+# that comprise **DynamicalSystems.jl**, see [contents](@ref contents) for more.
 # All of the functionality is brought into scope when doing:
 
 using DynamicalSystems
@@ -31,7 +31,7 @@ import Pkg
 #nb Pkg.add(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"])
 Pkg.status(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"]; mode = Pkg.PKGMODE_MANIFEST)
 
-#nb # ## DynamicalSystems.jl summary
+#nb # ## **DynamicalSystems.jl** summary
 
 #nb @doc DynamicalSystems
 
@@ -103,16 +103,18 @@ p0 = [1.4, 0.3]
 henon = DeterministicIteratedMap(henon_rule, u0, p0)
 
 # `henon` is a `DynamicalSystem`, one of the two core structures of the library.
-# They can evolved interactively, and queried, using the interface defined by [`DynamicalSystem`](@ref). The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
+# They can evolved interactively, and queried, using the interface defined by [`DynamicalSystem`](@ref).
+# The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
 
 total_time = 10_000
 X, t = trajectory(henon, total_time)
 X
 
-# `X` is a `StateSpaceSet`, the second of the core structures of the library. We'll see below how, and where, to use a `StateSpaceset`, but for now let's just do a scatter plot
+# `X` is a `StateSpaceSet`, the second of the core structures of the library.
+# We'll see below how, and where, to use a `StateSpaceset`, but for now let's just do a scatter plot
 
 using CairoMakie
-scatter(X[:, 1], X[:, 2])
+scatter(X)
 
 # ### Example: Lorenz96
 
@@ -167,7 +169,7 @@ fig
 # Continuous time dynamical systems are evolved through DifferentialEquations.jl.
 # In this sense, the above `trajectory` function is a simplified version of `DifferentialEquations.solve`.
 # If you only care about evolving a dynamical system forwards in time, you are probably better off using
-# DifferentialEquations.jl directly. DynamicalSystems.jl can be used to do many other things that either occur during
+# DifferentialEquations.jl directly. **DynamicalSystems.jl** can be used to do many other things that either occur during
 # the time evolution or after it, see the section below on [using dynamical systems](@ref using).
 
 # When initializing a `CoupledODEs` you can tune the solver properties to your heart's
@@ -175,7 +177,7 @@ fig
 # and any of the [common solver options](https://diffeq.sciml.ai/latest/basics/common_solver_opts/).
 # For example:
 
-using OrdinaryDiffEq # accessing the ODE solvers
+using OrdinaryDiffEq: Vern9 # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
 lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 
@@ -189,15 +191,15 @@ Y[end]
 
 # #### Higher accuracy, higher order
 
-# The solver `Tsit5` (the default solver) is most performant when medium-high error
-# tolerances are requested. When we require very small errors, choosing a different solver
+# The solver `Tsit5` (the default solver) is most performant when medium-low error
+# tolerances are requested. When we require very small error tolerances, choosing a different solver
 # can be more accurate. This can be especially impactful for chaotic dynamical systems.
 # Let's first expliclty ask for a given accuracy when solving the ODE by passing the
 # keywords `abstol, reltol` (for absolute and relative tolerance respectively),
 # and compare performance to a naive solver one would use:
 
 using BenchmarkTools: @btime
-using OrdinaryDiffEq: BS3 # equivalent of odeint23
+using OrdinaryDiffEq: BS3 # 3rd order solver
 
 for alg in (BS3(), Vern9())
     diffeq = (; alg, abstol = 1e-12, reltol = 1e-12)
@@ -252,14 +254,28 @@ end
 
 # ## [Using dynamical systems](@id using)
 
-# You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that utilize dynamical systems with a known evolution rule. The two main packages of the library that do this are [`ChaosTools`](@ref) and [`Attractors`](@ref). For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above. This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
+# You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that utilize dynamical systems with a known evolution rule.
+# The two main packages of the library that do this are [`ChaosTools`](@ref) and [`Attractors`](@ref).
+# For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above.
+# This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
 
 steps = 10_000
 lyapunovspectrum(lorenz96, steps)
 
-# As expected, there is at least one positive Lyapunov exponent, because the system is chaotic, and at least one zero Lyapunov exponent, because the system is continuous time.
+# As expected, there is at least one positive Lyapunov exponent, because the system is chaotic,
+# and at least one zero Lyapunov exponent, because the system is continuous time.
 
-# Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is "multistable" in the sense that some initial conditions diverge to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with [`Attractors`](@ref), and would work as follows:
+# A fantastic feature of **DynamicalSystems.jl** is that all library functions work for any
+# applicable dynamical system. The exact same `lyapunovspectrum` function would also work
+# for the Henon map.
+
+lyapunovspectrum(lorenz96, henon)
+
+# Something else that uses a dynamical system is estimating the basins of attraction
+# of a multistable dynamical system.
+# The Henon map is "multistable" in the sense that some initial conditions diverge to
+# infinity, and some others converge to a chaotic attractor.
+# Computing these basins of attraction is simple with [`Attractors`](@ref), and would work as follows:
 
 ## define a state space grid to compute the basins on:
 xg = yg = range(-2, 2; length = 201)
@@ -315,7 +331,12 @@ step!(henon, 2)
 
 X
 
-# It is printed like a matrix where each column is the timeseries of each dynamic variable. In reality, it is a vector of statically sized vectors (for performance reasons). When indexed with 1 index, it behaves like a vector of vectors
+# This is the main data structure used in **DynamicalSystems.jl** to handle numerical data.
+# It is printed like a matrix where each column is the timeseries of each dynamic variable.
+# In reality, it is a vector equally-sized vectors representing state space points.
+# _(For advanced users: `StateSpaceSet` directly subtypes `AbstractVector{<:AbstractVector}`)_
+
+# When indexed with 1 index, it behaves like a vector of vectors
 
 X[1]
 
@@ -342,6 +363,15 @@ map(point -> point[1] + 1/(point[2]+0.1), X)
 
 x, y = columns(X)
 summary.((x, y))
+
+# Because `StateSpaceSet` really is a vector of vectors, it can be given
+# to any Julia function that accepts such an input. For example,
+# the Makie plotting ecosystem knows how to plot vectors of vectors.
+# That's why this works:
+
+scatter(X)
+
+# even though Makie has no knowledge of the specifics of `StateSpaceSet`.
 
 # ## Using state space sets
 
@@ -420,7 +450,7 @@ fig
 
 # ## Integration with ModelingToolkit.jl
 
-# DynamicalSystems.jl understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
+# **DynamicalSystems.jl** understands when a model has been generated via [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/). The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.
 
 # To access this functionality, the `DynamicalSystem` must be created from a `DEProblem` of the SciML ecosystem, and the `DEProblem` itself must be created from a ModelingToolkit.jl model.
 
@@ -514,4 +544,4 @@ current_parameter(roessler, :c)
 
 # ## Learn more
 
-# To learn more, you need to visit the documentation pages of the modules that compose DynamicalSystems.jl. See the [contents](@ref contents) page for more!
+# To learn more, you need to visit the documentation pages of the modules that compose **DynamicalSystems.jl**. See the [contents](@ref contents) page for more!
