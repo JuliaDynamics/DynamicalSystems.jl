@@ -290,7 +290,49 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 
 heatmap_basins_attractors((xg, yg), basins, attractors)
 
-# One last thing to highlight in this short overview are the interactive GUI apps one
+# ## Stochastic systems
+
+# DynamicalSystems.jl has some support for stochastic systems
+# in the form of Stochastic Differential Equations (SDEs).
+# Just like `CoupledODEs`, one can make `CoupledSDEs`!
+# For example here is a stochastic version of a FitzHugh-Nagumo model
+
+using StochasticDiffEq # load extention for `CoupledSDEs`
+
+function fitzhugh_nagumo(u, p, t)
+    x, y = u
+    ϵ, β, α, γ, κ, I = p
+    dx = (-α * x^3 + γ * x - κ * y + I) / ϵ
+    dy = -β * y + x
+    return SVector(dx, dy)
+end
+p = [1.,3.,1.,1.,1.,0.]
+sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
+
+# In this particular example the SDE noise is white noise (Wiener process)
+# with strength (σ) of 0.05. See the documentation of `CoupledSDEs` for alternatives.
+
+# In any case, in DynamicalSystems.jl all dynamical systems are part of the same
+# interace, stochastic or not. As long as the algorithm is not influenced by stochasticity,
+# we can apply it to `CoupledSDEs` just as well. For example, we can study multistability
+# in a stochastic system. In contrast to the previous example of the Henon map,
+# we have to use an alternative algorithm, because `AttractorsViaRecurrences`
+# relies on a system without noise. So instead we'll use `AttractorsViaFeaturizing`:
+
+featurizer(X, t) = X[end]
+
+mapper = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 1)
+
+xg = yg = range(-1, 1; length = 101)
+
+sampler, _ = statespace_sampler((xg, yg))
+
+fs = basins_fractions(mapper, sampler)
+
+
+# ## Interactive GUIs
+
+# A particularly useful feature are interactive GUI apps one
 # can launch to examine a `DynamicalSystem`. The simplest is [`interactive_trajectory_timeseries`](@ref).
 # To actually make it interactive one needs to enable GLMakie.jl as a backend:
 
