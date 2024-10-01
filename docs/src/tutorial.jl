@@ -317,11 +317,11 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 # we can apply it to `CoupledSDEs` just as well. For example, we can study multistability
 # in a stochastic system. In contrast to the previous example of the Henon map,
 # we have to use an alternative algorithm, because `AttractorsViaRecurrences`
-# relies on a system without noise. So instead we'll use `AttractorsViaFeaturizing`:
+# only works for deterministic systems. So instead we'll use `AttractorsViaFeaturizing`:
 
 featurizer(X, t) = X[end]
 
-mapper = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 1)
+mapper = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
 
 xg = yg = range(-1, 1; length = 101)
 
@@ -329,6 +329,17 @@ sampler, _ = statespace_sampler((xg, yg))
 
 fs = basins_fractions(mapper, sampler)
 
+# and we can see the stored "attractors"
+
+attractors = extract_attractors(mapper)
+fig, ax = scatter(attractors[1])
+scatter!(attractors[2])
+fig
+
+# The mathematical concept of attractors
+# doesn't translate trivially to stochastic systems but thankfully
+# this system has two fixed point attractors that are only mildly perturbed
+# by the noise.
 
 # ## Interactive GUIs
 
