@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Overarching tutorial · DynamicalSystems.jl</title><meta name="title" content="Overarching tutorial · DynamicalSystems.jl"/><meta property="og:title" content="Overarching tutorial · DynamicalSystems.jl"/><meta property="twitter:title" content="Overarching tutorial · DynamicalSystems.jl"/><meta name="description" content="Documentation for DynamicalSystems.jl."/><meta property="og:description" content="Documentation for DynamicalSystems.jl."/><meta property="twitter:description" content="Documentation for DynamicalSystems.jl."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="DynamicalSystems.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">DynamicalSystems.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Introduction</a></li><li class="is-active"><a class="tocitem" href>Overarching tutorial</a><ul class="internal"><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Core-components"><span>Core components</span></a></li><li><a class="tocitem" href="#Making-dynamical-systems"><span>Making dynamical systems</span></a></li><li><a class="tocitem" href="#Using-dynamical-systems"><span>Using dynamical systems</span></a></li><li><a class="tocitem" href="#State-space-sets"><span>State space sets</span></a></li><li><a class="tocitem" href="#Using-state-space-sets"><span>Using state space sets</span></a></li><li><a class="tocitem" href="#More-nonlinear-timeseries-analysis"><span>More nonlinear timeseries analysis</span></a></li><li><a class="tocitem" href="#Integration-with-ModelingToolkit.jl"><span>Integration with ModelingToolkit.jl</span></a></li><li><a class="tocitem" href="#Core-components-reference"><span>Core components reference</span></a></li><li><a class="tocitem" href="#Dynamical-system-implementations"><span>Dynamical system implementations</span></a></li><li><a class="tocitem" href="#Learn-more"><span>Learn more</span></a></li></ul></li><li><a class="tocitem" href="../contents/">Contents</a></li><li><a class="tocitem" href="../visualizations/">Animations, GUIs, Visuals</a></li><li><a class="tocitem" href="../contributors_guide/">Contributor Guide</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Overarching tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Overarching tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/DynamicalSystems.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/docs/src/tutorial.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="tutorial"><a class="docs-heading-anchor" href="#tutorial">Overarching tutorial for DynamicalSystems.jl</a><a id="tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#tutorial" title="Permalink"></a></h1><p>This page serves as a short but to-the-point introduction to the <strong>DynamicalSystems.jl</strong> library. It outlines the core components, and how they establish an interface that is used by the rest of the library. It also provides a couple of usage examples to connect the various packages of the library together.</p><p>Going through this tutorial should take you about 20 minutes.</p><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p>To install <strong>DynamicalSystems.jl</strong>, simply do:</p><pre><code class="language-julia hljs">using Pkg; Pkg.add(&quot;DynamicalSystems&quot;)</code></pre><p>As discussed in the <a href="../contents/#contents">contents</a> page, this installs several packages for the Julia language, that are all exported under a common name. To use them, simply do:</p><pre><code class="language-julia hljs">using DynamicalSystems</code></pre><p>in your Julia session.</p><h2 id="Core-components"><a class="docs-heading-anchor" href="#Core-components">Core components</a><a id="Core-components-1"></a><a class="docs-heading-anchor-permalink" href="#Core-components" title="Permalink"></a></h2><p>The individual packages that compose <code>DynamicalSystems</code> interact flawlessly with each other because of the following two components:</p><ol><li>The <a href="#StateSpaceSets.StateSpaceSet"><code>StateSpaceSet</code></a>, which represents numerical data. They can be observed or measured from experiments, sampled trajectories of dynamical systems, or just unordered sets in a state space. A <code>StateSpaceSet</code> is a container of equally-sized points, representing multivariate timeseries or multivariate datasets. Timeseries, which are univariate sets, are represented by the <code>AbstractVector{&lt;:Real}</code> Julia base type.</li><li>The <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a>, which is the abstract representation of a dynamical system with a known dynamic evolution rule. <code>DynamicalSystem</code> defines an extendable interface, but typically one uses existing implementations such as <a href="#DynamicalSystemsBase.DeterministicIteratedMap"><code>DeterministicIteratedMap</code></a> or <a href="#DynamicalSystemsBase.CoupledODEs"><code>CoupledODEs</code></a>.</li></ol><h2 id="Making-dynamical-systems"><a class="docs-heading-anchor" href="#Making-dynamical-systems">Making dynamical systems</a><a id="Making-dynamical-systems-1"></a><a class="docs-heading-anchor-permalink" href="#Making-dynamical-systems" title="Permalink"></a></h2><p>In the majority of cases, to make a dynamical system one needs three things:</p><ol><li>The dynamic rule <code>f</code>: A Julia function that provides the instructions of how to evolve the dynamical system in time.</li><li>The state <code>u</code>: An array-like container that contains the variables of the dynamical system and also defines the starting state of the system.</li><li>The parameters <code>p</code>: An arbitrary container that parameterizes <code>f</code>.</li></ol><p>For most concrete implementations of <code>DynamicalSystem</code> there are two ways of defining <code>f, u</code>. The distinction is done on whether <code>f</code> is defined as an in-place (iip) function or out-of-place (oop) function.</p><ul><li><strong>oop</strong> : <code>f</code> <strong>must</strong> be in the form <code>f(u, p, t) -&gt; out</code>   which means that given a state <code>u::SVector{&lt;:Real}</code> and some parameter container   <code>p</code> it returns the output of <code>f</code> as an <code>SVector{&lt;:Real}</code> (static vector).</li><li><strong>iip</strong> : <code>f</code> <strong>must</strong> be in the form <code>f!(out, u, p, t)</code>   which means that given a state <code>u::AbstractArray{&lt;:Real}</code> and some parameter container <code>p</code>,   it writes in-place the output of <code>f</code> in <code>out::AbstractArray{&lt;:Real}</code>.   The function <strong>must</strong> return <code>nothing</code> as a final statement.</li></ul><p><code>t</code> stands for current time in both cases. <strong>iip</strong> is suggested for systems with high dimension and <strong>oop</strong> for small. The break-even point is between 10 to 100 dimensions but should be benchmarked on a case-by-case basis as it depends on the complexity of <code>f</code>.</p><div class="admonition is-info"><header class="admonition-header">Autonomous vs non-autonomous systems</header><div class="admonition-body"><p>Whether the dynamical system is autonomous (<code>f</code> doesn&#39;t depend on time) or not, it is still necessary to include <code>t</code> as an argument to <code>f</code>. Some algorithms utilize this information, some do not, but we prefer to keep a consistent interface either way.</p></div></div><h3 id="Example:-Henon-map"><a class="docs-heading-anchor" href="#Example:-Henon-map">Example: Henon map</a><a id="Example:-Henon-map-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-Henon-map" title="Permalink"></a></h3><p>Let&#39;s make the Henon map, defined as</p><p class="math-container">\[\begin{aligned}
+x_{n+1} &amp;= 1 - ax^2_n+y_n \\
+y_{n+1} &amp; = bx_n
+\end{aligned}\]</p><p>with parameters <span>$a = 1.4, b = 0.3$</span>.</p><p>First, we define the dynamic rule as a standard Julia function. Since the dynamical system is only two-dimensional, we should use the <em>out-of-place</em> form that returns an <code>SVector</code> with the next state:</p><pre><code class="language-julia hljs">using DynamicalSystems
+
+function henon_rule(u, p, n) # here `n` is &quot;time&quot;, but we don&#39;t use it.
+    x, y = u # system state
+    a, b = p # system parameters
+    xn = 1.0 - a*x^2 + y
+    yn = b*x
+    return SVector(xn, yn)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">henon_rule (generic function with 1 method)</code></pre><p>Then, we define initial state and parameters</p><pre><code class="language-julia hljs">u0 = [0.2, 0.3]
+p0 = [1.4, 0.3]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Float64}:
+ 1.4
+ 0.3</code></pre><p>Lastly, we give these three to the <code>DeterministicIteratedMap</code>:</p><pre><code class="language-julia hljs">henon = DeterministicIteratedMap(henon_rule, u0, p0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional DeterministicIteratedMap
+ deterministic: true
+ discrete time: true
+ in-place:      false
+ dynamic rule:  henon_rule
+ parameters:    [1.4, 0.3]
+ time:          0
+ state:         [0.2, 0.3]
+</code></pre><p><code>henon</code> is a <code>DynamicalSystem</code>, one of the two core structures of the library. They can evolved interactively, and queried, using the interface defined by <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a>. The simplest thing you can do with a <code>DynamicalSystem</code> is to get its trajectory:</p><pre><code class="language-julia hljs">total_time = 10_000
+X, t = trajectory(henon, total_time)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(2-dimensional StateSpaceSet{Float64} with 10001 points, 0:1:10000)</code></pre><pre><code class="language-julia hljs">X</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional StateSpaceSet{Float64} with 10001 points
+  0.2        0.3
+  1.244      0.06
+ -1.10655    0.3732
+ -0.341035  -0.331965
+  0.505208  -0.102311
+  0.540361   0.151562
+  0.742777   0.162108
+  0.389703   0.222833
+  1.01022    0.116911
+ -0.311842   0.303065
+  ⋮         
+ -0.582534   0.328346
+  0.853262  -0.17476
+ -0.194038   0.255978
+  1.20327   -0.0582113
+ -1.08521    0.36098
+ -0.287758  -0.325562
+  0.558512  -0.0863275
+  0.476963   0.167554
+  0.849062   0.143089</code></pre><p><code>X</code> is a <code>StateSpaceSet</code>, the second of the core structures of the library. We&#39;ll see below how, and where, to use a <code>StateSpaceset</code>, but for now let&#39;s just do a scatter plot</p><pre><code class="language-julia hljs">using CairoMakie
+scatter(X[:, 1], X[:, 2])</code></pre><img src="dafad127.png" alt="Example block output"/><h3 id="Example:-Lorenz96"><a class="docs-heading-anchor" href="#Example:-Lorenz96">Example: Lorenz96</a><a id="Example:-Lorenz96-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-Lorenz96" title="Permalink"></a></h3><p>Let&#39;s also make another dynamical system, the Lorenz96 model:</p><p class="math-container">\[\frac{dx_i}{dt} = (x_{i+1}-x_{i-2})x_{i-1} - x_i + F\]</p><p>for <span>$i \in \{1, \ldots, N\}$</span> and <span>$N+j=j$</span>.</p><p>Here, instead of a discrete time map we have <span>$N$</span> coupled ordinary differential equations. However, creating the dynamical system works out just like above, but using <code>CoupledODEs</code> instead of <code>DeterministicIteratedMap</code>.</p><p>First, we make the dynamic rule function. Since this dynamical system can be arbitrarily high-dimensional, we prefer to use the <em>in-place</em> form for <code>f</code>, overwriting in place the rate of change in a pre-allocated container. It is <a href="https://docs.julialang.org/en/v1/manual/style-guide/#bang-convention">customary</a> to append the name of functions that modify their arguments in-place with a bang (<code>!</code>).</p><pre><code class="language-julia hljs">function lorenz96_rule!(du, u, p, t)
+    F = p[1]; N = length(u)
+    # 3 edge cases
+    du[1] = (u[2] - u[N - 1]) * u[N] - u[1] + F
+    du[2] = (u[3] - u[N]) * u[1] - u[2] + F
+    du[N] = (u[1] - u[N - 2]) * u[N - 1] - u[N] + F
+    # then the general case
+    for n in 3:(N - 1)
+        du[n] = (u[n + 1] - u[n - 2]) * u[n - 1] - u[n] + F
+    end
+    return nothing # always `return nothing` for in-place form!
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz96_rule! (generic function with 1 method)</code></pre><p>then, like before, we define an initial state and parameters, and initialize the system</p><pre><code class="language-julia hljs">N = 6
+u0 = range(0.1, 1; length = N)
+p0 = [8.0]
+lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-dimensional CoupledODEs
+ deterministic: true
+ discrete time: false
+ in-place:      true
+ dynamic rule:  lorenz96_rule!
+ ODE solver:    Tsit5
+ ODE kwargs:    (abstol = 1.0e-6, reltol = 1.0e-6)
+ parameters:    [8.0]
+ time:          0.0
+ state:         [0.1, 0.28, 0.46, 0.64, 0.82, 1.0]
+</code></pre><p>and, again like before, we may obtain a trajectory the same way</p><pre><code class="language-julia hljs">total_time = 12.5
+sampling_time = 0.02
+Y, t = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
+Y</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-dimensional StateSpaceSet{Float64} with 626 points
+  3.15368   -4.40493  0.0311581  0.486735  1.89895   4.15167
+  2.71382   -4.39303  0.395019   0.66327   2.0652    4.32045
+  2.25088   -4.33682  0.693967   0.879701  2.2412    4.46619
+  1.7707    -4.24045  0.924523   1.12771   2.42882   4.58259
+  1.27983   -4.1073   1.08656    1.39809   2.62943   4.66318
+  0.785433  -3.94005  1.18319    1.6815    2.84384   4.70147
+  0.295361  -3.74095  1.2205     1.96908   3.07224   4.69114
+ -0.181932  -3.51222  1.20719    2.25296   3.3139    4.62628
+ -0.637491  -3.25665  1.154      2.5267    3.56698   4.50178
+ -1.06206   -2.9781   1.07303    2.7856    3.82827   4.31366
+  ⋮                                                  ⋮
+  3.17245    2.3759   3.01796    7.27415   7.26007  -0.116002
+  3.29671    2.71146  3.32758    7.5693    6.75971  -0.537853
+  3.44096    3.09855  3.66908    7.82351   6.13876  -0.922775
+  3.58387    3.53999  4.04452    8.01418   5.39898  -1.25074
+  3.70359    4.03513  4.45448    8.1137    4.55005  -1.5042
+  3.78135    4.57879  4.89677    8.09013   3.61125  -1.66943
+  3.80523    5.16112  5.36441    7.90891   2.61262  -1.73822
+  3.77305    5.7684   5.84318    7.53627   1.59529  -1.71018
+  3.6934     6.38507  6.30923    6.94454   0.61023  -1.59518</code></pre><p>We can&#39;t scatterplot something 6-dimensional but we can visualize all timeseries</p><pre><code class="language-julia hljs">fig = Figure()
+ax = Axis(fig[1, 1]; xlabel = &quot;time&quot;, ylabel = &quot;variable&quot;)
+for var in columns(Y)
+    lines!(ax, t, var)
+end
+fig</code></pre><img src="8de20d18.png" alt="Example block output"/><h3 id="ODE-solving"><a class="docs-heading-anchor" href="#ODE-solving">ODE solving</a><a id="ODE-solving-1"></a><a class="docs-heading-anchor-permalink" href="#ODE-solving" title="Permalink"></a></h3><p>Continuous time dynamical systems are evolved through DifferentialEquations.jl. When initializing a <code>CoupledODEs</code> you can tune the solver properties to your heart&#39;s content using any of the <a href="https://diffeq.sciml.ai/latest/solvers/ode_solve/">ODE solvers</a> and any of the <a href="https://diffeq.sciml.ai/latest/basics/common_solver_opts/">common solver options</a>. For example:</p><pre><code class="language-julia hljs">using OrdinaryDiffEq # accessing the ODE solvers
+diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
+lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-dimensional CoupledODEs
+ deterministic: true
+ discrete time: false
+ in-place:      true
+ dynamic rule:  lorenz96_rule!
+ ODE solver:    Vern9
+ ODE kwargs:    (abstol = 1.0e-9, reltol = 1.0e-9)
+ parameters:    [8.0]
+ time:          0.0
+ state:         [0.1, 0.28, 0.46, 0.64, 0.82, 1.0]
+</code></pre><pre><code class="language-julia hljs">Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
+Y[end]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-element SVector{6, Float64} with indices SOneTo(6):
+  3.8390248122407535
+  6.155709531170093
+  6.080625689047345
+  7.278588308970321
+  1.258215221210072
+ -1.5297062916990858</code></pre><h2 id="Using-dynamical-systems"><a class="docs-heading-anchor" href="#Using-dynamical-systems">Using dynamical systems</a><a id="Using-dynamical-systems-1"></a><a class="docs-heading-anchor-permalink" href="#Using-dynamical-systems" title="Permalink"></a></h2><p>You may use the <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a> interface to develop algorithms that utilize dynamical systems with a known evolution rule. The two main packages of the library that do this are <a href="../contents/#ChaosTools.ChaosTools"><code>ChaosTools</code></a> and <a href="../contents/#Attractors.Attractors"><code>Attractors</code></a>. For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above. This is as easy as calling the <code>lyapunovspectrum</code> function with <code>lorenz96</code></p><pre><code class="language-julia hljs">steps = 10_000
+lyapunovspectrum(lorenz96, steps)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-element Vector{Float64}:
+  0.9480080466096642
+  0.00012614364764332677
+ -0.1568159270952503
+ -0.747794014329633
+ -1.4066157568705158
+ -4.636905163494868</code></pre><p>As expected, there is at least one positive Lyapunov exponent, because the system is chaotic, and at least one zero Lyapunov exponent, because the system is continuous time.</p><p>Alternatively, you may want to estimate the basins of attraction of a multistable dynamical system. The Henon map is &quot;multistable&quot; in the sense that some initial conditions diverge to infinity, and some others converge to a chaotic attractor. Computing these basins of attraction is simple with <a href="../contents/#Attractors.Attractors"><code>Attractors</code></a>, and would work as follows:</p><pre><code class="language-julia hljs"># define a state space grid to compute the basins on:
+xg = yg = range(-2, 2; length = 201)
+# find attractors using recurrences in state space:
+mapper = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
+# compute the full basins of attraction:
+basins, attractors = basins_of_attraction(mapper; show_progress = false)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([-1 -1 … -1 -1; -1 -1 … -1 -1; … ; -1 -1 … -1 -1; -1 -1 … -1 -1], Dict{Int64, StateSpaceSet{2, Float64}}(1 =&gt; 2-dimensional StateSpaceSet{Float64} with 416 points))</code></pre><pre><code class="language-julia hljs">fig, ax = heatmap(xg, yg, basins)
+x, y = columns(X) # attractor of Henon map
+scatter!(ax, x, y; color = &quot;black&quot;)
+fig</code></pre><img src="d1fc2c7f.png" alt="Example block output"/><p>You could also be using a <code>DynamicalSystem</code> instance directly to build your own algorithm if it isn&#39;t already implemented (and then later contribute it so it <em>is</em> implemented ;) ). A dynamical system can be evolved forwards in time using <code>step!</code>:</p><pre><code class="language-julia hljs">henon</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional DeterministicIteratedMap
+ deterministic: true
+ discrete time: true
+ in-place:      false
+ dynamic rule:  henon_rule
+ parameters:    [1.4, 0.3]
+ time:          5
+ state:         [-1.5266434026801804e8, -3132.7519146699206]
+</code></pre><p>Notice how the time is not 0, because <code>henon</code> has already been stepped when we called the function <code>basins_of_attraction</code> with it. We can step it more:</p><pre><code class="language-julia hljs">step!(henon)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional DeterministicIteratedMap
+ deterministic: true
+ discrete time: true
+ in-place:      false
+ dynamic rule:  henon_rule
+ parameters:    [1.4, 0.3]
+ time:          6
+ state:         [-3.262896110526e16, -4.579930208040541e7]
+</code></pre><pre><code class="language-julia hljs">step!(henon, 2)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional DeterministicIteratedMap
+ deterministic: true
+ discrete time: true
+ in-place:      false
+ dynamic rule:  henon_rule
+ parameters:    [1.4, 0.3]
+ time:          8
+ state:         [-3.110262842032839e66, -4.4715262317959936e32]
+</code></pre><p>For more information on how to directly use <code>DynamicalSystem</code> instances, see the documentation of <a href="../contents/#DynamicalSystemsBase.DynamicalSystemsBase"><code>DynamicalSystemsBase</code></a>.</p><h2 id="State-space-sets"><a class="docs-heading-anchor" href="#State-space-sets">State space sets</a><a id="State-space-sets-1"></a><a class="docs-heading-anchor-permalink" href="#State-space-sets" title="Permalink"></a></h2><p>Let&#39;s recall that the output of the <code>trajectory</code> function is a <code>StateSpaceSet</code>:</p><pre><code class="language-julia hljs">X</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional StateSpaceSet{Float64} with 10001 points
+  0.2        0.3
+  1.244      0.06
+ -1.10655    0.3732
+ -0.341035  -0.331965
+  0.505208  -0.102311
+  0.540361   0.151562
+  0.742777   0.162108
+  0.389703   0.222833
+  1.01022    0.116911
+ -0.311842   0.303065
+  ⋮         
+ -0.582534   0.328346
+  0.853262  -0.17476
+ -0.194038   0.255978
+  1.20327   -0.0582113
+ -1.08521    0.36098
+ -0.287758  -0.325562
+  0.558512  -0.0863275
+  0.476963   0.167554
+  0.849062   0.143089</code></pre><p>It is printed like a matrix where each column is the timeseries of each dynamic variable. In reality, it is a vector of statically sized vectors (for performance reasons). When indexed with 1 index, it behaves like a vector of vectors</p><pre><code class="language-julia hljs">X[1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element SVector{2, Float64} with indices SOneTo(2):
+ 0.2
+ 0.3</code></pre><pre><code class="language-julia hljs">X[2:5]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-dimensional StateSpaceSet{Float64} with 4 points
+  1.244      0.06
+ -1.10655    0.3732
+ -0.341035  -0.331965
+  0.505208  -0.102311</code></pre><p>When indexed with two indices, it behaves like a matrix</p><pre><code class="language-julia hljs">X[2:5, 2]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{Float64}:
+  0.06
+  0.3732
+ -0.3319651199999999
+ -0.10231059085086688</code></pre><p>When iterated, it iterates over the contained points</p><pre><code class="language-julia hljs">for (i, point) in enumerate(X)
+    @show point
+    i &gt; 5 &amp;&amp; break
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">point = [0.2, 0.3]
+point = [1.244, 0.06]
+point = [-1.1065503999999997, 0.3732]
+point = [-0.34103530283622296, -0.3319651199999999]
+point = [0.5052077711071681, -0.10231059085086688]
+point = [0.5403605603672313, 0.1515623313321504]</code></pre><pre><code class="language-julia hljs">map(point -&gt; point[1] + point[2], X)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10001-element Vector{Float64}:
+  0.5
+  1.304
+ -0.7333503999999997
+ -0.6730004228362229
+  0.40289718025630117
+  0.6919228916993818
+  0.9048851501617762
+  0.6125365596336813
+  1.1271278272148746
+ -0.008777065619615998
+  ⋮
+ -0.2541879392427324
+  0.678501271515278
+  0.061940665344374896
+  1.145056192451011
+ -0.7242249528790483
+ -0.6133198017049188
+  0.47218423998951875
+  0.6445165778497133
+  0.9921511619004666</code></pre><p>The columns of the set are obtained with the convenience <code>columns</code> function</p><pre><code class="language-julia hljs">x, y = columns(X)
+summary.((x, y))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(&quot;10001-element Vector{Float64}&quot;, &quot;10001-element Vector{Float64}&quot;)</code></pre><h2 id="Using-state-space-sets"><a class="docs-heading-anchor" href="#Using-state-space-sets">Using state space sets</a><a id="Using-state-space-sets-1"></a><a class="docs-heading-anchor-permalink" href="#Using-state-space-sets" title="Permalink"></a></h2><p>Several packages of the library deal with <code>StateSpaceSets</code>.</p><p>You could use <a href="../contents/#ComplexityMeasures.ComplexityMeasures"><code>ComplexityMeasures</code></a> to obtain the entropy, or other complexity measures, of a given set. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately <code>50</code> bins per dimension:</p><pre><code class="language-julia hljs">prob_est = ValueHistogram(50)
+entropy(prob_est, X)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7.825799208736613</code></pre><p>Alternatively, you could use <a href="../contents/#FractalDimensions.FractalDimensions"><code>FractalDimensions</code></a> to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:</p><pre><code class="language-julia hljs">grassberger_proccacia_dim(X)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1.2232922815092426</code></pre><p>Or, you could obtain a recurrence matrix of a state space set with <a href="../contents/#RecurrenceAnalysis.RecurrenceAnalysis"><code>RecurrenceAnalysis</code></a></p><pre><code class="language-julia hljs">R = RecurrenceMatrix(Y, 8.0)
+Rg = grayscale(R)
+rr = recurrencerate(R)
+heatmap(Rg; colormap = :grays,
+    axis = (title = &quot;recurrence rate = $(rr)&quot;, aspect = 1,)
+)</code></pre><img src="b9dd38a3.png" alt="Example block output"/><h2 id="More-nonlinear-timeseries-analysis"><a class="docs-heading-anchor" href="#More-nonlinear-timeseries-analysis">More nonlinear timeseries analysis</a><a id="More-nonlinear-timeseries-analysis-1"></a><a class="docs-heading-anchor-permalink" href="#More-nonlinear-timeseries-analysis" title="Permalink"></a></h2><p>A <code>trajectory</code> of a known dynamical system is one way to obtain a <code>StateSpaceSet</code>. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use <code>optimal_separated_de</code> from <a href="../contents/#DelayEmbeddings.DelayEmbeddings"><code>DelayEmbeddings</code></a> to create an optimized delay coordinates embedding of a timeseries</p><pre><code class="language-julia hljs">w = Y[:, 1] # first variable of Lorenz96
+𝒟, τ, e = optimal_separated_de(w)
+𝒟</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-dimensional StateSpaceSet{Float64} with 558 points
+  3.15369   -2.40036    1.60497   2.90499  5.72572
+  2.71384   -2.24811    1.55832   3.04987  5.6022
+  2.2509    -2.02902    1.50499   3.20633  5.38629
+  1.77073   -1.75077    1.45921   3.37699  5.07029
+  1.27986   -1.42354    1.43338   3.56316  4.65003
+  0.785468  -1.05974    1.43672   3.76473  4.12617
+  0.295399  -0.673567   1.47423   3.98019  3.50532
+ -0.181891  -0.280351   1.54635   4.20677  2.80048
+ -0.637447   0.104361   1.64932   4.44054  2.03084
+ -1.06201    0.465767   1.77622   4.67654  1.22067
+  ⋮                                        
+  7.42111    9.27879   -1.23936   5.15945  3.25618
+  7.94615    9.22663   -1.64222   5.24344  3.34749
+  8.40503    9.13776   -1.81947   5.26339  3.46932
+  8.78703    8.99491   -1.77254   5.22631  3.60343
+  9.08701    8.77963   -1.51823   5.13887  3.72926
+  9.30562    8.47357   -1.08603   5.00759  3.82705
+  9.4488     8.06029   -0.514333  4.83928  3.88137
+  9.52679    7.52731    0.153637  4.6414   3.88458
+  9.55278    6.86845    0.873855  4.42248  3.83902</code></pre><p>and compare</p><pre><code class="language-julia hljs">fig = Figure()
+axs = [Axis3(fig[1, i]) for i in 1:2]
+for (S, ax) in zip((Y, 𝒟), axs)
+    lines!(ax, S[:, 1], S[:, 2], S[:, 3])
+end
+fig</code></pre><img src="e47c8a61.png" alt="Example block output"/><p>Since <code>𝒟</code> is just another state space set, we could be using any of the above analysis pipelines on it just as easily.</p><p>The last package to mention here is <a href="../contents/#TimeseriesSurrogates.TimeseriesSurrogates"><code>TimeseriesSurrogates</code></a>, which ties with all other observed/measured data analysis by providing a framework for confidence/hypothesis testing. For example, if we had a measured timeseries but we were not sure whether it represents a deterministic system with structure in the state space, or mostly noise, we could do a surrogate test. For this, we use <code>surrogenerator</code> and <code>RandomFourier</code> from <a href="../contents/#TimeseriesSurrogates.TimeseriesSurrogates"><code>TimeseriesSurrogates</code></a>, and the <code>generalized_dim</code> from <a href="../contents/#FractalDimensions.FractalDimensions"><code>FractalDimensions</code></a> (because it performs better in noisy sets)</p><pre><code class="language-julia hljs">x = X[:, 1] # Henon map timeseries
+# contaminate with noise
+using Random: Xoshiro
+rng = Xoshiro(1234)
+x .+= randn(rng, length(x))/100
+# compute noise-contaminated fractal dim.
+Δ_orig = generalized_dim(embed(x, 2, 1))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1.3801073957979793</code></pre><p>And we do the surrogate test</p><pre><code class="language-julia hljs">surrogate_method = RandomFourier()
+sgen = surrogenerator(x, surrogate_method, rng)
+
+Δ_surr = map(1:1000) do i
+    s = sgen()
+    generalized_dim(embed(s, 2, 1))
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1000-element Vector{Float64}:
+ 1.8297218640747606
+ 1.8449246422083758
+ 1.827998413768852
+ 1.8301078704767055
+ 1.8107042515928138
+ 1.83249783593657
+ 1.8300954188512213
+ 1.8416570396197014
+ 1.8575804541517287
+ 1.821435647618282
+ ⋮
+ 1.8768262063118628
+ 1.8287938131103985
+ 1.8435474417451545
+ 1.8129026565561648
+ 1.8551700924676993
+ 1.8283378225272842
+ 1.821134647531232
+ 1.8369834750866052
+ 1.8368699339310084</code></pre><p>and visualize the test result</p><pre><code class="language-julia hljs">fig, ax = hist(Δ_surr)
+vlines!(ax, Δ_orig)
+fig</code></pre><img src="bf9ed7a2.png" alt="Example block output"/><p>since the real value is outside the distribution we have confidence the data are not pure noise.</p><h2 id="Integration-with-ModelingToolkit.jl"><a class="docs-heading-anchor" href="#Integration-with-ModelingToolkit.jl">Integration with ModelingToolkit.jl</a><a id="Integration-with-ModelingToolkit.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Integration-with-ModelingToolkit.jl" title="Permalink"></a></h2><p>DynamicalSystems.jl understands when a model has been generated via <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl</a>. The symbolic variables used in ModelingToolkit.jl can be used to access the state or parameters of the dynamical system.</p><p>To access this functionality, the <code>DynamicalSystem</code> must be created from a <code>DEProblem</code> of the SciML ecosystem, and the <code>DEProblem</code> itself must be created from a ModelingToolkit.jl model.</p><div class="admonition is-info"><header class="admonition-header">ProcessBasedModelling.jl</header><div class="admonition-body"><p>ProcessBasedModelling.jl is an extension to ModelingToolkit.jl for creating models from a set of equations. It has been designed to be useful for scenarios applicable to a typical nonlinear dynamics analysis workflow, and provides better error messages during system construction than MTK. Have a look <a href="https://juliadynamics.github.io/ProcessBasedModelling.jl/stable/">at its docs</a>!</p></div></div><p>Let&#39;s create a the Roessler system as an MTK model:</p><pre><code class="language-julia hljs">using ModelingToolkit
+
+@variables t # use unitless time
+D = Differential(t)
+@mtkmodel Roessler begin
+    @parameters begin
+        a = 0.2
+        b = 0.2
+        c = 5.7
+    end
+    @variables begin
+        x(t) = 1.0
+        y(t) = 0.0
+        z(t) = 0.0
+        nlt(t) # nonlinear term
+    end
+    @equations begin
+        D(x) ~ -y -z
+        D(y) ~ x + a*y
+        D(z) ~ b + nlt
+        nlt ~ z*(x - c)
+    end
+end
+
+@mtkbuild model = Roessler()</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} x\left( t \right)}{\mathrm{d}t} =&amp;  - y\left( t \right) - z\left( t \right) \\
+\frac{\mathrm{d} y\left( t \right)}{\mathrm{d}t} =&amp; x\left( t \right) + a y\left( t \right) \\
+\frac{\mathrm{d} z\left( t \right)}{\mathrm{d}t} =&amp; b + \mathrm{nlt}\left( t \right)
+\end{align}
+ \]</p><p>this model can then be made into an <code>ODEProblem</code>:</p><pre><code class="language-julia hljs">prob = ODEProblem(model)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr38_2" style="color:#56b6c2">ODEProblem</span> with uType <span class="sgr38_2" style="color:#56b6c2">Vector{Float64}</span> and tType <span class="sgr38_2" style="color:#56b6c2">Nothing</span>. In-place: <span class="sgr38_2" style="color:#56b6c2">true</span>
+timespan: (nothing, nothing)
+u0: 3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0</code></pre><p>(notice that because we specified initial values for all parameters and variables during the model creation  we do need to provide additional initial values)</p><p>Now, this problem can be made into a <a href="#DynamicalSystemsBase.CoupledODEs"><code>CoupledODEs</code></a>:</p><pre><code class="language-julia hljs">roessler = CoupledODEs(prob)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-dimensional CoupledODEs
+ deterministic: true
+ discrete time: false
+ in-place:      true
+ dynamic rule:  f
+ ODE solver:    Tsit5
+ ODE kwargs:    (abstol = 1.0e-6, reltol = 1.0e-6)
+ parameters:    ModelingToolkit.MTKParameters{Tuple{Vector{Float64}}, Tuple{}, Tuple{}, Tuple{}, Tuple{}, Nothing, Nothing}(([0.2, 0.2, 5.7],), (), (), (), (), nothing, nothing)
+ time:          0.0
+ state:         [1.0, 0.0, 0.0]
+</code></pre><p>This dynamical system instance can be used in the rest of the library like anything else. Additionally, you can &quot;observe&quot; referenced symbolic variables:</p><pre><code class="language-julia hljs">observe_state(roessler, model.x)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1.0</code></pre><pre><code class="language-julia hljs">observe_state(roessler, model.nlt)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">-0.0</code></pre><p>These observables can also be used in the GUI visualization <a href="../visualizations/#DynamicalSystems.interactive_trajectory_timeseries"><code>interactive_trajectory_timeseries</code></a>.</p><p>You can also symbolically alter parameters</p><pre><code class="language-julia hljs">current_parameter(roessler, model.c)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5.7</code></pre><pre><code class="language-julia hljs">set_parameter!(roessler, model.c, 5.0)</code></pre><pre><code class="language-julia hljs">current_parameter(roessler, model.c)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5.0</code></pre><p>This symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.</p><h2 id="Core-components-reference"><a class="docs-heading-anchor" href="#Core-components-reference">Core components reference</a><a id="Core-components-reference-1"></a><a class="docs-heading-anchor-permalink" href="#Core-components-reference" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="StateSpaceSets.StateSpaceSet" href="#StateSpaceSets.StateSpaceSet"><code>StateSpaceSets.StateSpaceSet</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">StateSpaceSet{D, T} &lt;: AbstractStateSpaceSet{D,T}</code></pre><p>A dedicated interface for sets in a state space. It is an <strong>ordered container of equally-sized points</strong> of length <code>D</code>. Each point is represented by <code>SVector{D, T}</code>. The data are a standard Julia <code>Vector{SVector}</code>, and can be obtained with <code>vec(ssset::StateSpaceSet)</code>. Typically the order of points in the set is the time direction, but it doesn&#39;t have to be.</p><p>When indexed with 1 index, <code>StateSpaceSet</code> is like a vector of points. When indexed with 2 indices it behaves like a matrix that has each of the columns be the timeseries of each of the variables. When iterated over, it iterates over its contained points. See description of indexing below for more.</p><p><code>StateSpaceSet</code> also supports almost all sensible vector operations like <code>append!, push!, hcat, eachrow</code>, among others.</p><p><strong>Description of indexing</strong></p><p>In the following let <code>i, j</code> be integers, <code>typeof(X) &lt;: AbstractStateSpaceSet</code> and <code>v1, v2</code> be <code>&lt;: AbstractVector{Int}</code> (<code>v1, v2</code> could also be ranges, and for performance benefits make <code>v2</code> an <code>SVector{Int}</code>).</p><ul><li><code>X[i] == X[i, :]</code> gives the <code>i</code>th point (returns an <code>SVector</code>)</li><li><code>X[v1] == X[v1, :]</code>, returns a <code>StateSpaceSet</code> with the points in those indices.</li><li><code>X[:, j]</code> gives the <code>j</code>th variable timeseries (or collection), as <code>Vector</code></li><li><code>X[v1, v2], X[:, v2]</code> returns a <code>StateSpaceSet</code> with the appropriate entries (first indices being &quot;time&quot;/point index, while second being variables)</li><li><code>X[i, j]</code> value of the <code>j</code>th variable, at the <code>i</code>th timepoint</li></ul><p>Use <code>Matrix(ssset)</code> or <code>StateSpaceSet(matrix)</code> to convert. It is assumed that each <em>column</em> of the <code>matrix</code> is one variable. If you have various timeseries vectors <code>x, y, z, ...</code> pass them like <code>StateSpaceSet(x, y, z, ...)</code>. You can use <code>columns(dataset)</code> to obtain the reverse, i.e. all columns of the dataset in a tuple.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/StateSpaceSets.jl/blob/v1.4.6/src/statespaceset_concrete.jl#L3-L41">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.DynamicalSystem" href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystemsBase.DynamicalSystem</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">DynamicalSystem</code></pre><p><code>DynamicalSystem</code> is an abstract supertype encompassing all concrete implementations of what counts as a &quot;dynamical system&quot; in the DynamicalSystems.jl library.</p><p><strong><em>All concrete implementations of <code>DynamicalSystem</code> can be iteratively evolved in time via the <a href="@ref"><code>step!</code></a> function.</em></strong> Hence, most library functions that evolve the system will mutate its current state and/or parameters. See the documentation online for implications this has for parallelization.</p><p><code>DynamicalSystem</code> is further separated into two abstract types: <code>ContinuousTimeDynamicalSystem, DiscreteTimeDynamicalSystem</code>. The simplest and most common concrete implementations of a <code>DynamicalSystem</code> are <a href="#DynamicalSystemsBase.DeterministicIteratedMap"><code>DeterministicIteratedMap</code></a> or <a href="#DynamicalSystemsBase.CoupledODEs"><code>CoupledODEs</code></a>.</p><p><strong>Description</strong></p><p>A <code>DynamicalSystem</code> <strong>represents the time evolution of a state in a state space</strong>. It mainly encapsulates three things:</p><ol><li>A state, typically referred to as <code>u</code>, with initial value <code>u0</code>. The space that <code>u</code> occupies is the state space of <code>ds</code> and the length of <code>u</code> is the dimension of <code>ds</code> (and of the state space).</li><li>A dynamic rule, typically referred to as <code>f</code>, that dictates how the state evolves/changes with time when calling the <a href="@ref"><code>step!</code></a> function. <code>f</code> is typically a standard Julia function, see the online documentation for examples.</li><li>A parameter container <code>p</code> that parameterizes <code>f</code>. <code>p</code> can be anything, but in general it is recommended to be a type-stable mutable container.</li></ol><p>In sort, any set of quantities that change in time can be considered a dynamical system, however the concrete subtypes of <code>DynamicalSystem</code> are much more specific in their scope. Concrete subtypes typically also contain more information than the above 3 items.</p><p>In this scope dynamical systems have a known dynamic rule <code>f</code>. Finite <em>measured</em> or <em>sampled</em> data from a dynamical system are represented using <a href="#StateSpaceSets.StateSpaceSet"><code>StateSpaceSet</code></a>. Such data are obtained from the <a href="@ref"><code>trajectory</code></a> function or from an experimental measurement of a dynamical system with an unknown dynamic rule.</p><p>See also the DynamicalSystems.jl tutorial online for examples making dynamical systems.</p><p><strong>Integration with ModelingToolkit.jl</strong></p><p>Dynamical systems that have been constructed from <code>DEProblem</code>s that themselves have been constructed from ModelingToolkit.jl keep a reference to the symbolic model and all symbolic variables. Accessing a <code>DynamicalSystem</code> using symbolic variables is possible via the functions <a href="@ref"><code>observe_state</code></a>, <a href="@ref"><code>set_state!</code></a>, <a href="@ref"><code>current_parameter</code></a> and <a href="@ref"><code>set_parameter!</code></a>. The referenced MTK model corresponding to the dynamical system can be obtained with <code>model = referrenced_sciml_model(ds::DynamicalSystem)</code>.</p><p>See also the DynamicalSystems.jl tutorial online for an example.</p><div class="admonition is-category-warn"><header class="admonition-header">ModelingToolkit.jl v9</header><div class="admonition-body"><p>In ModelingToolkit.jl v9 the default <code>split</code> behavior of the parameter container is <code>true</code>. This means that the parameter container is no longer a <code>Vector{Float64}</code> by default, which means that you cannot use integers to access parameters. It is recommended to keep <code>split = true</code> (default) and only access parameters via their symbolic parameter binding. Use <code>structural_simplify(sys; split = false)</code> to allow accessing parameters with integers again.</p></div></div><p><strong>API</strong></p><p>The API that <code>DynamicalSystem</code> employs is composed of the functions listed below. Once a concrete instance of a subtype of <code>DynamicalSystem</code> is obtained, it can queried or altered with the following functions.</p><p>The main use of a concrete dynamical system instance is to provide it to downstream functions such as <code>lyapunovspectrum</code> from ChaosTools.jl or <code>basins_of_attraction</code> from Attractors.jl. A typical user will likely not utilize directly the following API, unless when developing new algorithm implementations that use dynamical systems.</p><p><strong>API - obtain information</strong></p><ul><li><code>ds(t)</code> with <code>ds</code> an instance of <code>DynamicalSystem</code>: return the state of <code>ds</code> at time <code>t</code>. For continuous time systems this interpolates and extrapolates, while for discrete time systems it only works if <code>t</code> is the current time.</li><li><a href="@ref"><code>current_state</code></a></li><li><a href="@ref"><code>initial_state</code></a></li><li><a href="@ref"><code>observe_state</code></a></li><li><a href="@ref"><code>current_parameters</code></a></li><li><a href="@ref"><code>current_parameter</code></a></li><li><a href="@ref"><code>initial_parameters</code></a></li><li><a href="@ref"><code>isdeterministic</code></a></li><li><a href="@ref"><code>isdiscretetime</code></a></li><li><a href="@ref"><code>dynamic_rule</code></a></li><li><a href="@ref"><code>current_time</code></a></li><li><a href="@ref"><code>initial_time</code></a></li><li><a href="@ref"><code>isinplace</code></a></li><li><a href="@ref"><code>successful_step</code></a></li><li><a href="@ref"><code>referrenced_sciml_model</code></a></li></ul><p><strong>API - alter status</strong></p><ul><li><a href="@ref"><code>reinit!</code></a></li><li><a href="@ref"><code>set_state!</code></a></li><li><a href="@ref"><code>set_parameter!</code></a></li><li><a href="@ref"><code>set_parameters!</code></a></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/core/dynamicalsystem_interface.jl#L4-L105">source</a></section></article><h2 id="Dynamical-system-implementations"><a class="docs-heading-anchor" href="#Dynamical-system-implementations">Dynamical system implementations</a><a id="Dynamical-system-implementations-1"></a><a class="docs-heading-anchor-permalink" href="#Dynamical-system-implementations" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.DeterministicIteratedMap" href="#DynamicalSystemsBase.DeterministicIteratedMap"><code>DynamicalSystemsBase.DeterministicIteratedMap</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">DeterministicIteratedMap &lt;: DynamicalSystem
+DeterministicIteratedMap(f, u0, p = nothing; t0 = 0)</code></pre><p>A deterministic discrete time dynamical system defined by an iterated map as follows:</p><p class="math-container">\[\vec{u}_{n+1} = \vec{f}(\vec{u}_n, p, n)\]</p><p>An alias for <code>DeterministicIteratedMap</code> is <code>DiscreteDynamicalSystem</code>.</p><p>Optionally configure the parameter container <code>p</code> and initial time <code>t0</code>.</p><p>For construction instructions regarding <code>f, u0</code> see the DynamicalSystems.jl tutorial.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/core_systems/discrete_time_map.jl#L7-L20">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.CoupledODEs" href="#DynamicalSystemsBase.CoupledODEs"><code>DynamicalSystemsBase.CoupledODEs</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">CoupledODEs &lt;: ContinuousTimeDynamicalSystem
+CoupledODEs(f, u0 [, p]; diffeq, t0 = 0.0)</code></pre><p>A deterministic continuous time dynamical system defined by a set of coupled ordinary differential equations as follows:</p><p class="math-container">\[\frac{d\vec{u}}{dt} = \vec{f}(\vec{u}, p, t)\]</p><p>An alias for <code>CoupledODE</code> is <code>ContinuousDynamicalSystem</code>.</p><p>Optionally provide the parameter container <code>p</code> and initial time as keyword <code>t0</code>.</p><p>For construction instructions regarding <code>f, u0</code> see the DynamicalSystems.jl tutorial.</p><p><strong>DifferentialEquations.jl interfacing</strong></p><p>The ODEs are evolved via the solvers of DifferentialEquations.jl. When initializing a <code>CoupledODEs</code>, you can specify the solver that will integrate <code>f</code> in time, along with any other integration options, using the <code>diffeq</code> keyword. For example you could use <code>diffeq = (abstol = 1e-9, reltol = 1e-9)</code>. If you want to specify a solver, do so by using the keyword <code>alg</code>, e.g.: <code>diffeq = (alg = Tsit5(), reltol = 1e-6)</code>. This requires you to have been first <code>using OrdinaryDiffEq</code> to access the solvers. The default <code>diffeq</code> is:</p><p>(alg = Tsit5(; stage<em>limiter! = trivial</em>limiter!, step<em>limiter! = trivial</em>limiter!, thread = static(false),), abstol = 1.0e-6, reltol = 1.0e-6)</p><p><code>diffeq</code> keywords can also include <code>callback</code> for <a href="http://docs.juliadiffeq.org/latest/features/callback_functions.html">event handling </a>.</p><p>The convenience constructors <code>CoupledODEs(prob::ODEProblem [, diffeq])</code> and <code>CoupledODEs(ds::CoupledODEs [, diffeq])</code> are also available. To integrate with ModelingToolkit.jl, the dynamical system <strong>must</strong> be created via the <code>ODEProblem</code> (which itself is created via ModelingToolkit.jl), see the Tutorial for an example.</p><p>Dev note: <code>CoupledODEs</code> is a light wrapper of <code>ODEIntegrator</code> from DifferentialEquations.jl. The integrator is available as the field <code>integ</code>, and the <code>ODEProblem</code> is <code>integ.sol.prob</code>. The convenience syntax <code>ODEProblem(ds::CoupledODEs, tspan = (t0, Inf))</code> is available to extract the problem.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/core_systems/continuous_time_ode.jl#L26-L66">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.StroboscopicMap" href="#DynamicalSystemsBase.StroboscopicMap"><code>DynamicalSystemsBase.StroboscopicMap</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">StroboscopicMap &lt;: DiscreteTimeDynamicalSystem
+StroboscopicMap(ds::CoupledODEs, period::Real) → smap
+StroboscopicMap(period::Real, f, u0, p = nothing; kwargs...)</code></pre><p>A discrete time dynamical system that produces iterations of a time-dependent (non-autonomous) <a href="#DynamicalSystemsBase.CoupledODEs"><code>CoupledODEs</code></a> system exactly over a given <code>period</code>. The second signature first creates a <a href="#DynamicalSystemsBase.CoupledODEs"><code>CoupledODEs</code></a> and then calls the first.</p><p><code>StroboscopicMap</code> follows the <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a> interface. In addition, the function <code>set_period!(smap, period)</code> is provided, that sets the period of the system to a new value (as if it was a parameter). As this system is in discrete time, <a href="@ref"><code>current_time</code></a> and <a href="@ref"><code>initial_time</code></a> are integers. The initial time is always 0, because <code>current_time</code> counts elapsed periods. Call these functions on the <code>parent</code> of <code>StroboscopicMap</code> to obtain the corresponding continuous time. In contrast, <a href="@ref"><code>reinit!</code></a> expects <code>t0</code> in continuous time.</p><p>The convenience constructor</p><pre><code class="language-julia hljs">StroboscopicMap(T::Real, f, u0, p = nothing; diffeq, t0 = 0) → smap</code></pre><p>is also provided.</p><p>See also <a href="#DynamicalSystemsBase.PoincareMap"><code>PoincareMap</code></a>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/derived_systems/stroboscopic_map.jl#L6-L31">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.PoincareMap" href="#DynamicalSystemsBase.PoincareMap"><code>DynamicalSystemsBase.PoincareMap</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">PoincareMap &lt;: DiscreteTimeDynamicalSystem
+PoincareMap(ds::CoupledODEs, plane; kwargs...) → pmap</code></pre><p>A discrete time dynamical system that produces iterations over the Poincaré map<sup class="footnote-reference"><a id="citeref-DatserisParlitz2022" href="#footnote-DatserisParlitz2022">[DatserisParlitz2022]</a></sup> of the given continuous time <code>ds</code>. This map is defined as the sequence of points on the Poincaré surface of section, which is defined by the <code>plane</code> argument.</p><p>See also <a href="#DynamicalSystemsBase.StroboscopicMap"><code>StroboscopicMap</code></a>, <a href="@ref"><code>poincaresos</code></a>.</p><p><strong>Keyword arguments</strong></p><ul><li><code>direction = -1</code>: Only crossings with <code>sign(direction)</code> are considered to belong to the surface of section. Negative direction means going from less than <span>$b$</span> to greater than <span>$b$</span>.</li><li><code>u0 = nothing</code>: Specify an initial state.</li><li><code>rootkw = (xrtol = 1e-6, atol = 1e-8)</code>: A <code>NamedTuple</code> of keyword arguments passed to <code>find_zero</code> from <a href="https://github.com/JuliaMath/Roots.jl">Roots.jl</a>.</li><li><code>Tmax = 1e3</code>: The argument <code>Tmax</code> exists so that the integrator can terminate instead of being evolved for infinite time, to avoid cases where iteration would continue forever for ill-defined hyperplanes or for convergence to fixed points, where the trajectory would never cross again the hyperplane. If during one <code>step!</code> the system has been evolved for more than <code>Tmax</code>, then <code>step!(pmap)</code> will terminate and error.</li></ul><p><strong>Description</strong></p><p>The Poincaré surface of section is defined as sequential transversal crossings a trajectory has with any arbitrary manifold, but here the manifold must be a hyperplane. <code>PoincareMap</code> iterates over the crossings of the section.</p><p>If the state of <code>ds</code> is <span>$\mathbf{u} = (u_1, \ldots, u_D)$</span> then the equation defining a hyperplane is</p><p class="math-container">\[a_1u_1 + \dots + a_Du_D = \mathbf{a}\cdot\mathbf{u}=b\]</p><p>where <span>$\mathbf{a}, b$</span> are the parameters of the hyperplane.</p><p>In code, <code>plane</code> can be either:</p><ul><li>A <code>Tuple{Int, &lt;: Real}</code>, like <code>(j, r)</code>: the plane is defined as when the <code>j</code>th variable of the system equals the value <code>r</code>.</li><li>A vector of length <code>D+1</code>. The first <code>D</code> elements of the vector correspond to <span>$\mathbf{a}$</span> while the last element is <span>$b$</span>.</li></ul><p><code>PoincareMap</code> uses <code>ds</code>, higher order interpolation from DifferentialEquations.jl, and root finding from Roots.jl, to create a high accuracy estimate of the section.</p><p><code>PoincareMap</code> follows the <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a> interface with the following adjustments:</p><ol><li><code>dimension(pmap) == dimension(ds)</code>, even though the Poincaré map is effectively 1 dimension less.</li><li>Like <a href="#DynamicalSystemsBase.StroboscopicMap"><code>StroboscopicMap</code></a> time is discrete and counts the iterations on the surface of section. <a href="@ref"><code>initial_time</code></a> is always <code>0</code> and <a href="@ref"><code>current_time</code></a> is current iteration number.</li><li>A new function <a href="@ref"><code>current_crossing_time</code></a> returns the real time corresponding to the latest crossing of the hyperplane, which is what the <a href="@ref"><code>current_state(ds)</code></a> corresponds to as well.</li><li>For the special case of <code>plane</code> being a <code>Tuple{Int, &lt;:Real}</code>, a special <code>reinit!</code> method is allowed with input state of length <code>D-1</code> instead of <code>D</code>, i.e., a reduced state already on the hyperplane that is then converted into the <code>D</code> dimensional state.</li></ol><p><strong>Example</strong></p><pre><code class="language-julia hljs">using DynamicalSystemsBase
+ds = Systems.rikitake(zeros(3); μ = 0.47, α = 1.0)
+pmap = poincaremap(ds, (3, 0.0))
+step!(pmap)
+next_state_on_psos = current_state(pmap)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/derived_systems/poincare/poincaremap.jl#L14-L89">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.ProjectedDynamicalSystem" href="#DynamicalSystemsBase.ProjectedDynamicalSystem"><code>DynamicalSystemsBase.ProjectedDynamicalSystem</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">ProjectedDynamicalSystem &lt;: DynamicalSystem
+ProjectedDynamicalSystem(ds::DynamicalSystem, projection, complete_state)</code></pre><p>A dynamical system that represents a projection of an existing <code>ds</code> on a (projected) space.</p><p>The <code>projection</code> defines the projected space. If <code>projection isa AbstractVector{Int}</code>, then the projected space is simply the variable indices that <code>projection</code> contains. Otherwise, <code>projection</code> can be an arbitrary function that given the state of the original system <code>ds</code>, returns the state in the projected space. In this case the projected space can be equal, or even higher-dimensional, than the original.</p><p><code>complete_state</code> produces the state for the original system from the projected state. <code>complete_state</code> can always be a function that given the projected state returns a state in the original space. However, if <code>projection isa AbstractVector{Int}</code>, then <code>complete_state</code> can also be a vector that contains the values of the <em>remaining</em> variables of the system, i.e., those <em>not</em> contained in the projected space. In this case the projected space needs to be lower-dimensional than the original.</p><p>Notice that <code>ProjectedDynamicalSystem</code> does not require an invertible projection, <code>complete_state</code> is only used during <a href="@ref"><code>reinit!</code></a>. <code>ProjectedDynamicalSystem</code> is in fact a rather trivial wrapper of <code>ds</code> which steps it as normal in the original state space and only projects as a last step, e.g., during <a href="@ref"><code>current_state</code></a>.</p><p><strong>Examples</strong></p><p>Case 1: project 5-dimensional system to its last two dimensions.</p><pre><code class="language-julia hljs">ds = Systems.lorenz96(5)
+projection = [4, 5]
+complete_state = [0.0, 0.0, 0.0] # completed state just in the plane of last two dimensions
+prods = ProjectedDynamicalSystem(ds, projection, complete_state)
+reinit!(prods, [0.2, 0.4])
+step!(prods)
+current_state(prods)</code></pre><p>Case 2: custom projection to general functions of state.</p><pre><code class="language-julia hljs">ds = Systems.lorenz96(5)
+projection(u) = [sum(u), sqrt(u[1]^2 + u[2]^2)]
+complete_state(y) = repeat([y[1]/5], 5)
+prods = # same as in above example...</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/derived_systems/projected_system.jl#L6-L49">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystemsBase.ArbitrarySteppable" href="#DynamicalSystemsBase.ArbitrarySteppable"><code>DynamicalSystemsBase.ArbitrarySteppable</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">ArbitrarySteppable &lt;: DiscreteTimeDynamicalSystem
+ArbitrarySteppable(
+    model, step!, extract_state, extract_parameters, reset_model!;
+    isdeterministic = true, set_state = reinit!,
+)</code></pre><p>A dynamical system generated by an arbitrary &quot;model&quot; that can be stepped <em>in-place</em> with some function <code>step!(model)</code> for 1 step. The state of the model is extracted by the <code>extract_state(model) -&gt; u</code> function The parameters of the model are extracted by the <code>extract_parameters(model) -&gt; p</code> function. The system may be re-initialized, via <a href="@ref"><code>reinit!</code></a>, with the <code>reset_model!</code> user-provided function that must have the call signature</p><pre><code class="language-julia hljs">reset_model!(model, u, p)</code></pre><p>given a (potentially new) state <code>u</code> and parameter container <code>p</code>, both of which will default to the initial ones in the <a href="@ref"><code>reinit!</code></a> call.</p><p><code>ArbitrarySteppable</code> exists to provide the DynamicalSystems.jl interface to models from other packages that could be used within the DynamicalSystems.jl library. <code>ArbitrarySteppable</code> follows the <a href="#DynamicalSystemsBase.DynamicalSystem"><code>DynamicalSystem</code></a> interface with the following adjustments:</p><ul><li><a href="@ref"><code>initial_time</code></a> is always 0, as time counts the steps the model has taken since creation or last <a href="@ref"><code>reinit!</code></a> call.</li><li><a href="@ref"><code>set_state!</code></a> is the same as <a href="@ref"><code>reinit!</code></a> by default. If not, the keyword argument <code>set_state</code> is a function <code>set_state(model, u)</code> that sets the state of the model to <code>u</code>.</li><li>The keyword <code>isdeterministic</code> should be set properly, as it decides whether downstream algorithms should error or not.</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystemsBase.jl/blob/v3.8.3/src/core_systems/arbitrary_steppable.jl#L3-L34">source</a></section></article><h2 id="Learn-more"><a class="docs-heading-anchor" href="#Learn-more">Learn more</a><a id="Learn-more-1"></a><a class="docs-heading-anchor-permalink" href="#Learn-more" title="Permalink"></a></h2><p>To learn more, you need to visit the documentation pages of the modules that compose DynamicalSystems.jl. See the <a href="../contents/#contents">contents</a> page for more!</p><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-DatserisParlitz2022"><a class="tag is-link" href="#citeref-DatserisParlitz2022">DatserisParlitz2022</a>Datseris &amp; Parlitz 2022, <em>Nonlinear Dynamics: A Concise Introduction Interlaced with Code</em>, <a href="https://doi.org/10.1007/978-3-030-91032-7">Springer Nature, Undergrad. Lect. Notes In Physics</a></li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Introduction</a><a class="docs-footer-nextpage" href="../contents/">Contents »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Monday 6 May 2024 11:13">Monday 6 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Animations, GUIs, Visuals · DynamicalSystems.jl</title><meta name="title" content="Animations, GUIs, Visuals · DynamicalSystems.jl"/><meta property="og:title" content="Animations, GUIs, Visuals · DynamicalSystems.jl"/><meta property="twitter:title" content="Animations, GUIs, Visuals · DynamicalSystems.jl"/><meta name="description" content="Documentation for DynamicalSystems.jl."/><meta property="og:description" content="Documentation for DynamicalSystems.jl."/><meta property="twitter:description" content="Documentation for DynamicalSystems.jl."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="DynamicalSystems.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">DynamicalSystems.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Introduction</a></li><li><a class="tocitem" href="../tutorial/">Overarching tutorial</a></li><li><a class="tocitem" href="../contents/">Contents</a></li><li class="is-active"><a class="tocitem" href>Animations, GUIs, Visuals</a><ul class="internal"><li><a class="tocitem" href="#Interactive-or-animated-trajectory-evolution"><span>Interactive- or animated trajectory evolution</span></a></li><li><a class="tocitem" href="#Cobweb-Diagrams"><span>Cobweb Diagrams</span></a></li><li><a class="tocitem" href="#Orbit-Diagrams"><span>Orbit Diagrams</span></a></li><li><a class="tocitem" href="#Interactive-Poincaré-Surface-of-Section"><span>Interactive Poincaré Surface of Section</span></a></li><li><a class="tocitem" href="#Scanning-a-Poincaré-Surface-of-Section"><span>Scanning a Poincaré Surface of Section</span></a></li></ul></li><li><a class="tocitem" href="../contributors_guide/">Contributor Guide</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Animations, GUIs, Visuals</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Animations, GUIs, Visuals</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/DynamicalSystems.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/main/docs/src/visualizations.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="visualizations"><a class="docs-heading-anchor" href="#visualizations">Interactive GUIs, animations, visualizations</a><a id="visualizations-1"></a><a class="docs-heading-anchor-permalink" href="#visualizations" title="Permalink"></a></h1><p>Using the functionality of package extensions in Julia v1.9+, DynamicalSystems.jl provides various visualization tools as soon as the <a href="https://makie.juliaplots.org/stable/">Makie</a> package comes into scope (i.e., when <code>using Makie</code> or any of its backends like <code>GLMakie</code>).</p><p>The main functionality is <a href="#DynamicalSystems.interactive_trajectory"><code>interactive_trajectory</code></a> that allows building custom GUI apps for visualizing the time evolution of dynamical systems. The remaining GUI applications in this page are dedicated to more specialized scenarios.</p><h2 id="Interactive-or-animated-trajectory-evolution"><a class="docs-heading-anchor" href="#Interactive-or-animated-trajectory-evolution">Interactive- or animated trajectory evolution</a><a id="Interactive-or-animated-trajectory-evolution-1"></a><a class="docs-heading-anchor-permalink" href="#Interactive-or-animated-trajectory-evolution" title="Permalink"></a></h2><p>The following GUI is obtained with the function <a href="#DynamicalSystems.interactive_trajectory_timeseries"><code>interactive_trajectory_timeseries</code></a> and the code snippet below it!</p><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/interactive_trajectory.mp4?raw=true" type="video/mp4">
+</video><pre class="documenter-example-output"><code class="nohighlight hljs ansi">using DynamicalSystems, GLMakie, ModelingToolkit
+# Import canonical time from MTK, however use the unitless version
+using ModelingToolkit: t_nounits as t
+
+# Define the variables and parameters in symbolic format
+@parameters begin
+    a = 0.29
+    b = 0.14
+    c = 4.52
+    d = 1.0
+end
+@variables begin
+    x(t) = 10.0
+    y(t) = 0.0
+    z(t) = 1.0
+    nlt(t) # nonlinear term
+end
+
+# Create the equations of the model
+eqs = [
+    Differential(t)(x) ~ -y - z,
+    Differential(t)(y) ~ x + a*y,
+    Differential(t)(z) ~ b + nlt - z*c,
+    nlt ~ d*z*x, # observed variable
+]
+
+# Create the model via ModelingToolkit
+@named roessler = ODESystem(eqs, t)
+# Do not split parameters so that integer indexing can be used as well
+model = structural_simplify(roessler; split = false)
+# Cast it into an `ODEProblem` and then into a `DynamicalSystem`.
+# Due to low-dimensionality it is preferred to cast into out of place
+prob = ODEProblem{false}(model, nothing, (0.0, Inf); u0_constructor = x-&gt;SVector(x...))
+ds = CoupledODEs(prob)
+# If you have &quot;lost&quot; the model, use:
+model = referrenced_sciml_model(ds)
+
+# Define which parameters will be interactive during the simulation
+parameter_sliders = Dict(
+    # can use integer indexing
+    1 =&gt; 0:0.01:1,
+    # the global scope symbol
+    b =&gt; 0:0.01:1,
+    # the symbol obtained from the MTK model
+    model.c =&gt; 0:0.01:10,
+    # or a `Symbol` with same name as the parameter
+    # (which is the easiest and recommended way)
+    :d =&gt; 0.8:0.01:1.2,
+)
+
+# Define what variables will be visualized as timeseries
+power(u) = sqrt(u[1]*u[1] + u[2]*u[2])
+observables = [
+    1,         # can use integer indexing
+    z,         # MTK state variable (called &quot;unknown&quot;)
+    model.nlt, # MTK observed variable
+    :y,        # `Symbol` instance with same name as symbolic variable
+    power,     # arbitrary function of the state
+    x^2 - y^2, # arbitrary symbolic expression of symbolic variables
+]
+
+# Define what variables will be visualized as state space trajectory
+# same as above, any indexing works, but ensure to make the vector `Any`
+# so that integers are not converted to symbolic variables
+idxs = Any[1, y, 3]
+
+u0s = [
+    # we can specify dictionaries, each mapping the variable to its value
+    # un-specified variables get the value they currently have in `ds`
+    Dict(:x =&gt; -4, :y =&gt; -4, :z =&gt; 0.1),
+    Dict(:x =&gt; 4, :y =&gt; 3, :z =&gt; 0.1),
+    Dict(:x =&gt; -5.72),
+    Dict(:x =&gt; 5.72, :y =&gt; 0.28, :z =&gt; 0.21),
+]
+
+update_theme!(fontsize = 14)
+tail = 1000
+
+fig, dsobs = interactive_trajectory_timeseries(ds, observables, u0s;
+    parameter_sliders, Δt = 0.01, tail, idxs,
+    figure = (size = (1100, 650),)
+)
+
+step!(dsobs, 2tail)
+
+display(fig)</code></pre><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_trajectory_timeseries" href="#DynamicalSystems.interactive_trajectory_timeseries"><code>DynamicalSystems.interactive_trajectory_timeseries</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs</code></pre><p>Create a Makie <code>Figure</code> to visualize trajectories and timeseries of observables of <code>ds</code>. This <code>Figure</code> can also be used as an interactive GUI to enable interactive control over parameters and time evolution. It can also be used to create videos, as well as customized animations, see below.</p><p><code>fs</code> is a <code>Vector</code> of &quot;indices to observe&quot;, i.e., anything that can be given to <a href="@ref"><code>observe_state</code></a>. Each observation index will make a timeseries plot. <code>u0s</code> is a <code>Vector</code> of initial conditions. Each is evolved with a unique color and displayed both as a trajectory in state space and as an observed timeseries. Elements of <code>u0</code> can be either <code>Vector{Real}</code> encoding a full state or <code>Dict</code> to partially set a state from current state of <code>ds</code> (same as in <a href="@ref"><code>set_state!</code></a>).</p><p>The trajectories from the initial conditions in <code>u0s</code> are all evolved and visualized in parallel. By default only the current state of the system is used. <code>u0s</code> can be anything accepted by a <a href="@ref"><code>ParallelDynamicalSystem</code></a>.</p><p><strong>Return</strong></p><p>Return <code>fig, dsobs::DynamicalSystemObservable</code>. <code>fig</code> is the created <code>Figure</code>. <code>dsobs</code> facilities the creation of custom animations and/or interactive applications, see the custom animations section below.</p><p>See also <a href="#DynamicalSystems.interactive_trajectory"><code>interactive_trajectory</code></a>.</p><p><strong>Interactivity and time stepping keywords</strong></p><p><em>GUI functionality is possible when the plotting backend is <code>GLMakie</code>. Do <code>using GLMakie; GLMakie.activate!()</code> to ensure this is the chosen backend.</em></p><ul><li><code>add_controls = true</code>: If <code>true</code>, below the state space axis some buttons for animating the trajectories live are added:<ul><li><code>reset</code>: results the parallel trajectories to their initial conditions</li><li><code>run</code>: when clicked it evolves the trajectories forwards in time indefinitely. click again to stop the evolution.</li><li><code>step</code>: when clicked it evolves the trajectories forwards in time for the amount of steps chosen by the slider to its right.</li></ul>The plotted trajectories can always be evolved manually using the custom animations etup that we describe below; <code>add_controls</code> only concerns the buttons and interactivity added to the created figure.</li><li><code>parameter_sliders = nothing</code>: If given, it must be a dictionary, mapping parameter indices (any valid index that can be given to <a href="@ref"><code>set_parameter!</code></a>) to ranges of parameter values. Each combination of index and range becomes a slider that can be interactively controlled to alter a system parameter on the fly during time evolution. Below the parameter sliders, three buttons are added for GUI usage:<ul><li><code>update</code>: when clicked the chosen parameter values are propagated into the system</li><li><code>u.r.s.</code>: when clicked it is equivalent with clicking in order: &quot;update&quot;, &quot;reset&quot;, &quot;step&quot;.</li><li><code>reset p</code>: when clicked it resets</li></ul>Parameters can also be altered using the custom animation setup that we describe below; <code>parameter_sliders</code> only conserns the buttons and interactivity added to the created figure.</li><li><code>parameter_names = Dict(keys(ps) .=&gt; string.(keys(ps)))</code>: Dictionary mapping parameter keys to labels. Only used if <code>parameter_sliders</code> is given.</li><li><code>Δt</code>: Time step of time evolution. Defaults to 1 for discrete time, 0.01 for continuous time systems. For internal simplicity, continuous time dynamical systems are evolved non-adaptively with constant step size equal to <code>Δt</code>.</li><li><code>pause = nothing</code>: If given, it must be a real number. This number is given to the <code>sleep</code> function, which is called between each plot update. Useful when time integration is computationally inexpensive and animation proceeds too fast.</li><li><code>starting_step = 1</code>: the starting value of the &quot;step&quot; slider.</li></ul><p><strong>Visualization keywords</strong></p><ul><li><code>colors</code>: The color for each initial condition (and resulting trajectory and timeseries). Needs to be a <code>Vector</code> of equal length as <code>u0s</code>.</li><li><code>tail = 1000</code>: Length of plotted trajectory (in units of <code>Δt</code>).</li><li><code>fade = 0.5</code>: The trajectories in state space are faded towards full transparency. The alpha channel (transparency) scales as <code>t^fade</code> with <code>t</code> ranging from 0 to 1 (1 being the end of the trajectory). Use <code>fade = 1.0</code> for linear fading or <code>fade = 0</code> for no fading. Current default makes fading progress faster at trajectory start and slower at trajectory end.</li><li><code>markersize = 15</code>: Size of markers of trajectory endpoints. For discrete systems half of that is used for the trajectory tail.</li><li><code>plotkwargs = NamedTuple()</code>: A named tuple of keyword arguments propagated to the state space plot (<code>lines</code> for continuous, <code>scatter</code> for discrete systems). <code>plotkwargs</code> can also be a vector of named tuples, in which case each initial condition gets different arguments.</li></ul><p><strong>Statespace trajectory keywords</strong></p><ul><li><code>idxs = 1:min(length(u0s[1]), 3)</code>: Which variables to plot in a state space trajectory. Any index that can be given to <a href="@ref"><code>observe_state</code></a> can be given here.</li><li><code>statespace_axis = true</code>: Whether to create and display an axis for the trajectory plot.</li><li><code>idxs = 1:min(length(u0s[1]), 3)</code>: Which variables to plot in a state space trajectory. Any index that can be given to <a href="@ref"><code>observe_state</code></a> can be given here. If three indices are given, the trajectory plot is also 3D, otherwise 2D.</li><li><code>lims</code>: A tuple of tuples (min, max) for the axis limits. If not given, they are automatically deduced by evolving each of <code>u0s</code> 1000 <code>Δt</code> units and picking most extreme values (limits are <em>not</em> adjusted by default during the live animations).</li><li><code>figure, axis</code>: both can be named tuples with arbitrary keywords propagated to the generation of the <code>Figure</code> and state space <code>Axis</code> instances.</li></ul><p><strong>Timeseries keywords</strong></p><ul><li><code>linekwargs = NamedTuple()</code>: Extra keywords propagated to the timeseries plots. Can also be a vector of named tuples, each one for each unique initial condition.</li><li><code>timeseries_names</code>: A vector of strings with length equal to <code>fs</code> giving names to the y-labels of the timeseries plots.</li><li><code>timeseries_ylims</code>: A vector of 2-tuples for the lower and upper limits of the y-axis of each timeseries plot. If not given it is deduced automatically similarly to <code>lims</code>.</li><li><code>timeunit = 1</code>: the units of time, if any. Sets the units of the timeseries x-axis.</li><li><code>timelabel = &quot;time&quot;</code>: label of the x-axis of the timeseries plots.</li></ul><p><strong>Custom animations</strong></p><p>The second return argument <code>dsobs</code> is a <code>DynamicalSystemObservable</code>. The trajectories plotted in the main panel are linked to observables that are fields of the <code>dsobs</code>. Specifically, the field <code>dsobs.state_obserable</code> is an observable containing the final state of each of the trajectories, i.e., a vector of vectors like <code>u0s</code>. <code>dsobs.param_observable</code> is an observable of the system parameters. These observables are triggered by the interactive GUI buttons (the first two when the system is stepped in time, the last one when the parameters are updated). However, these observables, and hence the corresponding plotted trajectories that are <code>map</code>ed from these observables, can be updated via the formal API of <code>DynamicalSystem</code>:</p><pre><code class="nohighlight hljs">step!(dsobs, n::Int = 1)</code></pre><p>will step the system for <code>n</code> steps of <code>Δt</code> time, and only update the plot on the last step. <code>set_parameter!(dsobs, index, value)</code> will update the system parameter and then trigger the parameter observable. Lastly, <code>set_state!(dsobs, new_u [, i])</code> will set the <code>i</code>-th system state and clear the trajectory plot to the new initial condition.</p><p>This information can be used to create custom animations and/or interactive apps. In principle, the only thing a user has to do is create new observables from the existing ones using e.g. the <code>on</code> function and plot these new observables. Various examples are provided in the online documentation.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L4-L135">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_trajectory" href="#DynamicalSystems.interactive_trajectory"><code>DynamicalSystems.interactive_trajectory</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_trajectory(ds::DynamicalSystem [, u0s]; kwargs...) → fig, dsobs</code></pre><p>Same as <a href="#DynamicalSystems.interactive_trajectory_timeseries"><code>interactive_trajectory_timeseries</code></a>, but does not plot any timeseries only the trajectory in a (projected) state space.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L138-L143">source</a></section></article><h3 id="Example-1:-interactive-trajectory-animation"><a class="docs-heading-anchor" href="#Example-1:-interactive-trajectory-animation">Example 1: interactive trajectory animation</a><a id="Example-1:-interactive-trajectory-animation-1"></a><a class="docs-heading-anchor-permalink" href="#Example-1:-interactive-trajectory-animation" title="Permalink"></a></h3><pre><code class="language-julia hljs">using DynamicalSystems, CairoMakie
+F, G, a, b = 6.886, 1.347, 0.255, 4.0
+ds = PredefinedDynamicalSystems.lorenz84(; F, G, a, b)
+
+u1 = [0.1, 0.1, 0.1] # periodic
+u2 = u1 .+ 1e-3     # fixed point
+u3 = [-1.5, 1.2, 1.3] .+ 1e-9 # chaotic
+u4 = [-1.5, 1.2, 1.3] .+ 21e-9 # chaotic 2
+u0s = [u1, u2, u3, u4]
+
+fig, dsobs = interactive_trajectory(
+    ds, u0s; tail = 1000, fade = true,
+    idxs = [1,3],
+)
+
+fig</code></pre><img src="0188dd0a.png" alt="Example block output"/><p>We could interact with this plot live, like in the example video above. We can also progress the visuals via code as instructed by <a href="#DynamicalSystems.interactive_trajectory"><code>interactive_trajectory</code></a> utilizing the second returned argument <code>dsobs</code>:</p><pre><code class="language-julia hljs">step!(dsobs, 2000)
+fig</code></pre><img src="d9788d28.png" alt="Example block output"/><p>(if you progress the visuals via code you probably want to give <code>add_controls = false</code> as a keyword to <a href="#DynamicalSystems.interactive_trajectory"><code>interactive_trajectory</code></a>)</p><h3 id="Example-2:-Adding-parameter-dependent-elements-to-a-plot"><a class="docs-heading-anchor" href="#Example-2:-Adding-parameter-dependent-elements-to-a-plot">Example 2: Adding parameter-dependent elements to a plot</a><a id="Example-2:-Adding-parameter-dependent-elements-to-a-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Example-2:-Adding-parameter-dependent-elements-to-a-plot" title="Permalink"></a></h3><p>In this advanced example we add plot elements to the provided figure, and also utilize the parameter observable in <code>dsobs</code> to add animated plot elements that update whenever a parameter updates. The final product of this snippet is in fact the animation at the top of the docstring of <a href="@ref"><code>interactive_trajectory_panel</code></a>.</p><p>We start with an interactive trajectory panel of the Lorenz63 system, in which we also add sliders for interactively changing parameter values</p><pre><code class="language-julia hljs">using DynamicalSystems, CairoMakie
+
+ps = Dict(
+    1 =&gt; 1:0.1:30,
+    2 =&gt; 10:0.1:50,
+    3 =&gt; 1:0.01:10.0,
+)
+pnames = Dict(1 =&gt; &quot;σ&quot;, 2 =&gt; &quot;ρ&quot;, 3 =&gt; &quot;β&quot;)
+
+lims = ((-30, 30), (-30, 30), (0, 100))
+
+ds = PredefinedDynamicalSystems.lorenz()
+
+u1 = [10,20,40.0]
+u3 = [20,10,40.0]
+u0s = [u1, u3]
+
+fig, dsobs = interactive_trajectory(
+    ds, u0s; parameter_sliders = ps, pnames, lims
+)
+
+fig</code></pre><img src="df9b7cff.png" alt="Example block output"/><p>If now one interactively clicked (if using GLMakie) the parameter sliders and then update, the system parameters would be updated accordingly. We can also add new plot elements that depend on the parameter values using the <code>dsobs</code>:</p><pre><code class="language-julia hljs"># Fixed points of the lorenz system (without the origin)
+lorenz_fixedpoints(ρ,β) = [
+    Point3f(sqrt(β*(ρ-1)), sqrt(β*(ρ-1)), ρ-1),
+    Point3f(-sqrt(β*(ρ-1)), -sqrt(β*(ρ-1)), ρ-1),
+]
+
+# add an observable trigger to the system parameters
+fpobs = map(dsobs.param_observable) do params
+    σ, ρ, β = params
+    return lorenz_fixedpoints(ρ, β)
+end
+
+# If we want to plot directly on the trajectory axis, we need to
+# extract it from the figure. The first entry of the figure is a grid layout
+# containing the axis and the GUI controls. The [1,1] entry of the layout
+# is the axis containing the trajectory plot
+
+ax = content(fig[1,1][1,1])
+scatter!(ax, fpobs; markersize = 10, marker = :diamond, color = :red)
+
+fig</code></pre><img src="2e71b6a0.png" alt="Example block output"/><p>Now, after the live animation &quot;run&quot; button is pressed, we can interactively change the parameter ρ and click update, in which case both the dynamical system&#39;s ρ parameter will change, but also the location of the red diamonds.</p><p>We can also change the parameters non-interactively using <code>set_parameter!</code></p><pre><code class="language-julia hljs">set_parameter!(dsobs, 2, 50.0)
+
+fig</code></pre><img src="cf9dd37e.png" alt="Example block output"/><pre><code class="language-julia hljs">set_parameter!(dsobs, 2, 10.0)
+
+fig</code></pre><img src="c15e3470.png" alt="Example block output"/><p>Note that the sliders themselves did not change, as this functionality is for &quot;offline&quot; creation of animations where one doesn&#39;t interact with sliders. The keyword <code>add_controls</code> should be given as <code>false</code> in such scenarios.</p><h3 id="Example-3:-Observed-timeseries-of-the-system"><a class="docs-heading-anchor" href="#Example-3:-Observed-timeseries-of-the-system">Example 3: Observed timeseries of the system</a><a id="Example-3:-Observed-timeseries-of-the-system-1"></a><a class="docs-heading-anchor-permalink" href="#Example-3:-Observed-timeseries-of-the-system" title="Permalink"></a></h3><pre><code class="language-julia hljs">using DynamicalSystems, CairoMakie
+using LinearAlgebra: norm, dot
+
+# Dynamical system and initial conditions
+ds = Systems.thomas_cyclical(b = 0.2)
+u0s = [[3, 1, 1.], [1, 3, 1.], [1, 1, 3.]] # must be a vector of states!
+
+# Observables we get timeseries of:
+function distance_from_symmetry(u)
+    v = SVector{3}(1/√3, 1/√3, 1/√3)
+    t = dot(v, u)
+    return norm(u - t*v)
+end
+fs = [3, distance_from_symmetry]
+
+fig, dsobs = interactive_trajectory_timeseries(ds, fs, u0s;
+    idxs = [1, 2], Δt = 0.05, tail = 500,
+    lims = ((-2, 4), (-2, 4)),
+    timeseries_ylims = [(-2, 4), (0, 5)],
+    add_controls = false,
+    figure = (size = (800, 400),)
+)
+
+fig</code></pre><img src="434fbf0f.png" alt="Example block output"/><p>we can progress the simulation:</p><pre><code class="language-julia hljs">step!(dsobs, 200)
+fig</code></pre><img src="617ceb50.png" alt="Example block output"/><p>or we can even make a nice video out of it:</p><pre><code class="language-julia hljs">record(fig, &quot;thomas_cycl.mp4&quot;, 1:100) do i
+    step!(dsobs, 10)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;thomas_cycl.mp4&quot;</code></pre><video width="auto" controls autoplay loop>
+<source src="../thomas_cycl.mp4" type="video/mp4">
+</video><h2 id="Cobweb-Diagrams"><a class="docs-heading-anchor" href="#Cobweb-Diagrams">Cobweb Diagrams</a><a id="Cobweb-Diagrams-1"></a><a class="docs-heading-anchor-permalink" href="#Cobweb-Diagrams" title="Permalink"></a></h2><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/cobweb.mp4?raw=true" type="video/mp4">
+</video><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_cobweb" href="#DynamicalSystems.interactive_cobweb"><code>DynamicalSystems.interactive_cobweb</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_cobweb(ds::DiscreteDynamicalSystem, prange, O::Int = 3; kwargs...)</code></pre><p>Launch an interactive application for exploring cobweb diagrams of 1D discrete dynamical systems. Two slides control the length of the plotted trajectory and the current parameter value. The parameter values are obtained from the given <code>prange</code>.</p><p>In the cobweb plot, higher order iterates of the dynamic rule <code>f</code> are plotted as well, starting from order 1 all the way to the given order <code>O</code>. Both the trajectory in the cobweb, as well as any iterate <code>f</code> can be turned off by using some of the buttons.</p><p><strong>Keywords</strong></p><ul><li><code>fkwargs = [(linewidth = 4.0, color = randomcolor()) for i in 1:O]</code>: plotting keywords for each of the plotted iterates of <code>f</code></li><li><code>trajcolor = :black</code>: color of the trajectory</li><li><code>pname = &quot;p&quot;</code>: name of the parameter slider</li><li><code>pindex = 1</code>: parameter index</li><li><code>xmin = 0, xmax = 1</code>: limits the state of the dynamical system can take</li><li><code>Tmax = 1000</code>: maximum trajectory length</li><li><code>x0s = range(xmin, xmax; length = 101)</code>: Possible values for the x0 slider.</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L147-L167">source</a></section></article><p>The animation at the top of this section was done with</p><pre><code class="language-julia hljs">using DynamicalSystems, GLMakie
+
+# the second range is a convenience for intermittency example of logistic
+rrange = 1:0.001:4.0
+# rrange = (rc = 1 + sqrt(8); [rc, rc - 1e-5, rc - 1e-3])
+
+lo = Systems.logistic(0.4; r = rrange[1])
+interactive_cobweb(lo, rrange, 5)</code></pre><h2 id="Orbit-Diagrams"><a class="docs-heading-anchor" href="#Orbit-Diagrams">Orbit Diagrams</a><a id="Orbit-Diagrams-1"></a><a class="docs-heading-anchor-permalink" href="#Orbit-Diagrams" title="Permalink"></a></h2><p><em>Notice that orbit diagrams and bifurcation diagrams are different things in DynamicalSystems.jl</em></p><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/odhenon.mp4?raw=true" type="video/mp4">
+</video><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_orbitdiagram" href="#DynamicalSystems.interactive_orbitdiagram"><code>DynamicalSystems.interactive_orbitdiagram</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_orbitdiagram(
+    ds::DynamicalSystem, p_index, pmin, pmax, i::Int = 1;
+    u0 = nothing, parname = &quot;p&quot;, title = &quot;&quot;
+)</code></pre><p>Open an interactive application for exploring orbit diagrams (ODs) of discrete time dynamical systems. Requires <code>DynamicalSystems</code>.</p><p>In essense, the function presents the output of <code>orbitdiagram</code> of the <code>i</code>th variable of the <code>ds</code>, and allows interactively zooming into it.</p><p>Keywords control the name of the parameter, the initial state (used for <em>any</em> parameter) or whether to add a title above the orbit diagram.</p><p><strong>Interaction</strong></p><p>The application is separated in the &quot;OD plot&quot; (left) and the &quot;control panel&quot; (right). On the OD plot you can interactively click and drag with the left mouse button to select a region in the OD. This region is then <strong>re-computed</strong> at a higher resolution.</p><p>The options at the control panel are straight-forward, with</p><ul><li><code>n</code> amount of steps recorded for the orbit diagram (not all are in the zoomed region!)</li><li><code>t</code> transient steps before starting to record steps</li><li><code>d</code> density of x-axis (the parameter axis)</li><li><code>α</code> alpha value for the plotted points.</li></ul><p>Notice that at each update <code>n*t*d</code> steps are taken. You have to press <code>update</code> after changing these parameters. Press <code>reset</code> to bring the OD in the original state (and variable). Pressing <code>back</code> will go back through the history of your exploration History is stored when the &quot;update&quot; button is pressed or a region is zoomed in.</p><p>You can even decide which variable to get the OD for by choosing one of the variables from the wheel! Because the y-axis limits can&#39;t be known when changing variable, they reset to the size of the selected variable.</p><p><strong>Accessing the data</strong></p><p>What is plotted on the application window is a <em>true</em> orbit diagram, not a plotting shorthand. This means that all data are obtainable and usable directly. Internally we always scale the orbit diagram to [0,1]² (to allow <code>Float64</code> precision even though plotting is <code>Float32</code>-based). This however means that it is necessary to transform the data in real scale. This is done through the function <a href="#DynamicalSystems.scaleod"><code>scaleod</code></a> which accepts the 5 arguments returned from the current function:</p><pre><code class="language-julia hljs">figure, oddata = interactive_orbitdiagram(...)
+ps, us = scaleod(oddata)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L172-L223">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.scaleod" href="#DynamicalSystems.scaleod"><code>DynamicalSystems.scaleod</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">scaleod(oddata) -&gt; ps, us</code></pre><p>Given the return values of <a href="#DynamicalSystems.interactive_orbitdiagram"><code>interactive_orbitdiagram</code></a>, produce orbit diagram data scaled correctly in data units. Return the data as a vector of parameter values and a vector of corresponding variable values.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L226-L231">source</a></section></article><p>The animation at the top of this section was done with</p><pre><code class="language-julia hljs">i = p_index = 1
+ds, p_min, p_max, parname = Systems.henon(), 0.8, 1.4, &quot;a&quot;
+t = &quot;orbit diagram for the Hénon map&quot;
+
+oddata = interactive_orbitdiagram(ds, p_index, p_min, p_max, i;
+                                  parname = parname, title = t)
+
+ps, us = scaleod(oddata)</code></pre><h2 id="Interactive-Poincaré-Surface-of-Section"><a class="docs-heading-anchor" href="#Interactive-Poincaré-Surface-of-Section">Interactive Poincaré Surface of Section</a><a id="Interactive-Poincaré-Surface-of-Section-1"></a><a class="docs-heading-anchor-permalink" href="#Interactive-Poincaré-Surface-of-Section" title="Permalink"></a></h2><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/interactive_psos.mp4?raw=true" type="video/mp4">
+</video><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_poincaresos" href="#DynamicalSystems.interactive_poincaresos"><code>DynamicalSystems.interactive_poincaresos</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_poincaresos(cds, plane, idxs, complete; kwargs...)</code></pre><p>Launch an interactive application for exploring a Poincaré surface of section (PSOS) of the continuous dynamical system <code>cds</code>. Requires <code>DynamicalSystems</code>.</p><p>The <code>plane</code> can only be the <code>Tuple</code> type accepted by <code>DynamicalSystems.poincaresos</code>, i.e. <code>(i, r)</code> for the <code>i</code>th variable crossing the value <code>r</code>. <code>idxs</code> gives the two indices of the variables to be displayed, since the PSOS plot is always a 2D scatterplot. I.e. <code>idxs = (1, 2)</code> will plot the 1st versus 2nd variable of the PSOS. It follows that <code>plane[1] ∉ idxs</code> must be true.</p><p><code>complete</code> is a three-argument <strong>function</strong> that completes the new initial state during interactive use, see below.</p><p>The function returns: <code>figure, laststate</code> with the latter being an observable containing the latest initial <code>state</code>.</p><p><strong>Keyword Arguments</strong></p><ul><li><code>direction, rootkw</code> : Same use as in <code>DynamicalSystems.poincaresos</code>.</li><li><code>tfinal = (1000.0, 10.0^4)</code> : A 2-element tuple for the range of values for the total integration time (chosen interactively).</li><li><code>color</code> : A <strong>function</strong> of the system&#39;s initial condition, that returns a color to plot the new points with. The color must be <code>RGBf/RGBAf</code>.  A random color is chosen by default.</li><li><code>labels = (&quot;u₁&quot; , &quot;u₂&quot;)</code> : Scatter plot labels.</li><li><code>scatterkwargs = ()</code>: Named tuple of keywords passed to <code>scatter</code>.</li><li><code>diffeq = NamedTuple()</code> : Any extra keyword arguments are passed into <code>init</code> of DiffEq.</li></ul><p><strong>Interaction</strong></p><p>The application is a standard scatterplot, which shows the PSOS of the system, initially using the system&#39;s <code>u0</code>. Two sliders control the total evolution time and the size of the marker points (which is always in pixels).</p><p>Upon clicking within the bounds of the scatter plot your click is transformed into a new initial condition, which is further evolved and its PSOS is computed and then plotted into the scatter plot.</p><p>Your click is transformed into a full <code>D</code>-dimensional initial condition through the function <code>complete</code>. The first two arguments of the function are the positions of the click on the PSOS. The third argument is the value of the variable the PSOS is defined on. To be more exact, this is how the function is called:</p><pre><code class="language-julia hljs">x, y = mouseclick; z = plane[2]
+newstate = complete(x, y, z)</code></pre><p>The <code>complete</code> function can throw an error for ill-conditioned <code>x, y, z</code>. This will be properly handled instead of breaking the application. This <code>newstate</code> is also given to the function <code>color</code> that gets a new color for the new points.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L259-L308">source</a></section></article><p>To generate the animation at the start of this section you can run</p><pre><code class="language-julia hljs">using InteractiveDynamics, GLMakie, OrdinaryDiffEq, DynamicalSystems
+diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
+
+hh = Systems.henonheiles()
+
+potential(x, y) = 0.5(x^2 + y^2) + (x^2*y - (y^3)/3)
+energy(x,y,px,py) = 0.5(px^2 + py^2) + potential(x,y)
+const E = energy(get_state(hh)...)
+
+function complete(y, py, x)
+    V = potential(x, y)
+    Ky = 0.5*(py^2)
+    Ky + V ≥ E &amp;&amp; error(&quot;Point has more energy!&quot;)
+    px = sqrt(2(E - V - Ky))
+    ic = [x, y, px, py]
+    return ic
+end
+
+plane = (1, 0.0) # first variable crossing 0
+
+# Coloring points using the Lyapunov exponent
+function λcolor(u)
+    λ = lyapunovs(hh, 4000; u0 = u)[1]
+    λmax = 0.1
+    return RGBf(0, 0, clamp(λ/λmax, 0, 1))
+end
+
+state, scene = interactive_poincaresos(hh, plane, (2, 4), complete;
+labels = (&quot;q₂&quot; , &quot;p₂&quot;),  color = λcolor, diffeq...)</code></pre><h2 id="Scanning-a-Poincaré-Surface-of-Section"><a class="docs-heading-anchor" href="#Scanning-a-Poincaré-Surface-of-Section">Scanning a Poincaré Surface of Section</a><a id="Scanning-a-Poincaré-Surface-of-Section-1"></a><a class="docs-heading-anchor-permalink" href="#Scanning-a-Poincaré-Surface-of-Section" title="Permalink"></a></h2><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/interact/psos_brainscan.mp4?raw=true" type="video/mp4">
+</video><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="DynamicalSystems.interactive_poincaresos_scan" href="#DynamicalSystems.interactive_poincaresos_scan"><code>DynamicalSystems.interactive_poincaresos_scan</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">interactive_poincaresos_scan(A::StateSpaceSet, j::Int; kwargs...)
+interactive_poincaresos_scan(As::Vector{StateSpaceSet}, j::Int; kwargs...)</code></pre><p>Launch an interactive application for scanning a Poincare surface of section of <code>A</code> like a &quot;brain scan&quot;, where the plane that defines the section can be arbitrarily moved around via a slider. Return <code>figure, ax3D, ax2D</code>.</p><p>The input dataset must be 3 dimensional, and here the crossing plane is always chosen to be when the <code>j</code>-th variable of the dataset crosses a predefined value. The slider automatically gets all possible values the <code>j</code>-th variable can obtain.</p><p>If given multiple datasets, the keyword <code>colors</code> attributes a color to each one, e.g. <code>colors = [JULIADYNAMICS_COLORS[mod1(i, 6)] for i in 1:length(As)]</code>.</p><p>The keywords <code>linekw, scatterkw</code> are named tuples that are propagated as keyword arguments to the line and scatter plot respectively, while the keyword <code>direction = -1</code> is propagated to the function <code>DyamicalSystems.poincaresos</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/e7b4f2f4a9c60d888d24ccbf730bf63ce33776c2/src/visualizations.jl#L236-L254">source</a></section></article><p>The animation at the top of this page was done with</p><pre><code class="language-julia hljs">using GLMakie, DynamicalSystems
+using OrdinaryDiffEq: Vern9
+
+diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
+ds = PredefinedDynamicalSystems.henonheiles()
+ds = CoupledODEs(ds, diffeq)
+
+u0s = [
+    [0.0, -0.25, 0.42081, 0.0],
+    [0.0, 0.1, 0.5, 0.0],
+    [0.0, -0.31596, 0.354461, 0.0591255]
+]
+# inputs
+trs = [trajectory(ds, 10000, u0)[1][:, SVector(1,2,3)] for u0 ∈ u0s]
+j = 2 # the dimension of the plane
+
+interactive_poincaresos_scan(trs, j; linekw = (transparency = true,))</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../contents/">« Contents</a><a class="docs-footer-nextpage" href="../contributors_guide/">Contributor Guide »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Monday 6 May 2024 11:13">Monday 6 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
