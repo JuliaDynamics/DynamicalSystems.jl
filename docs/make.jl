@@ -10,6 +10,12 @@ Downloads.download(
 )
 include("build_docs_with_style.jl")
 
+import Literate
+Literate.markdown(
+    joinpath(@__DIR__, "src", "tutorial.jl"), joinpath(@__DIR__, "src");
+    credit = false
+)
+
 pages =  [
     "Introduction" => "index.md",
     "Overarching tutorial" => "tutorial.md",

@@ -1,13 +1,13 @@
 name = "DynamicalSystems"
 uuid = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 repo = "https://github.com/JuliaDynamics/DynamicalSystems.jl.git"
-version = "3.3.17"
+version = "3.3.22"
 
 [deps]
 Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
 ChaosTools = "608a59af-f2a3-5ad4-90b4-758bdf3122a7"
 ComplexityMeasures = "ab4b797d-85ee-42ba-b621-05d793b346a2"
-DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8" # necessary for extension
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 DelayEmbeddings = "5732040d-69e3-5649-938a-b6b4f237613f"
 DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
 FractalDimensions = "4665ce21-e117-4649-aed8-08bbe5ccbead"
@@ -30,21 +30,20 @@ ChaosTools = "3"
 ComplexityMeasures = "2, 3"
 DataStructures = "0.18"
 DelayEmbeddings = "2.7"
-DynamicalSystemsBase = "3.8.3"
+DynamicalSystemsBase = "3.11.0"
 FractalDimensions = "1"
 Makie = "≥ 0.19"
 PredefinedDynamicalSystems = "1"
 RecurrenceAnalysis = "2"
 Reexport = "1"
 Scratch = "1"
-StateSpaceSets = "1"
+StateSpaceSets = "2"
 TimeseriesSurrogates = "2.1"
 julia = "1.9"
 
-
 [extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test", "Makie"]
