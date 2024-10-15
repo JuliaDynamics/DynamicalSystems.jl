@@ -202,7 +202,6 @@ fig.scene.backgroundcolor = to_color(:transparent)
 CairoMakie.save(desktop("juliadynamics_logo_dark_transp.png"), fig; px_per_unit = 4)
 
 # %% add text axis
-resize!(fig, 1600, 800)
 texax = Axis(fig[:, 0]; backgroundcolor = "#1e1e20")
 
 resize!(fig, 1600, 600)
@@ -213,24 +212,25 @@ ax.limits = ((-L1-L2-lima, L1 + L2+lima), (-L1-L2-lima, (L1 + L2 + lima)/2))
 fig
 
 # %% Add DynamicalSystems.jl font
-
+font = "Montserrat-Medium"
 empty!(texax)
 hidedecorations!(texax)
 hidespines!(texax)
 
 dstext = text!(texax, 1.0, 0.5;
-    text = "Dynamical\nSystems.jl", font = joinpath(@__DIR__, "montserrat", "Montserrat-Medium.ttf"),
+    text = "Dynamical\nSystems.jl", font = joinpath(@__DIR__, "montserrat", "$(font).ttf"),
     align = (:right, :center), justification = :right, space = :relative,
     color = :white, fontsize = 130, offset = (-35.0, 0),
 )
 
+# Julia dots over i/j
 scatter!(
     [0.69, 0.885], [0.725, 0.445]; markersize = 40,
     color = julia_blue
 )
 
 # add vertical line
-vertline = lines!(texax, [0.99, 0.99], [0.2, 0.8]; color = :white, linewidth = 10,)
+vertline = lines!(texax, [0.99, 0.99], [0.1, 0.9]; color = :white, linewidth = 10,)
 texax.limits = ((0, 1), (0, 1))
 fig
 
@@ -277,6 +277,8 @@ ax.backgroundcolor = "#1e1e20"
 texax.backgroundcolor = "#1e1e20"
 fig.scene.backgroundcolor = to_color("#1e1e20")
 
+fig
+
 # %% perform video animation animate from some t start to tf
 # What I want to do here is the following:
 # animate the pendulum motion so that it slows down as it reaches the final
@@ -299,17 +301,43 @@ ax.limits = ((-L1-L2-lima, L1 + L2+lima), (-L1-L2-lima, (L1 + L2 + lima)/2))
 juliaballs.markersize = 140
 
 # time
-span = tail*dt # total time to record for
-freq = 10 # record every 10th step
-times = 2span:-dt:0 # having 2 span allows us to bring the tail to the starting point
+ts1 =  12.0 # time when animation starts
+ts2 = 4.0 # time when slowdown function is applied
+tf = 0 # final time must be 0 by definition
+dtmin = dt/6 # minimum possible slowdown
 
-record(fig, desktop("juliadynamics_logo_anim.mp4"); framerate = 30) do io
-    for (i, t) in enumerate(times)
+# we must update a full span first before recording for a smooth tail
+before = (ts1 + span):-dt:ts1
+for t in before
+    update!(sol(t))
+end
+
+# now we make the time vector populated more densely at the end
+# we just need a function that returns `dt` when `t=ts` and `dtmin`
+# when `t = tf`; it doesn't matter the function.
+
+# linear:
+decay(t) = dt + (t - ts2)*(dtmin - dt)/(tf - ts2)
+# nonlinear, any function that goes to 0 would work
+decay(t) = dtmin + (dt - dtmin)*(t/(ts2 - tf))^(1/16)
+
+# now make the non-equi spaced vector
+newtimes = collect(ts1:-dt:ts2)
+while newtimes[end] > tf
+    x = linear(newtimes[end])
+    push!(newtimes, newtimes[end] - x)
+end
+pop!(newtimes)
+
+framerate = 30
+freq = 10 # this is the animation speed at normal `dt`, decrease it to slow down
+@time record(fig, desktop("juliadynamics_logo_anim_dark.mp4"); framerate) do io
+    for (i, t) in enumerate(newtimes)
         update!(sol(t))
-        if t ≤ span # we only record the final `span`
-            i % freq == 0 && recordframe!(io)
-        end
+        i % freq == 0 && recordframe!(io)
     end
+    # add a couple of seconds of stillness at the end
+    for _ in 1:3framerate; recordframe!(io); end
 end
 
 fig
