@@ -266,6 +266,7 @@ fig.scene.backgroundcolor = to_color(:white)
 
 CairoMakie.save(desktop("juliadynamics_full_logo_light.png"), fig; px_per_unit = 4)
 
+fig
 
 # %% reset back to solid dark for animation
 rodlines.color = :white
@@ -307,6 +308,7 @@ tf = 0 # final time must be 0 by definition
 dtmin = dt/6 # minimum possible slowdown
 
 # we must update a full span first before recording for a smooth tail
+span = tail*dt
 before = (ts1 + span):-dt:ts1
 for t in before
     update!(sol(t))
@@ -324,7 +326,7 @@ decay(t) = dtmin + (dt - dtmin)*(t/(ts2 - tf))^(1/16)
 # now make the non-equi spaced vector
 newtimes = collect(ts1:-dt:ts2)
 while newtimes[end] > tf
-    x = linear(newtimes[end])
+    x = decay(newtimes[end])
     push!(newtimes, newtimes[end] - x)
 end
 pop!(newtimes)
