@@ -19,14 +19,11 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 
 ## Latest news
 
-DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
+All subpackages composing DynamicalSystems.jl have their own human-readable CHANGELOG files in their corresponding GitHub repositories. The CHANGELOGs log all meaningful changes in the software.
 
-At a low level, this happens via the functions `observe_state`, `set_state!`,
-`current_parameter` and `set_parameter!`.
+Notable news for the **DynamicalSystems.jl** library are also posted on the official Julia language Discourse, and users may subscribe to this particular Topic to get notified of updates:
 
-Additionally, `interactive_trajectory_timeseries` allows symbolic indexing
-for state space plot, timeseries plots, or parameter sliders.
-Everything is also automatically named and limits are also automatically deduced for everything! Super convenient!
+https://discourse.julialang.org/t/dynamicalsystems-jl-news-updates-and-announcements/122079
 
 ## [Learning resources](@id learning)
 
