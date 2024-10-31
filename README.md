@@ -1,4 +1,4 @@
-![DynamicalSystems.jl logo: The Double Pendulum](https://i.imgur.com/nFQFdB0.gif)
+![DynamicalSystems.jl logo: The Double Pendulum](https://github.com/JuliaDynamics/JuliaDynamics/blob/master/videos/dynamicalsystems/juliadynamics_logo_anim_dark.gif?raw=true)
 
 [![](https://img.shields.io/badge/docs-online-blue.svg)](https://juliadynamics.github.io/DynamicalSystemsDocs.jl/dynamicalsystems/dev/)
 [![DocBuild](https://github.com/juliadynamics/DynamicalSystems.jl/workflows/CI/badge.svg)](https://github.com/JuliaDynamics/DynamicalSystems.jl/actions)
@@ -6,8 +6,7 @@
 [![Textbook](https://img.shields.io/badge/Textbook-10.1007%2F978--3--030--91032--7-purple)](https://link.springer.com/book/10.1007/978-3-030-91032-7)
 [![Package Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Ftotal_downloads%2FDynamicalSystems&query=total_requests&label=Downloads)](http://juliapkgstats.com/pkg/DynamicalSystems)
 
-
-**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia software library for nonlinear dynamics and nonlinear timeseries analysis.
+**DynamicalSystems.jl** is an [award-winning](https://dsweb.siam.org/The-Magazine/Article/winners-of-the-dsweb-2018-software-contest) Julia-based general-purpose software library for the whole of nonlinear dynamics and nonlinear timeseries analysis.
 
 To install **DynamicalSystems.jl**, run `import Pkg; Pkg.add("DynamicalSystems")` as a Julia language command.
 To learn how to use it and see its contents visit the documentation, which you can either find [online](https://juliadynamics.github.io/DynamicalSystems.jl/dev/) or build locally by running the `docs/make.jl` file.
@@ -23,8 +22,8 @@ Aspects of **DynamicalSystems.jl** that make it stand out among other codebases 
 - **Open source community project**. Built from the ground up entirely on GitHub, **DynamicalSystems.jl** is 100% open source and based on community contributions. Anyone can be a developer of the library. Everyone is welcomed.
 - **Extensive content**. It aims to cover the entire field of nonlinear dynamics and nonlinear timeseries analysis. It has functionality for complexity measures, delay embeddings, periodic orbits, nonlocal stability analysis, continuation, chaos, fractal dimensions, surrogate testing, recurrence quantification analysis, and much more. Furthermore, all algorithms are "general" and work for any dynamical system applicable. Missing functionality that falls under this wide category of content is welcomed to be part of the library!
 - **Well tested**. All implemented functionality is extensively tested. Each time any change in the code base is done, the extensive test suite is run and checked before merging the change in.
-- **Extendable**. **DynamicalSystems.jl** is a living, evolving project. New contributions can become part of the library and be accessed by all users in the next release. Most importantly, all parts of the library follow professional standards in software design and implement extendable interfaces so that it is easy to contribute new functionality.
-- **Active development**. Since the start of the project (May 2017) there has been  activity every month: new features, bugfixes, and the developer team answers users questions on official Julia language forums.
+- **Extendable**. New contributions can become part of the library and be accessed by all users in the next release. Most importantly, all parts of the library follow professional standards in software design and implement extendable interfaces so that it is easy to contribute new functionality.
+- **Active development**. It is a living, evolving project. Since its beginning in May 2017, **DynamicalSystems.jl** has had some activity every single month: new features, bugfixes. The developer team routinely answers users questions on official Julia language forums.
 - **Performant**. Written entirely in Julia, heavily optimized and parallelized, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Goals

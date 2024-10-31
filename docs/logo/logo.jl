@@ -182,24 +182,22 @@ fig
 
 # %% okay, save high quality version:
 ax.backgroundcolor = :transparent
-CairoMakie.save(desktop("juliadynamics_logo.png"), fig; px_per_unit = 4)
-# and one without tail
-trajline.visible = false
-save(desktop("juliadynamics_logo_no_tail.png"), fig; px_per_unit = 4)
-trajline.visible = true
+fig.scene.backgroundcolor = to_color(:transparent)
+CairoMakie.save(desktop("juliadynamics_logo_light_transparent.png"), fig; px_per_unit = 4)
 # and one more with white background
 ax.backgroundcolor = :white
 fig.scene.backgroundcolor = to_color(:white)
-CairoMakie.save(desktop("juliadynamics_logo_white.png"), fig; px_per_unit = 4)
+CairoMakie.save(desktop("juliadynamics_logo_light.png"), fig; px_per_unit = 4)
 # and a dark background
 rodlines.color = :white
-trajline.color = tailcoltransp
+trajline.color = tailcoltransplight
 ax.backgroundcolor = "#1e1e20"
 fig.scene.backgroundcolor = to_color("#1e1e20")
 CairoMakie.save(desktop("juliadynamics_logo_dark.png"), fig; px_per_unit = 4)
+# and transparent dark version
 ax.backgroundcolor = :transparent
 fig.scene.backgroundcolor = to_color(:transparent)
-CairoMakie.save(desktop("juliadynamics_logo_dark_transp.png"), fig; px_per_unit = 4)
+CairoMakie.save(desktop("juliadynamics_logo_dark_transparent.png"), fig; px_per_unit = 4)
 
 # %% add text axis
 texax = Axis(fig[:, 0]; backgroundcolor = "#1e1e20")
@@ -268,7 +266,8 @@ CairoMakie.save(desktop("juliadynamics_full_logo_light.png"), fig; px_per_unit =
 
 fig
 
-# %% reset back to solid dark for animation
+# %% reset back to solid dark for animation, modify accordingly for light
+# don't use transparent background, it doesn't work well with videos!!!
 rodlines.color = :white
 trajline.color = tailcoltransplight
 dstext.color = :white
@@ -285,14 +284,11 @@ fig
 # animate the pendulum motion so that it slows down as it reaches the final
 # state, and it stops once it reaches the final state.
 
-# For this, it is better to have a full ODE solution
-
-# we use solve here, it is so much simpler for adjusting time
+# For this, it is better to have a full ODE solution backwards in time,
+# it is so much simpler for adjusting time
 prob = ODEProblem((u,p,t) -> -doublependulum_rule(u,p,t), uf, (0.0, 100.0), p0)
 
 sol = solve(prob; alg = Vern9(), dt, dense = true, adaptive = false)
-
-fig
 
 # %%
 # We need to adjust limits of the pendulum axis and ball size because
@@ -302,10 +298,10 @@ ax.limits = ((-L1-L2-lima, L1 + L2+lima), (-L1-L2-lima, (L1 + L2 + lima)/2))
 juliaballs.markersize = 140
 
 # time
-ts1 =  12.0 # time when animation starts
-ts2 = 4.0 # time when slowdown function is applied
+ts1 = 12.0 # time when animation starts
+ts2 = 2.0 # time when slowdown function is applied
 tf = 0 # final time must be 0 by definition
-dtmin = dt/6 # minimum possible slowdown
+dtmin = dt/40 # minimum possible slowdown
 
 # we must update a full span first before recording for a smooth tail
 span = tail*dt
@@ -315,13 +311,13 @@ for t in before
 end
 
 # now we make the time vector populated more densely at the end
-# we just need a function that returns `dt` when `t=ts` and `dtmin`
+# we just need a function that returns `dt` when `t=ts2` and `dtmin`
 # when `t = tf`; it doesn't matter the function.
 
-# linear:
+# linear
 decay(t) = dt + (t - ts2)*(dtmin - dt)/(tf - ts2)
-# nonlinear, any function that goes to 0 would work
-decay(t) = dtmin + (dt - dtmin)*(t/(ts2 - tf))^(1/16)
+# nonlinear 1, extreme slowdown at the end
+decay(t) = dtmin + (dt - dtmin)*(t/(ts2 - tf))^(1/2)
 
 # now make the non-equi spaced vector
 newtimes = collect(ts1:-dt:ts2)
@@ -333,7 +329,7 @@ pop!(newtimes)
 
 framerate = 30
 freq = 10 # this is the animation speed at normal `dt`, decrease it to slow down
-@time record(fig, desktop("juliadynamics_logo_anim_dark.mp4"); framerate) do io
+@time record(fig, desktop("juliadynamics_logo_anim_dark.gif"); framerate) do io
     for (i, t) in enumerate(newtimes)
         update!(sol(t))
         i % freq == 0 && recordframe!(io)
