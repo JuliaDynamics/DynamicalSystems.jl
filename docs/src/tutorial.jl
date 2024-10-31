@@ -630,6 +630,7 @@ current_parameter(roessler, :c)
 # PoincareMap
 # ProjectedDynamicalSystem
 # ArbitrarySteppable
+# CoupledSDEs
 # ```
 
 # ## Dynamical system interface
