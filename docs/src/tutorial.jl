@@ -256,7 +256,33 @@ end
 
 # ## [Using dynamical systems](@id using)
 
-# You may use the [`DynamicalSystem`](@ref) interface to develop algorithms that utilize dynamical systems with a known evolution rule.
+# The [`DynamicalSystem`](@ref) type defines an extensive interface for what it means to be a
+# "dynamical system". This interface can be used to develop algorithms that utilize
+# dynamical systems with a known evolution rule. It can also be used to simply
+# query and alter properties of the dynamical system. For example, we have
+
+lorenz96
+
+# which we can evolve forwards in time using `step!`
+
+step!(lorenz96, 100.0) # progress for `100.0` units of time
+
+# and we can then query what is the current state that the dynamical system was brought into
+
+current_state(lorenz96)
+
+# we can also restart the system at a different state using `set_state!`
+
+set_state!(lorenz96, rand(6))
+
+# or we can alter system parameters given the index of the parameter and the value to set it to
+
+set_parameter!(lorenz96, 1, 9.6)
+current_parameters(lorenz96)
+
+# For more functions that query or alter a dynamical system see its docstring: [`DynamicalSystem`](@ref).
+
+# Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
 # The two main packages of the library that do this are [`ChaosTools`](@ref) and [`Attractors`](@ref).
 # For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above.
 # This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
@@ -289,6 +315,13 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 # Let's visualize the result
 
 heatmap_basins_attractors((xg, yg), basins, attractors)
+
+# !!! warning "Dynamical systems are modified!"
+#     It is not immediatelly obvious, but all library functions that obtain as an input a
+#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
+#     of the system before and after giving it to a function such as `basins_of_attraction`
+#     will not be the same! Please read the documentation string of [`DynamicalSystem`](@ref)
+#     for implications this has on e.g., parallelization.
 
 # ## Stochastic systems
 
@@ -555,13 +588,14 @@ prob = ODEProblem(model)
 
 roessler = CoupledODEs(prob)
 
-# This dynamical system instance can be used in the rest of the library like anything else. Additionally, you can "observe" referenced symbolic variables:
+# This dynamical system instance can be used in the rest of the library like anything else.
+# Additionally, you can "observe" referenced symbolic variables:
 
 observe_state(roessler, model.x)
 
-#
+# or, more commonly, you can observe a `Symbol` that has the name of the symbolic variable:
 
-observe_state(roessler, :nlt) # can use `Symbol`s as well
+observe_state(roessler, :nlt)
 
 # These observables can also be used in the GUI visualization [`interactive_trajectory_timeseries`](@ref).
 
@@ -577,7 +611,8 @@ set_parameter!(roessler, :c, 5.0)
 
 current_parameter(roessler, :c)
 
-# This symbolic indexing can be given anywhere in the ecosystem where you would be altering the parameters.
+# This symbolic indexing can be given anywhere in the ecosystem where you would be
+# altering the parameters, such as the function `global_continuation` from [`Attractors`](@ref).
 
 # ## Core components reference
 
@@ -595,6 +630,26 @@ current_parameter(roessler, :c)
 # PoincareMap
 # ProjectedDynamicalSystem
 # ArbitrarySteppable
+# ```
+
+# ## Dynamical system interface
+# ```@docs
+# current_state
+# initial_state
+# observe_state
+# state_name
+# current_parameters
+# current_parameter
+# parameter_name
+# initial_parameters
+# isdeterministic
+# isdiscretetime
+# dynamic_rule
+# current_time
+# initial_time
+# isinplace(::DynamicalSystem)
+# successful_step
+# referrenced_sciml_model
 # ```
 
 # ## Learn more
