@@ -168,7 +168,8 @@ function _init_statespace_plot!(
         x = [RGBAf(x.r, x.g, x.b, (i/tail)^(fade)) for i in 1:tail]
         if !DynamicalSystems.isdiscretetime(ds)
             Makie.lines!(statespaceax, ob;
-                color = x, linewidth = 3.0, transparency = true, pk...
+                color = x, linewidth = 3.0, transparency = true,
+                linecap = :butt, joinstyle = :round, pk...
             )
         else
             Makie.scatter!(statespaceax, ob; color = x,
