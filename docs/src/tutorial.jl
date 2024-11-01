@@ -370,7 +370,7 @@ fig
 # this system has two fixed point attractors that are only mildly perturbed
 # by the noise.
 
-## Parallelization
+# ## Parallelization
 
 # !!! warning "Dynamical systems are modified!"
 #     It is not immediatelly obvious, but all library functions that obtain as an input a
