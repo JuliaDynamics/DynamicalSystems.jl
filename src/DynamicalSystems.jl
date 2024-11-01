@@ -26,26 +26,4 @@ using Reexport
 using DataStructures
 include("visualizations.jl")
 
-# Update messages:
-using Scratch
-display_update = false
-version_number = "3.3.0"
-update_name = "update_v$(version_number)"
-
-if display_update
-    # Get scratch space for this package
-    versions_dir = @get_scratch!("versions")
-    if !isfile(joinpath(versions_dir, update_name))
-        printstyled(
-            stdout,
-            """
-            \nUpdate message: DynamicalSystems v$(version_number)\n
-            """;
-            color = :light_magenta,
-        )
-        touch(joinpath(versions_dir, update_name))
-    end
-end
-
-
 end # module
