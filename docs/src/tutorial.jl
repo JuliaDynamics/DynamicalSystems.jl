@@ -319,13 +319,6 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 
 heatmap_basins_attractors((xg, yg), basins, attractors)
 
-# !!! warning "Dynamical systems are modified!"
-#     It is not immediatelly obvious, but all library functions that obtain as an input a
-#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
-#     of the system before and after giving it to a function such as `basins_of_attraction`
-#     will not be the same! Please read the documentation string of [`DynamicalSystem`](@ref)
-#     for implications this has on e.g., parallelization.
-
 # ## Stochastic systems
 
 # DynamicalSystems.jl has some support for stochastic systems
@@ -376,6 +369,37 @@ fig
 # doesn't translate trivially to stochastic systems but thankfully
 # this system has two fixed point attractors that are only mildly perturbed
 # by the noise.
+
+## Parallelization
+
+# !!! warning "Dynamical systems are modified!"
+#     It is not immediatelly obvious, but all library functions that obtain as an input a
+#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
+#     of the system before and after giving it to a function such as `basins_of_attraction`
+#     will not be the same! This also affects parallelization, see below.
+
+
+# Since `DynamicalSystem`s are mutable, one needs to copy them before parallelizing,
+# to avoid having to deal with complicated race conditions etc. The simplest way is with
+# `deepcopy`. Here is an example block that shows how to parallelize calling some expensive
+# function (e.g., calculating the Lyapunov exponent) over a parameter range using `Threads`:
+
+
+# ```julia
+# ds = DynamicalSystem(f, u, p) # some concrete implementation
+# parameters = 0:0.01:1
+# outputs = zeros(length(parameters))
+
+# # Since `DynamicalSystem`s are mutable, we need to copy to parallelize
+# systems = [deepcopy(ds) for _ in 1:Threads.nthreads()-1]
+# pushfirst!(systems, ds) # we can save 1 copy
+
+# Threads.@threads for (i, p) in enumerate(parameters)
+#     system = systems[Threads.threadid()]
+#     set_parameter!(system, index, parameters[i])
+#     outputs[i] = expensive_function(system, args...)
+# end
+# ```
 
 # ## Interactive GUIs
 
