@@ -390,11 +390,11 @@ fig
 # ds = DynamicalSystem(f, u, p) # some concrete implementation
 # parameters = 0:0.01:1
 # outputs = zeros(length(parameters))
-
+#
 # # Since `DynamicalSystem`s are mutable, we need to copy to parallelize
 # systems = [deepcopy(ds) for _ in 1:Threads.nthreads()-1]
 # pushfirst!(systems, ds) # we can save 1 copy
-
+#
 # Threads.@threads for (i, p) in enumerate(parameters)
 #     system = systems[Threads.threadid()]
 #     set_parameter!(system, index, parameters[i])
