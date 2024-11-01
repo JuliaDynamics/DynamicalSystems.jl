@@ -382,7 +382,8 @@ fig
 # Since `DynamicalSystem`s are mutable, one needs to copy them before parallelizing,
 # to avoid having to deal with complicated race conditions etc. The simplest way is with
 # `deepcopy`. Here is an example block that shows how to parallelize calling some expensive
-# function (e.g., calculating the Lyapunov exponent) over a parameter range using `Threads`:
+# function (e.g., calculating the Lyapunov exponent) over a parameter range
+# (or alternatively, over different initial conditions) using `Threads`:
 
 
 # ```julia
