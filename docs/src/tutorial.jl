@@ -254,12 +254,13 @@ end
 # So using an appropriate solver really does matter!
 # For more information on choosing solvers consult the DifferentialEquations.jl documentation.
 
-# ## [Using dynamical systems](@id using)
+# ## Interacting with dynamical systems
 
 # The [`DynamicalSystem`](@ref) type defines an extensive interface for what it means to be a
-# "dynamical system". This interface can be used to develop algorithms that utilize
+# "dynamical system". This interface can be used to (1) define fundamentally new types
+# of dynamical systems, (2) to develop algorithms that utilize
 # dynamical systems with a known evolution rule. It can also be used to simply
-# query and alter properties of the dynamical system. For example, we have
+# query and alter properties of a given dynamical system. For example, we have
 
 lorenz96
 
@@ -277,14 +278,16 @@ set_state!(lorenz96, rand(6))
 
 # or we can alter system parameters given the index of the parameter and the value to set it to
 
-set_parameter!(lorenz96, 1, 9.6)
+set_parameter!(lorenz96, 1, 9.6) # change first parameter of the parameter container
 current_parameters(lorenz96)
 
 # For more functions that query or alter a dynamical system see its docstring: [`DynamicalSystem`](@ref).
 
+# ## [Using dynamical systems](@id using)
+
 # Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
-# The two main packages of the library that do this are [`ChaosTools`](@ref) and [`Attractors`](@ref).
-# For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above.
+# For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above,
+# which is a functionality offered by [`ChaosTools`](@ref).
 # This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
 
 steps = 10_000
