@@ -1,11 +1,14 @@
 # # [Overarching tutorial for **DynamicalSystems.jl**](@id tutorial)
 
-# This page serves as a short but to-the-point introduction to the ****DynamicalSystems.jl****
+# This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl**
 # library. It outlines the core components, and how they establish an interface that
 # is used by the rest of the library. It also provides a couple of usage examples
 # to connect the various packages of the library together.
 
 # Going through this tutorial should take you about 20 minutes.
+
+# !!! note "Also available as a Jupyter notebook"
+#     This tutorial is also available online as a [Jupyter notebook](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/gh-pages/dev/tutorial.ipynb).
 
 # ## Installation
 
