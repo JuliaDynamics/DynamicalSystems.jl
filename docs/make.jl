@@ -15,6 +15,10 @@ Literate.markdown(
     joinpath(@__DIR__, "src", "tutorial.jl"), joinpath(@__DIR__, "src");
     credit = false
 )
+Literate.notebook(
+    joinpath(@__DIR__, "src", "tutorial.jl"), joinpath(@__DIR__, "src");
+    credit = false, execute = true,
+)
 
 pages =  [
     "Introduction" => "index.md",
