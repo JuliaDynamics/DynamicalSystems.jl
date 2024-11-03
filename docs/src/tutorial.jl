@@ -31,8 +31,8 @@ import Pkg
 
 #nb # Activate an environment in the folder containing the notebook
 #nb Pkg.activate(dirname(@__DIR__))
-#nb Pkg.add(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"])
-Pkg.status(["DynamicalSystems", "CairoMakie", "GLMakie", "OrdinaryDiffEq", "BenchmarkTools"]; mode = Pkg.PKGMODE_MANIFEST)
+#nb Pkg.add(["DynamicalSystems", "CairoMakie", "OrdinaryDiffEq", "BenchmarkTools"])
+Pkg.status(["DynamicalSystems", "CairoMakie", "OrdinaryDiffEq", "BenchmarkTools"]; mode = Pkg.PKGMODE_MANIFEST)
 
 #nb # ## **DynamicalSystems.jl** summary
 
@@ -359,7 +359,7 @@ xg = yg = range(-1, 1; length = 101)
 
 sampler, _ = statespace_sampler((xg, yg))
 
-fs = basins_fractions(mapper, sampler)
+fs = basins_fractions(mapper, sampler; show_progress = false)
 
 # and we can see the stored "attractors"
 
@@ -509,7 +509,7 @@ pex, sey
 
 # Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
 
-grassberger_proccacia_dim(X)
+grassberger_proccacia_dim(X; show_progress = false)
 
 # Or, you could obtain a recurrence matrix of a state space set with [`RecurrenceAnalysis`](@ref)
 
@@ -548,7 +548,7 @@ using Random: Xoshiro
 rng = Xoshiro(1234)
 x .+= randn(rng, length(x))/100
 ## compute noise-contaminated fractal dim.
-Δ_orig = generalized_dim(embed(x, 2, 1))
+Δ_orig = generalized_dim(embed(x, 2, 1); show_progress = false)
 
 # And we do the surrogate test
 
@@ -556,7 +556,7 @@ surrogate_method = RandomFourier()
 sgen = surrogenerator(x, surrogate_method, rng)
 Δ_surr = map(1:1000) do i
     s = sgen()
-    generalized_dim(embed(s, 2, 1))
+    generalized_dim(embed(s, 2, 1); show_progress = false)
 end
 
 # and visualize the test result
