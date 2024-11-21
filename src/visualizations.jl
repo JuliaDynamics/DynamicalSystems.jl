@@ -42,7 +42,9 @@ See also [`interactive_trajectory`](@ref).
   - "run": when clicked it evolves the trajectories forwards in time indefinitely.
     click again to stop the evolution. Note that "run" simply presses the "step"
     button indefinitely, and hence the visual progress you see on the screen depends
-    on the value of the "steps" slider.
+    on the value of the "steps" slider. Thus, while the animation "runs" you can
+    increase/decrease the "steps" slider to increase/decrease the animation speed.
+    For smooth animations for continuous time systems you should have small `Δt` and large `tail`.
   - "step": when clicked it evolves the trajectories forwards in time for the
     amount of steps chosen by the "steps" slider to its right. Each step is an
     evolution of `Δt` unit of time long (and clicking the "step" button may do
