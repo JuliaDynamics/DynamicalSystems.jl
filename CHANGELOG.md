@@ -7,6 +7,13 @@ The changelog here therefore lists either major changes to the overarching Dynam
 
 The changelogs of individual sub-packages are self-contained for each package.
 
+# v3.4
+
+Some important fixes on the `interactive_trajectory` GUI:
+
+- Changed the internal handling for continuous time systems. Now they are stepped for exactly `Δt` by giving `true` as third input to `step!`. This increases consistency with discrete systems by not altering the integration protocol.
+- The documentation around the "run" button of the GUI has been clarified.
+
 # v3.3
 
 DynamicalSystems.jl now integrates with ModelingToolkit.jl and allows using symbolic variables to access/observe state and parameter.
