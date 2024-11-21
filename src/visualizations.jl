@@ -44,7 +44,9 @@ See also [`interactive_trajectory`](@ref).
     button indefinitely, and hence the visual progress you see on the screen depends
     on the value of the "steps" slider.
   - "step": when clicked it evolves the trajectories forwards in time for the
-    amount of steps chosen by the "steps" slider to its right.
+    amount of steps chosen by the "steps" slider to its right. Each step is an
+    evolution of `Δt` unit of time long (and clicking the "step" button may do
+    more than one steps according to the slider).
   The plotted trajectories can always be evolved
   manually using the custom animations setup that we describe below; `add_controls` only
   concerns the buttons and interactivity added to the created figure.
