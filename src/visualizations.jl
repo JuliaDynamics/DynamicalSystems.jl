@@ -58,8 +58,8 @@ Do `using GLMakie; GLMakie.activate!()` to ensure this is the chosen backend._
 - `parameter_names = Dict(keys(ps) .=> string.(keys(ps)))`: Dictionary mapping parameter
   keys to labels. Only used if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
-  0.01 for continuous time systems. For internal simplicity, continuous time dynamical
-  systems are evolved non-adaptively with constant step size equal to `Δt`.
+  0.01 for continuous time systems. Continuous time dynamical
+  systems are stepped for exactly `Δt` time (third argument to `step!` is `true`).
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
   function, which is called between each plot update. Useful when time integration is
   computationally inexpensive and animation proceeds too fast.

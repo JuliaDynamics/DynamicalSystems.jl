@@ -3,9 +3,9 @@
 The package DynamicalSystems.jl has little actual code.
 It mainly re-exports other packages. The source code contained here is only regarding graphical interactive applications for dynamical systems.
 
-The changelog here therefore lists either major changes to the overarching DynamicalSystems.jl ecosystem, or major changes to plotting infastructure.
+The changelog here therefore lists either major changes to the overarching DynamicalSystems.jl ecosystem, or major changes to plotting infrastructure.
 
-The changelogs of individual subpackages are self-contained for each package.
+The changelogs of individual sub-packages are self-contained for each package.
 
 # v3.3
 
