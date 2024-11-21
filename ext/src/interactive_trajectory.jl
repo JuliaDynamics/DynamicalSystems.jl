@@ -32,11 +32,6 @@ function DynamicalSystems.interactive_trajectory(
         throw(ArgumentError("State space plot can be up to 3 dimensional! Change `idxs`."))
     end
 
-    if ds isa CoupledODEs # force time evolution into non-adaptive
-        newdiffeq = (ds.diffeq..., adaptive = false, dt = Δt)
-        ds = CoupledODEs(ds, newdiffeq)
-    end
-
     p0 = initial_parameters(ds)
     pds = DynamicalSystems.ParallelDynamicalSystem(ds, u0s)
     u00s = deepcopy(current_states(pds))

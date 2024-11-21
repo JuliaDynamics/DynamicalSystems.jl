@@ -32,34 +32,41 @@ See also [`interactive_trajectory`](@ref).
 
 ## Interactivity and time stepping keywords
 
-_GUI functionality is possible when the plotting backend is `GLMakie`.
-Do `using GLMakie; GLMakie.activate!()` to ensure this is the chosen backend._
+!!! note "GLMakie"
+    GUI functionality is possible when the plotting backend is `GLMakie` or `WGLMakie`.
+    Do `using GLMakie; GLMakie.activate!()` to ensure this is the chosen backend.
 
 - `add_controls = true`: If `true`, below the state space axis
   some buttons for animating the trajectories live are added:
-  - `reset`: results the parallel trajectories to their initial conditions
-  - `run`: when clicked it evolves the trajectories forwards in time indefinitely.
-    click again to stop the evolution.
-  - `step`: when clicked it evolves the trajectories forwards in time for the
-    amount of steps chosen by the slider to its right.
+  - "reset": results the parallel trajectories to their initial conditions.
+  - "run": when clicked it evolves the trajectories forwards in time indefinitely.
+    click again to stop the evolution. Note that "run" simply presses the "step"
+    button indefinitely, and hence the visual progress you see on the screen depends
+    on the value of the "steps" slider. Thus, while the animation "runs" you can
+    increase/decrease the "steps" slider to increase/decrease the animation speed.
+    For smooth animations for continuous time systems you should have small `Δt` and large `tail`.
+  - "step": when clicked it evolves the trajectories forwards in time for the
+    amount of steps chosen by the "steps" slider to its right. Each step is an
+    evolution of `Δt` unit of time long (and clicking the "step" button may do
+    more than one steps according to the slider).
   The plotted trajectories can always be evolved
-  manually using the custom animations etup that we describe below; `add_controls` only
+  manually using the custom animations setup that we describe below; `add_controls` only
   concerns the buttons and interactivity added to the created figure.
 - `parameter_sliders = nothing`: If given, it must be a dictionary, mapping
   parameter indices (any valid index that can be given to [`set_parameter!`](@ref))
   to ranges of parameter values. Each combination of index and range becomes a slider
   that can be interactively controlled to alter a system parameter on the fly during time
   evolution. Below the parameter sliders, three buttons are added for GUI usage:
-  - `update`: when clicked the chosen parameter values are propagated into the system
-  - `u.r.s.`: when clicked it is equivalent with clicking in order: "update", "reset", "step".
-  - `reset p`: when clicked it resets
+  - "update": when clicked the chosen parameter values are propagated into the system.
+  - "u.r.s.": when clicked it is equivalent with clicking in order: "update", "reset", "step".
+  - "reset p": when clicked it resets parameters to their initial values.
   Parameters can also be altered using the custom animation setup that we describe below;
   `parameter_sliders` only conserns the buttons and interactivity added to the created figure.
 - `parameter_names = Dict(keys(ps) .=> string.(keys(ps)))`: Dictionary mapping parameter
   keys to labels. Only used if `parameter_sliders` is given.
 - `Δt`: Time step of time evolution. Defaults to 1 for discrete time,
-  0.01 for continuous time systems. For internal simplicity, continuous time dynamical
-  systems are evolved non-adaptively with constant step size equal to `Δt`.
+  0.01 for continuous time systems. Continuous time dynamical
+  systems are stepped for exactly `Δt` time (third argument to `step!` is `true`).
 - `pause = nothing`: If given, it must be a real number. This number is given to the `sleep`
   function, which is called between each plot update. Useful when time integration is
   computationally inexpensive and animation proceeds too fast.

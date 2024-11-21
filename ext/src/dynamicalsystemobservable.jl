@@ -23,7 +23,7 @@ function DynamicalSystems.step!(dso::DynamicalSystemObservable, n::Int = 1)
     N = length(dso.tail_observables)
     # Always store values, but only update observables after loop
     for _ in 1:n
-        step!(dso.pds, Δt)
+        step!(dso.pds, Δt, true)
         for i in 1:N
             ob = dso.tail_observables[i]
             last_state = current_state(dso.pds, i)

@@ -3,9 +3,16 @@
 The package DynamicalSystems.jl has little actual code.
 It mainly re-exports other packages. The source code contained here is only regarding graphical interactive applications for dynamical systems.
 
-The changelog here therefore lists either major changes to the overarching DynamicalSystems.jl ecosystem, or major changes to plotting infastructure.
+The changelog here therefore lists either major changes to the overarching DynamicalSystems.jl ecosystem, or major changes to plotting infrastructure.
 
-The changelogs of individual subpackages are self-contained for each package.
+The changelogs of individual sub-packages are self-contained for each package.
+
+# v3.4
+
+Some important fixes on the `interactive_trajectory` GUI:
+
+- Changed the internal handling for continuous time systems. Now they are stepped for exactly `Δt` by giving `true` as third input to `step!`. This increases consistency with discrete systems by not altering the integration protocol.
+- The documentation around the "run" button of the GUI has been clarified.
 
 # v3.3
 
