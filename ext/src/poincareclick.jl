@@ -8,35 +8,30 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
         # Makie kwargs:
         color = randomcolor,
         scatterkwargs = (),
-        labels = ("u₁" , "u₂"),
-        # DiffEq kwargs:
-        diffeq = NamedTuple()
+        labels = ("u₁", "u₂")
     )
 
-    error("this function has not yet been updated to DynamicalSystems.jl v3.0. PR welcomed!")
-    # TODO: What is needed here is to make this use `PoincareMap`.
-    # and that's it!
-
+    # Basic sanity checks on the method arguments
     @assert typeof(plane) <: Tuple
     @assert length(idxs) == 2
     @assert eltype(idxs) == Int
     @assert plane[1] ∉ idxs
     u0 = DynamicalSystems.get_state(ds)
 
-    # This is the low-level call of poincaresos:
-    DynamicalSystems.DynamicalSystemsBase.check_hyperplane_match(plane, DynamicalSystems.dimension(ds))
-    integ = DynamicalSystems.integrator(ds, u0; diffeq)
-    planecrossing = ChaosTools.PlaneCrossing(plane, direction > 0)
     i = DynamicalSystems.SVector{2, Int}(idxs)
 
-    figure = Figure(resolution = (1000, 800), backgroundcolor = DEFAULT_BG)
+    figure = Figure(size = (1000, 800), backgroundcolor = :white)
 
     T_slider, m_slider = _add_psos_controls!(figure, tfinal)
     ax = figure[0, :] = Axis(figure)
 
-    # Initial Section
-    f = (t) -> planecrossing(integ(t))
-    data = ChaosTools._poincaresos(integ, f, planecrossing, T_slider[], i, rootkw)
+    # Construct a new `PoincareMap` structure with the given parameters
+    pmap = DynamicalSystems.DynamicalSystemsBase.PoincareMap(ds, plane;
+        direction, u0, rootkw, Tmax = tfinal[2])
+
+    # Compute the initial section
+    psos, = trajectory(pmap, T_slider[]; t0 = 0)
+    data = psos[:, i]
     length(data) == 0 && error(ChaosTools.PSOS_ERROR)
 
     positions_node = Observable(data)
@@ -44,14 +39,14 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
     colors_node = Observable(colors)
     scatter!(
         ax, positions_node, color = colors_node,
-        markersize = lift(o -> o*px, m_slider), marker = MARKER, scatterkwargs...
+        markersize = lift(o -> o*px, m_slider), marker = :circle, scatterkwargs...
     )
 
     ax.xlabel, ax.ylabel = labels
     laststate = Observable(u0)
 
     # Interactive clicking on the psos:
-    MakieLayout.deactivate_interaction!(ax, :rectanglezoom)
+    Makie.deactivate_interaction!(ax, :rectanglezoom)
     spoint = select_point(ax.scene)
     on(spoint) do pos
         x, y = pos; z = plane[2] # third variable comes from plane
@@ -62,13 +57,13 @@ function DynamicalSystems.interactive_poincaresos(ds, plane, idxs, complete;
            return
         end
 
-        DynamicalSystems.reinit!(integ, newstate)
-        data = ChaosTools._poincaresos(integ, f, planecrossing, T_slider[], i, rootkw)
+        psos, = trajectory(pmap, T_slider[], newstate; t0 = 0)
+        data = psos[:, i]
         positions = positions_node[]; colors = colors_node[]
         append!(positions, data)
         c = color(newstate)
         append!(colors, fill(c, length(data)))
-        # update all the observables with Array as value:
+        # Update all the observables with Array as value:
         positions_node[], colors_node[], laststate[] = positions, colors, newstate
     end
     display(figure)
