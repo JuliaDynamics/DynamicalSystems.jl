@@ -122,14 +122,16 @@ using CairoMakie, DynamicalSystems
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools", "CairoMakie",
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "TransitionsInTimeseries", "SignalDecomposition", "ChaosTools", "CairoMakie",
     ];
     mode = PKGMODE_MANIFEST
 )
 ```
 
 !!! warn "Version numbers do not strictly follow SemVer2.0"
-    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations or better default keyword arguments) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
+    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are independent of each other. Our development approach is that mildly breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations or better default keyword arguments) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
+
+    Every single subpackage of DynamicalSystems.jl has a human-written CHANGELOG.md file that details all changes done in each version. You should consult this package if you want to know what changed from version to version.
 
 
 ## Other NLD-relevant packages
@@ -143,7 +145,6 @@ Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosy
 * [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
 * [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) - Agent based modelling.
 * [EasyModelAnalysis.jl](https://github.com/SciML/EasyModelAnalysis.jl) - Analysis tools for conveniently analysing solutions of DiffEq systems.
-* [SignalDecomposition.jl](https://github.com/JuliaDynamics/SignalDecomposition.jl) - Decompose a signal/timeseries into structure and noise or seasonal and residual components.
 * [ARFIMA.jl](https://github.com/JuliaDynamics/ARFIMA.jl) - generate ARFIMA process timeseries.
 * [ConcurrentSim.jl](https://github.com/JuliaDynamics/ConcurrentSim.jl) - discrete event process oriented simulation framework.
-* [CausalityTools.jl](https://github.com/JuliaDynamics/CausalityTools.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.
+* [Associations.jl](https://github.com/JuliaDynamics/Associations.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.
