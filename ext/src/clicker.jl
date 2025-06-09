@@ -1,7 +1,8 @@
 function DynamicalSystems.interactive_clicker(dds;
         # DynamicalSystems kwargs:
         tfinal = (1000.0, 10.0^4),
-        # TODO: project and complete, to be reusable from psos
+        complete = (x, y) -> [x, y],
+        project = identity,
         # Makie kwargs:
         color = randomcolor,
         scatterkwargs = (),
@@ -18,10 +19,12 @@ function DynamicalSystems.interactive_clicker(dds;
     # Compute the initial section
     tr, = trajectory(dds, T_slider[]; t0 = 0)
     length(tr) == 0 && error("Initial computed trajectory is empty!")
-    length(tr[1]) != 2 && error("Trajectory is not 2D")
 
-    positions_node = Observable(tr)
-    colors = (c = color(u0); [c for i in 1:length(tr)])
+    data = project(tr)
+    length(data[1]) != 2 && error("(Projected) trajectory is not 2D")
+
+    positions_node = Observable(data)
+    colors = (c = color(u0); [c for _ in 1:length(data)])
     colors_node = Observable(colors)
     scatter!(
         ax, positions_node, color = colors_node,
@@ -36,13 +39,20 @@ function DynamicalSystems.interactive_clicker(dds;
     spoint = select_point(ax.scene)
     on(spoint) do pos
         x, y = pos;
-        newstate = [x, y]
+        newstate = try
+           complete(x, y)
+        catch err
+           @error "Could not complete state, got error: " exception=err
+           return
+        end
 
         tr, = trajectory(dds, T_slider[], newstate; t0 = 0)
+        data = project(tr)
+
         positions = positions_node[]; colors = colors_node[]
-        append!(positions, tr)
+        append!(positions, data)
         c = color(newstate)
-        append!(colors, fill(c, length(tr)))
+        append!(colors, fill(c, length(data)))
         # Update all the observables with Array as value:
         positions_node[], colors_node[], laststate[] = positions, colors, newstate
     end
