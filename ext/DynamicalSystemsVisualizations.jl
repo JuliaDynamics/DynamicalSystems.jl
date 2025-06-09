@@ -10,6 +10,7 @@ include("src/cobweb.jl")
 include("src/orbitdiagram.jl")
 include("src/poincareclick.jl")
 include("src/brainscan.jl")
+include("src/clicker.jl")
 
 subscript = DynamicalSystemsVisualizations.subscript
 

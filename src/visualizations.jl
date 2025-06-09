@@ -1,5 +1,6 @@
 export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, scaleod,
-  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries
+  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries,
+  interactive_clicker
 
 """
     interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
@@ -314,3 +315,33 @@ This `newstate` is also given to the function `color` that
 gets a new color for the new points.
 """
 function interactive_poincaresos end
+
+
+"""
+    interactive_clicker(dds; kwargs...)
+Launch an interactive application for exploring the state space of a
+2D discrete dynamical system `dds`, usually derived from a continuous dynamical system.
+Requires `DynamicalSystems`.
+
+The function returns: `figure, laststate` with the latter being
+an observable containing the latest initial `state`.
+
+## Keyword Arguments
+* `tfinal = (1000.0, 10.0^4)` : A 2-element tuple for the range of values
+  for the total integration time (chosen interactively).
+* `color` : A **function** of the system's initial condition, that returns a color to
+  plot the new points with. The color must be `RGBf/RGBAf`.
+   A random color is chosen by default.
+* `labels = ("x" , "y")` : Scatter plot labels.
+* `scatterkwargs = ()`: Named tuple of keywords passed to `scatter`.
+* `diffeq = NamedTuple()` : Any extra keyword arguments are passed into `init` of DiffEq.
+
+## Interaction
+The application is a standard scatterplot, which shows the state space of the dynamical system,
+initially using the system's `u0`. Two sliders control the total evolution time
+and the size of the marker points (which is always in pixels).
+
+Upon clicking within the bounds of the scatter plot your click is transformed into
+a new initial condition, which is further evolved and then plotted into the scatter plot.
+"""
+function interactive_clicker end
