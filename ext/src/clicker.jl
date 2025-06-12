@@ -5,11 +5,9 @@ function DynamicalSystems.interactive_clicker(ds;
         project = identity,
         # Makie kwargs:
         color = randomcolor,
-        scatterkwargs = (),
-        labels = ("x", "y")
+        labels = ("x", "y"),
+        scatterkwargs = ()
     )
-
-    dimension(ds) != 2 && error("Dynamical system is not 2D")
 
     u0 = DynamicalSystems.get_state(ds)
 
