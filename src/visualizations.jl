@@ -318,23 +318,30 @@ function interactive_poincaresos end
 
 
 """
-    interactive_clicker(dds; kwargs...)
+    interactive_clicker(ds; kwargs...)
 Launch an interactive application for exploring the state space of a
-2D discrete dynamical system `dds`, usually derived from a continuous dynamical system.
+discrete dynamical system `ds`, usually derived from a continuous dynamical system.
 Requires `DynamicalSystems`.
 
 The function returns: `figure, laststate` with the latter being
 an observable containing the latest initial `state`.
 
 ## Keyword Arguments
-* `tfinal = (1000.0, 10.0^4)` : A 2-element tuple for the range of values
+* `tfinal = (1000.0, 10.0^4)`: A 2-element tuple for the range of values
   for the total integration time (chosen interactively).
+* `complete`: A **function** to construct the new initial state of the system,
+  after the user clicks on the screen. Receives two parameters,
+  the `x` and `y` coordinates of the click,
+  and must return a vector with the same dimension as the system's state.
+  If not specified, by default it's just `(x, y) -> [x, y]`.
+* `project`: A **function** to project a system's state down to two dimensions,
+  in order to be able to represent it graphically.
+  If not specified, the default is the identity function.
 * `color` : A **function** of the system's initial condition, that returns a color to
   plot the new points with. The color must be `RGBf/RGBAf`.
    A random color is chosen by default.
 * `labels = ("x" , "y")` : Scatter plot labels.
 * `scatterkwargs = ()`: Named tuple of keywords passed to `scatter`.
-* `diffeq = NamedTuple()` : Any extra keyword arguments are passed into `init` of DiffEq.
 
 ## Interaction
 The application is a standard scatterplot, which shows the state space of the dynamical system,
@@ -343,5 +350,8 @@ and the size of the marker points (which is always in pixels).
 
 Upon clicking within the bounds of the scatter plot your click is transformed into
 a new initial condition, which is further evolved and then plotted into the scatter plot.
+
+The `complete` function can throw an error for ill-conditioned `x, y, z`.
+This will be properly handled instead of breaking the application.
 """
 function interactive_clicker end
