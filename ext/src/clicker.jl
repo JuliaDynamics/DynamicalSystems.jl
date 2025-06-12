@@ -1,4 +1,4 @@
-function DynamicalSystems.interactive_clicker(dds;
+function DynamicalSystems.interactive_clicker(ds;
         # DynamicalSystems kwargs:
         tfinal = (1000.0, 10.0^4),
         complete = (x, y) -> [x, y],
@@ -9,7 +9,9 @@ function DynamicalSystems.interactive_clicker(dds;
         labels = ("x", "y")
     )
 
-    u0 = DynamicalSystems.get_state(dds)
+    dimension(ds) != 2 && error("Dynamical system is not 2D")
+
+    u0 = DynamicalSystems.get_state(ds)
 
     figure = Figure(size = (1000, 800), backgroundcolor = :white)
 
@@ -17,8 +19,8 @@ function DynamicalSystems.interactive_clicker(dds;
     ax = figure[0, :] = Axis(figure)
 
     # Compute the initial section
-    tr, = trajectory(dds, T_slider[]; t0 = 0)
-    length(tr) == 0 && error("Initial computed trajectory is empty!")
+    tr, = trajectory(ds, T_slider[]; t0 = 0)
+    length(tr) == 0 && error("Initial computed trajectory is empty")
 
     data = project(tr)
     length(data[1]) != 2 && error("(Projected) trajectory is not 2D")
@@ -46,7 +48,7 @@ function DynamicalSystems.interactive_clicker(dds;
            return
         end
 
-        tr, = trajectory(dds, T_slider[], newstate; t0 = 0)
+        tr, = trajectory(ds, T_slider[], newstate; t0 = 0)
         data = project(tr)
 
         positions = positions_node[]; colors = colors_node[]
