@@ -45,29 +45,25 @@ We are developing a full course (targeting a graduate or undergraduate semester 
 The materials of the course are on GitHub: <https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses>
 
 
-## Citing
+## How to cite
 
-There is a (small) paper associated with **DynamicalSystems.jl**. If we have helped
-you in research that led to a publication, please cite it using
-the DOI `10.21105/joss.00598` or the following BiBTeX entry:
-```
-@article{Datseris2018,
-  doi = {10.21105/joss.00598},
-  url = {https://doi.org/10.21105/joss.00598},
-  year  = {2018},
-  month = {mar},
-  volume = {3},
-  number = {23},
-  pages = {598},
-  author = {George Datseris},
-  title = {DynamicalSystems.jl: A Julia software library for chaos and nonlinear dynamics},
-  journal = {Journal of Open Source Software}
-}
-```
+If using **DynamicalSystems.jl** resulted in a publication with references, we kindly ask that you give appropriate credit in three ways:
 
-Irrespectively of **DynamicalSystems.jl**, _please also cite the specific algorithm that you used from the library_. The documentation of the function used will point you to the correct reference.
+1. Cite the whole **DyamicalSystems.jl** ecosystem by citing the associated DOI `10.21105/joss.00598` (and see below for a BiBTeX entry). Even if you did not use **DynamicalSystems.jl** directly, but only a subcomponent, we still strongly encourage to cite **DynamicalSystems.jl** as well. More citations enable us to obtain funding to maintain and further develop **DynamicalSystems.jl** and the central citation associated with this effort is that assigned to the top-level `DynamicalSystems` module.
+2. Cite the submodule (or subpackage, or subcomponent) that you used directly, if it has an associated publication (see example below).
+3. Cite the specific algorithm(s) you used to also give credit to the originators of the methods.
 
-Besides the library, we would also appreciate it if you cited the textbook we wrote that **DynamicalSystems.jl** accompanies:
+For example, a typical citation that gives proper credit to using **DynamicalSystems.jl** could be:
+
+> For our work we used the Sample Entropy `\cite{@SampleEntropy}` that is implemented in the ComplexityMeasures.jl component `\cite{ComplexityMeasures}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+
+or, one more example:
+
+> For the surrogates for the atmospheric temperature timeseries we used the random cascade surrogates `\cite{Palus2008} that is implemented in the TimeseriesSurrogates.jl component `\cite{TimeseriesSurrogates}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+
+To find the specific references associated with the subpackages visit their respective dedicated documentation pages.
+
+Besides the library, you may find useful the Nonlinear Dynamics textbook that utilizes **DynamicalSystems.jl**, which you can cite as:
 
 ```
 @book{DatserisParlitz2022,
