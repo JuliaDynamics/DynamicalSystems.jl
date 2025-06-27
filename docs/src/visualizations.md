@@ -318,3 +318,28 @@ j = 2 # the dimension of the plane
 
 interactive_poincaresos_scan(trs, j; linekw = (transparency = true,))
 ```
+
+## Interactive 2D dynamical system
+
+```@docs
+interactive_clicker
+```
+
+The `interactive_clicker` function can be used to spin up a GUI
+for interactively exploring the state space of a 2D dynamical system.
+
+For example, the following code show how to interactively explore a
+[`ProjectedDynamicalSystem`](@ref):
+
+```julia
+using GLMakie, DynamicalSystems
+
+# This is the 3D Lorenz model
+lorenz = Systems.lorenz()
+
+projection = [1, 2]
+complete_state = [0.0]
+projected_ds = ProjectedDynamicalSystem(lorenz, projection, complete_state)
+
+interactive_clicker(projected_ds; tfinal = (10.0, 150.0))
+```
