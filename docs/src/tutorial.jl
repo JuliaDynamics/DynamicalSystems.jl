@@ -577,7 +577,7 @@ fig
 #     ProcessBasedModelling.jl is an extension to ModelingToolkit.jl for creating
 #     models from a set of equations. It has been designed to be useful for scenarios
 #     applicable to a typical nonlinear dynamics analysis workflow,
-#     and provides better error messages during system construction than MTK.
+#     and provides improved error messages during system construction versus MTK.
 #     Have a look [at its docs](https://juliadynamics.github.io/ProcessBasedModelling.jl/stable/)!
 
 
