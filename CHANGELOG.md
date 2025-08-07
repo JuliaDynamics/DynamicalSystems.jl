@@ -7,6 +7,13 @@ The changelog here therefore lists either major changes to the overarching Dynam
 
 The changelogs of individual sub-packages are self-contained for each package.
 
+
+# v3.5
+
+- Improved documentation regarding versions
+- Added TransitionsInTimeseries.jl into DynamicalSystems.jl
+- Added SignalDecomposition.jl into DynamicalSystems.jl
+
 # v3.4
 
 Some important fixes on the `interactive_trajectory` GUI:
