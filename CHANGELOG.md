@@ -11,7 +11,6 @@ The changelogs of individual sub-packages are self-contained for each package.
 # v3.5
 
 - Improved documentation regarding versions
-- Added TransitionsInTimeseries.jl into DynamicalSystems.jl
 - Added SignalDecomposition.jl into DynamicalSystems.jl
 
 # v3.4

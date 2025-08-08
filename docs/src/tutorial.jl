@@ -324,7 +324,7 @@ heatmap_basins_attractors((xg, yg), basins, attractors)
 
 # ## Stochastic systems
 
-# DynamicalSystems.jl has some support for stochastic systems
+# **DynamicalSystems.jl** has some support for stochastic systems
 # in the form of Stochastic Differential Equations (SDEs).
 # Just like `CoupledODEs`, one can make `CoupledSDEs`!
 # For example here is a stochastic version of a FitzHugh-Nagumo model
@@ -344,7 +344,7 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 # In this particular example the SDE noise is white noise (Wiener process)
 # with strength (σ) of 0.05. See the documentation of `CoupledSDEs` for alternatives.
 
-# In any case, in DynamicalSystems.jl all dynamical systems are part of the same
+# In any case, in **DynamicalSystems.jl** all dynamical systems are part of the same
 # interace, stochastic or not. As long as the algorithm is not influenced by stochasticity,
 # we can apply it to `CoupledSDEs` just as well. For example, we can study multistability
 # in a stochastic system. In contrast to the previous example of the Henon map,
@@ -492,7 +492,7 @@ scatter(X)
 
 # even though Makie has no knowledge of the specifics of `StateSpaceSet`.
 
-# ## Using state space sets
+# ## Nonlinear data anlysis using state space sets
 
 # Several packages of the library deal with `StateSpaceSets`.
 
@@ -520,10 +520,12 @@ heatmap(Rg; colormap = :grays,
     axis = (title = "recurrence rate = $(round(rr; digits = 3))", aspect = 1)
 )
 
-
 # ## More nonlinear timeseries analysis
 
-# A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
+# A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`.
+# However, another common way is via a delay coordinates embedding of a measured/observed timeseries.
+# For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to
+# create an optimized delay coordinates embedding of a timeseries
 
 w = Y[:, 1] # first variable of Lorenz96
 𝒟, τ, e = optimal_separated_de(w)
@@ -538,34 +540,54 @@ for (S, ax) in zip((Y, 𝒟), axs)
 end
 fig
 
-# Since `𝒟` is just another state space set, we could be using any of the above analysis pipelines on it just as easily.
+# Since `𝒟` is just another state space set, we could be using any of the above
+# analysis pipelines on it just as easily.
 
-# The last package to mention here is [`TimeseriesSurrogates`](@ref), which ties with all other observed/measured data analysis by providing a framework for confidence/hypothesis testing. For example, if we had a measured timeseries but we were not sure whether it represents a deterministic system with structure in the state space, or mostly noise, we could do a surrogate test. For this, we use `surrogenerator` and `RandomFourier` from [`TimeseriesSurrogates`](@ref), and the `generalized_dim` from [`FractalDimensions`](@ref) (because it performs better in noisy sets)
+# [`TimeseriesSurrogates`](@ref) ties well all other observed/measured data analysis by
+# providing a framework for hypothesis testing. For example, if we had a measured
+# timeseries but we were not sure whether it represents a deterministic system with structure
+# in the state space, or mostly noise, we could do a surrogate test.
+# Let's say that this is the timeseries we want to use:
+
 
 x # Henon map timeseries
 ## contaminate with noise
 using Random: Xoshiro
 rng = Xoshiro(1234)
-x .+= randn(rng, length(x))/100
-## compute noise-contaminated fractal dim.
-Δ_orig = generalized_dim(embed(x, 2, 1); show_progress = false)
+noisyx = x .+ randn(rng, length(x))/100
 
-# And we do the surrogate test
+# To do the test, we use `SurrogateTest` and `RandomFourier` from [`TimeseriesSurrogates`](@ref).
+# We need to provide a function that given a timeseries it outputs a discriminatory value,
+# which is typically some nonlinear measure. Here we will use
+# the `generalized_dim` from [`FractalDimensions`](@ref) (because it performs better in noisy sets)
+# applied to the delay embedded set of the timeseries.
 
+discriminatory(x) = generalized_dim(embed(x, 2, 1); show_progress = false)
+
+# we then initialize the test and obtain its p-value:
 surrogate_method = RandomFourier()
-sgen = surrogenerator(x, surrogate_method, rng)
-Δ_surr = map(1:1000) do i
-    s = sgen()
-    generalized_dim(embed(s, 2, 1); show_progress = false)
-end
+test = SurrogateTest(discriminatory, noisyx, surrogate_method; n = 1000)
+pval = pvalue(test)
 
-# and visualize the test result
+# Since the p-value is very small we have good confidence that the timeseries
+# come from some nonlinear system and they are not just noise.
 
-fig, ax = hist(Δ_surr)
-vlines!(ax, Δ_orig)
+# The last component of **DynamicalSystems.jl** to mention is [`SignalDecomposition`](@ref),
+# a general-purpose tool that can perform de-noising or de-trending in timeseries,
+# a step often useful when pre-processing data before further analysis.
+# It incorporate several linear and nonlinear techniques. For example,
+# one can attempt to de-noise the noisy Henon map timeseries we used above
+# with nonlinear techniques, for example:
+
+m = 5
+k = 15
+Q = [3, 3, 3, 3, 3]
+denoisedx, _ = SignalDecomposition.decompose(noisyx, ManifoldProjection(m, Q, k))
+fig, ax = lines(abs.(x .- noisyx); label = "noise error")
+lines!(ax, abs.(x .- denoisedx); label = "denoised error")
+ylims!(ax, 0, 0.1)
+axislegend(ax)
 fig
-
-# since the real value is outside the distribution we have confidence the data are not pure noise.
 
 # ## Integration with ModelingToolkit.jl
 
