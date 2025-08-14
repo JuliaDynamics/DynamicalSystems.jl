@@ -12,6 +12,7 @@ The changelogs of individual sub-packages are self-contained for each package.
 
 - Improved documentation regarding versions
 - Added SignalDecomposition.jl into DynamicalSystems.jl
+- Added PeriodicOrbits.jl into DynamicalSystems.jl
 
 # v3.4
 
