@@ -49,21 +49,25 @@ The materials of the course are on GitHub: <https://github.com/JuliaDynamics/Non
 
 If using **DynamicalSystems.jl** resulted in a publication with references, we kindly ask that you give appropriate credit in three ways:
 
-1. Cite the whole **DyamicalSystems.jl** ecosystem by citing the associated DOI `10.21105/joss.00598` (and see below for a BiBTeX entry). Even if you did not use **DynamicalSystems.jl** directly, but only a subcomponent, we still strongly encourage to cite **DynamicalSystems.jl** as well. More citations enable us to obtain funding to maintain and further develop **DynamicalSystems.jl** and the central citation associated with this effort is that assigned to the top-level `DynamicalSystems` module.
-2. Cite the submodule (or subpackage, or subcomponent) that you used directly, if it has an associated publication (see example below).
+1. Cite the whole **DyamicalSystems.jl** ecosystem by citing the associated DOI `10.21105/joss.00598` (and see below for a BiBTeX entry). Even if you did not use **DynamicalSystems.jl** directly, but only a subpackage, we still strongly encourage to cite **DynamicalSystems.jl** as well. More citations enable us to obtain funding to maintain and further develop **DynamicalSystems.jl** and the central citation associated with this effort is that assigned to the top-level `DynamicalSystems` module.
+2. Cite the subpackage that you used directly, if it has an associated publication (see example below).
 3. Cite the specific algorithm(s) you used to also give credit to the originators of the methods.
 
 For example, a typical citation that gives proper credit to using **DynamicalSystems.jl** could be:
 
-> For our work we used the Sample Entropy `\cite{@SampleEntropy}` that is implemented in the ComplexityMeasures.jl component `\cite{ComplexityMeasures}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+> For our work we used the Sample Entropy `\cite{Richman2000}` that is implemented in the ComplexityMeasures.jl package `\cite{ComplexityMeasures}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
 
-or, one more example:
+or,
 
-> For the surrogates for the atmospheric temperature timeseries we used the random cascade surrogates `\cite{Palus2008} that is implemented in the TimeseriesSurrogates.jl component `\cite{TimeseriesSurrogates}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+> For the surrogates for the atmospheric temperature timeseries we used the random cascade surrogates `\cite{Palus2008}` that is implemented in the TimeseriesSurrogates.jl package `\cite{TimeseriesSurrogates}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+
+or,
+
+> We find the attractors of the dynamical systems using the recurrences algorithm `\cite{Datseris2022}` that is implemented in the Attractors.jl package `\cite{Attractors}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
 
 To find the specific references associated with the subpackages visit their respective dedicated documentation pages.
 
-Besides the library, you may find useful the Nonlinear Dynamics textbook that utilizes **DynamicalSystems.jl**, which you can cite as:
+Besides the library, you may also find useful the Nonlinear Dynamics textbook that utilizes **DynamicalSystems.jl**, which you can cite as:
 
 ```
 @book{DatserisParlitz2022,
