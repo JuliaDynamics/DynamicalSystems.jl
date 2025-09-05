@@ -322,6 +322,36 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 
 heatmap_basins_attractors((xg, yg), basins, attractors)
 
+# Another component of **DynamicalSystems.jl** that utilizes a `DynamicalSystem` instance
+# is [`PeriodicOrbits`](@ref), which, you guessed it, finds periodic orbits.
+# In contrast to `Attractors`, `PeriodicOrbits` is dediced to finding both
+# stable and unstable periodic orbits. For example, it is known that inside
+# chaotic attractors there resides an infinity of periodic orbits.
+# Let's find many unstable periodic orbits, up to order 8, for the Henon map
+# using an algorithm dedicated to discrete time systems
+
+xs = range(-3.0, 3.0; length = 10)
+ys = range(-10.0, 10.0; length = 10)
+seeds = [InitialGuess(SVector{2}(x,y), nothing) for x in xs for y in ys]
+n = 7
+alg = DavidchackLai(n=n, m=6, abstol=1e-7, disttol=1e-10)
+output = periodic_orbits(henon, alg, seeds)
+output = uniquepos(output)
+output = minimal_period.(henon, output) # remove duplicates
+
+# and now plot them on top of the chaotic attractor that we found
+# in the previous step
+A = attractors[1]
+fig, ax = scatter(A; color = ("black", 0.5), markersize = 10)
+markers = [:rect, :diamond, :utriangle, :dtriangle, :ltriangle, :rtriangle, :pentagon, :hexagon]
+cmap = cgrad(:dense, n+1; categorical = true)
+for po in output
+    @show po.T
+    scatter!(ax, po.points; markersize=20, color = cmap[po.T], marker=markers[po.T],
+    strokewidth = 1, strokecolor = "black")
+end
+fig
+
 # ## Stochastic systems
 
 # **DynamicalSystems.jl** has some support for stochastic systems

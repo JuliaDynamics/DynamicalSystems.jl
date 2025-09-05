@@ -22,6 +22,7 @@ using Reexport
 @reexport using PredefinedDynamicalSystems
 @reexport using Attractors
 @reexport using ChaosTools
+@reexport using PeriodicOrbits
 # visualizations (singleton methods for package extension)
 using DataStructures
 include("visualizations.jl")
