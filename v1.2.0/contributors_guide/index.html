@@ -1,0 +1,151 @@
+<!DOCTYPE html><HTML class="no-js" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="ie=edge" http-equiv="x-ua-compatible"/><meta content="A Julia software library for the exploration of chaos and nonlinear dynamics." name="description"/><meta content="George Datseris" name="author"/><meta content="Copy to clipboard" name="lang:clipboard.copy"/><meta content="Copied to clipboard" name="lang:clipboard.copied"/><meta content="en" name="lang:search.language"/><meta content="True" name="lang:search.pipeline.stopwords"/><meta content="True" name="lang:search.pipeline.trimmer"/><meta content="No matching documents" name="lang:search.result.none"/><meta content="1 matching document" name="lang:search.result.one"/><meta content="# matching documents" name="lang:search.result.other"/><meta content="[\s\-]+" name="lang:search.tokenizer"/><link href="../assets/images/favicon.png" rel="shortcut icon"/><meta content="mkdocs-0.17.5, mkdocs-material-2.9.4" name="generator"/><title>Contributor Guide - DynamicalSystems.jl</title><link href="../assets/stylesheets/application.451f80e5.css" rel="stylesheet"/><link href="../assets/stylesheets/application-palette.22915126.css" rel="stylesheet"/><meta content="#7e57c2" name="theme-color"/><script src="../assets/javascripts/modernizr.1aa3b519.js"></script><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i,700|Source+Code+Pro" rel="stylesheet"/><style>body,input{font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Source Code Pro","Courier New",Courier,monospace}</style><link href="../assets/fonts/material-icons.css" rel="stylesheet"/><link href="../assets\Documenter.css" rel="stylesheet"/><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This documentation is not for the latest version. <br> <a href="' + href + '">Go to the latest documentation</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body data-md-color-accent="teal" data-md-color-primary="deep-purple" dir="ltr"><svg class="md-svg"><defs><svg height="448" id="__github" viewBox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg"><path d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" fill="currentColor"></path></svg></defs></svg><input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/><input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/><label class="md-overlay" data-md-component="overlay" for="__drawer"></label><a class="md-skip" href="#contributor-guide" tabindex="1">
+        Skip to content
+      </a><header class="md-header" data-md-component="header"><nav class="md-header-nav md-grid"><div class="md-flex"><div class="md-flex__cell md-flex__cell--shrink"><a class="md-header-nav__button md-logo" href=".." title="DynamicalSystems.jl"><i class="md-icon"></i></a></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label></div><div class="md-flex__cell md-flex__cell--stretch"><div class="md-flex__ellipsis md-header-nav__title" data-md-component="title"><span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span><span class="md-header-nav__topic">
+                Contributor Guide
+              </span></div></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--search md-header-nav__button" for="__search"></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/><label class="md-icon md-search__icon" for="__search"></label><button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+        
+      </button></form><div class="md-search__output"><div class="md-search__scrollwrap" data-md-scrollfix=""><div class="md-search-result" data-md-component="result"><div class="md-search-result__meta">
+            Type to start searching
+          </div><ol class="md-search-result__list"></ol></div></div></div></div></div></div><div class="md-flex__cell md-flex__cell--shrink"><div class="md-header-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div></div></div></nav></header><div class="md-container"><main class="md-main"><div class="md-main__inner md-grid" data-md-component="container"><div class="md-sidebar md-sidebar--primary" data-md-component="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary" data-md-level="0"><label class="md-nav__title md-nav__title--site" for="__drawer"><a class="md-nav__button md-logo" href=".." title="DynamicalSystems.jl"><i class="md-icon"></i></a>
+    DynamicalSystems.jl
+  </label><div class="md-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href=".." title="Introduction &amp; Contents">
+      Introduction &amp; Contents
+    </a></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" id="nav-2" type="checkbox"/><label class="md-nav__link" for="nav-2">
+      DynamicalSystemsBase
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-2">
+        DynamicalSystemsBase
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../ds/general/" title="Dynamical System Definition">
+      Dynamical System Definition
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../ds/evolve/" title="Time Evolution">
+      Time Evolution
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../ds/predefined/" title="Predefined Systems">
+      Predefined Systems
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/><label class="md-nav__link" for="nav-3">
+      DelayEmbeddings
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-3">
+        DelayEmbeddings
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../embedding/dataset/" title="Numerical Data">
+      Numerical Data
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../embedding/reconstruction/" title="Delay Coordinates">
+      Delay Coordinates
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../embedding/estimate/" title="Estimating Delay Embedding Parameters">
+      Estimating Delay Embedding Parameters
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" id="nav-4" type="checkbox"/><label class="md-nav__link" for="nav-4">
+      ChaosTools
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-4">
+        ChaosTools
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../chaos/overview/" title="Features Overview">
+      Features Overview
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/orbitdiagram/" title="Orbit Diagrams &amp; PSOS">
+      Orbit Diagrams &amp; PSOS
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/lyapunovs/" title="Lyapunov Exponents">
+      Lyapunov Exponents
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/chaos_detection/" title="Chaos Distinction">
+      Chaos Distinction
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/entropies/" title="Entropies and Dimensions">
+      Entropies and Dimensions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/nlts/" title="Nonlinear Timeseries Analysis">
+      Nonlinear Timeseries Analysis
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/periodicity/" title="Periodicity">
+      Periodicity
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos/choosing/" title="Choosing a solver">
+      Choosing a solver
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" id="nav-5" type="checkbox"/><label class="md-nav__link" for="nav-5">
+      RecurrenceAnalysis
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-5">
+        RecurrenceAnalysis
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../rqa/rplots/" title="Recurrence Plots">
+      Recurrence Plots
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../rqa/quantification/" title="Quantification &amp; Analysis functions">
+      Quantification &amp; Analysis functions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../rqa/windowed/" title="Windowed RQA">
+      Windowed RQA
+    </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../advanced/" title="Advanced Documentation">
+      Advanced Documentation
+    </a></li><li class="md-nav__item md-nav__item--active"><input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/><label class="md-nav__link md-nav__link--active" for="__toc">
+        Contributor Guide
+      </label><a class="md-nav__link md-nav__link--active" href="./" title="Contributor Guide">
+      Contributor Guide
+    </a><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#contributing-code" title="Contributing Code">
+    Contributing Code
+  </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../news/" title="News">
+      News
+    </a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#contributing-code" title="Contributing Code">
+    Contributing Code
+  </a></li></ul></nav></div></div></div><div class="md-content"><article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/contributors_guide.md" title="Edit this page"></a><p><a id="Contributor-Guide-1"></a></p><h1 id="contributor-guide">Contributor Guide</h1><p>The ultimate goal for <strong>DynamicalSystems.jl</strong> is to be a useful <em>library</em> for scientists working on chaos, nonlinear dynamics and in general dynamical systems. We don't want to have "just code", but also detailed descriptions and references for as many methods as possible.</p><p>For this to be achieved, many of us should try to work together to improve the library!</p><p>If you want to help the cause, there are many ways to contribute to the <strong>DynamicalSystems.jl</strong> library:</p><ol><li>Just <em>use it</em>. If you encountered unexpected behavior simply report it either on our <a href="https://gitter.im/JuliaDynamics/Lobby">gitter chatroom</a> or using the <a href="https://github.com/JuliaDynamics/DynamicalSystems.jl/issues">DynamicalSystems.jl Issues</a> page.</li><li>Suggest methods that you think should be included in our library. This should be done by opening a new issue that describes the method, gives references to papers using the method and also justifies why the method should be included.</li><li>Contribute code by solving issues. The easiest issues to tackle are the ones with label <a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22good+first+issue%22+">"good first issue"</a>.</li><li>Contribute code by implementing new methods! That is the most <strong>awesome</strong> way to contribute! The individual packages that compose <strong>DynamicalSystems.jl</strong> have plenty of issues with the tag <a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=is%3Aopen+is%3Aissue+repo%3AJuliaDynamics%2FChaosTools.jl+repo%3AJuliaDynamics%2FDynamicalSystemsBase.jl+repo%3AJuliaDynamics%2FDynamicalSystems.jl+repo%3AJuliaDynamics%2FTimeseriesPrediction.jl+label%3A%22wanted+feature%22+">"wanted feature"</a>, which can get you started on a big contribution!</li><li>Contribute code by defining a new pre-defined dynamical system that you found useful.</li></ol><p><a id="Contributing-Code-1"></a></p><h2 id="contributing-code">Contributing Code</h2><p>When contributing code, you should keep these things in mind:</p><ul><li>In general, the speed of the implementation is important, but not as important as the <strong>reliability of the implementation</strong>. One of cornerstones of all of <strong>DynamicalSystems.jl</strong> is to have clear and readable source code. Fortunately, Julia allows you to have perfectly readable code but also super fast ;)</li><li>For new methods and systems please follow the convention of the documentation strings (do e.g. <code>?lyapunov</code> to see how they are structured).</li><li>Have enough comments in your code so that somebody that knows the method, can also understand the code immediately.</li><li>Always have a reference to the original work that introduces the method or the system that you are using. You should put this reference to the main function's documentation string. See the existing documentation strings and do it in a similar manner.</li></ul></article></div></div></main><footer class="md-footer"><div class="md-footer-nav"><nav class="md-footer-nav__inner md-grid"><a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../advanced/" rel="prev" title="Advanced Documentation"><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-back md-footer-nav__button"></i></div><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Advanced Documentation
+              </span></div></a><a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../news/" rel="next" title="News"><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Next
+                </span>
+                News
+              </span></div><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i></div></a></nav></div><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a></div><div class="md-footer-social"><link href="../assets/fonts/font-awesome.css" rel="stylesheet"/><a class="md-footer-social__link fa fa-github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl"></a></div></div></div></footer></div><script src="../assets/javascripts/application.30f6b8b1.js"></script><script>app.initialize({version:"0.17.5",url:{base:".."}})</script><script src="../assets\mathjaxhelper.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></HTML>
