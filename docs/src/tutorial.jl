@@ -72,6 +72,11 @@ Pkg.status(["DynamicalSystems", "CairoMakie", "OrdinaryDiffEq", "BenchmarkTools"
 # !!! note "Autonomous vs non-autonomous systems"
 #     Whether the dynamical system is autonomous (`f` doesn't depend on time) or not, it is still necessary to include `t` as an argument to `f`. Some algorithms utilize this information, some do not, but we prefer to keep a consistent interface either way.
 
+# !!! warning "Dynamical systems are modified!"
+#     It is not immediatelly obvious, but all library functions that obtain as an input a
+#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
+#     of the system before and after giving it to a function such as `basins_of_attraction`
+#     will not be the same! This also affects parallelization, see below.
 
 # ### Example: Henon map
 
@@ -404,35 +409,25 @@ fig
 
 # ## Parallelization
 
-# !!! warning "Dynamical systems are modified!"
-#     It is not immediatelly obvious, but all library functions that obtain as an input a
-#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
-#     of the system before and after giving it to a function such as `basins_of_attraction`
-#     will not be the same! This also affects parallelization, see below.
-
-
-# Since `DynamicalSystem`s are mutable, one needs to copy them before parallelizing,
-# to avoid having to deal with complicated race conditions etc. The simplest way is with
-# `deepcopy`. Here is an example block that shows how to parallelize calling some expensive
-# function (e.g., calculating the Lyapunov exponent) over a parameter range
-# (or alternatively, over different initial conditions) using `Threads`:
-
+# Because `DynamicalSystem`s are mutable and most library functions mutate them,
+# one needs to be slightly delicate with parallelization.
+# The package OhMyThreads.jl can take care of all the details for us, like so:
 
 # ```julia
 # ds = DynamicalSystem(f, u, p) # some concrete implementation
 # parameters = 0:0.01:1
 # outputs = zeros(length(parameters))
 #
-# # Since `DynamicalSystem`s are mutable, we need to copy to parallelize
-# systems = [deepcopy(ds) for _ in 1:Threads.nthreads()-1]
-# pushfirst!(systems, ds) # we can save 1 copy
-#
-# Threads.@threads for (i, p) in enumerate(parameters)
-#     system = systems[Threads.threadid()]
-#     set_parameter!(system, index, parameters[i])
-#     outputs[i] = expensive_function(system, args...)
+# using OhMyThreads: @tasks, @local
+# @tasks for i in eachindex(parameters)
+#     @local system = deepcopy(ds) # important!
+#     set_parameter!(system, 1, parameters[i])
+#     outputs[i] = expesive_function(system, args...)
 # end
 # ```
+
+# Note that parallelization is only useful if the expensive function is
+# significantly more expensive than copying the system and thread communication!
 
 # ## Interactive GUIs
 
