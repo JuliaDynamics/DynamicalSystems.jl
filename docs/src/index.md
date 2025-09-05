@@ -49,21 +49,25 @@ The materials of the course are on GitHub: <https://github.com/JuliaDynamics/Non
 
 If using **DynamicalSystems.jl** resulted in a publication with references, we kindly ask that you give appropriate credit in three ways:
 
-1. Cite the whole **DyamicalSystems.jl** ecosystem by citing the associated DOI `10.21105/joss.00598` (and see below for a BiBTeX entry). Even if you did not use **DynamicalSystems.jl** directly, but only a subcomponent, we still strongly encourage to cite **DynamicalSystems.jl** as well. More citations enable us to obtain funding to maintain and further develop **DynamicalSystems.jl** and the central citation associated with this effort is that assigned to the top-level `DynamicalSystems` module.
-2. Cite the submodule (or subpackage, or subcomponent) that you used directly, if it has an associated publication (see example below).
+1. Cite the whole **DyamicalSystems.jl** ecosystem by citing the associated DOI `10.21105/joss.00598` (and see below for a BiBTeX entry). Even if you did not use **DynamicalSystems.jl** directly, but only a subpackage, we still strongly encourage to cite **DynamicalSystems.jl** as well. More citations enable us to obtain funding to maintain and further develop **DynamicalSystems.jl** and the central citation associated with this effort is that assigned to the top-level `DynamicalSystems` module.
+2. Cite the subpackage that you used directly, if it has an associated publication (see example below).
 3. Cite the specific algorithm(s) you used to also give credit to the originators of the methods.
 
 For example, a typical citation that gives proper credit to using **DynamicalSystems.jl** could be:
 
-> For our work we used the Sample Entropy `\cite{@SampleEntropy}` that is implemented in the ComplexityMeasures.jl component `\cite{ComplexityMeasures}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+> For our work we used the Sample Entropy `\cite{Richman2000}` that is implemented in the ComplexityMeasures.jl package `\cite{ComplexityMeasures}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
 
-or, one more example:
+or,
 
-> For the surrogates for the atmospheric temperature timeseries we used the random cascade surrogates `\cite{Palus2008} that is implemented in the TimeseriesSurrogates.jl component `\cite{TimeseriesSurrogates}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+> For the surrogates for the atmospheric temperature timeseries we used the random cascade surrogates `\cite{Palus2008}` that is implemented in the TimeseriesSurrogates.jl package `\cite{TimeseriesSurrogates}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
+
+or,
+
+> We find the attractors of the dynamical systems using the recurrences algorithm `\cite{Datseris2022}` that is implemented in the Attractors.jl package `\cite{Attractors}` of the DynamicalSystems.jl library `\cite{DynamicalSystems}`.
 
 To find the specific references associated with the subpackages visit their respective dedicated documentation pages.
 
-Besides the library, you may find useful the Nonlinear Dynamics textbook that utilizes **DynamicalSystems.jl**, which you can cite as:
+Besides the library, you may also find useful the Nonlinear Dynamics textbook that utilizes **DynamicalSystems.jl**, which you can cite as:
 
 ```
 @book{DatserisParlitz2022,
@@ -86,28 +90,19 @@ There are three options for asking questions:
 2. As a message in our channel `#dynamics-bridged` in the [Julia Slack](https://julialang.org/slack/) workplace. This option is preferred for a brief question with (expected) simple answer, or to get an opinion about something, or to chat about something.
 3. By opening an issue directly on the [GitHub page of DynamicalSystems.jl](https://github.com/JuliaDynamics/DynamicalSystems.jl) while providing a Minimal Working Example. This option is preferred when you encounter unexpected behavior.
 
-## Contributing & Donating
+## Contributing
 
 Be sure to visit the [Contributor Guide](@ref) page, because you can help make this package better without having to write a single line of code! Also, if you find this package helpful please consider staring it on [GitHub](https://github.com/JuliaDynamics/DynamicalSystems.jl)! This gives us an accurate lower bound of users that this package has already helped!
-
-Finally, you can donate for the development of **DynamicalSystems.jl**. You can do that by adding bounties to existing issues on the GitHub repositories (you can open new issues as well). Every issue has an automatic way to create a bounty using [Bountysource](https://www.bountysource.com/), see the first comment of each issue.
-
-### Issues with Bounties
-
-Money that **DynamicalSystems.jl** obtains from awards, sponsors, or donators are converted into bounties for GitHub issues. The full list of issues that have a bounty is [available here](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+org%3AJuliaDynamics+label%3Abounty).
-
-By solving these issues you not only contribute to open source, but you also get some pocket money to boot :)
-
 
 ## Maintainers and Contributors
 
 The **DynamicalSystems.jl** library is maintained by [George Datseris](https://github.com/Datseris), who is also curating and writing this documentation.
 The software code however is built from the contributions of several individuals.
-The list is too long to write and constantly update, so the best way to find out these contributions is to visit the GitHub page of each of the subpackages and checkout the "contributors" pages there.
+The list is too long to write and constantly update, so the best way to find out these contributions is to visit the GitHub page of each of the subpackages and checkout their respective "contributors" pages.
 
-## Version numbers
+## Version numbers and SemVer
 
-The version of `DynamicalSystems` by itself is a bit meaningless, because the module does not have any source code, besides re-exporting other modules.
+The version of `DynamicalSystems` by itself is a bit meaningless, because the module does not have any source code, besides re-exporting other modules and offering some visualization functionality.
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
@@ -118,14 +113,16 @@ using CairoMakie, DynamicalSystems
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "ChaosTools", "CairoMakie",
+    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "TransitionsInTimeseries", "SignalDecomposition", "ChaosTools", "CairoMakie",
     ];
     mode = PKGMODE_MANIFEST
 )
 ```
 
 !!! warn "Version numbers do not strictly follow SemVer2.0"
-    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are independent of each other. Our development approach is that breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations or better default keyword arguments) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
+    Because of the nature of the **DynamicalSystems.jl** library, the exported API contains hundreds of algorithm implementations, most of which are independent of each other. Our development approach is that mildly breaking changes to these individual algorithms (due to e.g., better API design or better performance implementations or better default keyword arguments) can be done **without incrementing any major version numbers**. We increment major version numbers only for breaking changes that have wide impact over most of the **DynamicalSystems.jl** library.
+
+    Every single subpackage of DynamicalSystems.jl has a human-written CHANGELOG.md file that details all changes done in each version. You should consult this package if you want to know what changed from version to version.
 
 
 ## Other NLD-relevant packages
@@ -139,7 +136,6 @@ Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosy
 * [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
 * [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) - Agent based modelling.
 * [EasyModelAnalysis.jl](https://github.com/SciML/EasyModelAnalysis.jl) - Analysis tools for conveniently analysing solutions of DiffEq systems.
-* [SignalDecomposition.jl](https://github.com/JuliaDynamics/SignalDecomposition.jl) - Decompose a signal/timeseries into structure and noise or seasonal and residual components.
 * [ARFIMA.jl](https://github.com/JuliaDynamics/ARFIMA.jl) - generate ARFIMA process timeseries.
 * [ConcurrentSim.jl](https://github.com/JuliaDynamics/ConcurrentSim.jl) - discrete event process oriented simulation framework.
-* [CausalityTools.jl](https://github.com/JuliaDynamics/CausalityTools.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.
+* [Associations.jl](https://github.com/JuliaDynamics/Associations.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.

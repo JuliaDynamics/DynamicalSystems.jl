@@ -23,7 +23,7 @@ Aspects of **DynamicalSystems.jl** that make it stand out among other codebases 
 - **Extensive content**. It aims to cover the entire field of nonlinear dynamics and nonlinear timeseries analysis. It has functionality for complexity measures, delay embeddings, periodic orbits, nonlocal stability analysis, continuation, chaos, fractal dimensions, surrogate testing, recurrence quantification analysis, and much more. Furthermore, all algorithms are "general" and work for any dynamical system applicable. Missing functionality that falls under this wide category of content is welcomed to be part of the library!
 - **Well tested**. All implemented functionality is extensively tested. Each time any change in the code base is done, the extensive test suite is run and checked before merging the change in.
 - **Extendable**. New contributions can become part of the library and be accessed by all users in the next release. Most importantly, all parts of the library follow professional standards in software design and implement extendable interfaces so that it is easy to contribute new functionality.
-- **Active development**. It is a living, evolving project. Since its beginning in May 2017, **DynamicalSystems.jl** has had some activity every single month: new features, bugfixes. The developer team routinely answers users questions on official Julia language forums.
+- **Active development**. It is a living, evolving project. Since its beginning in May 2017, **DynamicalSystems.jl** has had some activity every single month: new features, new packages, bugfixes. The developer team routinely answers users questions on official Julia language forums.
 - **Performant**. Written entirely in Julia, heavily optimized and parallelized, and taking advantage of some of the best packages within the language, **DynamicalSystems.jl** is _really fast_.
 
 ## Goals
@@ -54,3 +54,14 @@ You see, it is unfortunately rarely the case that real, _runnable_ code is shown
 
 **DynamicalSystems.jl** provides teachers with a framework capable of demonstrating actual, real-world nonlinear dynamics code and its output, without having to invest the weeks to code the internal infrastructure themselves.
 Its high level syntax requires writing little code to get lots of meaningful analysis done, while its extensive functionality covers most typical classroom applications.
+
+### Goal 4: Stopping the endless re-invention of wheel
+
+Because Nonlinear Dynamics as a field lacks a general purpose and "widely accepted" software, almost every software implementation starts from scratch.
+While doing so much of the code written actually implements functionality that already exists in some other codebase for nonlinear dynamics.
+This is astonishingly, and shamefully, prevalent in nonlinear dynamics, where up to 90% of the functionality of a codebase may already exist somewhere else.
+Needless to say this is just an absolute waste of time!
+
+**DynamicalSystems.jl** hopes to establish itself as the central software for nonlinear dynamics, from which new algorithms can be implementing.
+Re-using all the well-thought out interfaces and functionality means that one does not have to waste time writing code for functionality that already exists.
+Rather, they can focus on coding only the _new_ stuff!

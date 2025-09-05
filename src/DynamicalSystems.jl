@@ -18,10 +18,12 @@ using Reexport
 @reexport using DelayEmbeddings
 @reexport using ComplexityMeasures
 @reexport using TimeseriesSurrogates
+@reexport using SignalDecomposition
 # dynamical systems
 @reexport using PredefinedDynamicalSystems
 @reexport using Attractors
 @reexport using ChaosTools
+@reexport using PeriodicOrbits
 # visualizations (singleton methods for package extension)
 using DataStructures
 include("visualizations.jl")
