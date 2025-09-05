@@ -346,7 +346,6 @@ fig, ax = scatter(A; color = ("black", 0.5), markersize = 10)
 markers = [:rect, :diamond, :utriangle, :dtriangle, :ltriangle, :rtriangle, :pentagon, :hexagon]
 cmap = cgrad(:dense, n+1; categorical = true)
 for po in output
-    @show po.T
     scatter!(ax, po.points; markersize=20, color = cmap[po.T], marker=markers[po.T],
     strokewidth = 1, strokecolor = "black")
 end
@@ -472,7 +471,8 @@ step!(henon)
 
 step!(henon, 2)
 
-# For more information on how to directly use `DynamicalSystem` instances, see the documentation of [`DynamicalSystemsBase`](@ref).
+# For more information on how to directly use `DynamicalSystem` instances,
+# see the [interface of `DynamicalSystem`](@ref dsref).
 
 # ## State space sets
 
@@ -605,7 +605,7 @@ pval = pvalue(test)
 # The last component of **DynamicalSystems.jl** to mention is [`SignalDecomposition`](@ref),
 # a general-purpose tool that can perform de-noising or de-trending in timeseries,
 # a step often useful when pre-processing data before further analysis.
-# It incorporate several linear and nonlinear techniques. For example,
+# It incorporates several linear and nonlinear techniques. For example,
 # one can attempt to de-noise the noisy Henon map timeseries we used above
 # with nonlinear techniques, for example:
 
@@ -615,7 +615,7 @@ Q = [3, 3, 3, 3, 3]
 denoisedx, _ = SignalDecomposition.decompose(noisyx, ManifoldProjection(m, Q, k))
 fig, ax = lines(abs.(x .- noisyx); label = "noise error")
 lines!(ax, abs.(x .- denoisedx); label = "denoised error")
-ylims!(ax, 0, 0.1)
+ylims!(ax, 0, 0.05)
 axislegend(ax)
 fig
 
@@ -663,9 +663,10 @@ end
 
 # this model can then be made into an `ODEProblem`:
 
-prob = ODEProblem(model)
+prob = ODEProblem(model, [], (0.0, Inf))
 
-# (notice that because we specified initial values for all parameters and variables during the model creation  we do need to provide additional initial values)
+# (notice that because we specified initial values for all parameters and variables during
+# the model creation  we do need to provide additional initial values, we give an empty vector instead)
 
 # Now, this problem can be made into a [`CoupledODEs`](@ref):
 
@@ -682,7 +683,7 @@ observe_state(roessler, :nlt)
 
 # These observables can also be used in the GUI visualization [`interactive_trajectory_timeseries`](@ref).
 
-# You can also symbolically alter parameters
+# You can also symbolically query or alter parameters
 
 current_parameter(roessler, :c)
 
@@ -716,7 +717,8 @@ current_parameter(roessler, :c)
 # CoupledSDEs
 # ```
 
-# ## Dynamical system interface
+# ## [`DynamicalSystem` interface reference](@id dsref)
+
 # ```@docs
 # current_state
 # initial_state
@@ -738,4 +740,5 @@ current_parameter(roessler, :c)
 
 # ## Learn more
 
-# To learn more, you need to visit the documentation pages of the modules that compose **DynamicalSystems.jl**. See the [contents](@ref contents) page for more!
+# To learn more, you need to visit the documentation pages of the modules that
+# compose **DynamicalSystems.jl**. See the [contents](@ref contents) page for more!
