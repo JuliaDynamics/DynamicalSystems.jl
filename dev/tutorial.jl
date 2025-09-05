@@ -72,6 +72,11 @@ Pkg.status(["DynamicalSystems", "CairoMakie", "OrdinaryDiffEq", "BenchmarkTools"
 # !!! note "Autonomous vs non-autonomous systems"
 #     Whether the dynamical system is autonomous (`f` doesn't depend on time) or not, it is still necessary to include `t` as an argument to `f`. Some algorithms utilize this information, some do not, but we prefer to keep a consistent interface either way.
 
+# !!! warning "Dynamical systems are modified!"
+#     It is not immediatelly obvious, but all library functions that obtain as an input a
+#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
+#     of the system before and after giving it to a function such as `basins_of_attraction`
+#     will not be the same! This also affects parallelization, see below.
 
 # ### Example: Henon map
 
@@ -322,9 +327,38 @@ basins, attractors = basins_of_attraction(mapper; show_progress = false)
 
 heatmap_basins_attractors((xg, yg), basins, attractors)
 
+# Another component of **DynamicalSystems.jl** that utilizes a `DynamicalSystem` instance
+# is [`PeriodicOrbits`](@ref), which, you guessed it, finds periodic orbits.
+# In contrast to `Attractors`, `PeriodicOrbits` is dediced to finding both
+# stable and unstable periodic orbits. For example, it is known that inside
+# chaotic attractors there resides an infinity of periodic orbits.
+# Let's find many unstable periodic orbits, up to order 8, for the Henon map
+# using an algorithm dedicated to discrete time systems
+
+xs = range(-3.0, 3.0; length = 10)
+ys = range(-10.0, 10.0; length = 10)
+seeds = [InitialGuess(SVector{2}(x,y), nothing) for x in xs for y in ys]
+n = 7
+alg = DavidchackLai(n=n, m=6, abstol=1e-7, disttol=1e-10)
+output = periodic_orbits(henon, alg, seeds)
+output = uniquepos(output)
+output = minimal_period.(henon, output) # remove duplicates
+
+# and now plot them on top of the chaotic attractor that we found
+# in the previous step
+A = attractors[1]
+fig, ax = scatter(A; color = ("black", 0.5), markersize = 10)
+markers = [:rect, :diamond, :utriangle, :dtriangle, :ltriangle, :rtriangle, :pentagon, :hexagon]
+cmap = cgrad(:dense, n+1; categorical = true)
+for po in output
+    scatter!(ax, po.points; markersize=20, color = cmap[po.T], marker=markers[po.T],
+    strokewidth = 1, strokecolor = "black")
+end
+fig
+
 # ## Stochastic systems
 
-# DynamicalSystems.jl has some support for stochastic systems
+# **DynamicalSystems.jl** has some support for stochastic systems
 # in the form of Stochastic Differential Equations (SDEs).
 # Just like `CoupledODEs`, one can make `CoupledSDEs`!
 # For example here is a stochastic version of a FitzHugh-Nagumo model
@@ -344,7 +378,7 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 # In this particular example the SDE noise is white noise (Wiener process)
 # with strength (σ) of 0.05. See the documentation of `CoupledSDEs` for alternatives.
 
-# In any case, in DynamicalSystems.jl all dynamical systems are part of the same
+# In any case, in **DynamicalSystems.jl** all dynamical systems are part of the same
 # interace, stochastic or not. As long as the algorithm is not influenced by stochasticity,
 # we can apply it to `CoupledSDEs` just as well. For example, we can study multistability
 # in a stochastic system. In contrast to the previous example of the Henon map,
@@ -375,35 +409,25 @@ fig
 
 # ## Parallelization
 
-# !!! warning "Dynamical systems are modified!"
-#     It is not immediatelly obvious, but all library functions that obtain as an input a
-#     `DynamicalSystem` instance will modify it, in-place. For example the `current_state`
-#     of the system before and after giving it to a function such as `basins_of_attraction`
-#     will not be the same! This also affects parallelization, see below.
-
-
-# Since `DynamicalSystem`s are mutable, one needs to copy them before parallelizing,
-# to avoid having to deal with complicated race conditions etc. The simplest way is with
-# `deepcopy`. Here is an example block that shows how to parallelize calling some expensive
-# function (e.g., calculating the Lyapunov exponent) over a parameter range
-# (or alternatively, over different initial conditions) using `Threads`:
-
+# Because `DynamicalSystem`s are mutable and most library functions mutate them,
+# one needs to be slightly delicate with parallelization.
+# The package OhMyThreads.jl can take care of all the details for us, like so:
 
 # ```julia
 # ds = DynamicalSystem(f, u, p) # some concrete implementation
 # parameters = 0:0.01:1
 # outputs = zeros(length(parameters))
 #
-# # Since `DynamicalSystem`s are mutable, we need to copy to parallelize
-# systems = [deepcopy(ds) for _ in 1:Threads.nthreads()-1]
-# pushfirst!(systems, ds) # we can save 1 copy
-#
-# Threads.@threads for (i, p) in enumerate(parameters)
-#     system = systems[Threads.threadid()]
-#     set_parameter!(system, index, parameters[i])
-#     outputs[i] = expensive_function(system, args...)
+# using OhMyThreads: @tasks, @local
+# @tasks for i in eachindex(parameters)
+#     @local system = deepcopy(ds) # important!
+#     set_parameter!(system, 1, parameters[i])
+#     outputs[i] = expesive_function(system, args...)
 # end
 # ```
+
+# Note that parallelization is only useful if the expensive function is
+# significantly more expensive than copying the system and thread communication!
 
 # ## Interactive GUIs
 
@@ -442,7 +466,8 @@ step!(henon)
 
 step!(henon, 2)
 
-# For more information on how to directly use `DynamicalSystem` instances, see the documentation of [`DynamicalSystemsBase`](@ref).
+# For more information on how to directly use `DynamicalSystem` instances,
+# see the [interface of `DynamicalSystem`](@ref dsref).
 
 # ## State space sets
 
@@ -492,7 +517,7 @@ scatter(X)
 
 # even though Makie has no knowledge of the specifics of `StateSpaceSet`.
 
-# ## Using state space sets
+# ## Nonlinear data anlysis using state space sets
 
 # Several packages of the library deal with `StateSpaceSets`.
 
@@ -520,10 +545,12 @@ heatmap(Rg; colormap = :grays,
     axis = (title = "recurrence rate = $(round(rr; digits = 3))", aspect = 1)
 )
 
-
 # ## More nonlinear timeseries analysis
 
-# A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`. However, another common way is via a delay coordinates embedding of a measured/observed timeseries. For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to create an optimized delay coordinates embedding of a timeseries
+# A `trajectory` of a known dynamical system is one way to obtain a `StateSpaceSet`.
+# However, another common way is via a delay coordinates embedding of a measured/observed timeseries.
+# For example, we could use `optimal_separated_de` from [`DelayEmbeddings`](@ref) to
+# create an optimized delay coordinates embedding of a timeseries
 
 w = Y[:, 1] # first variable of Lorenz96
 𝒟, τ, e = optimal_separated_de(w)
@@ -538,34 +565,54 @@ for (S, ax) in zip((Y, 𝒟), axs)
 end
 fig
 
-# Since `𝒟` is just another state space set, we could be using any of the above analysis pipelines on it just as easily.
+# Since `𝒟` is just another state space set, we could be using any of the above
+# analysis pipelines on it just as easily.
 
-# The last package to mention here is [`TimeseriesSurrogates`](@ref), which ties with all other observed/measured data analysis by providing a framework for confidence/hypothesis testing. For example, if we had a measured timeseries but we were not sure whether it represents a deterministic system with structure in the state space, or mostly noise, we could do a surrogate test. For this, we use `surrogenerator` and `RandomFourier` from [`TimeseriesSurrogates`](@ref), and the `generalized_dim` from [`FractalDimensions`](@ref) (because it performs better in noisy sets)
+# [`TimeseriesSurrogates`](@ref) ties well all other observed/measured data analysis by
+# providing a framework for hypothesis testing. For example, if we had a measured
+# timeseries but we were not sure whether it represents a deterministic system with structure
+# in the state space, or mostly noise, we could do a surrogate test.
+# Let's say that this is the timeseries we want to use:
+
 
 x # Henon map timeseries
 ## contaminate with noise
 using Random: Xoshiro
 rng = Xoshiro(1234)
-x .+= randn(rng, length(x))/100
-## compute noise-contaminated fractal dim.
-Δ_orig = generalized_dim(embed(x, 2, 1); show_progress = false)
+noisyx = x .+ randn(rng, length(x))/100
 
-# And we do the surrogate test
+# To do the test, we use `SurrogateTest` and `RandomFourier` from [`TimeseriesSurrogates`](@ref).
+# We need to provide a function that given a timeseries it outputs a discriminatory value,
+# which is typically some nonlinear measure. Here we will use
+# the `generalized_dim` from [`FractalDimensions`](@ref) (because it performs better in noisy sets)
+# applied to the delay embedded set of the timeseries.
 
+discriminatory(x) = generalized_dim(embed(x, 2, 1); show_progress = false)
+
+# we then initialize the test and obtain its p-value:
 surrogate_method = RandomFourier()
-sgen = surrogenerator(x, surrogate_method, rng)
-Δ_surr = map(1:1000) do i
-    s = sgen()
-    generalized_dim(embed(s, 2, 1); show_progress = false)
-end
+test = SurrogateTest(discriminatory, noisyx, surrogate_method; n = 1000)
+pval = pvalue(test)
 
-# and visualize the test result
+# Since the p-value is very small we have good confidence that the timeseries
+# come from some nonlinear system and they are not just noise.
 
-fig, ax = hist(Δ_surr)
-vlines!(ax, Δ_orig)
+# The last component of **DynamicalSystems.jl** to mention is [`SignalDecomposition`](@ref),
+# a general-purpose tool that can perform de-noising or de-trending in timeseries,
+# a step often useful when pre-processing data before further analysis.
+# It incorporates several linear and nonlinear techniques. For example,
+# one can attempt to de-noise the noisy Henon map timeseries we used above
+# with nonlinear techniques, for example:
+
+m = 5
+k = 15
+Q = [3, 3, 3, 3, 3]
+denoisedx, _ = SignalDecomposition.decompose(noisyx, ManifoldProjection(m, Q, k))
+fig, ax = lines(abs.(x .- noisyx); label = "noise error")
+lines!(ax, abs.(x .- denoisedx); label = "denoised error")
+ylims!(ax, 0, 0.05)
+axislegend(ax)
 fig
-
-# since the real value is outside the distribution we have confidence the data are not pure noise.
 
 # ## Integration with ModelingToolkit.jl
 
@@ -577,7 +624,7 @@ fig
 #     ProcessBasedModelling.jl is an extension to ModelingToolkit.jl for creating
 #     models from a set of equations. It has been designed to be useful for scenarios
 #     applicable to a typical nonlinear dynamics analysis workflow,
-#     and provides better error messages during system construction than MTK.
+#     and provides improved error messages during system construction versus MTK.
 #     Have a look [at its docs](https://juliadynamics.github.io/ProcessBasedModelling.jl/stable/)!
 
 
@@ -611,9 +658,10 @@ end
 
 # this model can then be made into an `ODEProblem`:
 
-prob = ODEProblem(model)
+prob = ODEProblem(model, [], (0.0, Inf))
 
-# (notice that because we specified initial values for all parameters and variables during the model creation  we do need to provide additional initial values)
+# (notice that because we specified initial values for all parameters and variables during
+# the model creation  we do need to provide additional initial values, we give an empty vector instead)
 
 # Now, this problem can be made into a [`CoupledODEs`](@ref):
 
@@ -630,7 +678,7 @@ observe_state(roessler, :nlt)
 
 # These observables can also be used in the GUI visualization [`interactive_trajectory_timeseries`](@ref).
 
-# You can also symbolically alter parameters
+# You can also symbolically query or alter parameters
 
 current_parameter(roessler, :c)
 
@@ -664,7 +712,8 @@ current_parameter(roessler, :c)
 # CoupledSDEs
 # ```
 
-# ## Dynamical system interface
+# ## [`DynamicalSystem` interface reference](@id dsref)
+
 # ```@docs
 # current_state
 # initial_state
@@ -686,4 +735,5 @@ current_parameter(roessler, :c)
 
 # ## Learn more
 
-# To learn more, you need to visit the documentation pages of the modules that compose **DynamicalSystems.jl**. See the [contents](@ref contents) page for more!
+# To learn more, you need to visit the documentation pages of the modules that
+# compose **DynamicalSystems.jl**. See the [contents](@ref contents) page for more!
