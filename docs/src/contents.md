@@ -45,6 +45,7 @@ RecurrenceAnalysis
 DelayEmbeddings
 FractalDimensions
 TimeseriesSurrogates
+SignalDecomposition
 ```
 
 ## For dynamical system instances
@@ -53,6 +54,7 @@ TimeseriesSurrogates
 PredefinedDynamicalSystems
 ChaosTools
 Attractors
+PeriodicOrbits
 ```
 
 ## All exported names
