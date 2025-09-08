@@ -240,6 +240,12 @@ oddata = interactive_orbitdiagram(ds, p_index, p_min, p_max, i;
 ps, us = scaleod(oddata)
 ```
 
+## Interactive 2D clicker
+
+```@docs
+interactive_2d_clicker
+```
+
 ## Interactive Poincaré Surface of Section
 
 ```@raw html
@@ -254,14 +260,12 @@ interactive_poincaresos
 
 To generate the animation at the start of this section you can run
 ```julia
-using InteractiveDynamics, GLMakie, OrdinaryDiffEq, DynamicalSystems
-diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
-
+using DynamicalSystems, GLMakie
 hh = Systems.henonheiles()
-
+hh = CoupledODEs(hh, (abstol = 1e-9, reltol = 1e-9))
 potential(x, y) = 0.5(x^2 + y^2) + (x^2*y - (y^3)/3)
 energy(x,y,px,py) = 0.5(px^2 + py^2) + potential(x,y)
-const E = energy(get_state(hh)...)
+const E = energy(current_state(hh)...)
 
 function complete(y, py, x)
     V = potential(x, y)
@@ -276,13 +280,18 @@ plane = (1, 0.0) # first variable crossing 0
 
 # Coloring points using the Lyapunov exponent
 function λcolor(u)
-    λ = lyapunovs(hh, 4000; u0 = u)[1]
+    u0 = complete(u..., 0.0)
+    λ = lyapunov(hh, 4000; u0)
     λmax = 0.1
-    return RGBf(0, 0, clamp(λ/λmax, 0, 1))
+    level = clamp(λ/λmax, 0, 1)
+    return RGBf(level, 0, level)
 end
 
-state, scene = interactive_poincaresos(hh, plane, (2, 4), complete;
-labels = ("q₂" , "p₂"),  color = λcolor, diffeq...)
+figure, state = interactive_poincaresos(hh, plane, (2, 4), complete; color = λcolor)
+
+ax = content(figure[1,1][1,1])
+ax.xlabel, ax.ylabel = ("q₂" , "p₂")
+figure
 ```
 
 ## Scanning a Poincaré Surface of Section
