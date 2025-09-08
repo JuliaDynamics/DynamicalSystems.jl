@@ -246,6 +246,19 @@ ps, us = scaleod(oddata)
 interactive_2d_clicker
 ```
 
+Example:
+
+```julia
+using GLMakie, DynamicalSystems
+
+lorenz = Systems.lorenz()
+projection = [1, 2]
+complete_state = [12.0]
+projected_ds = ProjectedDynamicalSystem(lorenz, projection, complete_state)
+
+interactive_2d_clicker(projected_ds; Δt = 0.01, times = 10:100)
+```
+
 ## Interactive Poincaré Surface of Section
 
 ```@raw html
