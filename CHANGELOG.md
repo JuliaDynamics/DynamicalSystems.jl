@@ -7,6 +7,9 @@ The changelog here therefore lists either major changes to the overarching Dynam
 
 The changelogs of individual sub-packages are self-contained for each package.
 
+# v3.6
+
+- New interactive GUI function: `interactive_2d_clicker`.
 
 # v3.5
 
