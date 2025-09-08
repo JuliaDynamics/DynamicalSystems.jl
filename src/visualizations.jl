@@ -1,5 +1,6 @@
 export interactive_trajectory, interactive_cobweb, interactive_orbitdiagram, scaleod,
-  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries
+  interactive_poincaresos_scan, interactive_poincaresos, interactive_trajectory_timeseries,
+  interactive_2d_clicker
 
 """
     interactive_trajectory_timeseries(ds::DynamicalSystem, fs, [, u0s]; kwargs...) → fig, dsobs
@@ -265,6 +266,7 @@ function interactive_poincaresos_scan end
 
 """
     interactive_poincaresos(cds, plane, idxs, complete; kwargs...)
+
 Launch an interactive application for exploring a Poincaré surface of section (PSOS)
 of the continuous dynamical system `cds`. Requires `DynamicalSystems`.
 
@@ -282,16 +284,10 @@ an observable containing the latest initial `state`.
 
 ## Keyword Arguments
 * `direction, rootkw` : Same use as in `DynamicalSystems.poincaresos`.
-* `tfinal = (1000.0, 10.0^4)` : A 2-element tuple for the range of values
-  for the total integration time (chosen interactively).
-* `color` : A **function** of the system's initial condition, that returns a color to
-  plot the new points with. The color must be `RGBf/RGBAf`.
-   A random color is chosen by default.
-* `labels = ("u₁" , "u₂")` : Scatter plot labels.
-* `scatterkwargs = ()`: Named tuple of keywords passed to `scatter`.
-* `diffeq = NamedTuple()` : Any extra keyword arguments are passed into `init` of DiffEq.
+* All other keywords are propagated to [`interactive_2d_clicker`](@ref).
 
 ## Interaction
+
 The application is a standard scatterplot, which shows the PSOS of the system,
 initially using the system's `u0`. Two sliders control the total evolution time
 and the size of the marker points (which is always in pixels).
@@ -314,3 +310,43 @@ This `newstate` is also given to the function `color` that
 gets a new color for the new points.
 """
 function interactive_poincaresos end
+
+"""
+    interactive_2d_clicker(ds; kwargs...)
+
+Launch an interactive application for exploring the state space of a
+two dimensional dynamical system `ds`.  usually derived from a continuous dynamical system.
+Requires `DynamicalSystems`.
+
+Return: `figure, last_state` with the latter being
+the latest-clicked initial condition.
+
+**Note:** this function works for any system that qualifies as two dimensional,
+this includes projected dynamical systems that can be in reality arbitrarily dimensional.
+
+## Keyword Arguments
+
+* `times = 10:10_000`: A vector of potential total integration times
+  (chosen interactively).
+* `Δt = 1`: trajectory time step.
+* `color` : A **function** of the system's initial condition, that returns a color to
+  plot the new points with. The color must be `RGBf/RGBAf`.
+   A random color is chosen by default.
+* `plotkwargs = ()`: Keywords passed to the plotting function.
+
+## Interaction
+
+The application is plotting the trajectory of the system starting from `u0`
+which is clicked on the 2D axis.
+The plot is using scatter or scatterlines depending on whether
+the dynamical system is discrete time or not.
+Two sliders control the total evolution time
+and the size of the marker points (which is always in pixels).
+
+Upon clicking within the bounds of the scatter plot your click is transformed into
+a new initial condition, which is further evolved and then plotted into the scatter plot.
+
+The `complete` function can throw an error for ill-conditioned `u0`.
+This will be properly handled instead of breaking the application.
+"""
+function interactive_2d_clicker end
