@@ -38,7 +38,9 @@ build_docs_with_style(pages, DynamicalSystems,
     Attractors,
     FractalDimensions,
     TimeseriesSurrogates,
-    PredefinedDynamicalSystems;
+    PredefinedDynamicalSystems,
+    SignalDecomposition,
+    PeriodicOrbits;
     authors = "George Datseris <datseris.george@gmail.com>",
     expandfirst = ["index.md"],
     # We need to remove the cross references because we don't list here
