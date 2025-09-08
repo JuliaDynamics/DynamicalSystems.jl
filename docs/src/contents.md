@@ -13,17 +13,19 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 - [`StateSpaceSets`](@ref)
 - [`DynamicalSystemsBase`](@ref)
 
-**For observed/measured data**
+**For observed/measured data and timeseries**
 - [`ComplexityMeasures`](@ref)
 - [`RecurrenceAnalysis`](@ref)
 - [`DelayEmbeddings`](@ref)
 - [`FractalDimensions`](@ref)
 - [`TimeseriesSurrogates`](@ref)
+- [`SignalDecomposition`](@ref)
 
 **For dynamical system instances**
 - [`PredefinedDynamicalSystems`](@ref)
 - [`ChaosTools`](@ref)
 - [`Attractors`](@ref)
+- [`PeriodicOrbits`](@ref)
 
 At the very end of this page, a full list of exported names is presented.
 
@@ -43,6 +45,7 @@ RecurrenceAnalysis
 DelayEmbeddings
 FractalDimensions
 TimeseriesSurrogates
+SignalDecomposition
 ```
 
 ## For dynamical system instances
@@ -51,6 +54,7 @@ TimeseriesSurrogates
 PredefinedDynamicalSystems
 ChaosTools
 Attractors
+PeriodicOrbits
 ```
 
 ## All exported names
