@@ -1,0 +1,230 @@
+<!DOCTYPE html><HTML class="no-js" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="ie=edge" http-equiv="x-ua-compatible"/><meta content="A Julia software library for the exploration of chaos and nonlinear dynamics." name="description"/><meta content="George Datseris" name="author"/><meta content="Copy to clipboard" name="lang:clipboard.copy"/><meta content="Copied to clipboard" name="lang:clipboard.copied"/><meta content="en" name="lang:search.language"/><meta content="True" name="lang:search.pipeline.stopwords"/><meta content="True" name="lang:search.pipeline.trimmer"/><meta content="No matching documents" name="lang:search.result.none"/><meta content="1 matching document" name="lang:search.result.one"/><meta content="# matching documents" name="lang:search.result.other"/><meta content="[\s\-]+" name="lang:search.tokenizer"/><link href="../../assets/images/favicon.png" rel="shortcut icon"/><meta content="mkdocs-0.17.5, mkdocs-material-2.9.4" name="generator"/><title>Delay Coordinates - DynamicalSystems.jl</title><link href="../../assets/stylesheets/application.451f80e5.css" rel="stylesheet"/><link href="../../assets/stylesheets/application-palette.22915126.css" rel="stylesheet"/><meta content="#7e57c2" name="theme-color"/><script src="../../assets/javascripts/modernizr.1aa3b519.js"></script><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono" rel="stylesheet"/><style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style><link href="../../assets/fonts/material-icons.css" rel="stylesheet"/><link href="../../assets\Documenter.css" rel="stylesheet"/><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This documentation is not for the latest version. <br> <a href="' + href + '">Go to the latest documentation</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body data-md-color-accent="teal" data-md-color-primary="deep-purple" dir="ltr"><svg class="md-svg"><defs><svg height="448" id="__github" viewBox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg"><path d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" fill="currentColor"></path></svg></defs></svg><input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/><input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/><label class="md-overlay" data-md-component="overlay" for="__drawer"></label><header class="md-header" data-md-component="header"><nav class="md-header-nav md-grid"><div class="md-flex"><div class="md-flex__cell md-flex__cell--shrink"><a class="md-header-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label></div><div class="md-flex__cell md-flex__cell--stretch"><div class="md-flex__ellipsis md-header-nav__title" data-md-component="title"><span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span><span class="md-header-nav__topic">
+                Delay Coordinates
+              </span></div></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--search md-header-nav__button" for="__search"></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/><label class="md-icon md-search__icon" for="__search"></label><button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+        
+      </button></form><div class="md-search__output"><div class="md-search__scrollwrap" data-md-scrollfix=""><div class="md-search-result" data-md-component="result"><div class="md-search-result__meta">
+            Type to start searching
+          </div><ol class="md-search-result__list"></ol></div></div></div></div></div></div><div class="md-flex__cell md-flex__cell--shrink"><div class="md-header-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div></div></div></nav></header><div class="md-container"><main class="md-main"><div class="md-main__inner md-grid" data-md-component="container"><div class="md-sidebar md-sidebar--primary" data-md-component="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary" data-md-level="0"><label class="md-nav__title md-nav__title--site" for="__drawer"><a class="md-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a>
+    DynamicalSystems.jl
+  </label><div class="md-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../.." title="Introduction">
+      Introduction
+    </a></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" id="nav-2" type="checkbox"/><label class="md-nav__link" for="nav-2">
+      Dynamical Systems
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-2">
+        Dynamical Systems
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../ds/general/" title="Dynamical System Definition">
+      Dynamical System Definition
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../ds/evolve/" title="Time Evolution">
+      Time Evolution
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../ds/predefined/" title="Predefined Systems">
+      Predefined Systems
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/><label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/overview/" title="Features Overview">
+      Features Overview
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/orbitdiagram/" title="Orbit Diagrams &amp; PSOS">
+      Orbit Diagrams &amp; PSOS
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/lyapunovs/" title="Lyapunov Exponents">
+      Lyapunov Exponents
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/entropies/" title="Entropies and Dimensions">
+      Entropies and Dimensions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/nlts/" title="Nonlinear Timeseries Analysis">
+      Nonlinear Timeseries Analysis
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/periodicity/" title="Periodicity">
+      Periodicity
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../chaos/chaos_detection/" title="Chaos Distinction">
+      Chaos Distinction
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input checked="" class="md-toggle md-nav__toggle" data-md-toggle="nav-4" id="nav-4" type="checkbox"/><label class="md-nav__link" for="nav-4">
+      Delay Coordinates Embedding
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-4">
+        Delay Coordinates Embedding
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../dataset/" title="Numerical Data">
+      Numerical Data
+    </a></li><li class="md-nav__item md-nav__item--active"><input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/><a class="md-nav__link md-nav__link--active" href="./" title="Delay Coordinates">
+      Delay Coordinates
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../estimate/" title="Estimating Delay Embedding Parameters">
+      Estimating Delay Embedding Parameters
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" id="nav-5" type="checkbox"/><label class="md-nav__link" for="nav-5">
+      Recurrence Quantification Analysis
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-5">
+        Recurrence Quantification Analysis
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../rqa/rplots/" title="Recurrence Plots">
+      Recurrence Plots
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../rqa/quantification/" title="Quantification &amp; Analysis functions">
+      Quantification &amp; Analysis functions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../rqa/windowed/" title="Windowed RQA">
+      Windowed RQA
+    </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../../advanced/" title="Advanced Documentation">
+      Advanced Documentation
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../contributors_guide/" title="Contributor Guide">
+      Contributor Guide
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../news/" title="News">
+      News
+    </a></li></ul></nav></div></div></div><div class="md-content"><article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/embedding/reconstruction.md" title="Edit this page"></a><h1>Delay Coordinates</h1><p>A timeseries recorded in some manner from a dynamical system can be used to gain information about the dynamics of the entire phase-space of the system. This can be done by reconstructing a new phase-space from the timeseries. One method that can do this is what is known as <a href="https://en.wikipedia.org/wiki/Takens%27_theorem">delay coordinates embedding</a> or delay coordinates <em>reconstruction</em>.</p><p>This is done through <code>reconstruct</code> or <code>embed</code>:</p><p><a href="#DelayEmbeddings.reconstruct" id="DelayEmbeddings.reconstruct">#</a><strong><code>DelayEmbeddings.reconstruct</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>reconstruct(s, γ, τ)
+</pre></div><p>Reconstruct <code>s</code> using the delay coordinates embedding with <code>γ</code> temporal neighbors and delay <code>τ</code> and return the result as a <a href="../dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a>.</p><p>See <a href="./#DelayEmbeddings.embed"><code>embed</code></a> for the version that accepts the embedding dimension <code>D = γ+1</code> directly.</p><p><strong>Description</strong></p><p><strong>Single Timeseries</strong></p><p>If <code>τ</code> is an integer, then the <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>-th entry of the embedded space is</p><div><div class="MathJax_Preview">
+(s(n), s(n+\tau), s(n+2\tau), \dots, s(n+γ\tau))
+</div><script type="math/tex; mode=display">
+(s(n), s(n+\tau), s(n+2\tau), \dots, s(n+γ\tau))
+</script></div><p>If instead <code>τ</code> is a vector of integers, so that <code>length(τ) == γ</code>, then the <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>-th entry is</p><div><div class="MathJax_Preview">
+(s(n), s(n+\tau[1]), s(n+\tau[2]), \dots, s(n+\tau[γ]))
+</div><script type="math/tex; mode=display">
+(s(n), s(n+\tau[1]), s(n+\tau[2]), \dots, s(n+\tau[γ]))
+</script></div><p>The reconstructed dataset can have same invariant quantities (like e.g. lyapunov exponents) with the original system that the timeseries were recorded from, for proper <code>γ</code> and <code>τ</code>. This is known as the Takens embedding theorem [1, 2]. The case of different delay times allows reconstructing systems with many time scales, see [3].</p><p><em>Notice</em> - The dimension of the returned dataset (i.e. embedding dimension) is <code>γ+1</code>!</p><p><strong>Multiple Timeseries</strong></p><p>To make a reconstruction out of a multiple timeseries (i.e. trajectory) the number of timeseries must be known by type, so <code>s</code> can be either:</p><ul><li><code>s::AbstractDataset{B}</code></li><li><code>s::SizedAray{A, B}</code></li></ul><p>If the trajectory is for example <span><span class="MathJax_Preview">(x, y)</span><script type="math/tex">(x, y)</script></span> and <code>τ</code> is integer, then the <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>-th entry of the embedded space is</p><div><div class="MathJax_Preview">
+(x(n), y(n), x(n+\tau), y(n+\tau), \dots, x(n+γ\tau), y(n+γ\tau))
+</div><script type="math/tex; mode=display">
+(x(n), y(n), x(n+\tau), y(n+\tau), \dots, x(n+γ\tau), y(n+γ\tau))
+</script></div><p>If <code>τ</code> is an <code>AbstractMatrix{Int}</code>, so that <code>size(τ) == (γ, B)</code>, then we have</p><div><div class="MathJax_Preview">
+(x(n), y(n), x(n+\tau[1, 1]), y(n+\tau[1, 2]), \dots, x(n+\tau[γ, 1]), y(n+\tau[γ, 2]))
+</div><script type="math/tex; mode=display">
+(x(n), y(n), x(n+\tau[1, 1]), y(n+\tau[1, 2]), \dots, x(n+\tau[γ, 1]), y(n+\tau[γ, 2]))
+</script></div><p><em>Notice</em> - The dimension of the returned dataset is <code>(γ+1)*B</code>!</p><p><strong>References</strong></p><p>[1] : F. Takens, <em>Detecting Strange Attractors in Turbulence — Dynamical Systems and Turbulence</em>, Lecture Notes in Mathematics <strong>366</strong>, Springer (1981)</p><p>[2] : T. Sauer <em>et al.</em>, J. Stat. Phys. <strong>65</strong>, pp 579 (1991)</p><p>[3] : K. Judd &amp; A. Mees, <a href="https://www.sciencedirect.com/science/article/pii/S0167278997001188">Physica D <strong>120</strong>, pp 273 (1998)</a></p><p><a href="#DelayEmbeddings.embed" id="DelayEmbeddings.embed">#</a><strong><code>DelayEmbeddings.embed</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>embed(s, D, τ)
+</pre></div><p>Perform a delay coordinates embedding on signal <code>s</code> with embedding dimension <code>D</code> and delay time <code>τ</code>. The result is returned as a <a href="../dataset/#DelayEmbeddings.Dataset"><code>Dataset</code></a>, which is a vector of static vectors.</p><p>See <a href="./#DelayEmbeddings.reconstruct"><code>reconstruct</code></a> for an advanced version that supports multiple delay times and can reconstruct multiple timeseries efficiently.</p><hr/><p>Here are some examples of <code>reconstruct</code>ing a 3D continuous chaotic system:</p><div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span><span class="p">,</span> <span class="n">PyPlot</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">gissinger</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span>
+
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">columns</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">3</span>
+    <span class="k">for</span> <span class="n">τ</span> <span class="kp">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">τ</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">plot</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">R</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s">"C</span><span class="si">$</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="s">"</span><span class="p">,</span> <span class="n">lw</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+        <span class="n">title</span><span class="p">(</span><span class="s">"var = </span><span class="si">$i</span><span class="s">, τ = </span><span class="si">$τ</span><span class="s">"</span><span class="p">)</span>
+        <span class="kd">global</span> <span class="n">k</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">suptitle</span><span class="p">(</span><span class="s">"2D reconstructed space"</span><span class="p">)</span>
+<span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+</pre></div><p><img alt="" src="../simple_reconstruction.png"/></p><div class="admonition note"><p class="admonition-title"><code>τ</code> and <code>dt</code></p><p>Keep in mind that whether a value of <code>τ</code> is "reasonable" for continuous systems depends on <code>dt</code>. In the above example the value <code>τ=30</code> is good, <em>only</em> for the case of using <code>dt = 0.05</code>. For shorter/longer <code>dt</code> one has to adjust properly <code>τ</code> so that their product <code>τ*dt</code> is the same.</p></div><p>You can also <code>reconstruct</code> multidimensional timeseries. For this to be possible, the number of timeseries must be known by Type:</p><div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">StaticArrays</span><span class="o">:</span> <span class="n">Size</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c"># my trajectory</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">Size</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)(</span><span class="n">a</span><span class="p">)</span> <span class="c"># create array with the size as Type information</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c">#aaaall good</span>
+</pre></div><div class="codehilite"><pre><span></span>9-dimensional Dataset{Float64} with 996 points
+ 0.586737  0.690671   0.551722   0.461107  …  0.188193   0.216192   0.215246
+ 0.909351  0.91001    0.184039   0.901984     0.165364   0.532704   0.0376504
+ 0.461107  0.637003   0.102668   0.188193     0.530936   0.362354   0.638021
+ 0.901984  0.630049   0.789279   0.165364     0.218598   0.110794   0.4218
+ 0.188193  0.216192   0.215246   0.530936     0.910046   0.0928874  0.635087
+ 0.165364  0.532704   0.0376504  0.218598  …  0.559884   0.682263   0.891165
+ 0.530936  0.362354   0.638021   0.910046     0.925997   0.848005   0.962085
+ 0.218598  0.110794   0.4218     0.559884     0.710808   0.278401   0.0480046
+ 0.910046  0.0928874  0.635087   0.925997     0.0329893  0.808522   0.777041
+ 0.559884  0.682263   0.891165   0.710808     0.733236   0.522726   0.663948
+ ⋮                                         ⋱
+ 0.654696  0.910419   0.937102   0.496767     0.902413   0.535011   0.286326
+ 0.112787  0.676533   0.710604   0.782823     0.23796    0.8091     0.331807
+ 0.496767  0.72632    0.0801256  0.902413     0.974982   0.126917   0.0617047
+ 0.782823  0.30521    0.509296   0.23796      0.350376   0.680805   0.819884
+ 0.902413  0.535011   0.286326   0.974982  …  0.8753     0.0753148  0.58837
+ 0.23796   0.8091     0.331807   0.350376     0.874148   0.427944   0.0337361
+ 0.974982  0.126917   0.0617047  0.8753       0.859089   0.923793   0.206666
+ 0.350376  0.680805   0.819884   0.874148     0.83831    0.852862   0.0214431
+ 0.8753    0.0753148  0.58837    0.859089     0.119321   0.975463   0.903877
+</pre></div><div class="codehilite"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">towel</span><span class="p">();</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c"># Dataset size is also known by Type!</span>
+</pre></div><div class="codehilite"><pre><span></span>9-dimensional Dataset{Float64} with 9997 points
+ 0.085     -0.121       0.075     …  0.837347   0.0372633   0.555269
+ 0.285813  -0.0675286   0.238038     0.51969    0.0616256   0.940906
+ 0.76827   -0.038933    0.672094     0.966676  -0.00171595  0.2225
+ 0.681871   0.0508933   0.825263     0.112748   0.0674955   0.653573
+ 0.837347   0.0372633   0.555269     0.386547  -0.0886542   0.869349
+ 0.51969    0.0616256   0.940906  …  0.910741  -0.0316828   0.411607
+ 0.966676  -0.00171595  0.2225       0.306095   0.0689305   0.909129
+ 0.112748   0.0674955   0.653573     0.824263  -0.056185    0.326064
+ 0.386547  -0.0886542   0.869349     0.545332   0.0508239   0.819404
+ 0.910741  -0.0316828   0.411607     0.954994   0.00453815  0.569534
+ ⋮                                ⋱
+ 0.914702  -0.0315439   0.294266     0.90246    0.0242141   0.539502
+ 0.289932   0.0641239   0.778698     0.335976   0.0735803   0.943945
+ 0.793854  -0.0552801   0.664223     0.86657   -0.0497658   0.214728
+ 0.62671    0.0557527   0.832001     0.430816   0.0535742   0.62743
+ 0.90246    0.0242141   0.539502  …  0.936955  -0.0200112   0.894333
+ 0.335976   0.0735803   0.943945     0.237481   0.0983265   0.353212
+ 0.86657   -0.0497658   0.214728     0.681538  -0.0476555   0.883219
+ 0.430816   0.0535742   0.62743      0.836353   0.0363264   0.380351
+ 0.936955  -0.0200112   0.894333     0.515471   0.0534613   0.898152
+</pre></div></article></div></div></main><footer class="md-footer"><div class="md-footer-nav"><nav class="md-footer-nav__inner md-grid"><a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../dataset/" rel="prev" title="Numerical Data"><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-back md-footer-nav__button"></i></div><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Numerical Data
+              </span></div></a><a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../estimate/" rel="next" title="Estimating Delay Embedding Parameters"><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Estimating Delay Embedding Parameters
+              </span></div><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i></div></a></nav></div><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a></div><div class="md-footer-social"><link href="../../assets/fonts/font-awesome.css" rel="stylesheet"/><a class="md-footer-social__link fa fa-github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl"></a></div></div></div></footer></div><script src="../../assets/javascripts/application.30f6b8b1.js"></script><script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script><script src="../../assets\mathjaxhelper.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></HTML>
