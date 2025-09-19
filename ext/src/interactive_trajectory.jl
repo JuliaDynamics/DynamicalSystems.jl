@@ -23,6 +23,7 @@ function DynamicalSystems.interactive_trajectory(
         axis = NamedTuple(),
         lims = nothing,
         statespace_axis = true,
+        statespace_names = state_name.(idxs),
         starting_step = 1,
     )
 
@@ -40,7 +41,7 @@ function DynamicalSystems.interactive_trajectory(
     statespacelayout = fig[1,1] = GridLayout()
     lims = isnothing(lims) ? _traj_lim_estimator(ds, u0s, idxs, [1], Δt)[1] : lims
     tailobs, finalpoints = _init_statespace_plot!(statespacelayout, ds, idxs,
-        lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_axis,
+        lims, pds, colors, plotkwargs, markersize, tail, axis, fade, statespace_names, statespace_axis,
     )
     # Set up layouting and add controls
     if add_controls # Notice that `run` and `step` are already observables
@@ -130,15 +131,15 @@ vector_idx_observe(ds, u, idxs) = [observe_state(ds, i, u) for i in idxs]
 "Create the state space axis and evolution controls. Return the axis."
 function _init_statespace_plot!(
         layout, ds, idxs, lims, pds, colors, plotkwargs, markersize, tail, axis, fade,
-        statespace_axis # whether to show the statespace axis
+        statespace_names, statespace_axis # whether to show the statespace axis
     )
     tailobs, finalpoints = _init_trajectory_observables(pds, tail)
     is3D = length(idxs) == 3
     axisposition = statespace_axis ? layout[1,1] : Figure()[1,1]
-    xlabel = state_name(idxs[1])
-    ylabel = state_name(idxs[2])
+    xlabel = statespace_names[1]
+    ylabel = statespace_names[2]
     statespaceax = if is3D
-        zlabel = state_name(idxs[3])
+        zlabel = statespace_names[3]
         Axis3(axisposition; xlabel, ylabel, zlabel, axis...)
     else
         Axis(axisposition; xlabel, ylabel, axis...)
@@ -272,16 +273,17 @@ end
 # Timeseries extension
 ###########################################################################################
 function DynamicalSystems.interactive_trajectory_timeseries(
-    ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
-    linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
-    timeseries_names = [state_name(f) for f in fs],
-    colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
-    timeseries_ylims = nothing,
-    timelabel = "time", timeunit = 1,
-    Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
-    idxs = 1:min(length(u0s[1]), 3),
-    lims = nothing,
-    kwargs...)
+        ds::DynamicalSystem, fs::Vector, u0s = [current_state(ds)];
+        linekwargs = isdiscretetime(ds)  ? (linewidth = 1,) : (linewidth = 3,),
+        timeseries_names = state_name.(fs),
+        colors = collect(cgrad(COLORSCHEME, length(u0s); categorical = true)),
+        timeseries_ylims = nothing,
+        timelabel = "time", timeunit = 1,
+        Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
+        idxs = 1:min(length(u0s[1]), 3),
+        lims = nothing,
+        kwargs...
+    )
 
     # automatic limits
     if isnothing(timeseries_ylims) || isnothing(lims)

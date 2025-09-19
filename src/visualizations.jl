@@ -94,6 +94,7 @@ See also [`interactive_trajectory`](@ref).
 
 - `idxs = 1:min(length(u0s[1]), 3)`: Which variables to plot in a state space trajectory.
   Any index that can be given to [`observe_state`](@ref) can be given here.
+- `statespace_names = state_name.(idxs)`: Names for the state space axis.
 - `statespace_axis = true`: Whether to create and display an axis for the trajectory plot.
 - `idxs = 1:min(length(u0s[1]), 3)`: Which variables to plot in a state space trajectory.
   Any index that can be given to [`observe_state`](@ref) can be given here.
@@ -108,7 +109,7 @@ See also [`interactive_trajectory`](@ref).
 
 - `linekwargs = NamedTuple()`: Extra keywords propagated to the timeseries plots.
   Can also be a vector of named tuples, each one for each unique initial condition.
-- `timeseries_names`: A vector of strings with length equal to `fs` giving names to
+- `timeseries_names = state_name.(fs)`: A vector of strings with length equal to `fs` giving names to
   the y-labels of the timeseries plots.
 - `timeseries_ylims`: A vector of 2-tuples for the lower and upper limits of the
   y-axis of each timeseries plot. If not given it is deduced automatically similarly to `lims`.

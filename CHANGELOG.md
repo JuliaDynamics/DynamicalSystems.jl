@@ -10,6 +10,7 @@ The changelogs of individual sub-packages are self-contained for each package.
 # v3.6
 
 - New interactive GUI function: `interactive_2d_clicker`.
+- New keyword `statespace_names` for `interactive_trajectory`.
 
 # v3.5
 
