@@ -654,14 +654,14 @@ D = Differential(t)
     end
 end
 
-@mtkbuild model = Roessler()
+@mtkcompile model = Roessler()
 
-# this model can then be made into an `ODEProblem`:
+# this model can then be made into an `ODEProblem`.
 
-prob = ODEProblem(model, [], (0.0, Inf))
+prob = ODEProblem(model, nothing, (0.0, Inf))
 
-# (notice that because we specified initial values for all parameters and variables during
-# the model creation  we do need to provide additional initial values, we give an empty vector instead)
+# We used `nothing` for the initialization container as all parameters and
+# state variables have been created with default values.
 
 # Now, this problem can be made into a [`CoupledODEs`](@ref):
 
@@ -731,6 +731,7 @@ current_parameter(roessler, :c)
 # isinplace(::DynamicalSystem)
 # successful_step
 # referrenced_sciml_model
+# named_variables
 # ```
 
 # ## Learn more
