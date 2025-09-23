@@ -51,7 +51,7 @@ function DynamicalSystems.interactive_poincaresos_scan(
         ss[j] = y
         o = Makie.Point3f(ss...)
         w = Makie.Point3f(ws...)
-        Makie.FRect3D(o, w)
+        Makie.Rect3f(o, w)
     end
 
     a = RGBAf(0,0,0,0)
