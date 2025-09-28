@@ -3,9 +3,11 @@
 # This page serves as a short but to-the-point introduction to the **DynamicalSystems.jl**
 # library. It outlines the core components, and how they establish an interface that
 # is used by the rest of the library. It also provides a couple of usage examples
-# to connect the various packages of the library together.
+# to connect the various subpackages of the library together.
+# This is not an in-depth tutorial, and the individual subpackages of the library have
+# their own in-depth tutorials and documentation (see the top bar of the online documentation).
 
-# Going through this tutorial should take you about 20 minutes.
+# Going through this tutorial should take you about 20-30 minutes.
 
 # !!! note "Also available as a Jupyter notebook"
 #     This tutorial is also available online as a [Jupyter notebook](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/gh-pages/dev/tutorial.ipynb).
@@ -17,7 +19,8 @@
 # using Pkg; Pkg.add("DynamicalSystems")
 # ```
 
-# This installs several packages for the Julia language. These are the sub-modules/packages
+# This installs several packages for the Julia language.
+# Some of these are the sub-modules/packages
 # that comprise **DynamicalSystems.jl**, see [contents](@ref contents) for more.
 # All of the functionality is brought into scope when doing:
 
@@ -227,7 +230,7 @@ end
 
 # One must be aware whether this is possible for their system and choose a solver that is better suited to tackle stiff problems. If not, a solution may diverge and the ODE integrator will throw an error or a warning.
 
-# Many of the problems in DifferentialEquations.jl are suitable for dealing with stiff problems. We can create a stiff problem by using the well known Van der Pol  oscillator _with a timescale separation_:
+# Many of the solvers in DifferentialEquations.jl are suitable for dealing with stiff problems. We can create a stiff problem by using the well known Van der Pol  oscillator _with a timescale separation_:
 
 # ```math
 # \begin{aligned}
@@ -238,7 +241,7 @@ end
 
 # with $\mu$ being the timescale of the $y$ variable in units of the timescale of the $x$ variable. For very large values of $\mu$ this problem becomes stiff.
 
-# Let's compare
+# Let's compare the default solver `Tsit5` with a stiff solver `Rodas5P`:
 
 using OrdinaryDiffEq: Tsit5, Rodas5P
 
@@ -280,11 +283,15 @@ step!(lorenz96, 100.0) # progress for `100.0` units of time
 
 current_state(lorenz96)
 
-# we can also restart the system at a different state using `set_state!`
+# or a particular state variable
+
+observe_state(lorenz96, 2)
+
+# We can also alter the system state using `set_state!`
 
 set_state!(lorenz96, rand(6))
 
-# or we can alter system parameters given the index of the parameter and the value to set it to
+# Similarly, we can alter system parameters given the index of the parameter and the value to set it to
 
 set_parameter!(lorenz96, 1, 9.6) # change first parameter of the parameter container
 current_parameters(lorenz96)
@@ -294,7 +301,14 @@ current_parameters(lorenz96)
 # ## [Using dynamical systems](@id using)
 
 # Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
-# For example, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above,
+# For example, you may want to obtain the Poincare section of a continuous time system,
+# which is something already available in [`DynamicalSystemsBase`](@ref):
+
+plane = (1, 0.0)
+pmap = poincaresos(lorenz96, plane, 10000.0)
+scatter(pmap[:, 2], pmap[:, 3])
+
+# Or, you may want to compute the Lyapunov spectrum of the Lorenz96 system from above,
 # which is a functionality offered by [`ChaosTools`](@ref).
 # This is as easy as calling the `lyapunovspectrum` function with `lorenz96`
 
