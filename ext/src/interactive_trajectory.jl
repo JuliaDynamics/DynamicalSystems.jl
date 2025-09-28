@@ -282,6 +282,7 @@ function DynamicalSystems.interactive_trajectory_timeseries(
         Δt = DynamicalSystems.isdiscretetime(ds) ? 1 : 0.01,
         idxs = 1:min(length(u0s[1]), 3),
         lims = nothing,
+        figure = (size = (1600, 800),),
         kwargs...
     )
 
@@ -292,7 +293,7 @@ function DynamicalSystems.interactive_trajectory_timeseries(
     isnothing(lims) && (lims = _lims)
     isnothing(timeseries_ylims) && (timeseries_ylims = _timeseries_ylims)
 
-    fig, dsobs = interactive_trajectory(ds, u0s; Δt, idxs, lims, colors, figure = (size = (1600, 800),), kwargs...)
+    fig, dsobs = interactive_trajectory(ds, u0s; Δt, idxs, lims, colors, figure, kwargs...)
 
     timeserieslayout = fig[:, 2] = GridLayout()
     _init_timeseries_plots!(
