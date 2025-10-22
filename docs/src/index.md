@@ -25,25 +25,30 @@ Notable news for the **DynamicalSystems.jl** library are also posted on the offi
 
 https://discourse.julialang.org/t/dynamicalsystems-jl-news-updates-and-announcements/122079
 
-## [Learning resources](@id learning)
+## Community meetings
 
-### Textbook with DynamicalSystems.jl
+**DynamicalSystems.jl** users and developers meet monthly in broader community meetings for nonlinear dynamics, complex systems, and timeseries analysis.
+In these meetings we have small presentations on published or ongoing research, followed by informal community discussions on various topics such as usage or development of packages, community events, upcoming features, user requests, etc.
 
-We have written an undergraduate level textbook as an introduction to nonlinear dynamics. The text is written in an applied, hands-on manner, while still covering all fundamentals. The book pages are interlaced with real Julia code that uses DynamicalSystems.jl and is published in the Undergraduate Lecture Notes in Physics by Springer Nature:
+The meetings occur every 2nd Friday of the month, at 2pm London Time.
+
+To join these meetings you can visit the meeting spreadsheet:
+
+<https://docs.google.com/spreadsheets/d/19MrgrHdhy6r1x8OUS-B3Gj1WEMIAToCNRabBimCzuCk/edit?usp=sharing>
+
+that lists the agenda, upcoming talks, and join link (via Microsoft Teams).
+
+## [Learning resources and associated textbook](@id learning)
+
+The primary learning source for all components of **DynamicalSystems.jl** is the documentation that you are reading now! And make sure you are reading the latest version please (bottom left corner of the webpage)!
+
+When it comes to more academic learning, we have written an undergraduate level textbook as an introduction to nonlinear dynamics. The text is written in an applied, hands-on manner, while still covering all fundamentals. The book pages are interlaced with real Julia code that uses DynamicalSystems.jl and is published in the Undergraduate Lecture Notes in Physics by Springer Nature:
 * [Nonlinear Dynamics: A concise introduction interlaced with code](https://link.springer.com/book/10.1007/978-3-030-91032-7) by G. Datseris & U. Parlitz.
 
-
-Additional textbooks on nonlinear dynamics with practical focus are:
+Additional examples of textbooks on nonlinear dynamics are:
 * Chaos in Dynamical Systems - E. Ott
 * Nonlinear Time series Analysis - H. Kantz & T. Schreiber
 * Nonlinear Dynamics and Chaos - S. Strogatz
-
-### Course on applied nonlinear dynamics and complex systems
-
-We are developing a full course (targeting a graduate or undergraduate semester long course) on applied nonlinear dynamics, nonlinear timeseries analysis, and complex systems, using the packages of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/). **DynamicalSystems.jl** is part of this course.
-
-The materials of the course are on GitHub: <https://github.com/JuliaDynamics/NonlinearDynamicsComplexSystemsCourses>
-
 
 ## How to cite
 
@@ -103,6 +108,8 @@ The list is too long to write and constantly update, so the best way to find out
 ## Version numbers and SemVer
 
 The version of `DynamicalSystems` by itself is a bit meaningless, because the module does not have any source code, besides re-exporting other modules and offering some visualization functionality.
+The subpackages that compose `DynamicalSystems` follow rigorous versioning, bearing in mind the warning message shown below.
+
 For transparency, the packages and versions used to build the documentation you are reading now are:
 
 ```@setup MAIN
@@ -132,10 +139,11 @@ Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosy
 * [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/index.html) - Besides providing solvers for standard ODE systems (infastructure already used in DynamicalSystems.jl), it also has much more features like SDE solvers or uncertainty quantification.
 * [SciMLSensitivity.jl](https://github.com/SciML/SciMLSensitivity.jl) - Discrete and continuous local sensitivity analysis, i.e., derivatives of the solutions of ODEs, or functions of the solutions, versus parameters, hosting [various forward and adjoint methods as well as methods tailored to chaotic systems](https://docs.sciml.ai/SciMLSensitivity/stable/tutorials/chaotic_ode/).
 * [GlobalSensitivity.jl](https://github.com/SciML/GlobalSensitivity.jl) - Global sensitivity analysis assessing the effect of any input variables over a larger domain on the output.
-* [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for automated bifurcation analysis.
+* [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl) - Featureful toolkit for local (traditional) continuation and local bifurcation analysis.
 * [NetworkDynamics.jl](https://github.com/PIK-ICoNe/NetworkDynamics.jl) - Simulating dynamics on networks and transforming network systems into `ODEProblem` (that can be made directly into a `ContinuousDynamicalSystem`).
 * [Agents.jl](https://github.com/JuliaDynamics/Agents.jl) - Agent based modelling.
 * [EasyModelAnalysis.jl](https://github.com/SciML/EasyModelAnalysis.jl) - Analysis tools for conveniently analysing solutions of DiffEq systems.
 * [ARFIMA.jl](https://github.com/JuliaDynamics/ARFIMA.jl) - generate ARFIMA process timeseries.
 * [ConcurrentSim.jl](https://github.com/JuliaDynamics/ConcurrentSim.jl) - discrete event process oriented simulation framework.
 * [Associations.jl](https://github.com/JuliaDynamics/Associations.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.
+* [StructuralIdentifiability.jl](https://github.com/SciML/StructuralIdentifiability.jl) - Fast and automatic structural identifiability (that is, whether system parameters can be inferred from data)
