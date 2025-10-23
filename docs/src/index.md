@@ -147,3 +147,4 @@ Besides DynamicalSystems.jl, the Julia programming language has a thriving ecosy
 * [ConcurrentSim.jl](https://github.com/JuliaDynamics/ConcurrentSim.jl) - discrete event process oriented simulation framework.
 * [Associations.jl](https://github.com/JuliaDynamics/Associations.jl) - hundreds of algorithms for relational/causal timeseries analysis and causal graphs.
 * [StructuralIdentifiability.jl](https://github.com/SciML/StructuralIdentifiability.jl) - Fast and automatic structural identifiability (that is, whether system parameters can be inferred from data)
+* [UncertaintyQuantification.jl](https://github.com/JuliaUQ/UncertaintyQuantification.jl) - Propagation of input uncertainty into output uncertainty
