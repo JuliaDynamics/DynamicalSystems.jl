@@ -11,6 +11,6 @@ include("src/orbitdiagram.jl")
 include("src/brainscan.jl")
 include("src/2dclicker.jl")
 
-subscript = DynamicalSystemsVisualizations.subscript
+const subscript = DynamicalSystemsVisualizations.subscript
 
 end
