@@ -34,7 +34,7 @@ At the very end of this page, a full list of exported names is presented.
 
 ```@docs
 StateSpaceSets
-DynamicalSystemsBase
+DynamicalSystemsBase.DynamicalSystemsBase
 ```
 
 ## For observed/measured data
