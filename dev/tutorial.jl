@@ -729,6 +729,7 @@ current_parameter(roessler, :c)
 # ## [`DynamicalSystem` interface reference](@id dsref)
 
 # ```@docs
+# step!(::DynamicalSystem, ::Any)
 # current_state
 # initial_state
 # observe_state
