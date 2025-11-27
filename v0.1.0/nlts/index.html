@@ -1,0 +1,103 @@
+<!DOCTYPE html><HTML class="no-js" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="ie=edge" http-equiv="x-ua-compatible"/><meta content="A Julia package for the exploration of continuous and discrete dynamical systems." name="description"/><meta content="George Datseris" name="author"/><link href="../assets/images/favicon.png" rel="shortcut icon"/><meta content="mkdocs-0.16.3, mkdocs-material-1.10.0" name="generator"/><title>Nonlinear Timeseries Analysis - DynamicalSystems.jl</title><script src="../assets/javascripts/modernizr-e826f8942a.js"></script><link href="../assets/stylesheets/application-b6a6d08807.css" rel="stylesheet"/><link href="../assets/stylesheets/application-23f75ab9c7.palette.css" rel="stylesheet"/><link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono" rel="stylesheet"/><style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/><link href="../assets/Documenter.css" rel="stylesheet"/><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This documentation is not for the latest version. <br> <a href="' + href + '">Go to the latest documentation</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body data-md-color-accent="deep-orange" data-md-color-primary="teal"><svg class="md-svg"><defs><svg height="448" id="github" viewBox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg"><path d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z" fill="currentColor"></path></svg></defs></svg><input class="md-toggle" data-md-toggle="drawer" id="drawer" type="checkbox"/><input class="md-toggle" data-md-toggle="search" id="search" type="checkbox"/><label class="md-overlay" data-md-component="overlay" for="drawer"></label><header class="md-header" data-md-component="header"><nav class="md-header-nav md-grid"><div class="md-flex"><div class="md-flex__cell md-flex__cell--shrink"><a class="md-header-nav__button md-logo" href=".." title="DynamicalSystems.jl"><i class="md-icon md-icon--home"></i></a></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label></div><div class="md-flex__cell md-flex__cell--stretch"><span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+            
+            Nonlinear Timeseries Analysis
+          
+        </span></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--search md-header-nav__button" for="search"></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="search"></label><div class="md-search__inner"><form class="md-search__form" name="search"><input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/><label class="md-icon md-search__icon" for="search"></label><button class="md-icon md-search__icon" data-md-component="reset" type="reset"></button></form><div class="md-search__output"><div class="md-search__scrollwrap" data-md-scrollfix=""><div class="md-search-result" data-md-component="result" data-md-lang-search="" data-md-lang-tokenizer="[\s\-]+"><div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div><ol class="md-search-result__list"></ol></div></div></div></div></div></div><div class="md-flex__cell md-flex__cell--shrink"><div class="md-header-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/Datseris/DynamicalSystems.jl" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div></div></div></nav></header><div class="md-container"><main class="md-main"><div class="md-main__inner md-grid" data-md-component="container"><div class="md-sidebar md-sidebar--primary" data-md-component="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary" data-md-level="0"><label class="md-nav__title md-nav__title--site" for="drawer"><div class="md-nav__button md-logo"><i class="md-icon md-icon--home"></i></div>
+    DynamicalSystems.jl
+  </label><div class="md-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/Datseris/DynamicalSystems.jl" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href=".." title="Introduction">
+      Introduction
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../system_definition/" title="System Definition">
+      System Definition
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../lyapunovs/" title="Lyapunov Exponents">
+      Lyapunov Exponents
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../entropies/" title="Entropies and Dimensions">
+      Entropies and Dimensions
+    </a></li><li class="md-nav__item md-nav__item--active"><input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="toc" type="checkbox"/><label class="md-nav__link md-nav__link--active" for="toc">
+        Nonlinear Timeseries Analysis
+      </label><a class="md-nav__link md-nav__link--active" href="./" title="Nonlinear Timeseries Analysis">
+      Nonlinear Timeseries Analysis
+    </a><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#attractor-reconstruction" title="Attractor Reconstruction">
+    Attractor Reconstruction
+  </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../contributors_guide/" title="Contributor Guide">
+      Contributor Guide
+    </a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#attractor-reconstruction" title="Attractor Reconstruction">
+    Attractor Reconstruction
+  </a></li></ul></nav></div></div></div><div class="md-content"><article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" href="https://github.com/Datseris/DynamicalSystems.jl/edit/master/docs/nlts.md" title="Edit this page"></a><p><a id="Nonlinear-Timeseries-Analysis-1"></a></p><h1 id="nonlinear-timeseries-analysis">Nonlinear Timeseries Analysis</h1><p><a id="Attractor-Reconstruction-1"></a></p><h2 id="attractor-reconstruction">Attractor Reconstruction</h2><p>A timeseries can be used to gain information about the dynamics of the entire phase-space, by reconstructing a phase-space from the timeseries. One method that can do this is what is known as <a href="https://en.wikipedia.org/wiki/Takens%27_theorem">delay coordinates embedding</a>.</p><p>In <code>DynamicalSystems.jl</code> this is done through the <code>reconstruct</code> interface:</p><p><a href="#DynamicalSystems.reconstruct" id="DynamicalSystems.reconstruct">#</a><strong><code>DynamicalSystems.reconstruct</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>reconstruct(s::AbstractVector, τ::Int, d::Int) -&gt; R
+</pre></div><p>Create and return an efficient <code>Reconstruction</code> data structure that serves as the delay-coordinates reconstruction of the signal <code>s</code>. The reconstuction has dimension <code>d</code> and delay <code>τ</code> (measured in indeces). This object can have same invariant quantities (like e.g. lyapunov exponents) with the original system that the timeseries were recorded from [1, 2].</p><p>The returned <code>R</code> is a <code>VectorOfArrays</code> from <code>RecursiveArrayTools.jl</code> and stores all the information about the embedding without allocating new arrays. It can however be used as a normal matrix:</p><div class="codehilite"><pre><span></span><span class="n">R</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c"># get the second column the reconstructed matrix</span>
+<span class="n">R</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c"># get the 5th element of the first column of the matrix</span>
+</pre></div><p>[1] : F. Takens, <em>Detecting Strange Attractors in Turbulence— Dynamical Systems and Turbulence</em>, Lecture Notes in Mathematics <strong>366</strong> (1981)</p><p>[2] : T. Sauer <em>et al.</em>, J. Stat. Phys. <strong>65</strong>, pp 579 (1991)</p><p><a class="documenter-source" href="https://github.com/Datseris/DynamicalSystems.jl/tree/839f85ab012297aa241bf7f4d58becfb110a6fd8/src/nlts/delay_coords.jl#L40-L60" target="_blank">source</a><br/></p><p>The returned object can be immediately passed into e.g. a method that calculates the attractor dimension, or simply be used as any matrix. For example:</p><div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span>
+<span class="n">he</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">henon</span><span class="p">()</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">timeseries</span><span class="p">(</span><span class="n">he</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+<span class="n">D1</span> <span class="o">=</span> <span class="n">information_dim</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="c"># around 1.20</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c"># some "recorded" timeseries</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">D2</span> <span class="o">=</span> <span class="n">information_dim</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="c">#around 1.17</span>
+</pre></div><p>The 2 numbers are very close, which is not too bad given that there wasn't any care for the value of <code>τ</code> that was chosen! More importantly:</p><div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">BenchmarkTools</span>
+<span class="nd">@btime</span> <span class="n">recostruct</span><span class="p">(</span><span class="o">$</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c"># @btime result:  94.675 ns (6 allocations: 304 bytes)</span>
+</pre></div></article></div></div></main><footer class="md-footer"><div class="md-footer-nav"><nav class="md-footer-nav__inner md-grid"><a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../entropies/" rel="prev" title="Entropies and Dimensions"><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-back md-footer-nav__button"></i></div><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Entropies and Dimensions
+              </span></div></a><a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../contributors_guide/" rel="next" title="Contributor Guide"><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Contributor Guide
+              </span></div><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i></div></a></nav></div><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a></div><div class="md-footer-social"><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/><a class="md-footer-social__link fa fa-github" href="https://github.com/Datseris/DynamicalBilliards.jl"></a></div></div></div></footer></div><script src="../assets/javascripts/application-f3ab9e5ff8.js"></script><script>app.initialize({url:{base:".."}})</script><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script><script src="../assets/mathjaxhelper.js"></script></body></HTML>

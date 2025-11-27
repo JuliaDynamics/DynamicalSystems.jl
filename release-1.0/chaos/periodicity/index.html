@@ -1,0 +1,203 @@
+<!DOCTYPE html><HTML class="no-js" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="ie=edge" http-equiv="x-ua-compatible"/><meta content="A Julia software library for the exploration of chaos and nonlinear dynamics." name="description"/><meta content="George Datseris" name="author"/><meta content="Copy to clipboard" name="lang:clipboard.copy"/><meta content="Copied to clipboard" name="lang:clipboard.copied"/><meta content="en" name="lang:search.language"/><meta content="True" name="lang:search.pipeline.stopwords"/><meta content="True" name="lang:search.pipeline.trimmer"/><meta content="No matching documents" name="lang:search.result.none"/><meta content="1 matching document" name="lang:search.result.one"/><meta content="# matching documents" name="lang:search.result.other"/><meta content="[\s\-]+" name="lang:search.tokenizer"/><link href="../../assets/images/favicon.png" rel="shortcut icon"/><meta content="mkdocs-0.17.5, mkdocs-material-2.9.4" name="generator"/><title>Periodicity - DynamicalSystems.jl</title><link href="../../assets/stylesheets/application.451f80e5.css" rel="stylesheet"/><link href="../../assets/stylesheets/application-palette.22915126.css" rel="stylesheet"/><meta content="#7e57c2" name="theme-color"/><script src="../../assets/javascripts/modernizr.1aa3b519.js"></script><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono" rel="stylesheet"/><style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style><link href="../../assets/fonts/material-icons.css" rel="stylesheet"/><link href="../../assets\Documenter.css" rel="stylesheet"/><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This documentation is not for the latest version. <br> <a href="' + href + '">Go to the latest documentation</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body data-md-color-accent="teal" data-md-color-primary="deep-purple" dir="ltr"><svg class="md-svg"><defs><svg height="448" id="__github" viewBox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg"><path d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" fill="currentColor"></path></svg></defs></svg><input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/><input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/><label class="md-overlay" data-md-component="overlay" for="__drawer"></label><a class="md-skip" href="#detecting-stable-and-unstable-periodic-orbits-of-maps" tabindex="1">
+        Skip to content
+      </a><header class="md-header" data-md-component="header"><nav class="md-header-nav md-grid"><div class="md-flex"><div class="md-flex__cell md-flex__cell--shrink"><a class="md-header-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label></div><div class="md-flex__cell md-flex__cell--stretch"><div class="md-flex__ellipsis md-header-nav__title" data-md-component="title"><span class="md-header-nav__topic">
+                DynamicalSystems.jl
+              </span><span class="md-header-nav__topic">
+                Periodicity
+              </span></div></div><div class="md-flex__cell md-flex__cell--shrink"><label class="md-icon md-icon--search md-header-nav__button" for="__search"></label><div class="md-search" data-md-component="search" role="dialog"><label class="md-search__overlay" for="__search"></label><div class="md-search__inner" role="search"><form class="md-search__form" name="search"><input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/><label class="md-icon md-search__icon" for="__search"></label><button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+        
+      </button></form><div class="md-search__output"><div class="md-search__scrollwrap" data-md-scrollfix=""><div class="md-search-result" data-md-component="result"><div class="md-search-result__meta">
+            Type to start searching
+          </div><ol class="md-search-result__list"></ol></div></div></div></div></div></div><div class="md-flex__cell md-flex__cell--shrink"><div class="md-header-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div></div></div></nav></header><div class="md-container"><main class="md-main"><div class="md-main__inner md-grid" data-md-component="container"><div class="md-sidebar md-sidebar--primary" data-md-component="navigation"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--primary" data-md-level="0"><label class="md-nav__title md-nav__title--site" for="__drawer"><a class="md-nav__button md-logo" href="../.." title="DynamicalSystems.jl"><i class="md-icon"></i></a>
+    DynamicalSystems.jl
+  </label><div class="md-nav__source"><a class="md-source" data-md-source="github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/" title="Go to repository"><div class="md-source__icon"><svg height="24" viewBox="0 0 24 24" width="24"><use height="24" href="#__github" width="24"></use></svg></div><div class="md-source__repository">
+      GitHub
+    </div></a></div><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../.." title="Introduction">
+      Introduction
+    </a></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" id="nav-2" type="checkbox"/><label class="md-nav__link" for="nav-2">
+      Fundamentals
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-2">
+        Fundamentals
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../definition/general/" title="Dynamical Systems">
+      Dynamical Systems
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../definition/evolve/" title="Time Evolution">
+      Time Evolution
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../definition/dataset/" title="Numerical Data">
+      Numerical Data
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../definition/reconstruction/" title="Delay Coordinates">
+      Delay Coordinates
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../definition/predefined/" title="Predefined Systems">
+      Predefined Systems
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--active md-nav__item--nested"><input checked="" class="md-toggle md-nav__toggle" data-md-toggle="nav-3" id="nav-3" type="checkbox"/><label class="md-nav__link" for="nav-3">
+      ChaosTools
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-3">
+        ChaosTools
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../overview/" title="Features Overview">
+      Features Overview
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../orbitdiagram/" title="Orbit Diagrams &amp; PSOS">
+      Orbit Diagrams &amp; PSOS
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../lyapunovs/" title="Lyapunov Exponents">
+      Lyapunov Exponents
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../entropies/" title="Entropies and Dimensions">
+      Entropies and Dimensions
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../nlts/" title="Nonlinear Timeseries Analysis">
+      Nonlinear Timeseries Analysis
+    </a></li><li class="md-nav__item md-nav__item--active"><input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/><label class="md-nav__link md-nav__link--active" for="__toc">
+        Periodicity
+      </label><a class="md-nav__link md-nav__link--active" href="./" title="Periodicity">
+      Periodicity
+    </a><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#detecting-stable-and-unstable-periodic-orbits-of-maps" title="Detecting Stable and Unstable Periodic Orbits of Maps">
+    Detecting Stable and Unstable Periodic Orbits of Maps
+  </a><nav class="md-nav"><ul class="md-nav__list"><li class="md-nav__item"><a class="md-nav__link" href="#standard-map-example" title="Standard Map example">
+    Standard Map example
+  </a></li></ul></nav></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../chaos_detection/" title="Chaos Detection">
+      Chaos Detection
+    </a></li></ul></nav></li><li class="md-nav__item md-nav__item--nested"><input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" id="nav-4" type="checkbox"/><label class="md-nav__link" for="nav-4">
+      TimeseriesPrediction
+    </label><nav class="md-nav" data-md-component="collapsible" data-md-level="1"><label class="md-nav__title" for="nav-4">
+        TimeseriesPrediction
+      </label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="../../tsprediction/localmodels/" title="Local Modeling">
+      Local Modeling
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../tsprediction/st_prediction/" title="Spatiotemporal Timeseries">
+      Spatiotemporal Timeseries
+    </a></li></ul></nav></li><li class="md-nav__item"><a class="md-nav__link" href="../../advanced/" title="Advanced Documentation">
+      Advanced Documentation
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../contributors_guide/" title="Contributor Guide">
+      Contributor Guide
+    </a></li><li class="md-nav__item"><a class="md-nav__link" href="../../news/" title="News">
+      News
+    </a></li></ul></nav></div></div></div><div class="md-sidebar md-sidebar--secondary" data-md-component="toc"><div class="md-sidebar__scrollwrap"><div class="md-sidebar__inner"><nav class="md-nav md-nav--secondary"><label class="md-nav__title" for="__toc">Table of contents</label><ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item"><a class="md-nav__link" href="#detecting-stable-and-unstable-periodic-orbits-of-maps" title="Detecting Stable and Unstable Periodic Orbits of Maps">
+    Detecting Stable and Unstable Periodic Orbits of Maps
+  </a><nav class="md-nav"><ul class="md-nav__list"><li class="md-nav__item"><a class="md-nav__link" href="#standard-map-example" title="Standard Map example">
+    Standard Map example
+  </a></li></ul></nav></li></ul></nav></div></div></div><div class="md-content"><article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" href="https://github.com/JuliaDynamics/DynamicalSystems.jl/edit/master/docs/chaos/periodicity.md" title="Edit this page"></a><h1>Periodicity</h1><p><a id="Detecting-Stable-and-Unstable-Periodic-Orbits-of-Maps-1"></a></p><h2 id="detecting-stable-and-unstable-periodic-orbits-of-maps">Detecting Stable and Unstable Periodic Orbits of Maps</h2><p>Chaotic behavior of low dimensional dynamical systems is affected by the position and the stability properties of the <a href="http://www.scholarpedia.org/article/Unstable_periodic_orbits">periodic orbits</a> existing in the chaotic sea.</p><p>Finding unstable (or stable) periodic orbits of a discrete mapping analytically rapidly becomes impossible for higher orders of fixed points. Fortunately there is a numeric algorithm due to Schmelcher &amp; Diakonos which allows such a computation. Notice that even though the algorithm can find stable fixed points, it is mainly aimed at <em>unstable</em> ones.</p><p>The functions <code>periodicorbits</code> and <code>lambdamatrix</code> implement the algorithm:</p><p><a href="#ChaosTools.periodicorbits" id="ChaosTools.periodicorbits">#</a><strong><code>ChaosTools.periodicorbits</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>periodicorbits(ds::DiscreteDynamicalSystem,
+               o, ics [, λs, indss, singss]; kwargs...) -&gt; FP
+</pre></div><p>Find fixed points <code>FP</code> of order <code>o</code> for the map <code>ds</code> using the algorithm due to Schmelcher &amp; Diakonos [1]. <code>ics</code> is a collection of initial conditions (container of vectors) to be evolved.</p><p><strong>Optional Arguments</strong></p><p>The optional arguments <code>λs, indss, singss</code><em>must be containers</em> of appropriate values, besides <code>λs</code> which can also be a number. The elements of those containers are passed to: <a href="./#ChaosTools.lambdamatrix"><code>lambdamatrix(λ, inds, sings)</code></a>, which creates the appropriate <span><span class="MathJax_Preview">\mathbf{\Lambda}_k</span><script type="math/tex">\mathbf{\Lambda}_k</script></span> matrix. If these arguments are not given, a random permutation will be chosen for them, with <code>λ=0.001</code>.</p><p><strong>Keyword Arguments</strong></p><ul><li><code>maxiters::Int = 100000</code> : Maximum amount of iterations an i.c. will be iterated  before claiming it has not converged.</li><li><code>disttol = 1e-10</code> : Distance tolerance. If the 2-norm of a previous state with  the next one is <code>≤ disttol</code> then it has converged to a fixed point.</li><li><code>inftol = 10.0</code> : If a state reaches <code>norm(state) ≥ inftol</code> it is assumed that  it has escaped to infinity (and is thus abandoned).</li><li><code>roundtol::Int = 4</code> : The found fixed points are rounded  to <code>roundtol</code> digits before pushed into the list of returned fixed points <code>FP</code>,  <em>if</em> they are not already contained in <code>FP</code>.  This is done so that <code>FP</code> doesn't contain duplicate fixed points (notice  that this has nothing to do with <code>disttol</code>). Turn this to <code>typemax(Int)</code>  to get the full precision of the algorithm.</li></ul><p><strong>Description</strong></p><p>The algorithm used can detect periodic orbits by turning fixed points of the original map <code>ds</code> to stable ones, through the transformation</p><div><div class="MathJax_Preview">
+\mathbf{x}_{n+1} = \mathbf{x}_n +
+\mathbf{\Lambda}_k\left(f^{(o)}(\mathbf{x}_n) - \mathbf{x}_n\right)
+</div><script type="math/tex; mode=display">
+\mathbf{x}_{n+1} = \mathbf{x}_n +
+\mathbf{\Lambda}_k\left(f^{(o)}(\mathbf{x}_n) - \mathbf{x}_n\right)
+</script></div><p>with <span><span class="MathJax_Preview">f</span><script type="math/tex">f</script></span> = <code>eom</code>. The index <span><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span> counts the various possible <span><span class="MathJax_Preview">\mathbf{\Lambda}_k</span><script type="math/tex">\mathbf{\Lambda}_k</script></span>.</p><p><strong>Performance Notes</strong></p><p><em>All</em> initial conditions are evolved for <em>all</em><span><span class="MathJax_Preview">\mathbf{\Lambda}_k</span><script type="math/tex">\mathbf{\Lambda}_k</script></span> which can very quickly lead to long computation times.</p><p><strong>References</strong></p><p>[1] : P. Schmelcher &amp; F. K. Diakonos, Phys. Rev. Lett. <strong>78</strong>, pp 4733 (1997)</p><p><a href="#ChaosTools.lambdamatrix" id="ChaosTools.lambdamatrix">#</a><strong><code>ChaosTools.lambdamatrix</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>lambdamatrix(λ, inds::Vector{Int}, sings) -&gt; Λk
+</pre></div><p>Return the matrix <span><span class="MathJax_Preview">\mathbf{\Lambda}_k</span><script type="math/tex">\mathbf{\Lambda}_k</script></span> used to create a new dynamical system with some unstable fixed points turned to stable in the function <a href="./#ChaosTools.periodicorbits"><code>periodicorbits</code></a>.</p><p><strong>Arguments</strong></p><ol><li><code>λ&lt;:Real</code> : the multiplier of the <span><span class="MathJax_Preview">C_k</span><script type="math/tex">C_k</script></span> matrix, with <code>0&lt;λ&lt;1</code>.</li><li><code>inds::Vector{Int}</code> : The <code>i</code>th entry of this vector gives the <em>row</em> of the nonzero element of the <code>i</code>th column of <span><span class="MathJax_Preview">C_k</span><script type="math/tex">C_k</script></span>.</li><li><code>sings::Vector{&lt;:Real}</code> : The element of the <code>i</code>th column of <span><span class="MathJax_Preview">C_k</span><script type="math/tex">C_k</script></span> is +1 if <code>signs[i] &gt; 0</code> and -1 otherwise (<code>sings</code> can also be <code>Bool</code> vector).</li></ol><p>Calling <code>lambdamatrix(λ, D::Int)</code> creates a random <span><span class="MathJax_Preview">\mathbf{\Lambda}_k</span><script type="math/tex">\mathbf{\Lambda}_k</script></span> by randomly generating an <code>inds</code> and a <code>signs</code> from all possible combinations. The <em>collections</em> of all these combinations can be obtained from the function <a href="./#ChaosTools.lambdaperms"><code>lambdaperms</code></a>.</p><p><strong>Description</strong></p><p>Each element of <code>inds</code><em>must be unique</em> such that the resulting matrix is orthogonal and represents the group of special reflections and permutations.</p><p>Deciding the appropriate values for <code>λ, inds, sings</code> is not trivial. However, in ref. [2] there is a lot of information that can help with that decision. Also, by appropriately choosing various values for <code>λ</code>, one can sort periodic orbits from e.g. least unstable to most unstable, see [3] for details.</p><p><strong>References</strong></p><p>[2] : D. Pingel <em>et al.</em>, Phys. Rev. E <strong>62</strong>, pp 2119 (2000)</p><p>[3] : F. K. Diakonos <em>et al.</em>, Phys. Rev. Lett. <strong>81</strong>, pp 4349 (1998)</p><p><a href="#ChaosTools.lambdaperms" id="ChaosTools.lambdaperms">#</a><strong><code>ChaosTools.lambdaperms</code></strong> — <em>Function</em>.</p><div class="codehilite"><pre><span></span>lambdaperms(D) -&gt; indperms, singperms
+</pre></div><p>Return two collections that each contain all possible combinations of indices (total of <span><span class="MathJax_Preview">D!</span><script type="math/tex">D!</script></span>) and signs (total of <span><span class="MathJax_Preview">2^D</span><script type="math/tex">2^D</script></span>) for dimension <code>D</code> (see <a href="./#ChaosTools.lambdamatrix"><code>lambdamatrix</code></a>).</p><hr/><p><a id="Standard-Map-example-1"></a></p><h3 id="standard-map-example">Standard Map example</h3><p>For example, let's find the fixed points of the <a href="../system_definition/#DynamicalSystems.Systems.standardmap">Standard Map</a> of order 2, 3, 4, 5, 6 and 8. We will use all permutations for the <code>signs</code> but only one for the <code>inds</code>. We will also only use one <code>λ</code> value, and a 21×21 density of initial conditions.</p><p>First, initialize everything</p><div class="codehilite"><pre><span></span><span class="k">using</span> <span class="n">DynamicalSystems</span><span class="p">,</span> <span class="n">PyPlot</span><span class="p">,</span> <span class="n">StaticArrays</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">Systems</span><span class="o">.</span><span class="n">standardmap</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">2</span><span class="nb">π</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">21</span><span class="p">);</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="n">ics</span> <span class="o">=</span> <span class="p">[</span><span class="n">SVector</span><span class="p">{</span><span class="mi">2</span><span class="p">}(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="kp">in</span> <span class="n">xs</span> <span class="k">for</span> <span class="n">y</span> <span class="kp">in</span> <span class="n">ys</span><span class="p">]</span>
+
+<span class="c"># All permutations of [±1, ±1]:</span>
+<span class="n">singss</span> <span class="o">=</span> <span class="n">lambdaperms</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="c"># second entry are the signs</span>
+
+<span class="c"># I know from personal research I only need this `inds`:</span>
+<span class="n">indss</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span> <span class="c"># &lt;- must be container of vectors!!!</span>
+
+<span class="n">λs</span> <span class="o">=</span> <span class="mf">0.005</span> <span class="c"># &lt;- only this allowed to not be vector (could also be vector)</span>
+
+<span class="n">orders</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">ALLFP</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="kt">Float64</span><span class="p">}[];</span>
+</pre></div><p>Then, do the necessary computations for all orders</p><div class="codehilite"><pre><span></span><span class="n">ttt</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">o</span> <span class="kp">in</span> <span class="n">orders</span>
+    <span class="n">FP</span> <span class="o">=</span> <span class="n">periodicorbits</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">ics</span><span class="p">,</span> <span class="n">λs</span><span class="p">,</span> <span class="n">indss</span><span class="p">,</span> <span class="n">singss</span><span class="p">)</span>
+    <span class="n">push!</span><span class="p">(</span><span class="n">ALLFP</span><span class="p">,</span> <span class="n">FP</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="s">"Total time, including compilation: </span><span class="si">$</span><span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">ttt</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span><span class="s"> mins."</span><span class="p">)</span>
+</pre></div><div class="codehilite"><pre><span></span>Total time, including compilation: 0.6589482347170512 mins.
+</pre></div><p>Plot the phase space of the standard map</p><div class="codehilite"><pre><span></span><span class="n">iters</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">iters</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="kp">in</span> <span class="n">xs</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="kp">in</span> <span class="n">ys</span>
+        <span class="n">append!</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">iters</span><span class="p">,</span> <span class="n">SVector</span><span class="p">{</span><span class="mi">2</span><span class="p">}(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="n">m</span> <span class="o">=</span> <span class="kt">Matrix</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">view</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">s</span><span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">"black"</span><span class="p">)</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs</span><span class="p">[</span><span class="k">end</span><span class="p">])</span>
+<span class="n">PyPlot</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ys</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ys</span><span class="p">[</span><span class="k">end</span><span class="p">]);</span>
+</pre></div><p>and finally, plot the fixed points</p><div class="codehilite"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="s">"D"</span><span class="p">,</span> <span class="s">"^"</span><span class="p">,</span> <span class="s">"s"</span><span class="p">,</span> <span class="s">"p"</span><span class="p">,</span> <span class="s">"h"</span><span class="p">,</span> <span class="s">"8"</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s">"b"</span><span class="p">,</span> <span class="s">"g"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">,</span> <span class="s">"m"</span><span class="p">,</span> <span class="s">"grey"</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">6</span>
+    <span class="n">FP</span> <span class="o">=</span> <span class="n">ALLFP</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">PyPlot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">columns</span><span class="p">(</span><span class="n">FP</span><span class="p">)</span><span class="o">...</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">10.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">8</span><span class="o">-</span><span class="n">o</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s">"order </span><span class="si">$o</span><span class="s">"</span><span class="p">,</span> <span class="n">markeredgecolor</span> <span class="o">=</span> <span class="s">"yellow"</span><span class="p">,</span> <span class="n">markeredgewidth</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">"upper right"</span><span class="p">,</span> <span class="n">framealpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">"</span><span class="se">\$\\</span><span class="s">theta</span><span class="se">\$</span><span class="s">"</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s">"</span><span class="se">\$</span><span class="s">p</span><span class="se">\$</span><span class="s">"</span><span class="p">)</span>
+</pre></div><p><img alt="Fixed points of the standard map" src="../fixedpoints.png"/></p><p>You can confirm for yourself that this is correct, for many reasons:</p><ol><li>It is the same <a href="https://journals.aps.org/pre/abstract/10.1103/PhysRevE.92.012914">fig. 12 of this publication</a>.</li><li>Fixed points of order <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> are also fixed points of order <span><span class="MathJax_Preview">2n, 3n, 4n, ...</span><script type="math/tex">2n, 3n, 4n, ...</script></span></li><li>Besides fixed points of previous orders, <em>original</em> fixed points of order <span><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span> come in (possible multiples of) <span><span class="MathJax_Preview">2n</span><script type="math/tex">2n</script></span>-sized pairs (see e.g. order 5). This is a direct consequence of the Poincaré–Birkhoff theorem.</li></ol></article></div></div></main><footer class="md-footer"><div class="md-footer-nav"><nav class="md-footer-nav__inner md-grid"><a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../nlts/" rel="prev" title="Nonlinear Timeseries Analysis"><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-back md-footer-nav__button"></i></div><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Nonlinear Timeseries Analysis
+              </span></div></a><a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../chaos_detection/" rel="next" title="Chaos Detection"><div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span class="md-flex__ellipsis"><span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Chaos Detection
+              </span></div><div class="md-flex__cell md-flex__cell--shrink"><i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i></div></a></nav></div><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a></div><div class="md-footer-social"><link href="../../assets/fonts/font-awesome.css" rel="stylesheet"/><a class="md-footer-social__link fa fa-github" href="https://github.com/JuliaDynamics/DynamicalSystems.jl"></a></div></div></div></footer></div><script src="../../assets/javascripts/application.30f6b8b1.js"></script><script>app.initialize({version:"0.17.5",url:{base:"../.."}})</script><script src="../../assets\mathjaxhelper.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></HTML>
