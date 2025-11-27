@@ -120,7 +120,10 @@ using CairoMakie, DynamicalSystems
 using Pkg
 Pkg.status([
     "DynamicalSystems",
-    "StateSpaceSets", "DynamicalSystemsBase", "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates", "PredefinedDynamicalSystems", "Attractors", "TransitionsInTimeseries", "SignalDecomposition", "ChaosTools", "CairoMakie",
+    "StateSpaceSets", "DynamicalSystemsBase",
+    "RecurrenceAnalysis", "FractalDimensions", "DelayEmbeddings", "ComplexityMeasures", "TimeseriesSurrogates",
+    "PredefinedDynamicalSystems", "Attractors", "ChaosTools", "PeriodicOrbits",
+    "CairoMakie",
     ];
     mode = PKGMODE_MANIFEST
 )
