@@ -709,6 +709,12 @@ current_parameter(roessler, :c)
 
 # ## Core components reference
 
+# !!! warn "Potentially broken hyperlinks"
+#     Depending on where and how you have accessed this page,
+#     the hyperlinks to some data structures referrenced below may be "broken".
+#     Instead, search the data structure name in the **global** search bar in the top
+#     right of the documentation window.
+
 # ```@docs
 # StateSpaceSet
 # DynamicalSystem

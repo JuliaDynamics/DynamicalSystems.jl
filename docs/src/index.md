@@ -8,6 +8,13 @@ DynamicalSystems
 
 ## Introduction
 
+
+!!! info "Use the multi-docs version of the docs"
+    Please make sure that you are using the multi-document version of the **DynamicalSystems.jl** where there is an overhead menu listing
+    the various components of the **DynamicalSystems.jl!** library.
+    If you are not sure, the link to this doc is here:
+    <https://juliadynamics.github.io/DynamicalSystemsDocs.jl/dynamicalsystems/dev/>
+
 Welcome to the documentation of **DynamicalSystems.jl**!
 
 - If you have not used the library before, and would like to get started, then please read the [overarching tutorial](@ref tutorial) for the library.
