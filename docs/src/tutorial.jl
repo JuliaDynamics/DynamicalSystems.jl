@@ -751,7 +751,7 @@ current_parameter(roessler, :c)
 # ```@docs
 # step!(::DynamicalSystem, ::Any)
 # current_state
-# initial_state
+# DynamicalSystemsBase.initial_state
 # observe_state
 # state_name
 # current_parameters
