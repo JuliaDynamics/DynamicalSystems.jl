@@ -31,6 +31,7 @@ pages =  [
 build_docs_with_style(pages, DynamicalSystems,
     ComplexityMeasures,
     RecurrenceAnalysis,
+    RecurrenceMicrostatesAnalysis,
     DelayEmbeddings,
     ChaosTools,
     DynamicalSystemsBase,
