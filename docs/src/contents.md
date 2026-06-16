@@ -16,6 +16,7 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 **For observed/measured data and timeseries**
 - [`ComplexityMeasures`](@ref)
 - [`RecurrenceAnalysis`](@ref)
+- [`RecurrenceMicrostatesAnalysis`](@ref)
 - [`DelayEmbeddings`](@ref)
 - [`FractalDimensions`](@ref)
 - [`TimeseriesSurrogates`](@ref)
@@ -42,6 +43,7 @@ DynamicalSystemsBase.DynamicalSystemsBase
 ```@docs
 ComplexityMeasures
 RecurrenceAnalysis
+RecurrenceMicrostatesAnalysis
 DelayEmbeddings
 FractalDimensions
 TimeseriesSurrogates

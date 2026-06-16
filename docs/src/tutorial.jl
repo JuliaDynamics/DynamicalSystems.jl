@@ -535,7 +535,9 @@ scatter(X)
 
 # Several packages of the library deal with `StateSpaceSets`.
 
-# You could use [`ComplexityMeasures`](@ref) to obtain the entropy, or other complexity measures, of a given set. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
+# You could use [`ComplexityMeasures`](@ref) to obtain the entropy, or other
+# complexity measures, of a given set. Below, we obtain the entropy of the natural density
+# of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
 
 prob_est = ValueHistogram(50)
 entropy(prob_est, X)
@@ -558,6 +560,18 @@ rr = recurrencerate(R)
 heatmap(Rg; colormap = :grays,
     axis = (title = "recurrence rate = $(round(rr; digits = 3))", aspect = 1)
 )
+
+# Recurrence matrices are used for recurrence quantification analysis (RQA).
+# Traditional is implemented in [`RecurrenceAnalysis`](@ref), but we also have
+# implementations for recurrence microstates analysis in [`RecurrenceMicrostatesAnalysis`](@ref).
+# The latter extends the API of [`ComplexityMeasures`](@ref), which allows you
+# to do stuff like
+
+ε = 0.25
+rmspace = RecurrenceMicrostates(ε, 2)
+entropy(Shannon(), rmspace, X)
+
+# which calculates the recurrence microstate entropy.
 
 # ## More nonlinear timeseries analysis
 
