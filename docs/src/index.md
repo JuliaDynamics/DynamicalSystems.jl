@@ -26,11 +26,25 @@ Welcome to the documentation of **DynamicalSystems.jl**!
 
 ## Latest news
 
-All subpackages composing DynamicalSystems.jl have their own human-readable CHANGELOG files in their corresponding GitHub repositories. The CHANGELOGs log all meaningful changes in the software.
+!!! info "10 years anniversary Symposium!"
+    In August 2027 we are celebrating the 10 years anniversary of **DynamicalSystems.jl**
+    and the JuliaDynamics GitHub organization. Everyone is welcomed to join.
+    Information about the Symposium can be found here:
+
+    <https://forms.cloud.microsoft/e/R3L7MghSHX>
+
+    Please submit your registration of interest in the form above as soon as possible!
+
+- New subpackage in DynamicalSystems.jl: [RecurrenceMicrostatesAnalysis](@ref)
 
 Notable news for the **DynamicalSystems.jl** library are also posted on the official Julia language Discourse, and users may subscribe to this particular Topic to get notified of updates:
 
 https://discourse.julialang.org/t/dynamicalsystems-jl-news-updates-and-announcements/122079
+
+
+### Changelogs
+
+All subpackages composing DynamicalSystems.jl have their own human-readable CHANGELOG files in their corresponding GitHub repositories. The CHANGELOGs log all meaningful changes in the software.
 
 ## Community meetings
 
