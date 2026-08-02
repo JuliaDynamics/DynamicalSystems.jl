@@ -333,9 +333,9 @@ lyapunovspectrum(henon, steps)
 ## define a state space grid to compute the basins on:
 xg = yg = range(-2, 2; length = 201)
 ## find attractors using recurrences in state space:
-mapper = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
+bmap = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
 ## compute the full basins of attraction:
-basins, attractors = basins_of_attraction(mapper; show_progress = false)
+basins, attractors = basins_of_attraction(bmap; show_progress = false)
 
 # Let's visualize the result
 
@@ -401,17 +401,17 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 
 featurizer(X, t) = X[end]
 
-mapper = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
+bmap = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
 
 xg = yg = range(-1, 1; length = 101)
 
 sampler, _ = statespace_sampler((xg, yg))
 
-fs = basins_fractions(mapper, sampler; show_progress = false)
+fs = basins_fractions(bmap, sampler; show_progress = false)
 
 # and we can see the stored "attractors"
 
-attractors = extract_attractors(mapper)
+attractors = extract_attractors(bmap)
 fig, ax = scatter(attractors[1])
 scatter!(attractors[2])
 fig
