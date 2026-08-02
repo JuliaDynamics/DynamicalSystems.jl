@@ -302,7 +302,7 @@ current_parameters(lorenz96)
 
 # Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
 # For example, you may want to obtain the Poincare section of a continuous time system,
-# which is something already available in [`DynamicalSystemsBase`](@ref):
+# which is something already available in [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref):
 
 plane = (1, 0.0)
 pmap = poincaresos(lorenz96, plane, 10000.0)

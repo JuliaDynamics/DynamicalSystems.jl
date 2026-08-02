@@ -28,7 +28,7 @@ Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 DynamicalSystemsVisualizations = "Makie"
 
 [compat]
-Attractors = "1"
+Attractors = "2"
 ChaosTools = "3"
 ComplexityMeasures = "2, 3"
 DataStructures = "0.18, 0.19"
