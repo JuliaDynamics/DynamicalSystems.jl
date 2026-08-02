@@ -7,6 +7,11 @@ The changelog here therefore lists either major changes to the overarching Dynam
 
 The changelogs of individual sub-packages are self-contained for each package.
 
+# v3.7
+
+- New package RecurrenceMicrostatesAnalysis.jl joins DynamicalSystems.jl!
+- Announcement: August 2027 a Symposium celebrating 10 years of DynamicalSystems.jl is taking place; see [here](https://discourse.julialang.org/t/juliadynamics-dynamicalsystems-jl-10-year-symposium/138566) for details!
+
 # v3.6
 
 - New interactive GUI function: `interactive_2d_clicker`.
@@ -54,7 +59,6 @@ Super duper major update.
 2. [Modularization](#modularization)
 3. [New documentation](#new-documentation)
 4. [Notable breaking changes](#notable-breaking-changes)
-   1. [Renames](#renames)
 5. [Re-write of `DynamicalSystem`](#re-write-of-dynamicalsystem)
 6. [ODE solver change](#ode-solver-change)
 7. [Package split: StateSpaceSets.jl](#package-split-statespacesetsjl)
