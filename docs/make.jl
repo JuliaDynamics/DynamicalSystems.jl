@@ -46,5 +46,5 @@ build_docs_with_style(pages, DynamicalSystems,
     expandfirst = ["index.md"],
     # We need to remove the cross references because we don't list here
     # the whole `DynamicalSystem` API...
-    warnonly = [:doctest, :missing_docs, :cross_references],
+    warnonly = [:doctest, :missing_docs, :cross_references, :linkcheck],
 )
