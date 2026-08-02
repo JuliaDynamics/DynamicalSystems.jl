@@ -11,7 +11,7 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 
 **Core**
 - [`StateSpaceSets`](@ref)
-- [`DynamicalSystemsBase`](@ref)
+- [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref)
 
 **For observed/measured data and timeseries**
 - [`ComplexityMeasures`](@ref)
