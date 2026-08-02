@@ -29,12 +29,12 @@ pages =  [
 ]
 
 build_docs_with_style(pages, DynamicalSystems,
+    DynamicalSystemsBase,
     ComplexityMeasures,
     RecurrenceAnalysis,
     RecurrenceMicrostatesAnalysis,
     DelayEmbeddings,
     ChaosTools,
-    DynamicalSystemsBase,
     StateSpaceSets,
     Attractors,
     FractalDimensions,
@@ -42,7 +42,7 @@ build_docs_with_style(pages, DynamicalSystems,
     PredefinedDynamicalSystems,
     SignalDecomposition,
     PeriodicOrbits;
-    authors = "George Datseris <datseris.george@gmail.com>",
+    authors = "George Datseris",
     expandfirst = ["index.md"],
     # We need to remove the cross references because we don't list here
     # the whole `DynamicalSystem` API...
