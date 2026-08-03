@@ -672,13 +672,13 @@ end
     z(t) = 0.0
     nlt(t) # nonlinear term
 end
-@equations begin
-    D(x) ~ -y -z
-    D(y) ~ x + a*y
-    D(z) ~ b + nlt
-    nlt ~ z*(x - c)
-end
-sys = System(eqs, t)
+eqs = [
+    D(x) ~ - y - z,
+    D(y) ~ x + a*y,
+    D(z) ~ b + nlt,
+    nlt  ~ z*(x - c),
+]
+sys = System(eqs, t; name = :roessler)
 model = mtkcompile(sys)
 
 # this model can then be made into an `ODEProblem`.
