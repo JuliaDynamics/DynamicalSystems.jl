@@ -188,7 +188,7 @@ fig
 # and any of the [common solver options](https://diffeq.sciml.ai/latest/basics/common_solver_opts/).
 # For example:
 
-using OrdinaryDiffEq: Vern9 # accessing the ODE solvers
+using OrdinaryDiffEqVerner: Vern9 # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
 lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 
@@ -210,7 +210,7 @@ Y[end]
 # and compare performance to a naive solver one would use:
 
 using BenchmarkTools: @btime
-using OrdinaryDiffEq: BS3 # 3rd order solver
+using OrdinaryDiffEqLowOrderRK: BS3 # 3rd order solver
 
 for alg in (BS3(), Vern9())
     diffeq = (; alg, abstol = 1e-12, reltol = 1e-12)
