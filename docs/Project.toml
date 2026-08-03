@@ -22,6 +22,8 @@ StochasticDiffEq = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
 SignalDecomposition = "11a47235-7b84-4c7c-b885-fc3e2a9cf955"
 PeriodicOrbits = "41be5fce-5647-450b-ae37-a6739b881a1c"
 RecurrenceMicrostatesAnalysis = "cb83a08b-85c6-4e94-91aa-4e946c7d4f0c"
+OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 
 [compat]
 ModelingToolkit = "11"
+OrderedCollections = "1"
