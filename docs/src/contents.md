@@ -11,11 +11,12 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 
 **Core**
 - [`StateSpaceSets`](@ref)
-- [`DynamicalSystemsBase`](@ref)
+- [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref)
 
 **For observed/measured data and timeseries**
 - [`ComplexityMeasures`](@ref)
 - [`RecurrenceAnalysis`](@ref)
+- [`RecurrenceMicrostatesAnalysis`](@ref)
 - [`DelayEmbeddings`](@ref)
 - [`FractalDimensions`](@ref)
 - [`TimeseriesSurrogates`](@ref)
@@ -34,7 +35,6 @@ At the very end of this page, a full list of exported names is presented.
 
 ```@docs
 StateSpaceSets
-DynamicalSystemsBase.DynamicalSystemsBase
 ```
 
 ## For observed/measured data
@@ -42,6 +42,7 @@ DynamicalSystemsBase.DynamicalSystemsBase
 ```@docs
 ComplexityMeasures
 RecurrenceAnalysis
+RecurrenceMicrostatesAnalysis
 DelayEmbeddings
 FractalDimensions
 TimeseriesSurrogates

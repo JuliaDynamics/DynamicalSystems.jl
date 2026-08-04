@@ -118,7 +118,7 @@ henon = DeterministicIteratedMap(henon_rule, u0, p0)
 # The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
 
 total_time = 10_000
-X, t = trajectory(henon, total_time)
+X, tvec = trajectory(henon, total_time)
 X
 
 # `X` is a `StateSpaceSet`, the second of the core structures of the library.
@@ -163,7 +163,7 @@ lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0)
 
 total_time = 12.5
 sampling_time = 0.02
-Y, t = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
+Y, tvec = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
 Y
 
 # We can't scatterplot something 6-dimensional but we can visualize all timeseries
@@ -171,7 +171,7 @@ Y
 fig = Figure()
 ax = Axis(fig[1, 1]; xlabel = "time", ylabel = "variable")
 for var in columns(Y)
-    lines!(ax, t, var)
+    lines!(ax, tvec, var)
 end
 fig
 
@@ -188,13 +188,13 @@ fig
 # and any of the [common solver options](https://diffeq.sciml.ai/latest/basics/common_solver_opts/).
 # For example:
 
-using OrdinaryDiffEq: Vern9 # accessing the ODE solvers
+using OrdinaryDiffEqVerner: Vern9 # accessing the ODE solvers
 diffeq = (alg = Vern9(), abstol = 1e-9, reltol = 1e-9)
 lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 
 #
 
-Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
+Y, tvec = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
 
 # The choice of the solver algorithm can have **huge impact on the performance and stability of the ODE integration!**
@@ -210,7 +210,7 @@ Y[end]
 # and compare performance to a naive solver one would use:
 
 using BenchmarkTools: @btime
-using OrdinaryDiffEq: BS3 # 3rd order solver
+using OrdinaryDiffEqLowOrderRK: BS3 # 3rd order solver
 
 for alg in (BS3(), Vern9())
     diffeq = (; alg, abstol = 1e-12, reltol = 1e-12)
@@ -302,7 +302,7 @@ current_parameters(lorenz96)
 
 # Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
 # For example, you may want to obtain the Poincare section of a continuous time system,
-# which is something already available in [`DynamicalSystemsBase`](@ref):
+# which is something already available in [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref):
 
 plane = (1, 0.0)
 pmap = poincaresos(lorenz96, plane, 10000.0)
@@ -333,9 +333,9 @@ lyapunovspectrum(henon, steps)
 ## define a state space grid to compute the basins on:
 xg = yg = range(-2, 2; length = 201)
 ## find attractors using recurrences in state space:
-mapper = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
+bmap = BasinMapRecurrences(henon, (xg, yg); sparse = false)
 ## compute the full basins of attraction:
-basins, attractors = basins_of_attraction(mapper; show_progress = false)
+basins, attractors = basins_of_attraction(bmap; show_progress = false)
 
 # Let's visualize the result
 
@@ -399,19 +399,19 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 # we have to use an alternative algorithm, because `AttractorsViaRecurrences`
 # only works for deterministic systems. So instead we'll use `AttractorsViaFeaturizing`:
 
-featurizer(X, t) = X[end]
+featurizer(X, tvec) = X[end]
 
-mapper = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
+bmap = BasinMapFeaturizeGroup(sde, featurizer; Ttr = 200, T = 10)
 
 xg = yg = range(-1, 1; length = 101)
 
 sampler, _ = statespace_sampler((xg, yg))
 
-fs = basins_fractions(mapper, sampler; show_progress = false)
+fs = basins_fractions(bmap, sampler; show_progress = false)
 
 # and we can see the stored "attractors"
 
-attractors = extract_attractors(mapper)
+attractors = extract_attractors(bmap)
 fig, ax = scatter(attractors[1])
 scatter!(attractors[2])
 fig
@@ -535,7 +535,9 @@ scatter(X)
 
 # Several packages of the library deal with `StateSpaceSets`.
 
-# You could use [`ComplexityMeasures`](@ref) to obtain the entropy, or other complexity measures, of a given set. Below, we obtain the entropy of the natural density of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
+# You could use [`ComplexityMeasures`](@ref) to obtain the entropy, or other
+# complexity measures, of a given set. Below, we obtain the entropy of the natural density
+# of the chaotic attractor by partitioning into a histogram of approximately `50` bins per dimension:
 
 prob_est = ValueHistogram(50)
 entropy(prob_est, X)
@@ -546,7 +548,8 @@ pex = entropy_permutation(x; m = 4)
 sey = entropy_sample(y; m = 2)
 pex, sey
 
-# Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
+# Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of
+# the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
 
 grassberger_proccacia_dim(X; show_progress = false)
 
@@ -558,6 +561,21 @@ rr = recurrencerate(R)
 heatmap(Rg; colormap = :grays,
     axis = (title = "recurrence rate = $(round(rr; digits = 3))", aspect = 1)
 )
+
+# Recurrence matrices are used for recurrence quantification analysis (RQA).
+# Traditional RQA is implemented in [`RecurrenceAnalysis`](@ref), but we also have
+# implementations for recurrence _microstates_ analysis in [`RecurrenceMicrostatesAnalysis`](@ref).
+# The latter extends the API of [`ComplexityMeasures`](@ref), which allows you
+# to do stuff like
+
+ε = 0.25
+rmspace = RecurrenceMicrostates(ε, 2)
+entropy(Shannon(), rmspace, X)
+
+# which calculates the recurrence microstate entropy, or
+# the microstate disorder index
+
+complexity(Disorder(), X)
 
 # ## More nonlinear timeseries analysis
 
@@ -646,29 +664,26 @@ fig
 
 using ModelingToolkit
 
-@variables t # use unitless time
-D = Differential(t)
-@mtkmodel Roessler begin
-    @parameters begin
-        a = 0.2
-        b = 0.2
-        c = 5.7
-    end
-    @variables begin
-        x(t) = 1.0
-        y(t) = 0.0
-        z(t) = 0.0
-        nlt(t) # nonlinear term
-    end
-    @equations begin
-        D(x) ~ -y -z
-        D(y) ~ x + a*y
-        D(z) ~ b + nlt
-        nlt ~ z*(x - c)
-    end
+using ModelingToolkit: t_nounits as t, D_nounits as D
+@parameters begin
+    a = 0.2
+    b = 0.2
+    c = 5.7
 end
-
-@mtkcompile model = Roessler()
+@variables begin
+    x(t) = 1.0
+    y(t) = 0.0
+    z(t) = 0.0
+    nlt(t) # nonlinear term
+end
+eqs = [
+    D(x) ~ - y - z,
+    D(y) ~ x + a*y,
+    D(z) ~ b + nlt,
+    nlt  ~ z*(x - c),
+]
+sys = System(eqs, t; name = :roessler)
+model = mtkcompile(sys)
 
 # this model can then be made into an `ODEProblem`.
 
@@ -737,7 +752,7 @@ current_parameter(roessler, :c)
 # ```@docs
 # step!(::DynamicalSystem, ::Any)
 # current_state
-# initial_state
+# DynamicalSystemsBase.initial_state
 # observe_state
 # state_name
 # current_parameters

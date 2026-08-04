@@ -17,6 +17,7 @@ using Reexport
 @reexport using FractalDimensions
 @reexport using DelayEmbeddings
 @reexport using ComplexityMeasures
+@reexport using RecurrenceMicrostatesAnalysis
 @reexport using TimeseriesSurrogates
 @reexport using SignalDecomposition
 # dynamical systems

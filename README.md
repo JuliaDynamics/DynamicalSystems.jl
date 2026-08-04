@@ -13,6 +13,14 @@ To learn how to use it and see its contents visit the documentation, which you c
 
 **DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
 
+> In August 2027 we are celebrating the 10 years anniversary of **DynamicalSystems.jl**
+> and the JuliaDynamics GitHub organization. Everyone is welcomed to join.
+> Information about the Symposium can be found here:
+>
+> <https://forms.cloud.microsoft/e/R3L7MghSHX>
+>
+> Please submit your registration of interest in the form above as soon as possible!
+
 ## Highlights
 
 Aspects of **DynamicalSystems.jl** that make it stand out among other codebases for nonlinear dynamics or nonlinear timeseries analysis are:
