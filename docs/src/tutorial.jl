@@ -548,7 +548,8 @@ pex = entropy_permutation(x; m = 4)
 sey = entropy_sample(y; m = 2)
 pex, sey
 
-# Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
+# Alternatively, you could use [`FractalDimensions`](@ref) to get the fractal dimensions of
+# the chaotic attractor of the henon map using the Grassberger-Procaccia algorithm:
 
 grassberger_proccacia_dim(X; show_progress = false)
 
@@ -562,8 +563,8 @@ heatmap(Rg; colormap = :grays,
 )
 
 # Recurrence matrices are used for recurrence quantification analysis (RQA).
-# Traditional is implemented in [`RecurrenceAnalysis`](@ref), but we also have
-# implementations for recurrence microstates analysis in [`RecurrenceMicrostatesAnalysis`](@ref).
+# Traditional RQA is implemented in [`RecurrenceAnalysis`](@ref), but we also have
+# implementations for recurrence _microstates_ analysis in [`RecurrenceMicrostatesAnalysis`](@ref).
 # The latter extends the API of [`ComplexityMeasures`](@ref), which allows you
 # to do stuff like
 
@@ -571,7 +572,10 @@ heatmap(Rg; colormap = :grays,
 rmspace = RecurrenceMicrostates(ε, 2)
 entropy(Shannon(), rmspace, X)
 
-# which calculates the recurrence microstate entropy.
+# which calculates the recurrence microstate entropy, or
+# the microstate disorder index
+
+complexity(Disorder(), X)
 
 # ## More nonlinear timeseries analysis
 
