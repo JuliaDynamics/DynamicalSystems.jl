@@ -333,7 +333,7 @@ lyapunovspectrum(henon, steps)
 ## define a state space grid to compute the basins on:
 xg = yg = range(-2, 2; length = 201)
 ## find attractors using recurrences in state space:
-bmap = AttractorsViaRecurrences(henon, (xg, yg); sparse = false)
+bmap = BasinMapRecurrences(henon, (xg, yg); sparse = false)
 ## compute the full basins of attraction:
 basins, attractors = basins_of_attraction(bmap; show_progress = false)
 
@@ -401,7 +401,7 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 
 featurizer(X, tvec) = X[end]
 
-bmap = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
+bmap = BasinMapFeaturizeGroup(sde, featurizer; Ttr = 200, T = 10)
 
 xg = yg = range(-1, 1; length = 101)
 

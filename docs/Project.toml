@@ -26,4 +26,3 @@ OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 
 [compat]
 ModelingToolkit = "11"
-OrderedCollections = "1"
