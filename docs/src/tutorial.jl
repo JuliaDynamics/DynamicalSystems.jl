@@ -118,7 +118,7 @@ henon = DeterministicIteratedMap(henon_rule, u0, p0)
 # The simplest thing you can do with a `DynamicalSystem` is to get its trajectory:
 
 total_time = 10_000
-X, t = trajectory(henon, total_time)
+X, tvec = trajectory(henon, total_time)
 X
 
 # `X` is a `StateSpaceSet`, the second of the core structures of the library.
@@ -163,7 +163,7 @@ lorenz96 = CoupledODEs(lorenz96_rule!, u0, p0)
 
 total_time = 12.5
 sampling_time = 0.02
-Y, t = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
+Y, tvec = trajectory(lorenz96, total_time; Ttr = 2.2, Δt = sampling_time)
 Y
 
 # We can't scatterplot something 6-dimensional but we can visualize all timeseries
@@ -171,7 +171,7 @@ Y
 fig = Figure()
 ax = Axis(fig[1, 1]; xlabel = "time", ylabel = "variable")
 for var in columns(Y)
-    lines!(ax, t, var)
+    lines!(ax, tvec, var)
 end
 fig
 
@@ -194,7 +194,7 @@ lorenz96_vern = ContinuousDynamicalSystem(lorenz96_rule!, u0, p0; diffeq)
 
 #
 
-Y, t = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
+Y, tvec = trajectory(lorenz96_vern, total_time; Ttr = 2.2, Δt = sampling_time)
 Y[end]
 
 # The choice of the solver algorithm can have **huge impact on the performance and stability of the ODE integration!**
@@ -399,7 +399,7 @@ sde = CoupledSDEs(fitzhugh_nagumo, zeros(2), p; noise_strength = 0.05)
 # we have to use an alternative algorithm, because `AttractorsViaRecurrences`
 # only works for deterministic systems. So instead we'll use `AttractorsViaFeaturizing`:
 
-featurizer(X, t) = X[end]
+featurizer(X, tvec) = X[end]
 
 bmap = AttractorsViaFeaturizing(sde, featurizer; Ttr = 200, T = 10)
 
