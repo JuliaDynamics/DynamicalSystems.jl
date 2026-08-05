@@ -10,6 +10,7 @@ The changelogs of individual sub-packages are self-contained for each package.
 # v3.7
 
 - New package RecurrenceMicrostatesAnalysis.jl joins DynamicalSystems.jl!
+- Attractors.jl has been updated to v2!
 - Announcement: August 2027 a Symposium celebrating 10 years of DynamicalSystems.jl is taking place; see [here](https://discourse.julialang.org/t/juliadynamics-dynamicalsystems-jl-10-year-symposium/138566) for details!
 
 # v3.6
