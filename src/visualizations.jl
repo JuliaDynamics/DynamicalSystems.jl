@@ -187,7 +187,7 @@ function interactive_cobweb end
 Open an interactive application for exploring orbit diagrams (ODs) of discrete time
 dynamical systems. Requires `DynamicalSystems`.
 
-In essense, the function presents the output of `orbitdiagram`
+In essence, the function presents the output of `orbitdiagram`
 of the `i`th variable of the `ds`, and allows interactively zooming into it.
 
 Keywords control the name of the parameter, the initial state (used for _any_ parameter)

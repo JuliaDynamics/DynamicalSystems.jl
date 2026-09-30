@@ -18,7 +18,7 @@ while the right scene plots the histogram of the `vals`. The function
 returns the two scenes `data_scene, hist_scene`.
 
 Two dimensional datasets are plotted as scatter plots (and are assumed to be discrete
-in nature), while three dimensional are plotted as lines (and are assummed continuous).
+in nature), while three dimensional are plotted as lines (and are assumed continuous).
 
 ## Interaction
 Clicking on a bin of the histogram plot will "highlight" all data

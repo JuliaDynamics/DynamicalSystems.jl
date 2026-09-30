@@ -43,8 +43,8 @@ These same goals are the core pillars guiding development, and are largely the s
 
 **Accessible** means that if you read on some sorts of fancy algorithm online in a scientific article, you should be able to use it instantly. You shouldn't have to put in the work to code it yourself. The authors of the paper already did that.
 _So why should you do it again?!_ To resolve this problem we developed, and continue to develop, a library that has an incredibly low threshold of entry: contributing to **DynamicalSystems.jl** and making your code available to all is truly _easier_ than coding your own algorithms from scratch, due to the well thought out and generic interfaces it provides for dynamical systems.
-With this aproach we also hope to stop the _endless reinviention of the wheel_ that is shockingly prevalent in nonlinear dynamics: where every time someone writes a new method/algorithm or even full software, they end up re-imlementing up to 90% of the functionality that may already exist somewhere else.
-With **DynamicalSystems.jl** and its extendable interfaces, new algorithms can be implemented with minimal code, and their software imlementation can be published along with the paper!
+With this approach we also hope to stop the _endless reinviention of the wheel_ that is shockingly prevalent in nonlinear dynamics: where every time someone writes a new method/algorithm or even full software, they end up re-imlementing up to 90% of the functionality that may already exist somewhere else.
+With **DynamicalSystems.jl** and its extendable interfaces, new algorithms can be implemented with minimal code, and their software implementation can be published along with the paper!
 We have done this already dozens of times and you can do too!
 
 **Reproducible** means that given some sorts of dynamical systems analysis in a scientific article, you should be able to do _exactly the same analysis_ and get _exactly the same results_ (within some numeric precision) as the article.
@@ -54,7 +54,7 @@ After all, computers are deterministic constructs.
 ### Goal 2: Library in the literal sense
 
 **DynamicalSystems.jl** is not just a software library. It is also a library in the literal sense: _where people go to learn something new_ (here in particular for nonlinear dynamics).
-That is why the documentation is of exceptionally high quality: detailed descriptions and explanations of algorithms, with references to the scientific articles articles. It is also partly a reason for the source code to be written as clearly as possible, so that it is examinable by any user.
+That is why the documentation is of exceptionally high quality: detailed descriptions and explanations of algorithms, with references to the scientific articles. It is also partly a reason for the source code to be written as clearly as possible, so that it is examinable by any user.
 
 ### Goal 3: A general purpose software
 
