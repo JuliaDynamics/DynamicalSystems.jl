@@ -140,7 +140,7 @@ for (i, b) in enumerate([b2,b3,b4,b5])
   sleep(0.1)
 end
 println("Conclusions about evolve calls: Versions with Base arrays are by far the slowest")
-println("Methods with Mutable StaticArrays are by far the fastests")
+println("Methods with Mutable StaticArrays are by far the fastest")
 println("with increase in speed of up to 60%")
 println("Note however, that both the methods with SVector and MVector are")
 println("very very fast, with speeds 60ns and 25ns respectively (on evolve call)")
