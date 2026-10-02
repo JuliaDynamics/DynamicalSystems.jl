@@ -7,7 +7,7 @@
 # This is not an in-depth tutorial, and the individual subpackages of the library have
 # their own in-depth tutorials and documentation (see the top bar of the online documentation).
 
-# Going through this tutorial should take you about 20-30 minutes.
+# Going through this tutorial should take you about 30 minutes.
 
 # !!! note "Also available as a Jupyter notebook"
 #     This tutorial is also available online as a [Jupyter notebook](https://github.com/JuliaDynamics/DynamicalSystems.jl/blob/gh-pages/dev/tutorial.ipynb).
@@ -302,7 +302,7 @@ current_parameters(lorenz96)
 
 # Now, as an end-user, you are most likely to be giving a `DynamicalSystem` instance to a library function.
 # For example, you may want to obtain the Poincare section of a continuous time system,
-# which is something already available in [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref):
+# which is something already available in [`DynamicalSystemsBase`](@ref):
 
 plane = (1, 0.0)
 pmap = poincaresos(lorenz96, plane, 10000.0)
@@ -369,6 +369,29 @@ for po in output
     strokewidth = 1, strokecolor = "black")
 end
 fig
+
+
+# The final component of **DynamicalSystems.jl** that directly handles `DynamicalSystems`
+# is [`CriticalTransitions`](@ref), which studies critical transitions or tipping points
+# that occur in dynamical systems. It offers a plethora of features, one of which
+# is the study of "rate tipping", that makes it straightforward to create a
+# non-autonomous version of an autonomous dynamical system.
+# For example, let's create a timeseries of the Lorenz-96 model with a time-varying
+# change in the parameter F:
+
+set_parameter!(lorenz96, 1, 0.0)
+fp = ForcingProfile(:linear)
+rate_lorenz96 = RateSystem(
+    lorenz96, fp, 1;
+    forcing_start_time = 10,
+    forcing_duration = 100,
+    forcing_scale = 10,
+    reverse = true,
+)
+
+X, t = trajectory(rate_lorenz, 220; Δt = 0.01)
+fig, ax = lines(t, X[:, 1])
+
 
 # ## Stochastic systems
 
@@ -752,7 +775,7 @@ current_parameter(roessler, :c)
 # ```@docs
 # step!(::DynamicalSystem, ::Any)
 # current_state
-# DynamicalSystemsBase.initial_state
+# initial_state
 # observe_state
 # state_name
 # current_parameters
