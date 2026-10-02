@@ -11,7 +11,7 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 
 **Core**
 - [`StateSpaceSets`](@ref)
-- [`DynamicalSystemsBase.DynamicalSystemsBase`](@ref)
+- [`DynamicalSystemsBase`](@ref)
 
 **For observed/measured data and timeseries**
 - [`ComplexityMeasures`](@ref)
@@ -27,6 +27,7 @@ The submodules that compose **DynamicalSystems.jl** are the following packages, 
 - [`ChaosTools`](@ref)
 - [`Attractors`](@ref)
 - [`PeriodicOrbits`](@ref)
+- [`CriticalTransitions`](@ref)
 
 At the very end of this page, a full list of exported names is presented.
 
@@ -35,6 +36,7 @@ At the very end of this page, a full list of exported names is presented.
 
 ```@docs
 StateSpaceSets
+DynamicalSystemsBase
 ```
 
 ## For observed/measured data
@@ -56,6 +58,7 @@ PredefinedDynamicalSystems
 ChaosTools
 Attractors
 PeriodicOrbits
+CriticalTransitions
 ```
 
 ## All exported names
