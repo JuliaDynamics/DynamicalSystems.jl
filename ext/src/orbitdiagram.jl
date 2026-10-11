@@ -29,7 +29,7 @@ function DynamicalSystems.interactive_orbitdiagram(ds, p_index, p_min, p_max, i0
     update_controls!(history[end], i, n, Ttr, d,  ⬜p₋, ⬜p₊, ⬜u₋, ⬜u₊)
 
     color = lift(a -> RGBAf(0,0,0,a), α)
-    scatter!(odax, od_obs; markersize = 1px, color = color, strokewidth = 0.0)
+    scatter!(odax, od_obs; markersize = 1, color = color, strokewidth = 0.0)
 
     xlims!(odax, 0, 1)
     ylims!(odax, 0, 1)
