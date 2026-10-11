@@ -1,3 +1,11 @@
+> In August 2027 we are celebrating the 10 years anniversary of **DynamicalSystems.jl**
+> and the JuliaDynamics GitHub organization. Everyone is welcomed to join.
+> Information about the Symposium can be found here:
+>
+> <https://forms.cloud.microsoft/e/R3L7MghSHX>
+>
+> Please submit your registration of interest in the form above as soon as possible!
+
 ![DynamicalSystems.jl logo: The Double Pendulum](https://github.com/JuliaDynamics/JuliaDynamics/blob/master/videos/dynamicalsystems/juliadynamics_logo_anim_dark.gif?raw=true)
 
 [![](https://img.shields.io/badge/docs-online-blue.svg)](https://juliadynamics.github.io/DynamicalSystemsDocs.jl/dynamicalsystems/dev/)
@@ -11,15 +19,7 @@
 To install **DynamicalSystems.jl**, run `import Pkg; Pkg.add("DynamicalSystems")` as a Julia language command.
 To learn how to use it and see its contents visit the documentation, which you can either find [online](https://juliadynamics.github.io/DynamicalSystems.jl/dev/) or build locally by running the `docs/make.jl` file.
 
-**DynamicalSystems.jl** is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), an organization dedicated to creating high quality scientific software.
-
-> In August 2027 we are celebrating the 10 years anniversary of **DynamicalSystems.jl**
-> and the JuliaDynamics GitHub organization. Everyone is welcomed to join.
-> Information about the Symposium can be found here:
->
-> <https://forms.cloud.microsoft/e/R3L7MghSHX>
->
-> Please submit your registration of interest in the form above as soon as possible!
+**DynamicalSystems.jl** is part of JuliaDynamics, an organization dedicated to creating high quality scientific software.
 
 ## Highlights
 
