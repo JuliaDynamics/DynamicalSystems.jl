@@ -372,8 +372,9 @@ fig
 
 
 # The final component of **DynamicalSystems.jl** that directly handles `DynamicalSystems`
-# is [`CriticalTransitions`](@ref), which studies critical transitions or tipping points
-# that occur in dynamical systems. It offers a plethora of features, one of which
+# is [`CriticalTransitions`](@ref), which is generally for the study of non-autonomous
+# systems (including stochastic ones), and critical transitions or tipping points.
+# It offers a plethora of features, one of which
 # is the study of "rate tipping", that makes it straightforward to create a
 # non-autonomous version of an autonomous dynamical system.
 # For example, let's create a timeseries of the Lorenz-96 model with a time-varying
