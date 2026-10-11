@@ -390,9 +390,9 @@ rate_lorenz96 = RateSystem(
     reverse = true,
 )
 
-X, t = trajectory(rate_lorenz96, 220; Δt = 0.01)
+Xrate, t = trajectory(rate_lorenz96, 220; Δt = 0.01)
 set_parameter!(lorenz96, 1, 8.0) # reset for later code
-fig, ax = lines(t, X[:, 1])
+fig, ax = lines(t, Xrate[:, 1])
 
 
 # ## Stochastic systems
