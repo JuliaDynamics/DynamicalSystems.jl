@@ -214,6 +214,13 @@ function _trajectory_plot_controls!(gl, statespace_axis::Bool, starting_step)
     return reset.clicks, run.clicks, step.clicks, sg.sliders[1].value
 end
 
+function _traj_lim_estimator(ds, u0s::Vector{<:Dict}, idxs, observables, dt)
+    # convert to vector of arrays:
+    u = Array(current_state(ds))
+    states = [set_state!(copy(u), u0, ds) for u0 in u0s]
+    return _traj_lim_estimator(ds, states, idxs, observables, dt)
+end
+
 function _traj_lim_estimator(ds, u0s, idxs, observables, dt)
     ds = deepcopy(ds)
     mi = fill(Inf, length(idxs))
