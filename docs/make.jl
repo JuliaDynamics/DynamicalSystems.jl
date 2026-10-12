@@ -17,7 +17,7 @@ Literate.markdown(
 )
 Literate.notebook(
     joinpath(@__DIR__, "src", "tutorial.jl"), joinpath(@__DIR__, "src");
-    credit = false, execute = true,
+    credit = false, execute = false,
 )
 
 pages =  [
