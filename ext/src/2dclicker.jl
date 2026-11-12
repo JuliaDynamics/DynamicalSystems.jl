@@ -19,6 +19,7 @@ function DynamicalSystems.interactive_2d_clicker(ds;
     colors = (c = color(u0); [c for _ in 1:length(data)])
     colors_node = Observable(colors)
 
+    px = 1.0 # multiplier for the marker size
     if isdiscretetime(ds)
         scatter!(
             ax, positions_node, color = colors_node,
