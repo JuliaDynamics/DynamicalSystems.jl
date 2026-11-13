@@ -22,12 +22,12 @@ function DynamicalSystems.interactive_2d_clicker(ds;
     if isdiscretetime(ds)
         scatter!(
             ax, positions_node, color = colors_node,
-            markersize = lift(o -> o*px, m_slider), marker = :circle, plotkwargs...
+            markersize = lift(o -> o, m_slider), marker = :circle, plotkwargs...
         )
     else
         scatterlines!(
             ax, positions_node, color = colors_node,
-            markersize = lift(o -> o*px, m_slider), marker = :circle, plotkwargs...
+            markersize = lift(o -> o, m_slider), marker = :circle, plotkwargs...
         )
     end
 
